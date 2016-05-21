@@ -459,7 +459,7 @@ namespace Xomega.Framework
 
             validationErrorList = new ErrorList();
 
-            if (Validator != null)
+            if (Validator != null && Editable)
             {
                 IList lst = InternalValue as IList;
                 if (lst != null && lst.Count > 0)
