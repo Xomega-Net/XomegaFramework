@@ -7,7 +7,7 @@ samples
 *.user
 *.userosscache
 *.sln.docstates
-*.Dotfuscator.xml
+.nuget
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

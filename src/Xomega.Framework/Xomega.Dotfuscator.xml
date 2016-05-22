@@ -219,17 +219,11 @@
         <codetransform name="analytics" />
       </codetransformlist>
       <assembly>
-        <file dir="${configdir}\pkg\rel\net40" name="Xomega.Framework.dll" />
+        <file dir="${configdir}\{dllDir}" name="Xomega.Framework.dll" />
       </assembly>
       <propertylist>
-<!--
-        <property name="CompanyName" value="NuGet" />
-        <property name="CompanyKey" value="44A1A421-EE24-4391-92ED-3C5CE2C4CC69" />
-        <property name="CompanyName" value="Xomega.Net" />
-        <property name="CompanyKey" value="F44EA787-0629-4964-ABAD-A3DFE7D60800" />
--->
-        <property name="CompanyName" value="CodePlex" />
-        <property name="CompanyKey" value="3E35F098-CE43-4F82-9E9D-05C8B1046A45" />
+        <property name="CompanyName" value="{companyName}" />
+        <property name="CompanyKey" value="{companyKey}" />
       </propertylist>
     </extattribute>
     <extattribute name="PreEmptive.Attributes.ApplicationAttribute">
@@ -238,13 +232,13 @@
         <codetransform name="analytics" />
       </codetransformlist>
       <assembly>
-        <file dir="${configdir}\pkg\rel\net40" name="Xomega.Framework.dll" />
+        <file dir="${configdir}\{dllDir}" name="Xomega.Framework.dll" />
       </assembly>
       <propertylist>
         <property name="ApplicationType" value="Library" />
         <property name="Guid" value="9647FBA0-8C3F-4B5E-AA91-A50A96C2A564" />
         <property name="Name" value="Xomega.Framework" />
-        <property name="Version" value="1.5" />
+        <property name="Version" value="{version}" />
       </propertylist>
     </extattribute>
   </extattributes>

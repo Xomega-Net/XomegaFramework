@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Xomega.Framework</id>
+        <version>{version}</version>
+        <authors>Xomega Team</authors>
+        <owners>Xomega.Net</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/Xomega-Net/XomegaFramework</projectUrl>
+        <iconUrl>https://avatars2.githubusercontent.com/u/17077373</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A powerful .NET framework for building multi-tier ASP.NET, WPF or Silverlight applications backed by a WCF service layer based on Entity Framework or any other ORM framework.</description>
+        <tags>WPF Silverlight ASP.NET MVC MVVM WCF EntityFramework</tags>
+        <dependencies />
+    </metadata>
+</package>
