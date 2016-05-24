@@ -52,9 +52,6 @@ namespace Xomega.Framework.Web
         {
             grid.RowDataBound += delegate(object sender, GridViewRowEventArgs e)
             {
-                bool isEditIndex = 0 <= grid.EditIndex && grid.EditIndex == e.Row.DataItemIndex;
-                // bind edit row to a copy (EditObject) so that (auto-)postbacks 
-                // don't update the list object until Update command is invoked
                 DataRow dataRow = e.Row.DataItem as DataRow;
                 if (dataRow == null) return;
                 dataRow.List.CurrentRow = e.Row.DataItemIndex;
@@ -174,9 +171,7 @@ namespace Xomega.Framework.Web
         {
             GridView grid = (GridView)control;
             grid.DataSource = list != null ? list.GetData() : null;
-            // if invoked from BindTo, which should be running before Load event,
-            // then defer data binding to the Load event. Otherwise rebind
-            if (sender != null) grid.DataBind();
+            grid.DataBind();
         }
     }
 }
