@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2010-2016 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -128,6 +128,19 @@ namespace Xomega.Framework.Web
             if (add && !classes.Contains(cssClass)) classes.Add(cssClass);
             else if (!add && classes.Contains(cssClass)) classes.Remove(cssClass);
             return string.Join(" ", classes.ToArray());
+        }
+
+        /// <summary>
+        /// Finds a parent udpate panel for the given control.
+        /// </summary>
+        /// <param name="ctl">Control to find parent update panel for</param>
+        /// <returns>Parent update panel</returns>
+        public static UpdatePanel FindParentUpdatePanel(Control ctl)
+        {
+            Control p = ctl.Parent;
+            while (p != null && p as UpdatePanel == null && p.Parent != null) p = p.Parent;
+            return p as UpdatePanel;
+
         }
     }
 }
