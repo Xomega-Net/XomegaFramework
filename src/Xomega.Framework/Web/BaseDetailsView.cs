@@ -63,9 +63,7 @@ namespace Xomega.Framework.Web
             IsNew = ActionCreate.Equals(query[QueryAction]);
 
             InitObjects(true);
-            foreach (string p in query.Keys)
-                if (dataObj != null && dataObj.HasProperty(p))
-                    dataObj[p].SetValue(query[p]);
+            if (dataObj != null) dataObj.SetValues(query);
 
             if (!IsNew) LoadData();
             BindObjects();

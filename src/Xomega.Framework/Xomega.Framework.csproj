@@ -150,6 +150,9 @@
     <Compile Include="Web\BaseDetailsView.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Web\CollapsiblePanelBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Web\CheckBoxPropertyBinding.cs" />
     <Compile Include="Web\LabelPropertyBinding.cs" />
     <Compile Include="Web\LinkPropertyBinding.cs" />

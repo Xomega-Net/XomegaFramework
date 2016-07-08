@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -434,6 +435,36 @@ namespace Xomega.Framework
                 else t = typeof(List<object>);
             }
             return Activator.CreateInstance(t);
+        }
+
+        #endregion
+
+        #region NameValueCollection support
+
+        /// <summary>
+        /// Sets property values from NameValueCollection object.
+        /// </summary>
+        public virtual void SetValues(NameValueCollection nvc)
+        {
+            foreach (string p in nvc.Keys)
+                if (HasProperty(p))
+                    this[p].SetValue(nvc[p]);
+        }
+
+        /// <summary>
+        /// Returns NameValueCollection object with property values.
+        /// </summary>
+        public virtual NameValueCollection ToNameValueCollection(bool includeNullValues = false)
+        {
+            NameValueCollection nvc = new NameValueCollection();
+            foreach (DataProperty p in Properties)
+            {
+                if (p.IsNull() && !includeNullValues)
+                    continue;
+
+                nvc[p.Name] = p.EditStringValue;
+            }
+            return nvc;
         }
 
         #endregion
