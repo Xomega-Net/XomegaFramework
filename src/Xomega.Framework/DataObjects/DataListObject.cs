@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace Xomega.Framework
 {
@@ -74,6 +75,15 @@ namespace Xomega.Framework
             FireCollectionChanged();
         }
 
+        /// <summary>
+        /// Overrides base method to reset the list by clearing all data
+        /// </summary>
+        public override void ResetData()
+        {
+            Clear();
+            modified = null;
+        }
+
         #region Sorting
 
         /// <summary>
@@ -98,6 +108,76 @@ namespace Xomega.Framework
             if (cmp == null) data.Sort();
             else data.Sort(cmp);
             FireCollectionChanged();
+        }
+        #endregion
+
+        #region Selection support
+
+        /// <summary>
+        /// Data list supports single selection
+        /// </summary>
+        public const string SelectionModeSingle = "SingleSelection";
+
+        /// <summary>
+        /// Data list supports multiple selection
+        /// </summary>
+        public const string SelectionModeMultiple = "MultipleSelection";
+
+        /// <summary>
+        /// Current selection mode for data list rows. Null means selection is not supported
+        /// </summary>
+        public string RowSelectionMode { get; set; }
+
+        /// <summary>
+        /// Selects data rows specified by the provided start and end indexes.
+        /// </summary>
+        /// <param name="startIdx">Start row index to select</param>
+        /// <param name="endIdx">End row index to select</param>
+        /// <param name="clearOthers">True to clear selection for rows not in the specified range, false otherwise</param>
+        /// <returns>True if selection was allowed, false otherwise</returns>
+        public bool SelectRows(int startIdx, int endIdx, bool clearOthers)
+        {
+            int count = endIdx - startIdx + 1;
+            if (RowSelectionMode != SelectionModeSingle && RowSelectionMode != SelectionModeMultiple ||
+                RowSelectionMode == SelectionModeSingle && count > 1) return false;
+            if (count > 0)
+                data.Skip(startIdx).Take(count).ToList().ForEach(r => r.Selected = true);
+            if (clearOthers || RowSelectionMode == SelectionModeSingle)
+            {
+                data.Take(startIdx).ToList().ForEach(r => r.Selected = false);
+                data.Skip(endIdx + 1).ToList().ForEach(r => r.Selected = false);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// A list of currently selected data row indexes
+        /// </summary>
+        public List<int> SelectedRowIndexes
+        {
+            get
+            {
+                List<int> res = new List<int>();
+                for (int i=0; i < data.Count; i++)
+                    if (data[i].Selected) res.Add(i);
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// Select all data rows
+        /// </summary>
+        public void SelectAllRows()
+        {
+            SelectRows(0, data.Count - 1, false);
+        }
+
+        /// <summary>
+        /// Clear selection for all data rows
+        /// </summary>
+        public void ClearSelectedRows()
+        {
+            SelectRows(0, -1, true);
         }
         #endregion
 

@@ -97,6 +97,8 @@ namespace Xomega.Framework.Web
         {
             InitObjects(true);
 
+            if (list != null) list.RowSelectionMode = query[QuerySelectionMode];
+
             if (query[QueryAction] == ActionSearch)
             {
                 Search();
@@ -111,8 +113,8 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected virtual void Reset(object sender, EventArgs e)
         {
-            InitObjects(true);
-            BindObjects();
+            if (criteria != null) criteria.ResetData();
+            if (list != null) list.ResetData();
         }
 
         #endregion
@@ -149,6 +151,14 @@ namespace Xomega.Framework.Web
             Search();
         }
 
+        #endregion
+
+        #region Selection
+
+        /// <summary>
+        /// Query parameter indicating selection mode to set, if any
+        /// </summary>
+        public const string QuerySelectionMode = "SelectionMode";
         #endregion
     }
 }

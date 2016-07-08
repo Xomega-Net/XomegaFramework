@@ -88,6 +88,11 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="obj">The object to copy the state from.</param>
         void CopyFrom(IDataObject obj);
+
+        /// <summary>
+        /// Resets data object to initial values
+        /// </summary>
+        void ResetData();
     }
 
     /// <summary>

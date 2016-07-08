@@ -140,6 +140,15 @@ namespace Xomega.Framework
         /// <returns>True if the current property value is null, otherwise false.</returns>
         public bool IsNull() { return IsValueNull(InternalValue, ValueFormat.Internal); }
 
+        /// <summary>
+        /// Resets property value and modified state to default values
+        /// </summary>
+        public virtual void ResetValue()
+        {
+            SetValue(null);
+            Modified = null;
+        }
+
         #endregion
 
         #region Value configuration

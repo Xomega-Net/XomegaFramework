@@ -13,6 +13,9 @@ namespace Xomega.Framework.Web
     /// </summary>
     public class TimeTracker : IDisposable
     {
+        /// <summary>
+        /// Special category for tracking time for service calls
+        /// </summary>
         public const string Service = "service";
 
         /// <summary>
@@ -64,6 +67,11 @@ namespace Xomega.Framework.Web
             AddTime(category, (DateTime.Now - startTime).TotalMilliseconds);
         }
 
+        /// <summary>
+        /// Adds some time to the timer for the given category.
+        /// </summary>
+        /// <param name="category">Category name to add time to</param>
+        /// <param name="ms">Numer of millisecodns to add</param>
         public static void AddTime(string category, double ms)
         {
             if (HttpContext.Current != null)

@@ -11,7 +11,7 @@ namespace Xomega.Framework.Web
     /// A data property binding is responsible for making sure that the state of the web control
     /// is in sync with the state of the underlying data property.
     /// Web property bindings are created when a control is bound to a specific data object using
-    /// <see cref="WebUtil.BindToObject"/> method, which uses attribute <see cref="AttrProperty"/>
+    /// <see cref="WebUtil.BindToObject(Control, DataObject)"/> method, which uses attribute <see cref="AttrProperty"/>
     /// to get the name of the data object property to bind the control to, and also possibly
     /// a path to a child object from the attribute <see cref="AttrChildObject"/> to locate that property.
     /// Web property bindings are created via a factory design pattern. A <c>PropertyBindingCreator</c>

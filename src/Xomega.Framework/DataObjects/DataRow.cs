@@ -55,6 +55,11 @@ namespace Xomega.Framework
         public DataListObject List { get; private set; }
 
         /// <summary>
+        /// A flag indicating if the current row is selected
+        /// </summary>
+        public bool Selected { get; internal set; }
+
+        /// <summary>
         /// Constructs a new data row for the specified data list object.
         /// </summary>
         /// <param name="dataList">Data list object that contains this row.</param>

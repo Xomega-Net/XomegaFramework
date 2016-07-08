@@ -88,6 +88,18 @@ namespace Xomega.Framework
                 childObjects[chName].CopyFrom(dObj.GetChildObject(chName));
         }
 
+        /// <summary>
+        /// Resets data object to initial values
+        /// </summary>
+        public virtual void ResetData()
+        {
+            foreach (DataProperty p in properties.Values)
+                p.ResetValue();
+            foreach (string chName in childObjects.Keys)
+                childObjects[chName].ResetData();
+            modified = null;
+        }
+
         #endregion
 
         #region Properties

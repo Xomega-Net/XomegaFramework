@@ -19,7 +19,7 @@ namespace Xomega.Framework
     /// by setting the visibility of the corresponding data object list property.
     /// </summary>
     /// <typeparam name="T">The type of the underlying data object, which should have a default constructor.</typeparam>
-    [Obsolete("Use DataList class instead for performance")]
+    [Obsolete("Use DataListObject class instead for performance")]
     public class DataObjectList<T> : ObservableCollection<T>, IDataObjectList where T : DataObject, new()
     {
         /// <summary>
@@ -357,6 +357,14 @@ namespace Xomega.Framework
                 objectItem.ToDataContract(item);
                 list.Add(item);
             }
+        }
+
+        /// <summary>
+        /// Implements IDataObject.ResetData by clearing the list
+        /// </summary>
+        public void ResetData()
+        {
+            ClearItems();
         }
     }
 }

@@ -3,6 +3,7 @@
 using System.Collections.Specialized;
 using System.Web.UI.WebControls;
 using System;
+using System.Collections.Generic;
 
 namespace Xomega.Framework.Web
 {
@@ -50,6 +51,14 @@ namespace Xomega.Framework.Web
         protected GridViewBinding(GridView grid)
             : base(grid)
         {
+            grid.DataBinding += delegate(object sender, EventArgs e)
+            {
+                grid.SelectedIndex = -1;
+                int ps = grid.PageSize, pi = grid.PageIndex;
+                List<int> selIdx = list == null ? null : list.SelectedRowIndexes;
+                if (selIdx == null || selIdx.Count != 1 || selIdx[0] < ps * pi || selIdx[0] >= ps * (pi + 1)) return;
+                grid.SelectedIndex = selIdx[0] % grid.PageSize;
+            };
             grid.RowDataBound += delegate(object sender, GridViewRowEventArgs e)
             {
                 DataRow dataRow = e.Row.DataItem as DataRow;
@@ -127,6 +136,13 @@ namespace Xomega.Framework.Web
                 grid.EditIndex = index;
                 list.Insert(grid.PageSize * grid.PageIndex + index, newRow);
             };
+            grid.SelectedIndexChanging += delegate(object sender, GridViewSelectEventArgs e)
+            {
+                if (e.Cancel || list == null) return;
+                int idx = grid.PageSize * grid.PageIndex + e.NewSelectedIndex;
+                if (!list.SelectRows(idx, idx, true))
+                    e.Cancel = true;
+            };
             // Defer data binding to the Load method after the view state is loaded.
             // Otherwise the view state will get corrupted.
             grid.Load += delegate
@@ -159,6 +175,12 @@ namespace Xomega.Framework.Web
             {
                 OnListChanged(null, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 observableList.CollectionChanged += OnListChanged;
+            }
+            // set up grid selection
+            GridView grid = (GridView)control;
+            if (grid != null && list != null)
+            {
+                grid.AutoGenerateSelectButton = (list.RowSelectionMode == DataListObject.SelectionModeSingle);
             }
         }
 
