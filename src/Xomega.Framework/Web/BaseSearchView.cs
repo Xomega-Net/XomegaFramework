@@ -53,7 +53,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Panel with criteria
         /// </summary>
-        protected Control pnl_Criteria;
+        protected CollapsiblePanelBase ucl_Criteria;
 
         /// <summary>
         /// Results grid
@@ -65,10 +65,10 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void BindObjects()
         {
-            if (criteria != null && pnl_Criteria != null)
+            if (criteria != null && ucl_Criteria != null)
             {
-                pnl_Criteria.DataBind();
-                WebUtil.BindToObject(pnl_Criteria, criteria);
+                ucl_Criteria.DataBind();
+                WebUtil.BindToObject(ucl_Criteria, criteria);
             }
             if (list != null && grd_Results != null)
                 WebUtil.BindToList(grd_Results, list);
@@ -96,6 +96,7 @@ namespace Xomega.Framework.Web
         public override void Activate(NameValueCollection query)
         {
             InitObjects(true);
+            if (criteria != null) criteria.SetValues(query);
 
             if (list != null) list.RowSelectionMode = query[QuerySelectionMode];
 
@@ -103,6 +104,7 @@ namespace Xomega.Framework.Web
             {
                 Search();
             }
+
             BindObjects();
         }
 

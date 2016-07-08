@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -140,7 +141,16 @@ namespace Xomega.Framework.Web
             Control p = ctl.Parent;
             while (p != null && p as UpdatePanel == null && p.Parent != null) p = p.Parent;
             return p as UpdatePanel;
+        }
 
+        /// <summary>
+        /// Adds a query string from NameValueCollection object to the url.
+        /// </summary>
+        public static string AddQueryString(string url, NameValueCollection nvc)
+        {
+            NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);
+            foreach (string k in nvc.Keys) query[k] = nvc[k];
+            return (url == null ? "" : url.Split('?')[0]) + (query.Keys.Count == 0 ? "" : "?" + query.ToString());
         }
     }
 }
