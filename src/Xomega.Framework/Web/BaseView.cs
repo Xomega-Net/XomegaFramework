@@ -74,6 +74,11 @@ namespace Xomega.Framework.Web
 
         #region Show/Hide with JavaScript
 
+        /// <summary>
+        /// Occurs when the view is closed
+        /// </summary>
+        public event EventHandler Closed;
+
         /// <summary>Script to run code on document ready.</summary>
         protected string Script_OnDocumentReady = "$(document).ready(function() {{ {0} }});";
 
@@ -149,6 +154,7 @@ namespace Xomega.Framework.Web
             }
 
             Mode = null;
+            if (Closed != null) Closed(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -209,6 +215,21 @@ namespace Xomega.Framework.Web
         protected UpdatePanel upl_Main;
 
         /// <summary>
+        /// Subscribes to child view's events
+        /// </summary>
+        /// <param name="child">Child view</param>
+        protected virtual void SubscribeToChildEvents(BaseView child)
+        {
+            child.Closed += OnChildClosed;
+            BaseDetailsView detailsView = child as BaseDetailsView;
+            if (detailsView != null)
+            {
+                detailsView.Saved += OnChildSaved;
+                detailsView.Deleted += OnChildDeleted;
+            }
+        }
+
+        /// <summary>
         /// Default handler for saving or deleting of a child details view.
         /// </summary>
         /// <param name="obj">View being saved or deleted</param>
@@ -234,6 +255,16 @@ namespace Xomega.Framework.Web
         protected virtual void OnChildDeleted(object obj, EventArgs e)
         {
             OnChildChanged(obj, e);
+            if (upl_Main != null) upl_Main.Update();
+        }
+
+        /// <summary>
+        /// Default handler for closing of a child view.
+        /// </summary>
+        /// <param name="obj">View being closed</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnChildClosed(object obj, EventArgs e)
+        {
             if (upl_Main != null) upl_Main.Update();
         }
 

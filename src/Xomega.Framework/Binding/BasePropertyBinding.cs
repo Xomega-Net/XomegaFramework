@@ -177,7 +177,7 @@ namespace Xomega.Framework
 
             if (change.IncludesEditable()) UpdateEditability();
             if (change.IncludesVisible()) UpdateVisibility();
-            if (change.IncludesRequired()) UpdateRequired();
+            if (change.IncludesRequired() || change.IncludesEditable()) UpdateRequired();
             if (change.IncludesValidation() || change.IncludesEditable() || change.IncludesVisible())
                 UpdateValidation();
         }

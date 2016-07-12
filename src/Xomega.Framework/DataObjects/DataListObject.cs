@@ -138,8 +138,7 @@ namespace Xomega.Framework
         public bool SelectRows(int startIdx, int endIdx, bool clearOthers)
         {
             int count = endIdx - startIdx + 1;
-            if (RowSelectionMode != SelectionModeSingle && RowSelectionMode != SelectionModeMultiple ||
-                RowSelectionMode == SelectionModeSingle && count > 1) return false;
+            if (RowSelectionMode == SelectionModeSingle && count > 1) return false;
             if (count > 0)
                 data.Skip(startIdx).Take(count).ToList().ForEach(r => r.Selected = true);
             if (clearOthers || RowSelectionMode == SelectionModeSingle)
@@ -162,6 +161,16 @@ namespace Xomega.Framework
                     if (data[i].Selected) res.Add(i);
                 return res;
             }
+        }
+
+        /// <summary>
+        /// Single-select data row with a specified index
+        /// </summary>
+        /// <param name="idx">Index of the row to select</param>
+        /// <returns>True if selection was allowed, false otherwise</returns>
+        public bool SelectRow(int idx)
+        {
+            return SelectRows(idx, idx, true);
         }
 
         /// <summary>

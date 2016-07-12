@@ -51,19 +51,12 @@ namespace Xomega.Framework.Web
         protected GridViewBinding(GridView grid)
             : base(grid)
         {
-            grid.DataBinding += delegate(object sender, EventArgs e)
-            {
-                grid.SelectedIndex = -1;
-                int ps = grid.PageSize, pi = grid.PageIndex;
-                List<int> selIdx = list == null ? null : list.SelectedRowIndexes;
-                if (selIdx == null || selIdx.Count != 1 || selIdx[0] < ps * pi || selIdx[0] >= ps * (pi + 1)) return;
-                grid.SelectedIndex = selIdx[0] % grid.PageSize;
-            };
             grid.RowDataBound += delegate(object sender, GridViewRowEventArgs e)
             {
                 DataRow dataRow = e.Row.DataItem as DataRow;
                 if (dataRow == null) return;
                 dataRow.List.CurrentRow = e.Row.DataItemIndex;
+                if (dataRow.Selected) e.Row.ApplyStyle(grid.SelectedRowStyle);
                 WebUtil.BindToObject(e.Row, dataRow.List, true);
             };
             grid.PageIndexChanging += delegate(object sender, GridViewPageEventArgs e)
@@ -140,8 +133,8 @@ namespace Xomega.Framework.Web
             {
                 if (e.Cancel || list == null) return;
                 int idx = grid.PageSize * grid.PageIndex + e.NewSelectedIndex;
-                if (!list.SelectRows(idx, idx, true))
-                    e.Cancel = true;
+                if (list.SelectRow(idx)) list.FireCollectionChanged();
+                else e.Cancel = true;
             };
             // Defer data binding to the Load method after the view state is loaded.
             // Otherwise the view state will get corrupted.

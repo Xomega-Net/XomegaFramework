@@ -161,6 +161,17 @@ namespace Xomega.Framework.Web
         /// Query parameter indicating selection mode to set, if any
         /// </summary>
         public const string QuerySelectionMode = "SelectionMode";
+
+        /// <summary>
+        /// Default handler for closing of a child view.
+        /// </summary>
+        /// <param name="obj">View being closed</param>
+        /// <param name="e">Event arguments</param>
+        protected override void OnChildClosed(object obj, EventArgs e)
+        {
+            if (list != null) list.ClearSelectedRows();
+            base.OnChildClosed(obj, e);
+        }
         #endregion
     }
 }

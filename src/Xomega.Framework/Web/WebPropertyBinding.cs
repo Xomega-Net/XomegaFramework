@@ -180,7 +180,8 @@ namespace Xomega.Framework.Web
         protected override void UpdateRequired()
         {
             control.CssClass = WebUtil.AddOrRemoveClass(control.CssClass, "required", property.Required);
-            if (label != null) label.CssClass = WebUtil.AddOrRemoveClass(label.CssClass, "required", property.Required);
+            if (label != null && property != null && property.Editable)
+                label.CssClass = WebUtil.AddOrRemoveClass(label.CssClass, "required", property.Required);
         }
 
         /// <summary>
