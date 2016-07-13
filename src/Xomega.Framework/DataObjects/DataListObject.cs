@@ -51,6 +51,11 @@ namespace Xomega.Framework
         public DataRow EditRow { get; set; }
 
         /// <summary>
+        /// List of applied criteria settings associated with the data.
+        /// </summary>
+        public List<FieldCriteriaSetting> AppliedCriteria { get; set; }
+
+        /// <summary>
         /// Constructs a new data list object.
         /// </summary>
         public DataListObject()

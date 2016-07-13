@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Xomega.Framework.Properties;
 
 namespace Xomega.Framework
 {
@@ -477,6 +478,59 @@ namespace Xomega.Framework
                 nvc[p.Name] = p.EditStringValue;
             }
             return nvc;
+        }
+
+        #endregion
+
+        #region Field criteria settings export
+
+        /// <summary>
+        /// Returns a list of current field criteria settings.
+        /// </summary>
+        public List<FieldCriteriaSetting> GetFieldCriteriaSettings()
+        {
+            // get a map properties
+            Dictionary<string, DataProperty> map = new Dictionary<string, DataProperty>();
+            foreach (DataProperty p in Properties) map.Add(p.Name, p);
+
+            // clear the map from properties that are associated with operators
+            OperatorProperty op;
+            foreach (DataProperty p in Properties)
+            {
+                if ((op = p as OperatorProperty) == null) continue;
+                if (op.AdditionalPropertyName != null)
+                    map.Remove(op.AdditionalPropertyName);
+                if (op.AdditionalPropertyName2 != null)
+                    map.Remove(op.AdditionalPropertyName2);
+            }
+
+            // export visible non-null settings
+            List<FieldCriteriaSetting> res = new List<FieldCriteriaSetting>();
+            foreach (DataProperty p in map.Values)
+            {
+                if (p.IsNull() || !p.Visible) continue;
+                if ((op = p as OperatorProperty) != null)
+                {
+                    List<string> value = new List<string>();
+                    foreach (var apn in new string[] { op.AdditionalPropertyName, op.AdditionalPropertyName2 })
+                    {
+                        DataProperty v = apn != null ? this[apn] : null;
+                        if (v != null && !v.IsNull() && v.Visible)
+                            value.Add(v.DisplayStringValue);
+                    }
+                    res.Add(new FieldCriteriaSetting {
+                        Label = p.Label,
+                        Operator = op.DisplayStringValue,
+                        Value = value.ToArray()
+                    });
+                }
+                else res.Add(new FieldCriteriaSetting {
+                    Label = p.Label,
+                    Operator = null,
+                    Value = new string[] { p.DisplayStringValue }
+                });
+            }
+            return res;
         }
 
         #endregion
