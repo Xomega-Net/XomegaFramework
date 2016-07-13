@@ -96,10 +96,9 @@ namespace Xomega.Framework.Web
         public override void Activate(NameValueCollection query)
         {
             InitObjects(true);
+
             if (criteria != null) criteria.SetValues(query);
-
             if (list != null) list.RowSelectionMode = query[QuerySelectionMode];
-
             if (query[QueryAction] == ActionSearch)
             {
                 Search();
@@ -117,6 +116,7 @@ namespace Xomega.Framework.Web
         {
             if (criteria != null) criteria.ResetData();
             if (list != null) list.ResetData();
+            if (AutomateCriteriaPanel) ucl_Criteria.Collapsed = false;
         }
 
         #endregion
@@ -129,9 +129,15 @@ namespace Xomega.Framework.Web
         public const string ActionSearch = "Search";
 
         /// <summary>
+        /// Controls if criteria panel will automatically collapse/expand on Search/Reset.
+        /// </summary>
+        protected virtual bool AutomateCriteriaPanel { get { return true; } }
+
+        /// <summary>
         /// Perfroms the search with the current criteria and populates the list
         /// </summary>
-        public abstract void Search();
+        /// <returns>True on success, false in case of errors.</returns>
+        public abstract bool Search();
 
         /// <summary>
         /// Search function exposed as an event handler for the Search button
@@ -140,7 +146,9 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event argument</param>
         protected virtual void Search(object sender, EventArgs e)
         {
-            Search();
+            if (Search()) {
+                if (AutomateCriteriaPanel) ucl_Criteria.Collapsed = true;
+            }
         }
 
         /// <summary>
@@ -172,6 +180,7 @@ namespace Xomega.Framework.Web
             if (list != null) list.ClearSelectedRows();
             base.OnChildClosed(obj, e);
         }
+
         #endregion
     }
 }

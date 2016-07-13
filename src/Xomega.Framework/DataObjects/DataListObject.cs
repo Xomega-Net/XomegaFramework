@@ -76,6 +76,7 @@ namespace Xomega.Framework
         /// </summary>
         public void Clear()
         {
+            AppliedCriteria = null;
             data.Clear();
             FireCollectionChanged();
         }
