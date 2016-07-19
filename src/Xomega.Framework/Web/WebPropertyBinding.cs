@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
+using System;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -66,23 +67,31 @@ namespace Xomega.Framework.Web
         public static string AttrLabelId = "LabelID";
 
         /// <summary>
-        /// Checks if a web control is property bindable by checking its <see cref="AttrProperty"/>
-        /// attribute. It also data binds it first to resolve attribute value.
+        /// Checks if a control is property bindable.
         /// </summary>
-        /// <param name="ctl">Web control to check.</param>
-        /// <returns>Whether or not the web control is property bindable.</returns>
-        public static bool IsBindable(WebControl ctl)
+        /// <param name="ctl">Control to check.</param>
+        /// <returns>Whether or not the control is property bindable.</returns>
+        public static bool IsBindable(Control ctl)
         {
-            if (ctl == null) return false;
-            ctl.DataBind();
-            return ctl.Attributes[AttrProperty] != null;
+            return ctl != null;
         }
+
+        public static void Register<TControl>(Func<Control, BasePropertyBinding> ctr)
+            where TControl: Control
+        {
+            Register(typeof(TControl), delegate (object obj)
+            {
+                Control ctl = obj as Control;
+                return IsBindable(ctl) ? ctr(ctl) : null;
+            });
+        }
+
         #endregion
 
         /// <summary>
-        /// The web control that is bound to the data property.
+        /// The control that is bound to the data property.
         /// </summary>
-        protected WebControl control;
+        protected Control control;
 
         /// <summary>
         /// The label control associated with the current control.
@@ -99,7 +108,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Constructs a base data property web binding for the given web control.
         /// </summary>
-        protected WebPropertyBinding(WebControl ctl)
+        protected WebPropertyBinding(Control ctl)
         {
             control = ctl;
 
@@ -113,6 +122,26 @@ namespace Xomega.Framework.Web
             ctl.Unload += delegate { Dispose(); };
         }
 
+        public static AttributeCollection GetControlAttributes(Control ctl)
+        {
+            return ctl is WebControl ? (ctl as WebControl).Attributes :
+                ctl is UserControl ? (ctl as UserControl).Attributes :
+                null;
+        }
+
+        protected string GetControlAttribute(string key)
+        {
+            AttributeCollection attr = GetControlAttributes(control);
+            return attr != null ? attr[key] : null;
+        }
+
+        protected void SetControlAttribute(string key, string value)
+        {
+            AttributeCollection attr = GetControlAttributes(control);
+            if (attr != null)
+                attr[key] = value;
+        }
+
         /// <summary>
         /// Associates the current web control with the label that is stored in the control's
         /// attribute <see cref="AttrProperty"/>, which can be statically set in the ASPX.
@@ -121,7 +150,7 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void SetLabel()
         {
-            string lblId = control.Attributes[AttrLabelId];
+            string lblId = GetControlAttribute(AttrLabelId);
             if (string.IsNullOrEmpty(lblId) || control.NamingContainer == null ||
                 (label = control.NamingContainer.FindControl(lblId) as WebControl) == null) return;
 
@@ -160,7 +189,9 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void UpdateEditability()
         {
-            control.Enabled = property.Editable;
+            var ctl = control as WebControl;
+            if (ctl != null)
+                ctl.Enabled = property.Editable;
         }
 
         /// <summary>
@@ -179,7 +210,9 @@ namespace Xomega.Framework.Web
         /// <seealso cref="Property.RequiredProperty"/>
         protected override void UpdateRequired()
         {
-            control.CssClass = WebUtil.AddOrRemoveClass(control.CssClass, "required", property.Required);
+            var ctl = control as WebControl;
+            if (ctl != null)
+                ctl.CssClass = WebUtil.AddOrRemoveClass(ctl.CssClass, "required", property.Required);
             if (label != null && property != null && property.Editable)
                 label.CssClass = WebUtil.AddOrRemoveClass(label.CssClass, "required", property.Required);
         }
@@ -191,13 +224,15 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void UpdateValidation()
         {
+            var ctl = control as WebControl;
+            if (ctl == null) return;
             ErrorList errors = property.ValidationErrors == null ? null : property.ValidationErrors;
-            control.CssClass = WebUtil.AddOrRemoveClass(control.CssClass, "invalid", false);
-            control.ToolTip = null;
+            ctl.CssClass = WebUtil.AddOrRemoveClass(ctl.CssClass, "invalid", false);
+            ctl.ToolTip = null;
             if (errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable)
             {
-                control.CssClass = WebUtil.AddOrRemoveClass(control.CssClass, "invalid", true);
-                control.ToolTip = errors.ErrorsText;
+                ctl.CssClass = WebUtil.AddOrRemoveClass(ctl.CssClass, "invalid", true);
+                ctl.ToolTip = errors.ErrorsText;
             }
         }
 

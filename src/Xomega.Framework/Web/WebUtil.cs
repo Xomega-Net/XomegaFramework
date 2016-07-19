@@ -77,37 +77,37 @@ namespace Xomega.Framework.Web
         /// to the given data object (or its child object)
         /// as specified by the controls' Property and ChildObject attributes.
         /// </summary>
-        /// <param name="ctl">Web control to bind to the given data object.</param>
-        /// <param name="obj">Data object to bind the web control to.</param>
+        /// <param name="ctl">Control to bind to the given data object.</param>
+        /// <param name="obj">Data object to bind the control to.</param>
         /// <param name="bindCurrentRow">For list objects specifies whether to bind the whole list or just the current row.</param>
         public static void BindToObject(Control ctl, DataObject obj, bool bindCurrentRow)
         {
             if (obj == null || ctl == null) return;
 
-            WebControl webCtl = ctl as WebControl;
-            string childPath = webCtl != null ? webCtl.Attributes[WebPropertyBinding.AttrChildObject] : null;
+            AttributeCollection attr = WebPropertyBinding.GetControlAttributes(ctl);
+            string childPath = attr != null ? attr[WebPropertyBinding.AttrChildObject] : null;
             IDataObject cObj = WebPropertyBinding.FindChildObject(obj, childPath);
             obj = cObj as DataObject;
-            string propertyName = webCtl != null ? webCtl.Attributes[WebPropertyBinding.AttrProperty] : null;
+            string propertyName = attr != null ? attr[WebPropertyBinding.AttrProperty] : null;
             if (obj != null && propertyName != null)
             {
                 WebPropertyBinding binding = WebPropertyBinding.Create(ctl) as WebPropertyBinding;
                 if (binding != null) binding.BindTo(obj[propertyName]);
                 // remove attributes that are no longer needed to minimize HTML
-                webCtl.Attributes.Remove(WebPropertyBinding.AttrChildObject);
-                webCtl.Attributes.Remove(WebPropertyBinding.AttrProperty);
+                attr.Remove(WebPropertyBinding.AttrChildObject);
+                attr.Remove(WebPropertyBinding.AttrProperty);
             }
-            else if (cObj is DataListObject && !bindCurrentRow) BindToList(webCtl, (DataListObject)cObj);
+            else if (cObj is DataListObject && !bindCurrentRow) BindToList(ctl, (DataListObject)cObj);
             else foreach (Control c in ctl.Controls)
-                    BindToObject(c, obj, bindCurrentRow);
+                BindToObject(c, obj, bindCurrentRow);
         }
 
         /// <summary>
         /// Binds the specified control to the given data object list.
         /// </summary>
-        /// <param name="ctl">Web control to bind to the given data object list.</param>
-        /// <param name="list">Data object list to bind the web control to.</param>
-        public static void BindToList(WebControl ctl, DataListObject list)
+        /// <param name="ctl">Control to bind to the given data object list.</param>
+        /// <param name="list">Data object list to bind the control to.</param>
+        public static void BindToList(Control ctl, DataListObject list)
         {
             if (list == null || ctl == null) return;
 
