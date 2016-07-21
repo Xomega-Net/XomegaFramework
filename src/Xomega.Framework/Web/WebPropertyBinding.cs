@@ -76,12 +76,17 @@ namespace Xomega.Framework.Web
             return ctl != null;
         }
 
-        public static void Register<TControl>(Func<Control, BasePropertyBinding> ctr)
+        /// <summary>
+        /// Registers a property binding creator for the given type of controls.
+        /// </summary>
+        /// <typeparam name="TControl">Control type name.</typeparam>
+        /// <param name="ctr">Property binding constructor.</param>
+        public static void Register<TControl>(Func<TControl, BasePropertyBinding> ctr)
             where TControl: Control
         {
             Register(typeof(TControl), delegate (object obj)
             {
-                Control ctl = obj as Control;
+                TControl ctl = obj as TControl;
                 return IsBindable(ctl) ? ctr(ctl) : null;
             });
         }
@@ -122,6 +127,11 @@ namespace Xomega.Framework.Web
             ctl.Unload += delegate { Dispose(); };
         }
 
+        /// <summary>
+        /// Accesses the collection of attributes on the control.
+        /// </summary>
+        /// <param name="ctl">Control.</param>
+        /// <returns>AttributeCollection object.</returns>
         public static AttributeCollection GetControlAttributes(Control ctl)
         {
             return ctl is WebControl ? (ctl as WebControl).Attributes :
@@ -129,12 +139,22 @@ namespace Xomega.Framework.Web
                 null;
         }
 
+        /// <summary>
+        /// Retrieves the value of an attribute with the given key.
+        /// </summary>
+        /// <param name="key">Attribute's key.</param>
+        /// <returns>Attribute's value.</returns>
         protected string GetControlAttribute(string key)
         {
             AttributeCollection attr = GetControlAttributes(control);
             return attr != null ? attr[key] : null;
         }
 
+        /// <summary>
+        /// Sets the attribute with the given key and value.
+        /// </summary>
+        /// <param name="key">Attribute's key.</param>
+        /// <param name="value">Attribute's value.</param>
         protected void SetControlAttribute(string key, string value)
         {
             AttributeCollection attr = GetControlAttributes(control);
