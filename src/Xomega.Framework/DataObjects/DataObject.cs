@@ -489,7 +489,7 @@ namespace Xomega.Framework
         /// </summary>
         public List<FieldCriteriaSetting> GetFieldCriteriaSettings()
         {
-            // get a map properties
+            // get a map of properties
             Dictionary<string, DataProperty> map = new Dictionary<string, DataProperty>();
             foreach (DataProperty p in Properties) map.Add(p.Name, p);
 

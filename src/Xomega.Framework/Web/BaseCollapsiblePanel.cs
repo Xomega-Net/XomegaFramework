@@ -7,7 +7,7 @@ namespace Xomega.Framework.Web
     /// <summary>
     /// Base class for CollapsiblePanel control.
     /// </summary>
-    public abstract class CollapsiblePanelBase : UserControl, INamingContainer
+    public abstract class BaseCollapsiblePanel : UserControl, INamingContainer
     {
         /// <summary>
         /// Controls collapsed/expanded state of the control.

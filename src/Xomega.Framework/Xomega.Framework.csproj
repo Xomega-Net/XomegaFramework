@@ -145,13 +145,13 @@
     <Compile Include="Services\IServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataProperties\DataProperty.cs" />
+    <Compile Include="Web\BaseCollapsiblePanel.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Web\BaseSearchView.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\BaseDetailsView.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Web\CollapsiblePanelBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\CheckBoxPropertyBinding.cs" />

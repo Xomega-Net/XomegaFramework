@@ -53,7 +53,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Panel with criteria
         /// </summary>
-        protected CollapsiblePanelBase ucl_Criteria;
+        protected BaseCollapsiblePanel ucl_Criteria;
 
         /// <summary>
         /// Results grid
@@ -116,7 +116,7 @@ namespace Xomega.Framework.Web
         {
             if (criteria != null) criteria.ResetData();
             if (list != null) list.ResetData();
-            if (AutomateCriteriaPanel) ucl_Criteria.Collapsed = false;
+            if (AutoCollapseCriteria) ucl_Criteria.Collapsed = false;
         }
 
         #endregion
@@ -131,7 +131,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Controls if criteria panel will automatically collapse/expand on Search/Reset.
         /// </summary>
-        protected virtual bool AutomateCriteriaPanel { get { return true; } }
+        protected virtual bool AutoCollapseCriteria { get { return true; } }
 
         /// <summary>
         /// Perfroms the search with the current criteria and populates the list
@@ -147,7 +147,7 @@ namespace Xomega.Framework.Web
         protected virtual void Search(object sender, EventArgs e)
         {
             if (Search()) {
-                if (AutomateCriteriaPanel) ucl_Criteria.Collapsed = true;
+                if (AutoCollapseCriteria) ucl_Criteria.Collapsed = true;
             }
         }
 
