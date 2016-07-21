@@ -177,7 +177,11 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected override void OnChildClosed(object obj, EventArgs e)
         {
-            if (list != null) list.ClearSelectedRows();
+            if (list != null)
+            {
+                list.ClearSelectedRows();
+                list.FireCollectionChanged();
+            }
             base.OnChildClosed(obj, e);
         }
 
