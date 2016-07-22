@@ -76,21 +76,6 @@ namespace Xomega.Framework.Web
             return ctl != null;
         }
 
-        /// <summary>
-        /// Registers a property binding creator for the given type of controls.
-        /// </summary>
-        /// <typeparam name="TControl">Control type name.</typeparam>
-        /// <param name="ctr">Property binding constructor.</param>
-        public static void Register<TControl>(Func<TControl, BasePropertyBinding> ctr)
-            where TControl: Control
-        {
-            Register(typeof(TControl), delegate (object obj)
-            {
-                TControl ctl = obj as TControl;
-                return IsBindable(ctl) ? ctr(ctl) : null;
-            });
-        }
-
         #endregion
 
         /// <summary>
