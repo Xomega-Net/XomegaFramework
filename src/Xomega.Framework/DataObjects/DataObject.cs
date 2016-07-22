@@ -490,8 +490,7 @@ namespace Xomega.Framework
         public List<FieldCriteriaSetting> GetFieldCriteriaSettings()
         {
             // get a map of properties
-            Dictionary<string, DataProperty> map = new Dictionary<string, DataProperty>();
-            foreach (DataProperty p in Properties) map.Add(p.Name, p);
+            Dictionary<string, DataProperty> map = new Dictionary<string, DataProperty>(properties);
 
             // clear the map from properties that are associated with operators
             OperatorProperty op;
