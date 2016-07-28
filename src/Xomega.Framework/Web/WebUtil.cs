@@ -152,5 +152,40 @@ namespace Xomega.Framework.Web
             foreach (string k in nvc.Keys) query[k] = nvc[k];
             return (url == null ? "" : url.Split('?')[0]) + (query.Keys.Count == 0 ? "" : "?" + query.ToString());
         }
+
+        /// <summary>Script to run code on document ready.</summary>
+        private const string Script_OnDocumentReady = "$(document).ready(function() {{ {0} }});";
+
+        /// <summary>
+        /// Utility function to register a startup script.
+        /// </summary>
+        /// <param name="ctl">The control that is registering the client script block.</param>
+        /// <param name="key">Unique key within the view to register the script under.</param>
+        /// <param name="script">JavaScript text with placeholders.</param>
+        /// <param name="args">Arguments for the placeholders.</param>
+        public static void RegisterStartupScript(Control ctl, string key, string script, params object[] args)
+        {
+            if (!script.EndsWith(";")) script += ";";
+            string formattedScript = args.Length == 0 ? script : string.Format(script, args);
+
+            UpdatePanel upl = FindParentUpdatePanel(ctl);
+            if (upl != null)
+            {
+                ScriptManager.RegisterStartupScript(
+                    ctl,
+                    ctl.GetType(),
+                    ctl.ClientID + "_" + key,
+                    formattedScript,
+                    true);
+            }
+            else
+            {
+                ctl.Page.ClientScript.RegisterStartupScript(
+                    ctl.Page.GetType(),
+                    ctl.Page.ClientID + "_" + key,
+                    string.Format(Script_OnDocumentReady, formattedScript),
+                    true);
+            }
+        }
     }
 }
