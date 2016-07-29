@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -17,12 +18,12 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Criteria data object for the view
         /// </summary>
-        protected DataObject criteria;
+        protected CriteriaObject criteriaObj;
 
         /// <summary>
         /// List data object for the view
         /// </summary>
-        protected DataListObject list;
+        protected DataListObject listObj;
 
         /// <summary>
         /// Retrieves the criteria object possibly creating a new one along the way.
@@ -65,13 +66,13 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void BindObjects()
         {
-            if (criteria != null && ucl_Criteria != null)
+            if (criteriaObj != null && ucl_Criteria != null)
             {
                 ucl_Criteria.DataBind();
-                WebUtil.BindToObject(ucl_Criteria, criteria);
+                WebUtil.BindToObject(ucl_Criteria, criteriaObj);
             }
-            if (list != null && grd_Results != null)
-                WebUtil.BindToList(grd_Results, list);
+            if (listObj != null && grd_Results != null)
+                WebUtil.BindToList(grd_Results, listObj);
         }
 
         #endregion
@@ -79,32 +80,22 @@ namespace Xomega.Framework.Web
         #region Initialization/Activation
 
         /// <summary>
-        /// Initializes the view for each request
-        /// </summary>
-        /// <param name="e">Standard event arguments</param>
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
-            InitObjects(false);
-            BindObjects();
-        }
-
-        /// <summary>
         /// Activates search view and runs the search if needed
         /// </summary>
         /// <param name="query">Parameters to activate the view with</param>
-        public override void Activate(NameValueCollection query)
+        /// <returns>True if the view was successfully activated, False otherwise</returns>
+        public override bool Activate(NameValueCollection query)
         {
             InitObjects(true);
 
-            if (criteria != null) criteria.SetValues(query);
-            if (list != null) list.RowSelectionMode = query[QuerySelectionMode];
-            if (query[QueryAction] == ActionSearch)
-            {
-                Search();
-            }
+            if (criteriaObj != null) criteriaObj.SetValues(query);
+            if (listObj != null) listObj.RowSelectionMode = query[QuerySelectionMode];
+            if (query[QueryAction] == ActionSearch) Search();
+            // try to auto-select as appropriate and don't show the view if succeeded
+            if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
 
             BindObjects();
+            return true;
         }
 
         /// <summary>
@@ -114,8 +105,8 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected virtual void Reset(object sender, EventArgs e)
         {
-            if (criteria != null) criteria.ResetData();
-            if (list != null) list.ResetData();
+            if (criteriaObj != null) criteriaObj.ResetData();
+            if (listObj != null) listObj.ResetData();
             if (AutoCollapseCriteria) ucl_Criteria.Collapsed = false;
         }
 
@@ -146,9 +137,8 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event argument</param>
         protected virtual void Search(object sender, EventArgs e)
         {
-            if (Search()) {
-                if (AutoCollapseCriteria) ucl_Criteria.Collapsed = true;
-            }
+            if (Search() && ucl_Criteria != null && AutoCollapseCriteria)
+                ucl_Criteria.Collapsed = true;
         }
 
         /// <summary>
@@ -166,9 +156,51 @@ namespace Xomega.Framework.Web
         #region Selection
 
         /// <summary>
+        /// Occurs when the user confirms selection of currently selected rows
+        /// </summary>
+        public EventHandler<List<DataRow>> Selected;
+
+        /// <summary>
+        /// Action to initiate search on activation
+        /// </summary>
+        public const string ActionSelect = "Select";
+
+        /// <summary>
         /// Query parameter indicating selection mode to set, if any
         /// </summary>
         public const string QuerySelectionMode = "SelectionMode";
+
+        /// <summary>
+        /// Automates row selection process
+        /// </summary>
+        /// <returns>True if automatic selection succeeded, false otherwise.</returns>
+        public virtual bool AutoSelect()
+        {
+            if (listObj == null || criteriaObj != null && !criteriaObj.HasCriteria() || !Search()) return false;
+            if (listObj.RowCount > 1 && ucl_Criteria != null && AutoCollapseCriteria)
+                ucl_Criteria.Collapsed = true;
+            else if (listObj.RowCount == 0 && ucl_Criteria != null)
+                ucl_Criteria.Collapsed = false;
+            else if (listObj.RowCount == 1 && Selected != null)
+            {
+                listObj.SelectRow(0);
+                Selected(this, listObj.SelectedRows);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Default handler for convirming selected records and closing the view.
+        /// </summary>
+        protected virtual void Select(object sender, EventArgs e)
+        {
+            if (Selected != null && listObj != null)
+            {
+                Selected(this, listObj.SelectedRows);
+                Hide();
+            }
+        }
 
         /// <summary>
         /// Default handler for closing of a child view.
@@ -177,10 +209,10 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected override void OnChildClosed(object obj, EventArgs e)
         {
-            if (list != null)
+            if (listObj != null)
             {
-                list.ClearSelectedRows();
-                list.FireCollectionChanged();
+                listObj.ClearSelectedRows();
+                listObj.FireCollectionChanged();
             }
             base.OnChildClosed(obj, e);
         }

@@ -103,6 +103,7 @@
     <Compile Include="Binding\ValueConverters.cs" />
     <Compile Include="DataObjects\DataListObject.cs" />
     <Compile Include="DataObjects\DataRow.cs" />
+    <Compile Include="DataObjects\CriteriaObject.cs" />
     <Compile Include="DataObjects\FieldCriteriaSetting.cs" />
     <Compile Include="DataObjects\ListSortCriteria.cs" />
     <Compile Include="DataObjects\IValidatable.cs" />

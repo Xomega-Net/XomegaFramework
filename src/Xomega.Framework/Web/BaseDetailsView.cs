@@ -58,7 +58,8 @@ namespace Xomega.Framework.Web
         /// Activates details view and populates properties from parameters
         /// </summary>
         /// <param name="query">Parameters to activate the view with</param>
-        public override void Activate(NameValueCollection query)
+        /// <returns>True if the view was successfully activated, False otherwise</returns>
+        public override bool Activate(NameValueCollection query)
         {
             IsNew = ActionCreate.Equals(query[QueryAction]);
 
@@ -67,6 +68,7 @@ namespace Xomega.Framework.Web
 
             if (!IsNew) LoadData();
             BindObjects();
+            return true;
         }
 
         #endregion

@@ -134,7 +134,8 @@ namespace Xomega.Framework.Web
                 if (e.Cancel || list == null) return;
                 int idx = grid.PageSize * grid.PageIndex + e.NewSelectedIndex;
                 if (list.SelectRow(idx)) list.FireCollectionChanged();
-                else e.Cancel = true;
+                // cancel, since we don't really want the grid to set SelectedIndex, which doesn't work for with paging
+                e.Cancel = true;
             };
             // Defer data binding to the Load method after the view state is loaded.
             // Otherwise the view state will get corrupted.

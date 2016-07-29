@@ -122,12 +122,12 @@ namespace Xomega.Framework
         /// <summary>
         /// Data list supports single selection
         /// </summary>
-        public const string SelectionModeSingle = "SingleSelection";
+        public const string SelectionModeSingle = "Single";
 
         /// <summary>
         /// Data list supports multiple selection
         /// </summary>
-        public const string SelectionModeMultiple = "MultipleSelection";
+        public const string SelectionModeMultiple = "Multiple";
 
         /// <summary>
         /// Current selection mode for data list rows. Null means selection is not supported
@@ -168,6 +168,11 @@ namespace Xomega.Framework
                 return res;
             }
         }
+
+        /// <summary>
+        /// A list of currently selected data rows
+        /// </summary>
+        public List<DataRow> SelectedRows { get { return data.Where(r => r.Selected).ToList(); } }
 
         /// <summary>
         /// Single-select data row with a specified index

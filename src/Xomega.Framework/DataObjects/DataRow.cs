@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿// Copyright (c) 2010-2016 Xomega.Net. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 
 namespace Xomega.Framework

@@ -46,7 +46,8 @@ namespace Xomega.Framework.Web
         /// Activates the view
         /// </summary>
         /// <param name="query">Parameters to activate the view with</param>
-        public abstract void Activate(NameValueCollection query);
+        /// <returns>True if the view was successfully activated, False otherwise</returns>
+        public abstract bool Activate(NameValueCollection query);
 
         /// <summary>
         /// Query parameter indicating action to perform
@@ -66,8 +67,8 @@ namespace Xomega.Framework.Web
         /// <param name="mode">Navigation mode (BaseView.ModePopup or BaseView.ModeInline)</param>
         public void NavigateTo(BaseView view, NameValueCollection query, string mode = null)
         {
-            view.Activate(query);
-            view.Show(mode);
+            if (view.Activate(query))
+                view.Show(mode);
         }
 
         #endregion
