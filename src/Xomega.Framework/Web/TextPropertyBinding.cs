@@ -1,6 +1,10 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
+using System.Collections;
+using System.Collections.Generic;
+using System.Web.UI;
 using System.Web.UI.WebControls;
+using Xomega.Framework.Properties;
 
 namespace Xomega.Framework.Web
 {
@@ -39,6 +43,26 @@ namespace Xomega.Framework.Web
         {
             base.OnPropertyBound();
             ((TextBox)control).MaxLength = (property != null && !property.IsMultiValued && property.Size > 0) ? property.Size : 0;
+
+            // use jQuery UI autocomplete widget for enum properties
+            if (property is EnumProperty && property.ItemsProvider != null)
+            {
+                const string script =
+                    "$(function() {{" +
+                        "$('#{0}').autocomplete({{" +
+                            "source: [{1}]" +
+                        "}});" +
+                    "}});";
+
+                List<string> values = new List<string>();
+                IEnumerable items = property.ItemsProvider(null);
+                foreach (object i in items)
+                {
+                    values.Add("'" + property.ValueToString(i, ValueFormat.EditString) + "'");
+                }
+
+                WebUtil.RegisterStartupScript(control, "AutoComplete", script, control.ClientID, string.Join(",", values));
+            }
         }
     }
 }

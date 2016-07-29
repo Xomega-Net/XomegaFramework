@@ -80,17 +80,14 @@ namespace Xomega.Framework.Web
         /// </summary>
         public event EventHandler Closed;
 
-        /// <summary>Script to run code on document ready.</summary>
-        protected string Script_OnDocumentReady = "$(document).ready(function() {{ {0} }});";
-
         /// <summary>Script to popup a modal dialog for a view.</summary>
-        protected string Script_ModalDialog = "modalViewPopup('{0}', '{1}', '{2}', {3});";
-        
+        protected const string Script_ModalDialog = "modalViewPopup('{0}', '{1}', '{2}', {3});";
+
         /// <summary>Script to udpate view visibility in a split panel.</summary>
-        protected string Script_Splitter_OnViewVisibilityChange = "vSplitterPanel_OnViewVisibilityChange('{0}');";
-        
+        protected const string Script_Splitter_OnViewVisibilityChange = "vSplitterPanel_OnViewVisibilityChange('{0}');";
+
         /// <summary>Script to split a panel vertically.</summary>
-        protected string Script_Splitter = "vSplitterPanel('{0}');";
+        protected const string Script_Splitter = "vSplitterPanel('{0}');";
 
         /// <summary>Mode property that stores display mode that this view was shown with.</summary>
         protected string Mode
@@ -182,28 +179,7 @@ namespace Xomega.Framework.Web
         /// <param name="args">Arguments for the placeholders.</param>
         protected void RegisterStartupScript(string key, string script, params object[] args)
         {
-            if (!script.EndsWith(";")) script += ";";
-            string formattedScript = args.Length == 0 ? script : string.Format(script, args);
-
-            UpdatePanel upl = WebUtil.FindParentUpdatePanel(this);
-            if (upl != null)
-            {
-                Control pnlView = ViewPanel;
-                ScriptManager.RegisterStartupScript(
-                    pnlView,
-                    pnlView.GetType(),
-                    pnlView.ClientID + "_" + key,
-                    formattedScript,
-                    true);
-            }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(
-                    Page.GetType(),
-                    Page.ClientID + "_" + key,
-                    string.Format(Script_OnDocumentReady, formattedScript),
-                    true);
-            }
+            WebUtil.RegisterStartupScript(ViewPanel, key, script, args);
         }
 
         #endregion
