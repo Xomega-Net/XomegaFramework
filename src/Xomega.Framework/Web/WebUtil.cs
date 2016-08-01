@@ -160,7 +160,7 @@ namespace Xomega.Framework.Web
         /// Utility function to register a startup script.
         /// </summary>
         /// <param name="ctl">The control that is registering the client script block.</param>
-        /// <param name="key">Unique key within the view to register the script under.</param>
+        /// <param name="key">Unique key to use with the control ID when registering the script.</param>
         /// <param name="script">JavaScript text with placeholders.</param>
         /// <param name="args">Arguments for the placeholders.</param>
         public static void RegisterStartupScript(Control ctl, string key, string script, params object[] args)

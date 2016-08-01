@@ -80,13 +80,13 @@ namespace Xomega.Framework.Web
         public event EventHandler Closed;
 
         /// <summary>Script to popup a modal dialog for a view.</summary>
-        protected const string Script_ModalDialog = "modalViewPopup('{0}', '{1}', '{2}', {3});";
+        protected string Script_ModalDialog = "if (typeof modalViewPopup === 'function') modalViewPopup('{0}', '{1}', '{2}', {3});";
 
         /// <summary>Script to udpate view visibility in a split panel.</summary>
-        protected const string Script_Splitter_OnViewVisibilityChange = "vSplitterPanel_OnViewVisibilityChange('{0}');";
+        protected string Script_Splitter_OnViewVisibilityChange = "if (typeof vSplitterPanel_OnViewVisibilityChange === 'function') vSplitterPanel_OnViewVisibilityChange('{0}');";
 
         /// <summary>Script to split a panel vertically.</summary>
-        protected const string Script_Splitter = "vSplitterPanel('{0}');";
+        protected string Script_Splitter = "if (typeof vSplitterPanel === 'function') vSplitterPanel('{0}');";
 
         /// <summary>Mode property that stores display mode that this view was shown with.</summary>
         protected string Mode
@@ -173,7 +173,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Utility function to register a startup script for the current view.
         /// </summary>
-        /// <param name="key">Unique key within the view to register the script under.</param>
+        /// <param name="key">Unique key to use with the view panel ID when registering the script.</param>
         /// <param name="script">JavaScript text with placeholders.</param>
         /// <param name="args">Arguments for the placeholders.</param>
         protected void RegisterStartupScript(string key, string script, params object[] args)
