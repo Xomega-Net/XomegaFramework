@@ -141,17 +141,18 @@ namespace Xomega.Framework.Web
             if (change.IncludesValue() || change.IncludesItems() || !isMultiVal && change.IncludesRequired())
             {
                 foreach (ListItem li in list.Items) li.Selected = false;
-                if (isMultiVal)
+                IEnumerable values = isMultiVal ? lst : new object[] { (lst != null && lst.Count > 0) ? lst[0] : property.InternalValue };
+                foreach (object i in values)
                 {
-                    foreach (object i in lst)
+                    ListItem li = list.Items.FindByValue(property.ValueToString(i, ValueFormat.EditString));
+                    if (li == null) // add value not in list to avoid data binding exceptions
                     {
-                        ListItem li = list.Items.FindByValue(property.ValueToString(i, ValueFormat.EditString));
-                        if (li != null) li.Selected = true;
+                        li = new ListItem(property.ValueToString(i, ValueFormat.DisplayString),
+                            property.ValueToString(i, ValueFormat.EditString));
+                        list.Items.Add(li);
                     }
+                    li.Selected = true;
                 }
-                else if (lst != null && lst.Count > 0)
-                    list.SelectedValue = property.ValueToString(lst[0], ValueFormat.EditString);
-                else list.SelectedValue = property.EditStringValue;
             }
         }
     }
