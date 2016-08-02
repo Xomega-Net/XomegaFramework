@@ -133,6 +133,12 @@ namespace Xomega.Framework.Properties
             {
                 if (h != null && h.Type == EnumType) return value;
                 string str = Convert.ToString(value);
+                if (str != null)
+                {
+                    string trimmed = str.Trim();
+                    if (trimmed.Length > 0)
+                        str = trimmed;
+                }
                 LookupTable tbl = GetLookupTable();
                 if (tbl != null)
                 {
