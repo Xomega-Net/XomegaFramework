@@ -117,17 +117,26 @@ namespace Xomega.Framework.Web
                 || lb != null && lb.SelectionMode == ListSelectionMode.Multiple);
             DropDownList dl = control as DropDownList;
 
-            if (change.IncludesItems() || isMultiVal && change.IncludesEditable() ||
-                dl != null && (change.IncludesRequired() || change.IncludesValue()))
+            if (change.IncludesItems() // if items list changed,
+                || isMultiVal && change.IncludesEditable() // or control shows all items and Editable changed,
+                || dl != null && change.IncludesRequired() // or control is DropDownList and Required changed,
+                || change.IncludesValue()) // or property value changed
             {
+                // get the list of items to show
                 IEnumerable src = null;
                 if (isMultiVal && !property.Editable) src = lst;
                 else if (property.ItemsProvider != null) src = property.ItemsProvider(null);
-                list.Items.Clear();
+
+                list.Items.Clear(); // clear control's item collection
+
+                // for DropDownList, add special items in case when not Required or Required and has no value
                 if (dl != null && !property.Required)
                     list.Items.Add(new ListItem("", property.NullString));
                 if (dl != null && property.Required && property.IsNull())
                     list.Items.Add(new ListItem("Select Value...", ""));
+                int insertionPoint = list.Items.Count;
+
+                // add items to show
                 if (src != null)
                 {
                     foreach (object i in src)
@@ -135,23 +144,26 @@ namespace Xomega.Framework.Web
                         ListItem li = new ListItem(property.ValueToString(i, ValueFormat.DisplayString),
                             property.ValueToString(i, ValueFormat.EditString));
                         list.Items.Add(li);
+                        li.Selected = src == lst; // if items are values, mark them as selected
                     }
                 }
-            }
-            if (change.IncludesValue() || change.IncludesItems() || !isMultiVal && change.IncludesRequired())
-            {
-                foreach (ListItem li in list.Items) li.Selected = false;
-                IEnumerable values = isMultiVal ? lst : new object[] { (lst != null && lst.Count > 0) ? lst[0] : property.InternalValue };
-                foreach (object i in values)
+
+                // if not showing only values, make sure the values are present in the list and mark them as selected
+                if (src != lst)
                 {
-                    ListItem li = list.Items.FindByValue(property.ValueToString(i, ValueFormat.EditString));
-                    if (li == null) // add value not in list to avoid data binding exceptions
+                    IEnumerable values = isMultiVal ? lst : new object[] { (lst != null && lst.Count > 0) ? lst[0] : property.InternalValue };
+                    foreach (object i in values)
                     {
-                        li = new ListItem(property.ValueToString(i, ValueFormat.DisplayString),
-                            property.ValueToString(i, ValueFormat.EditString));
-                        list.Items.Add(li);
+                        ListItem li = list.Items.FindByValue(property.ValueToString(i, ValueFormat.EditString));
+                        if (li == null) // add values not in list
+                        {
+                            li = new ListItem(property.ValueToString(i, ValueFormat.DisplayString),
+                                property.ValueToString(i, ValueFormat.EditString));
+                            li.Attributes["disabled"] = "disabled"; ; // disable items not included in the list of expected values
+                            list.Items.Insert(insertionPoint++, li); // insert them after special items and before expected values
+                        }
+                        li.Selected = true;
                     }
-                    li.Selected = true;
                 }
             }
         }
