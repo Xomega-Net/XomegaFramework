@@ -86,15 +86,17 @@ namespace Xomega.Framework.Web
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public override bool Activate(NameValueCollection query)
         {
+            if (!base.Activate(query)) return false;
             InitObjects(true);
 
             if (criteriaObj != null) criteriaObj.SetValues(query);
             if (listObj != null) listObj.RowSelectionMode = query[QuerySelectionMode];
+
+            BindObjects(); // bind before search to output criteria labels properly
             if (query[QueryAction] == ActionSearch) Search();
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
 
-            BindObjects();
             return true;
         }
 
@@ -117,7 +119,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Action to initiate search on activation
         /// </summary>
-        public const string ActionSearch = "Search";
+        public const string ActionSearch = "search";
 
         /// <summary>
         /// Controls if criteria panel will automatically collapse/expand on Search/Reset.
@@ -163,12 +165,12 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Action to initiate search on activation
         /// </summary>
-        public const string ActionSelect = "Select";
+        public const string ActionSelect = "select";
 
         /// <summary>
         /// Query parameter indicating selection mode to set, if any
         /// </summary>
-        public const string QuerySelectionMode = "SelectionMode";
+        public const string QuerySelectionMode = "_selection";
 
         /// <summary>
         /// Automates row selection process

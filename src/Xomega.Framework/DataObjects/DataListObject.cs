@@ -122,12 +122,12 @@ namespace Xomega.Framework
         /// <summary>
         /// Data list supports single selection
         /// </summary>
-        public const string SelectionModeSingle = "Single";
+        public const string SelectionModeSingle = "single";
 
         /// <summary>
         /// Data list supports multiple selection
         /// </summary>
-        public const string SelectionModeMultiple = "Multiple";
+        public const string SelectionModeMultiple = "multiple";
 
         /// <summary>
         /// Current selection mode for data list rows. Null means selection is not supported

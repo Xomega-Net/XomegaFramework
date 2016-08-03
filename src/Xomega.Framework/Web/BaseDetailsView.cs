@@ -61,6 +61,7 @@ namespace Xomega.Framework.Web
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public override bool Activate(NameValueCollection query)
         {
+            if (!base.Activate(query)) return false;
             IsNew = ActionCreate.Equals(query[QueryAction]);
 
             InitObjects(true);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web.UI;
 
@@ -47,17 +48,21 @@ namespace Xomega.Framework.Web
         /// </summary>
         /// <param name="query">Parameters to activate the view with</param>
         /// <returns>True if the view was successfully activated, False otherwise</returns>
-        public abstract bool Activate(NameValueCollection query);
+        public virtual bool Activate(NameValueCollection query)
+        {
+            ParentSource = query[QuerySource];
+            return true;
+        }
 
         /// <summary>
         /// Query parameter indicating action to perform
         /// </summary>
-        public const string QueryAction = "Action";
+        public const string QueryAction = "_action";
 
         /// <summary>
         /// Action to create a new object
         /// </summary>
-        public const string ActionCreate = "Create";
+        public const string ActionCreate = "create";
 
         /// <summary>
         /// Navigate from the current view to the specified view.
@@ -71,6 +76,24 @@ namespace Xomega.Framework.Web
                 view.Show(mode);
         }
 
+        /// <summary>
+        /// Query parameter indicating specific source link on the parent that invoked this view
+        /// </summary>
+        public const string QuerySource = "_source";
+
+        /// <summary>
+        /// Stores the value passed in the source query parameter that can be used in parent callbacks
+        /// to identify which link invoked this view when the parent has multiple links to the same view.
+        /// </summary>
+        public string ParentSource
+        {
+            get { return ViewState["ParentSource"] as string; }
+            set
+            {
+                if (value == null) ViewState.Remove("ParentSource");
+                else ViewState["ParentSource"] = value;
+            }
+        }
         #endregion
 
         #region Show/Hide with JavaScript
@@ -204,43 +227,55 @@ namespace Xomega.Framework.Web
                 detailsView.Saved += OnChildSaved;
                 detailsView.Deleted += OnChildDeleted;
             }
+            BaseSearchView searchView = child as BaseSearchView;
+            if (searchView != null)
+            {
+                searchView.Selected += OnChildSelection;
+            }
         }
+
+        /// <summary>
+        /// Default handler for processing selection of a child search view.
+        /// </summary>
+        /// <param name="searchView">Search view where selection took place</param>
+        /// <param name="selectedRows">Selected rows</param>
+        protected virtual void OnChildSelection(object searchView, List<DataRow> selectedRows) { }
 
         /// <summary>
         /// Default handler for saving or deleting of a child details view.
         /// </summary>
-        /// <param name="obj">View being saved or deleted</param>
+        /// <param name="detailsView">View being saved or deleted</param>
         /// <param name="e">Event arguments</param>
-        protected virtual void OnChildChanged(object obj, EventArgs e) { }
+        protected virtual void OnChildChanged(object detailsView, EventArgs e) { }
 
         /// <summary>
         /// Default handler for saving of a child details view.
         /// </summary>
-        /// <param name="obj">View being saved</param>
+        /// <param name="detailsView">View being saved</param>
         /// <param name="e">Event arguments</param>
-        protected virtual void OnChildSaved(object obj, EventArgs e)
+        protected virtual void OnChildSaved(object detailsView, EventArgs e)
         {
-            OnChildChanged(obj, e);
+            OnChildChanged(detailsView, e);
             if (upl_Main != null) upl_Main.Update();
         }
 
         /// <summary>
         /// Default handler for deleting of a child details view.
         /// </summary>
-        /// <param name="obj">View being deleted</param>
+        /// <param name="detailsView">View being deleted</param>
         /// <param name="e">Event arguments</param>
-        protected virtual void OnChildDeleted(object obj, EventArgs e)
+        protected virtual void OnChildDeleted(object detailsView, EventArgs e)
         {
-            OnChildChanged(obj, e);
+            OnChildChanged(detailsView, e);
             if (upl_Main != null) upl_Main.Update();
         }
 
         /// <summary>
         /// Default handler for closing of a child view.
         /// </summary>
-        /// <param name="obj">View being closed</param>
+        /// <param name="childView">View being closed</param>
         /// <param name="e">Event arguments</param>
-        protected virtual void OnChildClosed(object obj, EventArgs e)
+        protected virtual void OnChildClosed(object childView, EventArgs e)
         {
             if (upl_Main != null) upl_Main.Update();
         }
