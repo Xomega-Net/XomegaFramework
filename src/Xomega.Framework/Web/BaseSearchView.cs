@@ -93,7 +93,7 @@ namespace Xomega.Framework.Web
             if (listObj != null) listObj.RowSelectionMode = query[QuerySelectionMode];
 
             BindObjects(); // bind before search to output criteria labels properly
-            if (query[QueryAction] == ActionSearch) Search();
+            if (query[QueryAction] == ActionSearch) Search(false);
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
 
@@ -129,8 +129,9 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Perfroms the search with the current criteria and populates the list
         /// </summary>
+        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
         /// <returns>True on success, false in case of errors.</returns>
-        public abstract bool Search();
+        public abstract bool Search(bool preserveSelection);
 
         /// <summary>
         /// Search function exposed as an event handler for the Search button
@@ -139,7 +140,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event argument</param>
         protected virtual void Search(object sender, EventArgs e)
         {
-            if (Search() && ucl_Criteria != null && AutoCollapseCriteria)
+            if (Search(true) && ucl_Criteria != null && AutoCollapseCriteria)
                 ucl_Criteria.Collapsed = true;
         }
 
@@ -150,7 +151,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected override void OnChildChanged(object obj, EventArgs e)
         {
-            Search();
+            Search(true);
         }
 
         #endregion
@@ -178,7 +179,7 @@ namespace Xomega.Framework.Web
         /// <returns>True if automatic selection succeeded, false otherwise.</returns>
         public virtual bool AutoSelect()
         {
-            if (listObj == null || criteriaObj != null && !criteriaObj.HasCriteria() || !Search()) return false;
+            if (listObj == null || criteriaObj != null && !criteriaObj.HasCriteria() || !Search(false)) return false;
             if (listObj.RowCount > 1 && ucl_Criteria != null && AutoCollapseCriteria)
                 ucl_Criteria.Collapsed = true;
             else if (listObj.RowCount == 0 && ucl_Criteria != null)

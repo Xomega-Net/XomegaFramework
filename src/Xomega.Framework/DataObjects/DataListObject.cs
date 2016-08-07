@@ -255,17 +255,49 @@ namespace Xomega.Framework
         /// <param name="list">A list of data contract objects to populate the list from.</param>
         public virtual void FromDataContract(IEnumerable list)
         {
+            FromDataContract(list, false);
+        }
+
+        /// <summary>
+        /// Populates the data object list and imports the data from the given data contract list
+        /// with ability to preserve currently selected entities.
+        /// </summary>
+        /// <param name="list">A list of data contract objects to populate the list from.</param>
+        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
+        public virtual void FromDataContract(IEnumerable list, bool preserveSelection)
+        {
             if (list == null) return;
+            List<DataRow> sel = new List<DataRow>();
+            ListSortCriteria keys = new ListSortCriteria();
+            if (preserveSelection)
+            {
+                sel = SelectedRows;
+                keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));
+            }
             data.Clear();
             Reset();
             SetModified(false, false);
             foreach (object contractItem in list)
             {
-                data.Add(new DataRow(this));
+                DataRow r = new DataRow(this);
+                data.Add(r);
                 MoveNext();
                 FromDataContract(contractItem);
+                r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
             FireCollectionChanged();
+        }
+
+        /// <summary>
+        /// Checks if two data rows represent the same entity. Can be overridden in subclasses.
+        /// </summary>
+        /// <param name="r1">First row</param>
+        /// <param name="r2">Second row</param>
+        /// <param name="keys">Sort criteria with key property names</param>
+        /// <returns>True, if the two rows represent the same entity, false otherwise.</returns>
+        protected virtual bool SameEntity(DataRow r1, DataRow r2, ListSortCriteria keys)
+        {
+            return r1 == null || keys == null || keys.Count == 0 ? false : r1.CompareTo(r2, keys) == 0;
         }
 
         #region IEnumerable interfaces

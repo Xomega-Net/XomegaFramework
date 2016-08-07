@@ -72,6 +72,11 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// A flag indicating if this a key property within its parent data object
+        /// </summary>
+        public bool IsKey { get; set; }
+
+        /// <summary>
         /// Performs additional property initialization after all other properties and child objects
         /// have been already added to the parent object and would be accessible from within this method.
         /// </summary>

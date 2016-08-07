@@ -90,12 +90,25 @@ namespace Xomega.Framework
         /// is equal to other. Greater than zero This object is greater than other.</returns>
         public int CompareTo(DataRow other)
         {
+            return CompareTo(other, List == null ? null : List.SortCriteria);
+        }
+
+        /// <summary>
+        /// Compares this row with the other row provided using specified sort criteria.
+        /// </summary>
+        /// <param name="other">The other data row to compare this row to.</param>
+        /// <param name="criteria">Sort criteria to use.</param>
+        /// <returns>A 32-bit signed integer that indicates the relative order of the objects
+        /// being compared. The return value has the following meanings: Value Meaning
+        /// Less than zero This object is less than the other parameter. Zero This object
+        /// is equal to other. Greater than zero This object is greater than other.</returns>
+        public int CompareTo(DataRow other, ListSortCriteria criteria)
+        {
             int res = 0;
 
-            ListSortCriteria criteria = List == null ? null : List.SortCriteria;
             if (criteria == null || other == null || List != other.List) return res;
 
-            foreach (ListSortField sortFld in List.SortCriteria)
+            foreach (ListSortField sortFld in criteria)
             {
                 DataProperty p = List[sortFld.PropertyName];
                 if (p != null)
