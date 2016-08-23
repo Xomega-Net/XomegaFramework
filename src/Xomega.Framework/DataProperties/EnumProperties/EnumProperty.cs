@@ -79,13 +79,19 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
+        /// An instance of local lookup table when the possible values are not globally cached,
+        /// but depend on the current state of the data object.
+        /// </summary>
+        public LookupTable LocalLookupTable { get; set; }
+
+        /// <summary>
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
-        /// Subclasses can override this behavior to get a lookup table from a local class member or elsewhere.
         /// </summary>
         /// <returns>The lookup table to be used for the property.</returns>
         protected virtual LookupTable GetLookupTable()
         {
+            if (LocalLookupTable != null) return LocalLookupTable;
             LookupCache cache = LookupCache.Get(CacheType);
             LookupCache.LookupTableReady onReady = null;
 #if SILVERLIGHT

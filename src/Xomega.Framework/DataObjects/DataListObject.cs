@@ -55,6 +55,8 @@ namespace Xomega.Framework
         /// </summary>
         public List<FieldCriteriaSetting> AppliedCriteria { get; set; }
 
+        #region Construction and initialization
+
         /// <summary>
         /// Constructs a new data list object.
         /// </summary>
@@ -89,6 +91,8 @@ namespace Xomega.Framework
             Clear();
             modified = null;
         }
+
+        #endregion
 
         #region Sorting
 
@@ -201,6 +205,8 @@ namespace Xomega.Framework
         }
         #endregion
 
+        #region Collection modification
+
         /// <summary>
         /// Occurs when the data in the list changes.
         /// </summary>
@@ -248,6 +254,10 @@ namespace Xomega.Framework
             data.RemoveAt(index);
             FireCollectionChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, index));
         }
+
+        #endregion
+
+        #region Data Contract support
 
         /// <summary>
         /// Populates the data object list and imports the data from the given data contract list.
@@ -300,6 +310,29 @@ namespace Xomega.Framework
             return r1 == null || keys == null || keys.Count == 0 ? false : r1.CompareTo(r2, keys) == 0;
         }
 
+        /// <summary>
+        /// Exports the data from the data object list to the list of data contract objects.
+        /// </summary>
+        /// <param name="obj">The list of data contract objects to export the data to.
+        /// The list should be generic with a single type parameter.</param>
+        public override void ToDataContract(Object obj)
+        {
+            IList list = obj as IList;
+            if (list == null) return;
+            Type listType = list.GetType();
+            if (!listType.IsGenericType || listType.GetGenericArguments().Length != 1) return;
+
+            Type contractItemType = list.GetType().GetGenericArguments()[0];
+            foreach (DataObject objectItem in this)
+            {
+                object item = Activator.CreateInstance(contractItemType);
+                objectItem.ToDataContract(item);
+                list.Add(item);
+            }
+        }
+
+        #endregion
+
         #region IEnumerable interfaces
 
         /// <summary>
@@ -344,6 +377,8 @@ namespace Xomega.Framework
         public void Reset() { CurrentRow = -1; }
 
         #endregion
+
+        #region RowProxyObject
 
         /// <summary>
         /// A proxy data object for a row in the list that is returned by the enumerator on the list object.
@@ -394,5 +429,7 @@ namespace Xomega.Framework
                 }
             }
         }
+
+        #endregion
     }
 }
