@@ -62,6 +62,11 @@ namespace Xomega.Framework.Web
         protected GridView grd_Results;
 
         /// <summary>
+        /// Panel with action buttons for selection mode
+        /// </summary>
+        protected Control pnl_SelectActions;
+
+        /// <summary>
         /// Binds criteria panel and results grid to the criteria and list objects respectively
         /// </summary>
         protected override void BindObjects()
@@ -97,6 +102,7 @@ namespace Xomega.Framework.Web
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
 
+            pnl_SelectActions.Visible = query[QueryAction] == ActionSelect;
             return true;
         }
 
