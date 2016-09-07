@@ -12,6 +12,7 @@ namespace Xomega.Framework
     /// </summary>
     public abstract class CriteriaObject : DataObject
     {
+#if !SILVERLIGHT
         /// <summary>
         /// Sets values from the given collection and adjusts values for operators
         /// </summary>
@@ -40,6 +41,7 @@ namespace Xomega.Framework
         {
             return Properties.Where(p => !(p is OperatorProperty)).ToList().Exists(p => !p.IsNull());
         }
+#endif
 
         /// <summary>
         /// Returns a list of current field criteria settings.
