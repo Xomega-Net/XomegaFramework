@@ -452,6 +452,7 @@ namespace Xomega.Framework
 
         #endregion
 
+#if !SILVERLIGHT
         #region NameValueCollection support
 
         /// <summary>
@@ -479,8 +480,8 @@ namespace Xomega.Framework
             }
             return nvc;
         }
-
         #endregion
+#endif
 
         #region Validation
 
@@ -540,9 +541,9 @@ namespace Xomega.Framework
             validationErrorList = new ErrorList();
         }
 
-        #endregion
+#endregion
 
-        #region Modification support
+#region Modification support
 
         /// <summary>
         /// Tracks the modification state of the data object.
@@ -591,6 +592,6 @@ namespace Xomega.Framework
             }
         }
 
-        #endregion
+#endregion
     }
 }
