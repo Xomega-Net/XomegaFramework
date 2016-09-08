@@ -149,6 +149,9 @@
     <Compile Include="Web\BaseCollapsiblePanel.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Web\BasePickListControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Web\BaseDateTimeControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
