@@ -38,6 +38,18 @@ namespace Xomega.Framework.Web
             /// </summary>
             protected PropertyBinding(BasePickListControl ctl) : base(ctl)
             {
+                ctl.btn_AddAll.Click += delegate (object sender, EventArgs e)
+                {
+                    if (property == null || property.ItemsProvider == null) return;
+                    List<string> values = new List<string>();
+                    foreach (object i in property.ItemsProvider(null))
+                    {
+                        string value = property.ValueToString(i, ValueFormat.EditString);
+                        values.Add(value);
+                    }
+                    property.SetValue(values.Count == 0 ? property.NullString : string.Join(",", values.ToArray()));
+                };
+
                 ctl.btn_Add.Click += delegate (object sender, EventArgs e)
                 {
                     ListBox lbxSelection = (control as BasePickListControl).lbx_Selection;
@@ -82,6 +94,11 @@ namespace Xomega.Framework.Web
                     }
                     property.SetValue(values.Count == 0 ? property.NullString : string.Join(",", values.ToArray()));
                 };
+
+                ctl.btn_RemoveAll.Click += delegate (object sender, EventArgs e)
+                {
+                    property.SetValue(property.NullString);
+                };
             }
 
             /// <summary>
@@ -94,6 +111,43 @@ namespace Xomega.Framework.Web
                 BasePickListControl ctl = control as BasePickListControl;
                 ctl.lbx_Items.SelectionMode = property.IsMultiValued ? ListSelectionMode.Multiple : ListSelectionMode.Single;
                 ctl.lbx_Selection.SelectionMode = ListSelectionMode.Multiple;
+                ctl.btn_AddAll.Visible = ctl.btn_RemoveAll.Visible = property.IsMultiValued;
+            }
+
+            /// <summary>
+            /// Overrides the base method to hide all but selection list when not editable.
+            /// </summary>
+            protected override void UpdateEditability()
+            {
+                var lbxItems = (control as BasePickListControl).lbx_Items;
+                var pnlButtons = (control as BasePickListControl).pnl_Buttons;
+                lbxItems.Visible = pnlButtons.Visible = property.Editable;
+
+                var lbxSelection = (control as BasePickListControl).lbx_Selection;
+                if (property.Editable) lbxSelection.Attributes.Remove("disabled");
+                else lbxSelection.Attributes.Add("disabled", "disabled");
+            }
+
+            /// <summary>
+            /// Extends the base method to place the required class on the wrapper element.
+            /// </summary>
+            protected override void UpdateRequired()
+            {
+                base.UpdateRequired();
+                var pnlWrapper = (control as BasePickListControl).pnl_Wrapper;
+                pnlWrapper.CssClass = WebUtil.AddOrRemoveClass(pnlWrapper.CssClass, "required", property.Required);
+            }
+
+            /// <summary>
+            /// Overrides the base method to place the validation tooltip and class on the selection list.
+            /// </summary>
+            protected override void UpdateValidation()
+            {
+                var lbxSelection = (control as BasePickListControl).lbx_Selection;
+                ErrorList errors = property.ValidationErrors;
+                bool markAsInvalid = errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable;
+                lbxSelection.CssClass = WebUtil.AddOrRemoveClass(lbxSelection.CssClass, "invalid", markAsInvalid);
+                lbxSelection.ToolTip = markAsInvalid ? errors.ErrorsText : null;
             }
 
             /// <summary>
@@ -143,6 +197,8 @@ namespace Xomega.Framework.Web
 
         #endregion
 
+        #region Static constructor
+
         /// <summary>
         /// Static constructor that triggers registration of the binding.
         /// </summary>
@@ -150,6 +206,20 @@ namespace Xomega.Framework.Web
         {
             PropertyBinding.Register();
         }
+
+        #endregion
+
+        #region Controls
+
+        /// <summary>
+        /// Wrapper element.
+        /// </summary>
+        public Panel pnl_Wrapper;
+
+        /// <summary>
+        /// Buttons container.
+        /// </summary>
+        public Panel pnl_Buttons;
 
         /// <summary>
         /// List of possible items.
@@ -167,8 +237,20 @@ namespace Xomega.Framework.Web
         public Button btn_Add;
 
         /// <summary>
+        /// Adds all items to the selection.
+        /// </summary>
+        public Button btn_AddAll;
+
+        /// <summary>
         /// Removes items from the selection.
         /// </summary>
         public Button btn_Remove;
+
+        /// <summary>
+        /// Removes items from the selection.
+        /// </summary>
+        public Button btn_RemoveAll;
+
+        #endregion
     }
 }
