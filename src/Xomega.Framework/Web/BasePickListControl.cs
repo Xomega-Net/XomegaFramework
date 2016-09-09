@@ -97,7 +97,8 @@ namespace Xomega.Framework.Web
 
                 ctl.btn_RemoveAll.Click += delegate (object sender, EventArgs e)
                 {
-                    property.SetValue(property.NullString);
+                    if (property != null)
+                        property.SetValue(property.NullString);
                 };
             }
 
