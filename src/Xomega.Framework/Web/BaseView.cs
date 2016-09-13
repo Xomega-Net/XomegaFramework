@@ -19,6 +19,11 @@ namespace Xomega.Framework.Web
         #region Initialization/Activation
 
         /// <summary>
+        /// Close button
+        /// </summary>
+        protected Control btn_Close;
+
+        /// <summary>
         /// Initializes view data objects
         /// </summary>
         /// <param name="createNew">If true, creates new objects</param>
@@ -51,6 +56,7 @@ namespace Xomega.Framework.Web
         public virtual bool Activate(NameValueCollection query)
         {
             ParentSource = query[QuerySource];
+            btn_Close.Visible = Mode != null;
             return true;
         }
 
@@ -72,8 +78,9 @@ namespace Xomega.Framework.Web
         /// <param name="mode">Navigation mode (BaseView.ModePopup or BaseView.ModeInline)</param>
         public void NavigateTo(BaseView view, NameValueCollection query, string mode = null)
         {
+            view.Mode = mode;
             if (view.Activate(query))
-                view.Show(mode);
+                view.Show();
         }
 
         /// <summary>
@@ -113,7 +120,7 @@ namespace Xomega.Framework.Web
         protected string Script_Splitter = "if (typeof vSplitterPanel === 'function') vSplitterPanel('{0}');";
 
         /// <summary>Mode property that stores display mode that this view was shown with.</summary>
-        protected string Mode
+        public string Mode
         {
             get { return ViewState["Mode"] as string; }
             set
@@ -133,23 +140,21 @@ namespace Xomega.Framework.Web
         protected virtual Control ViewPanel { get { return Controls[0]; } }
 
         /// <summary>Shows the view in the specified mode.</summary>
-        /// <param name="mode">Navigation mode (BaseView.ModePopup or BaseView.ModeInline)</param>
-        public virtual void Show(string mode = null)
+        public virtual void Show()
         {
             Visible = true;
             UpdatePanel upl = WebUtil.FindParentUpdatePanel(this);
             if (upl != null) upl.Update();
 
-            if (ModePopup.Equals(mode))
+            switch (Mode)
             {
-                RegisterStartupScript("Dialog", Script_ModalDialog, "show", ViewPanel.ClientID, upl != null ? upl.ClientID : "", "false");
+                case ModePopup:
+                    RegisterStartupScript("Dialog", Script_ModalDialog, "show", ViewPanel.ClientID, upl != null ? upl.ClientID : "", "false");
+                    break;
+                case ModeInline:
+                    RegisterStartupScript("Visible", Script_Splitter_OnViewVisibilityChange, upl.ClientID);
+                    break;
             }
-            else if (ModeInline.Equals(mode))
-            {
-                RegisterStartupScript("Visible", Script_Splitter_OnViewVisibilityChange, upl.ClientID);
-            }
-
-            Mode = mode ?? "";
         }
 
         /// <summary>Hides the view.</summary>
@@ -164,14 +169,14 @@ namespace Xomega.Framework.Web
                 if (uplHost != null) uplHost.Update();
             }
 
-            string mode = Mode;
-            if (mode == ModePopup)
+            switch (Mode)
             {
-                RegisterStartupScript("Dialog", Script_ModalDialog, "hide", ViewPanel.ClientID, upl != null ? upl.ClientID : "", uplHost != null ? "true" : "false");
-            }
-            else if (mode == ModeInline)
-            {
-                RegisterStartupScript("Visible", Script_Splitter_OnViewVisibilityChange, upl.ClientID);
+                case ModePopup:
+                    RegisterStartupScript("Dialog", Script_ModalDialog, "hide", ViewPanel.ClientID, upl != null ? upl.ClientID : "", uplHost != null ? "true" : "false");
+                    break;
+                case ModeInline:
+                    RegisterStartupScript("Visible", Script_Splitter_OnViewVisibilityChange, upl.ClientID);
+                    break;
             }
 
             Mode = null;
@@ -203,6 +208,21 @@ namespace Xomega.Framework.Web
         protected void RegisterStartupScript(string key, string script, params object[] args)
         {
             WebUtil.RegisterStartupScript(ViewPanel, key, script, args);
+        }
+
+        /// <summary>
+        /// Updates visibility of a control and its container ignoring blank literals.
+        /// </summary>
+        protected static void SetVisible(Control ctl, bool value)
+        {
+            ctl.Visible = value;
+            ctl.Parent.Visible = true;
+            foreach (Control c in ctl.Parent.Controls)
+                if (c is LiteralControl && (c as LiteralControl).Text.Trim() == String.Empty)
+                    continue;
+                else if (c.Visible)
+                    return;
+            ctl.Parent.Visible = false;
         }
 
         #endregion

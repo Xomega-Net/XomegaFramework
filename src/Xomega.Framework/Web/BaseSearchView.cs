@@ -49,7 +49,7 @@ namespace Xomega.Framework.Web
 
         #endregion
 
-        #region Binding
+        #region Controls
 
         /// <summary>
         /// Panel with criteria
@@ -57,14 +57,28 @@ namespace Xomega.Framework.Web
         protected BaseCollapsiblePanel ucl_Criteria;
 
         /// <summary>
+        /// Search bar
+        /// </summary>
+        protected Control ctl_SearchBar;
+
+        /// <summary>
         /// Results grid
         /// </summary>
         protected GridView grd_Results;
 
         /// <summary>
-        /// Panel with action buttons for selection mode
+        /// View bar
         /// </summary>
-        protected Control pnl_SelectActions;
+        protected Control ctl_ViewBar;
+
+        /// <summary>
+        /// Select button
+        /// </summary>
+        protected Control btn_Select;
+
+        #endregion
+
+        #region Binding
 
         /// <summary>
         /// Binds criteria panel and results grid to the criteria and list objects respectively
@@ -102,7 +116,7 @@ namespace Xomega.Framework.Web
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
 
-            pnl_SelectActions.Visible = query[QueryAction] == ActionSelect;
+            SetVisible(btn_Select, query[QueryAction] == ActionSelect);
             return true;
         }
 
