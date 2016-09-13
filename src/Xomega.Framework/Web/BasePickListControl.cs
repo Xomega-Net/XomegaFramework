@@ -253,5 +253,33 @@ namespace Xomega.Framework.Web
         public Button btn_RemoveAll;
 
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Number of visible rows.
+        /// </summary>
+        public int Rows { get; set; }
+
+        /// <summary>
+        /// Default number of visible rows.
+        /// </summary>
+        public static int DefaultRows = 5;
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Control initialization handler.
+        /// </summary>
+        /// <param name="e">EventArgs object.</param>
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            lbx_Items.Rows = lbx_Selection.Rows = Rows > 0 ? Rows : DefaultRows;
+        }
+
+        #endregion
     }
 }
