@@ -57,19 +57,9 @@ namespace Xomega.Framework.Web
         protected BaseCollapsiblePanel ucl_Criteria;
 
         /// <summary>
-        /// Search bar
-        /// </summary>
-        protected Control ctl_SearchBar;
-
-        /// <summary>
         /// Results grid
         /// </summary>
         protected GridView grd_Results;
-
-        /// <summary>
-        /// View bar
-        /// </summary>
-        protected Control ctl_ViewBar;
 
         /// <summary>
         /// Select button
@@ -115,8 +105,8 @@ namespace Xomega.Framework.Web
             if (query[QueryAction] == ActionSearch) Search(false);
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
-
-            SetVisible(btn_Select, query[QueryAction] == ActionSelect);
+            // make Select button visible only in Select mode
+            if (btn_Select != null) btn_Select.Visible = (query[QueryAction] == ActionSelect);
             return true;
         }
 

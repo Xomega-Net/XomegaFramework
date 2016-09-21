@@ -56,7 +56,8 @@ namespace Xomega.Framework.Web
         public virtual bool Activate(NameValueCollection query)
         {
             ParentSource = query[QuerySource];
-            btn_Close.Visible = Mode != null;
+            // display Close button only if the view is activated as a child (popup or inline)
+            if (btn_Close != null) btn_Close.Visible = (Mode != null);
             return true;
         }
 
@@ -208,21 +209,6 @@ namespace Xomega.Framework.Web
         protected void RegisterStartupScript(string key, string script, params object[] args)
         {
             WebUtil.RegisterStartupScript(ViewPanel, key, script, args);
-        }
-
-        /// <summary>
-        /// Updates visibility of a control and its container ignoring blank literals.
-        /// </summary>
-        protected static void SetVisible(Control ctl, bool value)
-        {
-            ctl.Visible = value;
-            ctl.Parent.Visible = true;
-            foreach (Control c in ctl.Parent.Controls)
-                if (c is LiteralControl && (c as LiteralControl).Text.Trim() == String.Empty)
-                    continue;
-                else if (c.Visible)
-                    return;
-            ctl.Parent.Visible = false;
         }
 
         #endregion
