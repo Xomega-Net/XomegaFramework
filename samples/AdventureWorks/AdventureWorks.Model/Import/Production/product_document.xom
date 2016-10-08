@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <fieldsets>
+    <fieldset name="product document">
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+      <field name="document node" type="document" required="true">
+        <config>
+          <sql:column name="DocumentNode"/>
+        </config>
+        <doc>
+          <summary>Document identification number. Foreign key to Document.DocumentNode.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="product document">
+      <fields>
+        <fieldset ref="product document" key="supplied" required="true"/>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductDocument"/>
+      </config>
+      <doc>
+        <summary>Cross-reference table mapping products to related product documents.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

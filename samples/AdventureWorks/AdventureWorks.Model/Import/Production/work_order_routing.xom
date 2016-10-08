@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <fieldsets>
+    <fieldset name="work order routing">
+      <field name="work order id" type="work order" required="true">
+        <config>
+          <sql:column name="WorkOrderID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Foreign key to WorkOrder.WorkOrderID.</summary>
+        </doc>
+      </field>
+      <field name="product id" type="integer" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+      <field name="operation sequence" type="small int" required="true">
+        <config>
+          <sql:column name="OperationSequence"/>
+        </config>
+        <doc>
+          <summary>Primary key. Indicates the manufacturing process sequence.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="work order routing">
+      <fields>
+        <fieldset ref="work order routing" key="supplied" required="true"/>
+        <field name="location id" type="location" required="true">
+          <config>
+            <sql:column name="LocationID"/>
+          </config>
+          <doc>
+            <summary>Manufacturing location where the part is processed. Foreign key to Location.LocationID.</summary>
+          </doc>
+        </field>
+        <field name="scheduled start date" type="date time" required="true">
+          <config>
+            <sql:column name="ScheduledStartDate"/>
+          </config>
+          <doc>
+            <summary>Planned manufacturing start date.</summary>
+          </doc>
+        </field>
+        <field name="scheduled end date" type="date time" required="true">
+          <config>
+            <sql:column name="ScheduledEndDate"/>
+          </config>
+          <doc>
+            <summary>Planned manufacturing end date.</summary>
+          </doc>
+        </field>
+        <field name="actual start date" type="date time">
+          <config>
+            <sql:column name="ActualStartDate"/>
+          </config>
+          <doc>
+            <summary>Actual start date.</summary>
+          </doc>
+        </field>
+        <field name="actual end date" type="date time">
+          <config>
+            <sql:column name="ActualEndDate"/>
+          </config>
+          <doc>
+            <summary>Actual end date.</summary>
+          </doc>
+        </field>
+        <field name="actual resource hrs" type="decimal_9_4">
+          <config>
+            <sql:column name="ActualResourceHrs"/>
+          </config>
+          <doc>
+            <summary>Number of manufacturing hours used.</summary>
+          </doc>
+        </field>
+        <field name="planned cost" type="money" required="true">
+          <config>
+            <sql:column name="PlannedCost"/>
+          </config>
+          <doc>
+            <summary>Estimated manufacturing cost.</summary>
+          </doc>
+        </field>
+        <field name="actual cost" type="money">
+          <config>
+            <sql:column name="ActualCost"/>
+          </config>
+          <doc>
+            <summary>Actual manufacturing cost.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.WorkOrderRouting"/>
+      </config>
+      <doc>
+        <summary>Work order details.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

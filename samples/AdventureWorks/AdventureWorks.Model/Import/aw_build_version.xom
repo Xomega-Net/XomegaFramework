@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm">
+  <types>
+    <type name="aw build version" base="tiny int"/>
+  </types>
+  <objects>
+    <object name="aw build version">
+      <fields>
+        <field name="system information id" type="aw build version" key="serial"
+               required="true">
+          <config>
+            <sql:column name="SystemInformationID"/>
+          </config>
+        </field>
+        <field name="database version" type="string25" required="true">
+          <config>
+            <sql:column name="Database Version"/>
+          </config>
+          <doc>
+            <summary>Version number of the database in 9.yy.mm.dd.00 format.</summary>
+          </doc>
+        </field>
+        <field name="version date" type="date time" required="true">
+          <config>
+            <sql:column name="VersionDate"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="AWBuildVersion"/>
+      </config>
+      <doc>
+        <summary>Current version number of the AdventureWorks 2012 sample database. </summary>
+      </doc>
+    </object>
+  </objects>
+</module>

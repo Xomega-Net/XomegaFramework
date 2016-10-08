@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="product" base="integer key"/>
+  </types>
+  <objects>
+    <object name="product">
+      <fields>
+        <field name="product id" type="product" key="serial" required="true">
+          <config>
+            <sql:column name="ProductID"/>
+          </config>
+        </field>
+        <field name="name" type="string50" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Name of the product.</summary>
+          </doc>
+        </field>
+        <field name="product number" type="string25" required="true">
+          <config>
+            <sql:column name="ProductNumber"/>
+          </config>
+          <doc>
+            <summary>Unique product identification number.</summary>
+          </doc>
+        </field>
+        <field name="make flag" type="boolean" required="true">
+          <config>
+            <sql:column name="MakeFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>0 = Product is purchased, 1 = Product is manufactured in-house.</summary>
+          </doc>
+        </field>
+        <field name="finished goods flag" type="boolean" required="true">
+          <config>
+            <sql:column name="FinishedGoodsFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>0 = Product is not a salable item. 1 = Product is salable.</summary>
+          </doc>
+        </field>
+        <field name="color" type="string15">
+          <config>
+            <sql:column name="Color"/>
+          </config>
+          <doc>
+            <summary>Product color.</summary>
+          </doc>
+        </field>
+        <field name="safety stock level" type="small int" required="true">
+          <config>
+            <sql:column name="SafetyStockLevel"/>
+          </config>
+          <doc>
+            <summary>Minimum inventory quantity. </summary>
+          </doc>
+        </field>
+        <field name="reorder point" type="small int" required="true">
+          <config>
+            <sql:column name="ReorderPoint"/>
+          </config>
+          <doc>
+            <summary>Inventory level that triggers a purchase order or work order. </summary>
+          </doc>
+        </field>
+        <field name="standard cost" type="money" required="true">
+          <config>
+            <sql:column name="StandardCost"/>
+          </config>
+          <doc>
+            <summary>Standard cost of the product.</summary>
+          </doc>
+        </field>
+        <field name="list price" type="money" required="true">
+          <config>
+            <sql:column name="ListPrice"/>
+          </config>
+          <doc>
+            <summary>Selling price.</summary>
+          </doc>
+        </field>
+        <field name="size" type="string5">
+          <config>
+            <sql:column name="Size"/>
+          </config>
+          <doc>
+            <summary>Product size.</summary>
+          </doc>
+        </field>
+        <field name="size unit measure code" type="unit measure">
+          <config>
+            <sql:column name="SizeUnitMeasureCode"/>
+          </config>
+          <doc>
+            <summary>Unit of measure for Size column.</summary>
+          </doc>
+        </field>
+        <field name="weight unit measure code" type="unit measure">
+          <config>
+            <sql:column name="WeightUnitMeasureCode"/>
+          </config>
+          <doc>
+            <summary>Unit of measure for Weight column.</summary>
+          </doc>
+        </field>
+        <field name="weight" type="decimal_8_2">
+          <config>
+            <sql:column name="Weight"/>
+          </config>
+          <doc>
+            <summary>Product weight.</summary>
+          </doc>
+        </field>
+        <field name="days to manufacture" type="integer" required="true">
+          <config>
+            <sql:column name="DaysToManufacture"/>
+          </config>
+          <doc>
+            <summary>Number of days required to manufacture the product.</summary>
+          </doc>
+        </field>
+        <field name="product line" type="code2">
+          <config>
+            <sql:column name="ProductLine"/>
+          </config>
+          <doc>
+            <summary>R = Road, M = Mountain, T = Touring, S = Standard</summary>
+          </doc>
+        </field>
+        <field name="class" type="code2">
+          <config>
+            <sql:column name="Class"/>
+          </config>
+          <doc>
+            <summary>H = High, M = Medium, L = Low</summary>
+          </doc>
+        </field>
+        <field name="style" type="code2">
+          <config>
+            <sql:column name="Style"/>
+          </config>
+          <doc>
+            <summary>W = Womens, M = Mens, U = Universal</summary>
+          </doc>
+        </field>
+        <field name="product subcategory id" type="product subcategory">
+          <config>
+            <sql:column name="ProductSubcategoryID"/>
+          </config>
+          <doc>
+            <summary>Product is a member of this product subcategory. Foreign key to ProductSubCategory.ProductSubCategoryID. </summary>
+          </doc>
+        </field>
+        <field name="product model id" type="product model">
+          <config>
+            <sql:column name="ProductModelID"/>
+          </config>
+          <doc>
+            <summary>Product is a member of this product model. Foreign key to ProductModel.ProductModelID.</summary>
+          </doc>
+        </field>
+        <field name="sell start date" type="date time" required="true">
+          <config>
+            <sql:column name="SellStartDate"/>
+          </config>
+          <doc>
+            <summary>Date the product was available for sale.</summary>
+          </doc>
+        </field>
+        <field name="sell end date" type="date time">
+          <config>
+            <sql:column name="SellEndDate"/>
+          </config>
+          <doc>
+            <summary>Date the product was no longer available for sale.</summary>
+          </doc>
+        </field>
+        <field name="discontinued date" type="date time">
+          <config>
+            <sql:column name="DiscontinuedDate"/>
+          </config>
+          <doc>
+            <summary>Date the product was discontinued.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.Product"/>
+      </config>
+      <doc>
+        <summary>Products sold or used in the manfacturing of sold products.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

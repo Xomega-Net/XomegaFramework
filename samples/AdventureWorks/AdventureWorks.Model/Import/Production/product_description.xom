@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="product description" base="integer key"/>
+  </types>
+  <objects>
+    <object name="product description">
+      <fields>
+        <field name="product description id" type="product description" key="serial"
+               required="true">
+          <config>
+            <sql:column name="ProductDescriptionID"/>
+          </config>
+        </field>
+        <field name="description" type="string400" required="true">
+          <config>
+            <sql:column name="Description"/>
+          </config>
+          <doc>
+            <summary>Description of the product.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductDescription"/>
+      </config>
+      <doc>
+        <summary>Product descriptions in several languages.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="illustration" base="integer key"/>
+  </types>
+  <objects>
+    <object name="illustration">
+      <fields>
+        <field name="illustration id" type="illustration" key="serial" required="true">
+          <config>
+            <sql:column name="IllustrationID"/>
+          </config>
+        </field>
+        <field name="diagram" type="xml">
+          <config>
+            <sql:column name="Diagram"/>
+          </config>
+          <doc>
+            <summary>Illustrations used in manufacturing instructions. Stored as XML.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.Illustration"/>
+      </config>
+      <doc>
+        <summary>Bicycle assembly diagrams.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

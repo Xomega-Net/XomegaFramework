@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <fieldsets>
+    <fieldset name="product inventory">
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+      <field name="location id" type="location" required="true">
+        <config>
+          <sql:column name="LocationID"/>
+        </config>
+        <doc>
+          <summary>Inventory location identification number. Foreign key to Location.LocationID. </summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="product inventory">
+      <fields>
+        <fieldset ref="product inventory" key="supplied" required="true"/>
+        <field name="shelf" type="string10" required="true">
+          <config>
+            <sql:column name="Shelf"/>
+          </config>
+          <doc>
+            <summary>Storage compartment within an inventory location.</summary>
+          </doc>
+        </field>
+        <field name="bin" type="tiny int" required="true">
+          <config>
+            <sql:column name="Bin"/>
+          </config>
+          <doc>
+            <summary>Storage container on a shelf in an inventory location.</summary>
+          </doc>
+        </field>
+        <field name="quantity" type="small int" required="true">
+          <config>
+            <sql:column name="Quantity" default="((0))"/>
+          </config>
+          <doc>
+            <summary>Quantity of products in the inventory location.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductInventory"/>
+      </config>
+      <doc>
+        <summary>Product inventory information.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <fieldsets>
+    <fieldset name="product product photo">
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+      <field name="product photo id" type="product photo" required="true">
+        <config>
+          <sql:column name="ProductPhotoID"/>
+        </config>
+        <doc>
+          <summary>Product photo identification number. Foreign key to ProductPhoto.ProductPhotoID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="product product photo">
+      <fields>
+        <fieldset ref="product product photo" key="supplied" required="true"/>
+        <field name="primary" type="boolean" required="true">
+          <config>
+            <sql:column name="Primary" default="((0))"/>
+          </config>
+          <doc>
+            <summary>0 = Photo is not the principal image. 1 = Photo is the principal image.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductProductPhoto"/>
+      </config>
+      <doc>
+        <summary>Cross-reference table mapping products and product photos.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,4 +1,4 @@
-﻿using AdventureWorks.Services;
+using AdventureWorks.Services;
 
 namespace AdventureWorks.Entities
 {

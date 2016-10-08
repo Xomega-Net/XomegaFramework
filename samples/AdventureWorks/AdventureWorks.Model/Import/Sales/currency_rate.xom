@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="currency rate" base="integer key"/>
+  </types>
+  <objects>
+    <object name="currency rate">
+      <fields>
+        <field name="currency rate id" type="currency rate" key="serial" required="true">
+          <config>
+            <sql:column name="CurrencyRateID"/>
+          </config>
+        </field>
+        <field name="currency rate date" type="date time" required="true">
+          <config>
+            <sql:column name="CurrencyRateDate"/>
+          </config>
+          <doc>
+            <summary>Date and time the exchange rate was obtained.</summary>
+          </doc>
+        </field>
+        <field name="from currency code" type="currency" required="true">
+          <config>
+            <sql:column name="FromCurrencyCode"/>
+          </config>
+          <doc>
+            <summary>Exchange rate was converted from this currency code.</summary>
+          </doc>
+        </field>
+        <field name="to currency code" type="currency" required="true">
+          <config>
+            <sql:column name="ToCurrencyCode"/>
+          </config>
+          <doc>
+            <summary>Exchange rate was converted to this currency code.</summary>
+          </doc>
+        </field>
+        <field name="average rate" type="money" required="true">
+          <config>
+            <sql:column name="AverageRate"/>
+          </config>
+          <doc>
+            <summary>Average exchange rate for the day.</summary>
+          </doc>
+        </field>
+        <field name="end of day rate" type="money" required="true">
+          <config>
+            <sql:column name="EndOfDayRate"/>
+          </config>
+          <doc>
+            <summary>Final exchange rate for the day.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.CurrencyRate"/>
+      </config>
+      <doc>
+        <summary>Currency exchange rates.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

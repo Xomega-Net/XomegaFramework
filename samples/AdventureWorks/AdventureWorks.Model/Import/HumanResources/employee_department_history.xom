@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="human resources">
+  <fieldsets>
+    <fieldset name="employee department history">
+      <field name="business entity id" type="employee" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Employee identification number. Foreign key to Employee.BusinessEntityID.</summary>
+        </doc>
+      </field>
+      <field name="start date" type="date" required="true">
+        <config>
+          <sql:column name="StartDate"/>
+        </config>
+        <doc>
+          <summary>Date the employee started work in the department.</summary>
+        </doc>
+      </field>
+      <field name="department id" type="department" required="true">
+        <config>
+          <sql:column name="DepartmentID"/>
+        </config>
+        <doc>
+          <summary>Department in which the employee worked including currently. Foreign key to Department.DepartmentID.</summary>
+        </doc>
+      </field>
+      <field name="shift id" type="shift" required="true">
+        <config>
+          <sql:column name="ShiftID"/>
+        </config>
+        <doc>
+          <summary>Identifies which 8-hour shift the employee works. Foreign key to Shift.Shift.ID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="employee department history">
+      <fields>
+        <fieldset ref="employee department history" key="supplied" required="true"/>
+        <field name="end date" type="date">
+          <config>
+            <sql:column name="EndDate"/>
+          </config>
+          <doc>
+            <summary>Date the employee left the department. NULL = Current department.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="HumanResources.EmployeeDepartmentHistory"/>
+      </config>
+      <doc>
+        <summary>Employee department transfers.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

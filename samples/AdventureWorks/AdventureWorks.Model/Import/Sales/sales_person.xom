@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="sales person" base="employee"/>
+  </types>
+  <objects>
+    <object name="sales person">
+      <fields>
+        <field name="business entity id" type="sales person" key="supplied" required="true">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+        </field>
+        <field name="territory id" type="sales territory">
+          <config>
+            <sql:column name="TerritoryID"/>
+          </config>
+          <doc>
+            <summary>Territory currently assigned to. Foreign key to SalesTerritory.SalesTerritoryID.</summary>
+          </doc>
+        </field>
+        <field name="sales quota" type="money">
+          <config>
+            <sql:column name="SalesQuota"/>
+          </config>
+          <doc>
+            <summary>Projected yearly sales.</summary>
+          </doc>
+        </field>
+        <field name="bonus" type="money" required="true">
+          <config>
+            <sql:column name="Bonus" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Bonus due if quota is met.</summary>
+          </doc>
+        </field>
+        <field name="commission pct" type="small money" required="true">
+          <config>
+            <sql:column name="CommissionPct" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Commision percent received per sale.</summary>
+          </doc>
+        </field>
+        <field name="sales ytd" type="money" required="true">
+          <config>
+            <sql:column name="SalesYTD" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales total year to date.</summary>
+          </doc>
+        </field>
+        <field name="sales last year" type="money" required="true">
+          <config>
+            <sql:column name="SalesLastYear" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales total of previous year.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SalesPerson"/>
+      </config>
+      <doc>
+        <summary>Sales representative current information.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

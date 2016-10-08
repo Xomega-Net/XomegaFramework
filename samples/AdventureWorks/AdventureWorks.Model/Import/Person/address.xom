@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="person">
+  <types>
+    <type name="address" base="integer key"/>
+  </types>
+  <objects>
+    <object name="address">
+      <fields>
+        <field name="address id" type="address" key="serial" required="true">
+          <config>
+            <sql:column name="AddressID"/>
+          </config>
+        </field>
+        <field name="address line1" type="string60" required="true">
+          <config>
+            <sql:column name="AddressLine1"/>
+          </config>
+          <doc>
+            <summary>First street address line.</summary>
+          </doc>
+        </field>
+        <field name="address line2" type="string60">
+          <config>
+            <sql:column name="AddressLine2"/>
+          </config>
+          <doc>
+            <summary>Second street address line.</summary>
+          </doc>
+        </field>
+        <field name="city" type="string30" required="true">
+          <config>
+            <sql:column name="City"/>
+          </config>
+          <doc>
+            <summary>Name of the city.</summary>
+          </doc>
+        </field>
+        <field name="state province id" type="state province" required="true">
+          <config>
+            <sql:column name="StateProvinceID"/>
+          </config>
+          <doc>
+            <summary>Unique identification number for the state or province. Foreign key to StateProvince table.</summary>
+          </doc>
+        </field>
+        <field name="postal code" type="string15" required="true">
+          <config>
+            <sql:column name="PostalCode"/>
+          </config>
+          <doc>
+            <summary>Postal code for the street address.</summary>
+          </doc>
+        </field>
+        <field name="spatial location" type="geography">
+          <config>
+            <sql:column name="SpatialLocation"/>
+          </config>
+          <doc>
+            <summary>Latitude and longitude of this address.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Person.Address"/>
+      </config>
+      <doc>
+        <summary>Street address information for customers, employees, and vendors.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

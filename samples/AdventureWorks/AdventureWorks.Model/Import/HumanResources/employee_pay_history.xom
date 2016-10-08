@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="human resources">
+  <fieldsets>
+    <fieldset name="employee pay history">
+      <field name="business entity id" type="employee" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Employee identification number. Foreign key to Employee.BusinessEntityID.</summary>
+        </doc>
+      </field>
+      <field name="rate change date" type="date time" required="true">
+        <config>
+          <sql:column name="RateChangeDate"/>
+        </config>
+        <doc>
+          <summary>Date the change in pay is effective</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="employee pay history">
+      <fields>
+        <fieldset ref="employee pay history" key="supplied" required="true"/>
+        <field name="rate" type="money" required="true">
+          <config>
+            <sql:column name="Rate"/>
+          </config>
+          <doc>
+            <summary>Salary hourly rate.</summary>
+          </doc>
+        </field>
+        <field name="pay frequency" type="tiny int" required="true">
+          <config>
+            <sql:column name="PayFrequency"/>
+          </config>
+          <doc>
+            <summary>1 = Salary received monthly, 2 = Salary received biweekly</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="HumanResources.EmployeePayHistory"/>
+      </config>
+      <doc>
+        <summary>Employee pay history.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

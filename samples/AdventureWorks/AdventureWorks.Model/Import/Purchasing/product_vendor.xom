@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="purchasing">
+  <fieldsets>
+    <fieldset name="product vendor">
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+      <field name="business entity id" type="vendor" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Foreign key to Vendor.BusinessEntityID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="product vendor">
+      <fields>
+        <fieldset ref="product vendor" key="supplied" required="true"/>
+        <field name="average lead time" type="integer" required="true">
+          <config>
+            <sql:column name="AverageLeadTime"/>
+          </config>
+          <doc>
+            <summary>The average span of time (in days) between placing an order with the vendor and receiving the purchased product.</summary>
+          </doc>
+        </field>
+        <field name="standard price" type="money" required="true">
+          <config>
+            <sql:column name="StandardPrice"/>
+          </config>
+          <doc>
+            <summary>The vendor's usual selling price.</summary>
+          </doc>
+        </field>
+        <field name="last receipt cost" type="money">
+          <config>
+            <sql:column name="LastReceiptCost"/>
+          </config>
+          <doc>
+            <summary>The selling price when last purchased.</summary>
+          </doc>
+        </field>
+        <field name="last receipt date" type="date time">
+          <config>
+            <sql:column name="LastReceiptDate"/>
+          </config>
+          <doc>
+            <summary>Date the product was last received by the vendor.</summary>
+          </doc>
+        </field>
+        <field name="min order qty" type="integer" required="true">
+          <config>
+            <sql:column name="MinOrderQty"/>
+          </config>
+          <doc>
+            <summary>The maximum quantity that should be ordered.</summary>
+          </doc>
+        </field>
+        <field name="max order qty" type="integer" required="true">
+          <config>
+            <sql:column name="MaxOrderQty"/>
+          </config>
+          <doc>
+            <summary>The minimum quantity that should be ordered.</summary>
+          </doc>
+        </field>
+        <field name="on order qty" type="integer">
+          <config>
+            <sql:column name="OnOrderQty"/>
+          </config>
+          <doc>
+            <summary>The quantity currently on order.</summary>
+          </doc>
+        </field>
+        <field name="unit measure code" type="unit measure" required="true">
+          <config>
+            <sql:column name="UnitMeasureCode"/>
+          </config>
+          <doc>
+            <summary>The product's unit of measure.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Purchasing.ProductVendor"/>
+      </config>
+      <doc>
+        <summary>Cross-reference table mapping vendors with the products they supply.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

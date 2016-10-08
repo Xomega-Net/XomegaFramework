@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <fieldsets>
+    <fieldset name="product cost history">
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Product identification number. Foreign key to Product.ProductID</summary>
+        </doc>
+      </field>
+      <field name="start date" type="date time" required="true">
+        <config>
+          <sql:column name="StartDate"/>
+        </config>
+        <doc>
+          <summary>Product cost start date.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="product cost history">
+      <fields>
+        <fieldset ref="product cost history" key="supplied" required="true"/>
+        <field name="end date" type="date time">
+          <config>
+            <sql:column name="EndDate"/>
+          </config>
+          <doc>
+            <summary>Product cost end date.</summary>
+          </doc>
+        </field>
+        <field name="standard cost" type="money" required="true">
+          <config>
+            <sql:column name="StandardCost"/>
+          </config>
+          <doc>
+            <summary>Standard cost of the product.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductCostHistory"/>
+      </config>
+      <doc>
+        <summary>Changes in the cost of a product over time.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

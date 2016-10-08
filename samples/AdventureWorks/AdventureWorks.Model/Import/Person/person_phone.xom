@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="person">
+  <fieldsets>
+    <fieldset name="person phone">
+      <field name="business entity id" type="person" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Business entity identification number. Foreign key to Person.BusinessEntityID.</summary>
+        </doc>
+      </field>
+      <field name="phone number" type="string25" required="true">
+        <config>
+          <sql:column name="PhoneNumber"/>
+        </config>
+        <doc>
+          <summary>Telephone number identification number.</summary>
+        </doc>
+      </field>
+      <field name="phone number type id" type="phone number type" required="true">
+        <config>
+          <sql:column name="PhoneNumberTypeID"/>
+        </config>
+        <doc>
+          <summary>Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="person phone">
+      <fields>
+        <fieldset ref="person phone" key="supplied" required="true"/>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Person.PersonPhone"/>
+      </config>
+      <doc>
+        <summary>Telephone number and type of a person.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

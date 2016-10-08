@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <fieldsets>
+    <fieldset name="sales person quota history">
+      <field name="business entity id" type="sales person" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Sales person identification number. Foreign key to SalesPerson.BusinessEntityID.</summary>
+        </doc>
+      </field>
+      <field name="quota date" type="date time" required="true">
+        <config>
+          <sql:column name="QuotaDate"/>
+        </config>
+        <doc>
+          <summary>Sales quota date.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="sales person quota history">
+      <fields>
+        <fieldset ref="sales person quota history" key="supplied" required="true"/>
+        <field name="sales quota" type="money" required="true">
+          <config>
+            <sql:column name="SalesQuota"/>
+          </config>
+          <doc>
+            <summary>Sales quota amount.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SalesPersonQuotaHistory"/>
+      </config>
+      <doc>
+        <summary>Sales performance tracking.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

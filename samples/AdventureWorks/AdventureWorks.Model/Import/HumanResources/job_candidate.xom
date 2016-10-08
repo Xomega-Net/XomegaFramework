@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="human resources">
+  <types>
+    <type name="job candidate" base="integer key"/>
+  </types>
+  <objects>
+    <object name="job candidate">
+      <fields>
+        <field name="job candidate id" type="job candidate" key="serial" required="true">
+          <config>
+            <sql:column name="JobCandidateID"/>
+          </config>
+        </field>
+        <field name="business entity id" type="employee">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+          <doc>
+            <summary>Employee identification number if applicant was hired. Foreign key to Employee.BusinessEntityID.</summary>
+          </doc>
+        </field>
+        <field name="resume" type="xml">
+          <config>
+            <sql:column name="Resume"/>
+          </config>
+          <doc>
+            <summary>Résumé in XML format.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="HumanResources.JobCandidate"/>
+      </config>
+      <doc>
+        <summary>Résumés submitted to Human Resources by job applicants.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

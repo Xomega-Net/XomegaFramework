@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <fieldsets>
+    <fieldset name="special offer product">
+      <field name="special offer id" type="special offer" required="true">
+        <config>
+          <sql:column name="SpecialOfferID"/>
+        </config>
+        <doc>
+          <summary>Primary key for SpecialOfferProduct records.</summary>
+        </doc>
+      </field>
+      <field name="product id" type="product" required="true">
+        <config>
+          <sql:column name="ProductID"/>
+        </config>
+        <doc>
+          <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="special offer product">
+      <fields>
+        <fieldset ref="special offer product" key="supplied" required="true"/>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SpecialOfferProduct"/>
+      </config>
+      <doc>
+        <summary>Cross-reference table mapping products to special offer discounts.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="sales order detail" base="integer key"/>
+    <type name="sales order header" base="integer key"/>
+    <type name="sales order header sales reason" base="sales reason"/>
+  </types>
+  <objects>
+    <object name="sales order header">
+      <fields>
+        <field name="sales order id" type="sales order header" key="serial" required="true">
+          <config>
+            <sql:column name="SalesOrderID"/>
+          </config>
+        </field>
+        <field name="revision number" type="tiny int" required="true">
+          <config>
+            <sql:column name="RevisionNumber" default="((0))"/>
+          </config>
+          <doc>
+            <summary>Incremental number to track changes to the sales order over time.</summary>
+          </doc>
+        </field>
+        <field name="order date" type="date time" required="true">
+          <config>
+            <sql:column name="OrderDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Dates the sales order was created.</summary>
+          </doc>
+        </field>
+        <field name="due date" type="date time" required="true">
+          <config>
+            <sql:column name="DueDate"/>
+          </config>
+          <doc>
+            <summary>Date the order is due to the customer.</summary>
+          </doc>
+        </field>
+        <field name="ship date" type="date time">
+          <config>
+            <sql:column name="ShipDate"/>
+          </config>
+          <doc>
+            <summary>Date the order was shipped to the customer.</summary>
+          </doc>
+        </field>
+        <field name="status" type="tiny int" required="true">
+          <config>
+            <sql:column name="Status" default="((1))"/>
+          </config>
+          <doc>
+            <summary>Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled</summary>
+          </doc>
+        </field>
+        <field name="online order flag" type="boolean" required="true">
+          <config>
+            <sql:column name="OnlineOrderFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>0 = Order placed by sales person. 1 = Order placed online by customer.</summary>
+          </doc>
+        </field>
+        <field name="sales order number" type="string25" required="true">
+          <config>
+            <sql:column name="SalesOrderNumber"/>
+          </config>
+          <doc>
+            <summary>Unique sales order identification number.</summary>
+          </doc>
+        </field>
+        <field name="purchase order number" type="string25">
+          <config>
+            <sql:column name="PurchaseOrderNumber"/>
+          </config>
+          <doc>
+            <summary>Customer purchase order number reference. </summary>
+          </doc>
+        </field>
+        <field name="account number" type="string15">
+          <config>
+            <sql:column name="AccountNumber"/>
+          </config>
+          <doc>
+            <summary>Financial accounting number reference.</summary>
+          </doc>
+        </field>
+        <field name="customer id" type="customer" required="true">
+          <config>
+            <sql:column name="CustomerID"/>
+          </config>
+          <doc>
+            <summary>Customer identification number. Foreign key to Customer.BusinessEntityID.</summary>
+          </doc>
+        </field>
+        <field name="sales person id" type="sales person">
+          <config>
+            <sql:column name="SalesPersonID"/>
+          </config>
+          <doc>
+            <summary>Sales person who created the sales order. Foreign key to SalesPerson.BusinessEntityID.</summary>
+          </doc>
+        </field>
+        <field name="territory id" type="sales territory">
+          <config>
+            <sql:column name="TerritoryID"/>
+          </config>
+          <doc>
+            <summary>Territory in which the sale was made. Foreign key to SalesTerritory.SalesTerritoryID.</summary>
+          </doc>
+        </field>
+        <field name="bill to address id" type="address" required="true">
+          <config>
+            <sql:column name="BillToAddressID"/>
+          </config>
+          <doc>
+            <summary>Customer billing address. Foreign key to Address.AddressID.</summary>
+          </doc>
+        </field>
+        <field name="ship to address id" type="address" required="true">
+          <config>
+            <sql:column name="ShipToAddressID"/>
+          </config>
+          <doc>
+            <summary>Customer shipping address. Foreign key to Address.AddressID.</summary>
+          </doc>
+        </field>
+        <field name="ship method id" type="ship method" required="true">
+          <config>
+            <sql:column name="ShipMethodID"/>
+          </config>
+          <doc>
+            <summary>Shipping method. Foreign key to ShipMethod.ShipMethodID.</summary>
+          </doc>
+        </field>
+        <field name="credit card id" type="credit card">
+          <config>
+            <sql:column name="CreditCardID"/>
+          </config>
+          <doc>
+            <summary>Credit card identification number. Foreign key to CreditCard.CreditCardID.</summary>
+          </doc>
+        </field>
+        <field name="credit card approval code" type="char string15">
+          <config>
+            <sql:column name="CreditCardApprovalCode"/>
+          </config>
+          <doc>
+            <summary>Approval code provided by the credit card company.</summary>
+          </doc>
+        </field>
+        <field name="currency rate id" type="currency rate">
+          <config>
+            <sql:column name="CurrencyRateID"/>
+          </config>
+          <doc>
+            <summary>Currency exchange rate used. Foreign key to CurrencyRate.CurrencyRateID.</summary>
+          </doc>
+        </field>
+        <field name="sub total" type="money" required="true">
+          <config>
+            <sql:column name="SubTotal" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.</summary>
+          </doc>
+        </field>
+        <field name="tax amt" type="money" required="true">
+          <config>
+            <sql:column name="TaxAmt" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Tax amount.</summary>
+          </doc>
+        </field>
+        <field name="freight" type="money" required="true">
+          <config>
+            <sql:column name="Freight" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Shipping cost.</summary>
+          </doc>
+        </field>
+        <field name="total due" type="money" required="true">
+          <config>
+            <sql:column name="TotalDue"/>
+          </config>
+          <doc>
+            <summary>Total due from customer. Computed as Subtotal + TaxAmt + Freight.</summary>
+          </doc>
+        </field>
+        <field name="comment" type="string128">
+          <config>
+            <sql:column name="Comment"/>
+          </config>
+          <doc>
+            <summary>Sales representative comments.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SalesOrderHeader"/>
+      </config>
+      <doc>
+        <summary>General sales order information.</summary>
+      </doc>
+      <subobjects>
+        <object name="sales order detail">
+          <fields>
+            <field name="sales order detail id" type="sales order detail" key="serial"
+                   required="true">
+              <config>
+                <sql:column name="SalesOrderDetailID"/>
+              </config>
+            </field>
+            <field name="carrier tracking number" type="string25">
+              <config>
+                <sql:column name="CarrierTrackingNumber"/>
+              </config>
+              <doc>
+                <summary>Shipment tracking number supplied by the shipper.</summary>
+              </doc>
+            </field>
+            <field name="order qty" type="small int" required="true">
+              <config>
+                <sql:column name="OrderQty"/>
+              </config>
+              <doc>
+                <summary>Quantity ordered per product.</summary>
+              </doc>
+            </field>
+            <fieldset ref="special offer product"/>
+            <field name="unit price" type="money" required="true">
+              <config>
+                <sql:column name="UnitPrice"/>
+              </config>
+              <doc>
+                <summary>Selling price of a single product.</summary>
+              </doc>
+            </field>
+            <field name="unit price discount" type="money" required="true">
+              <config>
+                <sql:column name="UnitPriceDiscount" default="((0.0))"/>
+              </config>
+              <doc>
+                <summary>Discount amount.</summary>
+              </doc>
+            </field>
+            <field name="line total" type="numeric_38_6" required="true">
+              <config>
+                <sql:column name="LineTotal"/>
+              </config>
+              <doc>
+                <summary>Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.</summary>
+              </doc>
+            </field>
+            <field name="rowguid" type="guid" required="true">
+              <config>
+                <sql:column name="rowguid" default="(newid())"/>
+              </config>
+              <doc>
+                <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+              </doc>
+            </field>
+            <field name="modified date" type="date time" required="true">
+              <config>
+                <sql:column name="ModifiedDate" default="(getdate())"/>
+              </config>
+              <doc>
+                <summary>Date and time the record was last updated.</summary>
+              </doc>
+            </field>
+          </fields>
+          <config>
+            <sql:table name="Sales.SalesOrderDetail"/>
+          </config>
+          <doc>
+            <summary>Individual products associated with a specific sales order. See SalesOrderHeader.</summary>
+          </doc>
+        </object>
+        <object name="sales reason">
+          <fields>
+            <field name="sales reason id" type="sales order header sales reason" key="supplied"
+                   required="true">
+              <config>
+                <sql:column name="SalesReasonID"/>
+              </config>
+            </field>
+            <field name="modified date" type="date time" required="true">
+              <config>
+                <sql:column name="ModifiedDate" default="(getdate())"/>
+              </config>
+              <doc>
+                <summary>Date and time the record was last updated.</summary>
+              </doc>
+            </field>
+          </fields>
+          <config>
+            <sql:table name="Sales.SalesOrderHeaderSalesReason"/>
+          </config>
+          <doc>
+            <summary>Cross-reference table mapping sales orders to sales reason codes.</summary>
+          </doc>
+        </object>
+      </subobjects>
+    </object>
+  </objects>
+</module>

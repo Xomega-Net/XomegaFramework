@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="transaction history" base="integer key"/>
+  </types>
+  <objects>
+    <object name="transaction history">
+      <fields>
+        <field name="transaction id" type="transaction history" key="serial" required="true">
+          <config>
+            <sql:column name="TransactionID"/>
+          </config>
+        </field>
+        <field name="product id" type="product" required="true">
+          <config>
+            <sql:column name="ProductID"/>
+          </config>
+          <doc>
+            <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+          </doc>
+        </field>
+        <field name="reference order id" type="integer" required="true">
+          <config>
+            <sql:column name="ReferenceOrderID"/>
+          </config>
+          <doc>
+            <summary>Purchase order, sales order, or work order identification number.</summary>
+          </doc>
+        </field>
+        <field name="reference order line id" type="integer" required="true">
+          <config>
+            <sql:column name="ReferenceOrderLineID" default="((0))"/>
+          </config>
+          <doc>
+            <summary>Line number associated with the purchase order, sales order, or work order.</summary>
+          </doc>
+        </field>
+        <field name="transaction date" type="date time" required="true">
+          <config>
+            <sql:column name="TransactionDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time of the transaction.</summary>
+          </doc>
+        </field>
+        <field name="transaction type" type="code1" required="true">
+          <config>
+            <sql:column name="TransactionType"/>
+          </config>
+          <doc>
+            <summary>W = WorkOrder, S = SalesOrder, P = PurchaseOrder</summary>
+          </doc>
+        </field>
+        <field name="quantity" type="integer" required="true">
+          <config>
+            <sql:column name="Quantity"/>
+          </config>
+          <doc>
+            <summary>Product quantity.</summary>
+          </doc>
+        </field>
+        <field name="actual cost" type="money" required="true">
+          <config>
+            <sql:column name="ActualCost"/>
+          </config>
+          <doc>
+            <summary>Product cost.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.TransactionHistory"/>
+      </config>
+      <doc>
+        <summary>Record of each purchase order, sales order, or work order transaction year to date.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

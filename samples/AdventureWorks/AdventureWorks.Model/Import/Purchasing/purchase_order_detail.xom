@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="purchasing">
+  <fieldsets>
+    <fieldset name="purchase order detail">
+      <field name="purchase order id" type="purchase order header" required="true">
+        <config>
+          <sql:column name="PurchaseOrderID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.</summary>
+        </doc>
+      </field>
+      <field name="purchase order detail id" type="integer" required="true">
+        <config>
+          <sql:column name="PurchaseOrderDetailID" serial="true"/>
+        </config>
+        <doc>
+          <summary>Primary key. One line number per purchased product.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="purchase order detail">
+      <fields>
+        <fieldset ref="purchase order detail" key="supplied" required="true"/>
+        <field name="due date" type="date time" required="true">
+          <config>
+            <sql:column name="DueDate"/>
+          </config>
+          <doc>
+            <summary>Date the product is expected to be received.</summary>
+          </doc>
+        </field>
+        <field name="order qty" type="small int" required="true">
+          <config>
+            <sql:column name="OrderQty"/>
+          </config>
+          <doc>
+            <summary>Quantity ordered.</summary>
+          </doc>
+        </field>
+        <field name="product id" type="product" required="true">
+          <config>
+            <sql:column name="ProductID"/>
+          </config>
+          <doc>
+            <summary>Product identification number. Foreign key to Product.ProductID.</summary>
+          </doc>
+        </field>
+        <field name="unit price" type="money" required="true">
+          <config>
+            <sql:column name="UnitPrice"/>
+          </config>
+          <doc>
+            <summary>Vendor's selling price of a single product.</summary>
+          </doc>
+        </field>
+        <field name="line total" type="money" required="true">
+          <config>
+            <sql:column name="LineTotal"/>
+          </config>
+          <doc>
+            <summary>Per product subtotal. Computed as OrderQty * UnitPrice.</summary>
+          </doc>
+        </field>
+        <field name="received qty" type="decimal_8_2" required="true">
+          <config>
+            <sql:column name="ReceivedQty"/>
+          </config>
+          <doc>
+            <summary>Quantity actually received from the vendor.</summary>
+          </doc>
+        </field>
+        <field name="rejected qty" type="decimal_8_2" required="true">
+          <config>
+            <sql:column name="RejectedQty"/>
+          </config>
+          <doc>
+            <summary>Quantity rejected during inspection.</summary>
+          </doc>
+        </field>
+        <field name="stocked qty" type="decimal_9_2" required="true">
+          <config>
+            <sql:column name="StockedQty"/>
+          </config>
+          <doc>
+            <summary>Quantity accepted into inventory. Computed as ReceivedQty - RejectedQty.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Purchasing.PurchaseOrderDetail"/>
+      </config>
+      <doc>
+        <summary>Individual products associated with a specific purchase order. See PurchaseOrderHeader.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

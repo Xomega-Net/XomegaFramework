@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <fieldsets>
+    <fieldset name="sales territory history">
+      <field name="business entity id" type="sales person" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Primary key. The sales rep.  Foreign key to SalesPerson.BusinessEntityID.</summary>
+        </doc>
+      </field>
+      <field name="start date" type="date time" required="true">
+        <config>
+          <sql:column name="StartDate"/>
+        </config>
+        <doc>
+          <summary>Primary key. Date the sales representive started work in the territory.</summary>
+        </doc>
+      </field>
+      <field name="territory id" type="sales territory" required="true">
+        <config>
+          <sql:column name="TerritoryID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Territory identification number. Foreign key to SalesTerritory.SalesTerritoryID.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="sales territory history">
+      <fields>
+        <fieldset ref="sales territory history" key="supplied" required="true"/>
+        <field name="end date" type="date time">
+          <config>
+            <sql:column name="EndDate"/>
+          </config>
+          <doc>
+            <summary>Date the sales representative left work in the territory.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SalesTerritoryHistory"/>
+      </config>
+      <doc>
+        <summary>Sales representative transfers to other sales territories.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <fieldsets>
+    <fieldset name="country region currency">
+      <field name="country region code" type="country region" required="true">
+        <config>
+          <sql:column name="CountryRegionCode"/>
+        </config>
+        <doc>
+          <summary>ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.</summary>
+        </doc>
+      </field>
+      <field name="currency code" type="currency" required="true">
+        <config>
+          <sql:column name="CurrencyCode"/>
+        </config>
+        <doc>
+          <summary>ISO standard currency code. Foreign key to Currency.CurrencyCode.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="country region currency">
+      <fields>
+        <fieldset ref="country region currency" key="supplied" required="true"/>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.CountryRegionCurrency"/>
+      </config>
+      <doc>
+        <summary>Cross-reference table mapping ISO currency codes to a country or region.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

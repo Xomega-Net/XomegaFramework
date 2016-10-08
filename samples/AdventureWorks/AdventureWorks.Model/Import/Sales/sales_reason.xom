@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="sales reason" base="integer key"/>
+  </types>
+  <objects>
+    <object name="sales reason">
+      <fields>
+        <field name="sales reason id" type="sales reason" key="serial" required="true">
+          <config>
+            <sql:column name="SalesReasonID"/>
+          </config>
+        </field>
+        <field name="name" type="string50" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Sales reason description.</summary>
+          </doc>
+        </field>
+        <field name="reason type" type="string50" required="true">
+          <config>
+            <sql:column name="ReasonType"/>
+          </config>
+          <doc>
+            <summary>Category the sales reason belongs to.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.SalesReason"/>
+      </config>
+      <doc>
+        <summary>Lookup table of customer purchase reasons.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

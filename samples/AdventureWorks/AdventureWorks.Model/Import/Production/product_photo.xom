@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="product photo" base="integer key"/>
+  </types>
+  <objects>
+    <object name="product photo">
+      <fields>
+        <field name="product photo id" type="product photo" key="serial" required="true">
+          <config>
+            <sql:column name="ProductPhotoID"/>
+          </config>
+        </field>
+        <field name="thumb nail photo" type="large binary">
+          <config>
+            <sql:column name="ThumbNailPhoto"/>
+          </config>
+          <doc>
+            <summary>Small image of the product.</summary>
+          </doc>
+        </field>
+        <field name="thumbnail photo file name" type="string50">
+          <config>
+            <sql:column name="ThumbnailPhotoFileName"/>
+          </config>
+          <doc>
+            <summary>Small image file name.</summary>
+          </doc>
+        </field>
+        <field name="large photo" type="large binary">
+          <config>
+            <sql:column name="LargePhoto"/>
+          </config>
+          <doc>
+            <summary>Large image of the product.</summary>
+          </doc>
+        </field>
+        <field name="large photo file name" type="string50">
+          <config>
+            <sql:column name="LargePhotoFileName"/>
+          </config>
+          <doc>
+            <summary>Large image file name.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.ProductPhoto"/>
+      </config>
+      <doc>
+        <summary>Product images.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

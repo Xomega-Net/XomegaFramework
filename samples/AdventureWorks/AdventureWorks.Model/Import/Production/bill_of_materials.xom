@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="bill of materials" base="integer key"/>
+  </types>
+  <objects>
+    <object name="bill of materials">
+      <fields>
+        <field name="bill of materials id" type="bill of materials" key="serial"
+               required="true">
+          <config>
+            <sql:column name="BillOfMaterialsID"/>
+          </config>
+        </field>
+        <field name="product assembly id" type="product">
+          <config>
+            <sql:column name="ProductAssemblyID"/>
+          </config>
+          <doc>
+            <summary>Parent product identification number. Foreign key to Product.ProductID.</summary>
+          </doc>
+        </field>
+        <field name="component id" type="product" required="true">
+          <config>
+            <sql:column name="ComponentID"/>
+          </config>
+          <doc>
+            <summary>Component identification number. Foreign key to Product.ProductID.</summary>
+          </doc>
+        </field>
+        <field name="start date" type="date time" required="true">
+          <config>
+            <sql:column name="StartDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date the component started being used in the assembly item.</summary>
+          </doc>
+        </field>
+        <field name="end date" type="date time">
+          <config>
+            <sql:column name="EndDate"/>
+          </config>
+          <doc>
+            <summary>Date the component stopped being used in the assembly item.</summary>
+          </doc>
+        </field>
+        <field name="unit measure code" type="unit measure" required="true">
+          <config>
+            <sql:column name="UnitMeasureCode"/>
+          </config>
+          <doc>
+            <summary>Standard code identifying the unit of measure for the quantity.</summary>
+          </doc>
+        </field>
+        <field name="bom level" type="small int" required="true">
+          <config>
+            <sql:column name="BOMLevel"/>
+          </config>
+          <doc>
+            <summary>Indicates the depth the component is from its parent (AssemblyID).</summary>
+          </doc>
+        </field>
+        <field name="per assembly qty" type="decimal_8_2" required="true">
+          <config>
+            <sql:column name="PerAssemblyQty" default="((1.00))"/>
+          </config>
+          <doc>
+            <summary>Quantity of the component needed to create the assembly.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.BillOfMaterials"/>
+      </config>
+      <doc>
+        <summary>Items required to make bicycles and bicycle subassemblies. It identifies the heirarchical relationship between a parent product and its components.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

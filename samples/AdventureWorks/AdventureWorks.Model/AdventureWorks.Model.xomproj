@@ -1,18 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="2.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>
-    </ProjectGuid>
+    <ProjectGuid>{54aff7c5-86ab-4c83-bf07-82890279030f}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Model</Configuration>
     <Database>sqlsrv</Database>
-    <DbVersion>
-    </DbVersion>
-    <DbConnection>
-    </DbConnection>
+    <DbVersion>11.0</DbVersion>
+    <DbConnection>Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=AdventureWorks;Data Source=(local)</DbConnection>
     <DbExcludeTables>
     </DbExcludeTables>
-    <DbCase>
-    </DbCase>
+    <DbCase>camel</DbCase>
     <DbTimeout>
     </DbTimeout>
     <Name>AdventureWorks.Model</Name>
@@ -831,6 +827,76 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomFile Include="Framework\base_types.xom" />
     <XomFile Include="Framework\operators.xom" />
     <XomFile Include="global_config.xom" />
+    <XomFile Include="Import\aw_build_version.xom" />
+    <XomFile Include="Import\database_log.xom" />
+    <XomFile Include="Import\error_log.xom" />
+    <XomFile Include="Import\HumanResources\department.xom" />
+    <XomFile Include="Import\HumanResources\employee.xom" />
+    <XomFile Include="Import\HumanResources\employee_department_history.xom" />
+    <XomFile Include="Import\HumanResources\employee_pay_history.xom" />
+    <XomFile Include="Import\HumanResources\job_candidate.xom" />
+    <XomFile Include="Import\HumanResources\shift.xom" />
+    <XomFile Include="Import\Person\address.xom" />
+    <XomFile Include="Import\Person\address_type.xom" />
+    <XomFile Include="Import\Person\business_entity.xom" />
+    <XomFile Include="Import\Person\business_entity_address.xom" />
+    <XomFile Include="Import\Person\business_entity_contact.xom" />
+    <XomFile Include="Import\Person\contact_type.xom" />
+    <XomFile Include="Import\Person\country_region.xom" />
+    <XomFile Include="Import\Person\email_address.xom" />
+    <XomFile Include="Import\Person\password.xom" />
+    <XomFile Include="Import\Person\person.xom" />
+    <XomFile Include="Import\Person\person_phone.xom" />
+    <XomFile Include="Import\Person\phone_number_type.xom" />
+    <XomFile Include="Import\Person\state_province.xom" />
+    <XomFile Include="Import\Production\bill_of_materials.xom" />
+    <XomFile Include="Import\Production\culture.xom" />
+    <XomFile Include="Import\Production\document.xom" />
+    <XomFile Include="Import\Production\illustration.xom" />
+    <XomFile Include="Import\Production\location.xom" />
+    <XomFile Include="Import\Production\product.xom" />
+    <XomFile Include="Import\Production\product_category.xom" />
+    <XomFile Include="Import\Production\product_cost_history.xom" />
+    <XomFile Include="Import\Production\product_description.xom" />
+    <XomFile Include="Import\Production\product_document.xom" />
+    <XomFile Include="Import\Production\product_inventory.xom" />
+    <XomFile Include="Import\Production\product_list_price_history.xom" />
+    <XomFile Include="Import\Production\product_model.xom" />
+    <XomFile Include="Import\Production\product_model_illustration.xom" />
+    <XomFile Include="Import\Production\product_model_product_description_culture.xom" />
+    <XomFile Include="Import\Production\product_photo.xom" />
+    <XomFile Include="Import\Production\product_product_photo.xom" />
+    <XomFile Include="Import\Production\product_review.xom" />
+    <XomFile Include="Import\Production\product_subcategory.xom" />
+    <XomFile Include="Import\Production\scrap_reason.xom" />
+    <XomFile Include="Import\Production\transaction_history.xom" />
+    <XomFile Include="Import\Production\transaction_history_archive.xom" />
+    <XomFile Include="Import\Production\unit_measure.xom" />
+    <XomFile Include="Import\Production\work_order.xom" />
+    <XomFile Include="Import\Production\work_order_routing.xom" />
+    <XomFile Include="Import\Purchasing\product_vendor.xom" />
+    <XomFile Include="Import\Purchasing\purchase_order_detail.xom" />
+    <XomFile Include="Import\Purchasing\purchase_order_header.xom" />
+    <XomFile Include="Import\Purchasing\ship_method.xom" />
+    <XomFile Include="Import\Purchasing\vendor.xom" />
+    <XomFile Include="Import\Sales\country_region_currency.xom" />
+    <XomFile Include="Import\Sales\credit_card.xom" />
+    <XomFile Include="Import\Sales\currency.xom" />
+    <XomFile Include="Import\Sales\currency_rate.xom" />
+    <XomFile Include="Import\Sales\customer.xom" />
+    <XomFile Include="Import\Sales\person_credit_card.xom" />
+    <XomFile Include="Import\Sales\sales_order_header.xom" />
+    <XomFile Include="Import\Sales\sales_person.xom" />
+    <XomFile Include="Import\Sales\sales_person_quota_history.xom" />
+    <XomFile Include="Import\Sales\sales_reason.xom" />
+    <XomFile Include="Import\Sales\sales_tax_rate.xom" />
+    <XomFile Include="Import\Sales\sales_territory.xom" />
+    <XomFile Include="Import\Sales\sales_territory_history.xom" />
+    <XomFile Include="Import\Sales\shopping_cart_item.xom" />
+    <XomFile Include="Import\Sales\special_offer.xom" />
+    <XomFile Include="Import\Sales\special_offer_product.xom" />
+    <XomFile Include="Import\Sales\store.xom" />
+    <XomFile Include="Import\_types.xom" />
   </ItemGroup>
   <Import Project="$(XomegaHome14)Xomega.targets" />
 </Project>

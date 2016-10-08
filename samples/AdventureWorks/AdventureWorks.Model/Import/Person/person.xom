@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="person">
+  <types>
+    <type name="person" base="business entity"/>
+  </types>
+  <objects>
+    <object name="person">
+      <fields>
+        <field name="business entity id" type="person" key="supplied" required="true">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+        </field>
+        <field name="person type" type="code2" required="true">
+          <config>
+            <sql:column name="PersonType"/>
+          </config>
+          <doc>
+            <summary>Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact</summary>
+          </doc>
+        </field>
+        <field name="name style" type="boolean" required="true">
+          <config>
+            <sql:column name="NameStyle" default="((0))"/>
+          </config>
+          <doc>
+            <summary>0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.</summary>
+          </doc>
+        </field>
+        <field name="title" type="string8">
+          <config>
+            <sql:column name="Title"/>
+          </config>
+          <doc>
+            <summary>A courtesy title. For example, Mr. or Ms.</summary>
+          </doc>
+        </field>
+        <field name="first name" type="string50" required="true">
+          <config>
+            <sql:column name="FirstName"/>
+          </config>
+          <doc>
+            <summary>First name of the person.</summary>
+          </doc>
+        </field>
+        <field name="middle name" type="string50">
+          <config>
+            <sql:column name="MiddleName"/>
+          </config>
+          <doc>
+            <summary>Middle name or middle initial of the person.</summary>
+          </doc>
+        </field>
+        <field name="last name" type="string50" required="true">
+          <config>
+            <sql:column name="LastName"/>
+          </config>
+          <doc>
+            <summary>Last name of the person.</summary>
+          </doc>
+        </field>
+        <field name="suffix" type="string10">
+          <config>
+            <sql:column name="Suffix"/>
+          </config>
+          <doc>
+            <summary>Surname suffix. For example, Sr. or Jr.</summary>
+          </doc>
+        </field>
+        <field name="email promotion" type="integer" required="true">
+          <config>
+            <sql:column name="EmailPromotion" default="((0))"/>
+          </config>
+          <doc>
+            <summary>0 = Contact does not wish to receive e-mail promotions, 1 = Contact does wish to receive e-mail promotions from AdventureWorks, 2 = Contact does wish to receive e-mail promotions from AdventureWorks and selected partners. </summary>
+          </doc>
+        </field>
+        <field name="additional contact info" type="xml">
+          <config>
+            <sql:column name="AdditionalContactInfo"/>
+          </config>
+          <doc>
+            <summary>Additional contact information about the person stored in xml format. </summary>
+          </doc>
+        </field>
+        <field name="demographics" type="xml">
+          <config>
+            <sql:column name="Demographics"/>
+          </config>
+          <doc>
+            <summary>Personal information such as hobbies, and income collected from online shoppers. Used for sales analysis.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Person.Person"/>
+      </config>
+      <doc>
+        <summary>Human beings involved with AdventureWorks: employees, customer contacts, and vendor contacts.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

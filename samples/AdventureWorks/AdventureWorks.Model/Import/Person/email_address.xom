@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="person">
+  <fieldsets>
+    <fieldset name="email address">
+      <field name="business entity id" type="person" required="true">
+        <config>
+          <sql:column name="BusinessEntityID"/>
+        </config>
+        <doc>
+          <summary>Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID</summary>
+        </doc>
+      </field>
+      <field name="email address id" type="integer" required="true">
+        <config>
+          <sql:column name="EmailAddressID" serial="true"/>
+        </config>
+        <doc>
+          <summary>Primary key. ID of this email address.</summary>
+        </doc>
+      </field>
+    </fieldset>
+  </fieldsets>
+  <objects>
+    <object name="email address">
+      <fields>
+        <fieldset ref="email address" key="supplied" required="true"/>
+        <field name="email address" type="string50">
+          <config>
+            <sql:column name="EmailAddress"/>
+          </config>
+          <doc>
+            <summary>E-mail address for the person.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Person.EmailAddress"/>
+      </config>
+      <doc>
+        <summary>Where to send a person email.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="location" base="small int"/>
+  </types>
+  <objects>
+    <object name="location">
+      <fields>
+        <field name="location id" type="location" key="serial" required="true">
+          <config>
+            <sql:column name="LocationID"/>
+          </config>
+        </field>
+        <field name="name" type="string50" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Location description.</summary>
+          </doc>
+        </field>
+        <field name="cost rate" type="small money" required="true">
+          <config>
+            <sql:column name="CostRate" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Standard hourly cost of the manufacturing location.</summary>
+          </doc>
+        </field>
+        <field name="availability" type="decimal_8_2" required="true">
+          <config>
+            <sql:column name="Availability" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Work capacity (in hours) of the manufacturing location.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.Location"/>
+      </config>
+      <doc>
+        <summary>Product inventory and manufacturing locations.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

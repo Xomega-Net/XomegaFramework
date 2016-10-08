@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm">
+  <types>
+    <type name="error log" base="integer key"/>
+  </types>
+  <objects>
+    <object name="error log">
+      <fields>
+        <field name="error log id" type="error log" key="serial" required="true">
+          <config>
+            <sql:column name="ErrorLogID"/>
+          </config>
+        </field>
+        <field name="error time" type="date time" required="true">
+          <config>
+            <sql:column name="ErrorTime" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>The date and time at which the error occurred.</summary>
+          </doc>
+        </field>
+        <field name="user name" type="string128" required="true">
+          <config>
+            <sql:column name="UserName"/>
+          </config>
+          <doc>
+            <summary>The user who executed the batch in which the error occurred.</summary>
+          </doc>
+        </field>
+        <field name="error number" type="integer" required="true">
+          <config>
+            <sql:column name="ErrorNumber"/>
+          </config>
+          <doc>
+            <summary>The error number of the error that occurred.</summary>
+          </doc>
+        </field>
+        <field name="error severity" type="integer">
+          <config>
+            <sql:column name="ErrorSeverity"/>
+          </config>
+          <doc>
+            <summary>The severity of the error that occurred.</summary>
+          </doc>
+        </field>
+        <field name="error state" type="integer">
+          <config>
+            <sql:column name="ErrorState"/>
+          </config>
+          <doc>
+            <summary>The state number of the error that occurred.</summary>
+          </doc>
+        </field>
+        <field name="error procedure" type="string126">
+          <config>
+            <sql:column name="ErrorProcedure"/>
+          </config>
+          <doc>
+            <summary>The name of the stored procedure or trigger where the error occurred.</summary>
+          </doc>
+        </field>
+        <field name="error line" type="integer">
+          <config>
+            <sql:column name="ErrorLine"/>
+          </config>
+          <doc>
+            <summary>The line number at which the error occurred.</summary>
+          </doc>
+        </field>
+        <field name="error message" type="string4000" required="true">
+          <config>
+            <sql:column name="ErrorMessage"/>
+          </config>
+          <doc>
+            <summary>The message text of the error that occurred.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="ErrorLog"/>
+      </config>
+      <doc>
+        <summary>Audit table tracking errors in the the AdventureWorks database that are caught by the CATCH block of a TRY...CATCH construct. Data is inserted by stored procedure dbo.uspLogError when it is executed from inside the CATCH block of a TRY...CATCH construct.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>
