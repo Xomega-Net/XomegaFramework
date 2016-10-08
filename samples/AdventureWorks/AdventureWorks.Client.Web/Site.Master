@@ -1,0 +1,48 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="AdventureWorks.Client.Web.SiteMaster" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <asp:PlaceHolder runat="server">
+    <link href='<%= Page.ResolveUrl("~/Content/css/normalize.css") %>' rel="stylesheet" type="text/css" />
+    <link href='<%= Page.ResolveUrl("~/Content/css/page.css") %>' rel="stylesheet" type="text/css" />
+    <link href='<%= Page.ResolveUrl("~/Content/css/xomega.css") %>' rel="stylesheet" type="text/css" />
+    <link href='<%= Page.ResolveUrl("~/Content/css/widgets.css") %>' rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src='<%= Page.ResolveUrl("~/Scripts/Client/autocomplete.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/Scripts/Client/dialog.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/Scripts/Client/splitter.js") %>' type="text/javascript"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  </asp:PlaceHolder>
+  <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+  <form runat="server">
+    <asp:ScriptManager ScriptMode="Release" runat="server" />
+    <div class="page">
+      <div class="page-header">
+        <div class="site-caption">
+          <h1 class="site-title">
+             AdventureWorks 
+          </h1>
+        </div>
+        <div class="site-nav">
+          <asp:Menu ID="SiteMap" ClientIDMode="Static" CssClass="menu"
+            EnableViewState="True" IncludeStyleBlock="False" Orientation="Horizontal"
+            DataSourceID="dsSiteMap" SkipLinkText="" runat="server">
+          </asp:Menu>
+          <asp:SiteMapDataSource ID="dsSiteMap" ShowStartingNode="False" runat="server" />
+        </div>
+      </div>
+      <div class="page-body">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+      </div>
+      <div class="page-footer"></div>
+    </div>
+  </form>
+</body>
+</html>

@@ -1,0 +1,215 @@
+﻿/**
+ * Covers
+ * 1. Page layout
+ * 2. HTML defaults
+ * 3. Common classes
+ * 4. General view style
+ */
+
+/* Page layout
+   ===================================================== */
+
+html {
+  font-size: 125%; /* 20px */
+}
+
+body {
+  font-size: 0.65rem;
+  font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+  background: #b6b7bc;
+  color: #696969;
+}
+
+.page > div {
+  position: fixed;
+  right: 0;
+  left: 0;
+}
+
+.page-header {
+  top: 0;
+  height: 4.25rem;
+  z-index: 102;
+}
+
+.page-body {
+  top: 0;
+  bottom: 0;
+  margin: 4.25rem 0 1.5rem;
+  width: auto;
+  height: auto;
+  background-color: #fff;
+  overflow: auto;
+  z-index: 0;
+}
+
+.page-footer {
+  bottom: 0;
+  height: 1.5rem;
+  text-align: center;
+  color: #4e5766;
+  overflow: hidden;
+  z-index: 101;
+}
+
+/* Page header */
+
+.site-caption {
+  height: 2.5rem;
+  background-color: #4b6c9e;
+  color: #f9f9f9;
+  overflow: hidden;
+}
+
+.site-title {
+  display: block;
+  float: left;
+  margin: 0 1rem;
+  line-height: 2.5rem;
+  font-size: 2em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.site-nav {
+  height: 1.75rem;
+  background-color: #3a4f63;
+}
+
+#SiteMap {
+  float: none !important;
+  padding: 0.2rem 0.4rem;
+  white-space: nowrap;
+}
+
+#SiteMap ul {
+  float: none !important;
+  width: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+#SiteMap > ul > li {
+  float: none !important;
+  display: inline-block;
+}
+
+#SiteMap ul li a, #SiteMap ul li a:visited {
+  display: block;
+  border: 1px #4e667d solid;
+  padding: 0.2rem 1rem;
+  line-height: 0.85rem;
+  text-decoration: none;
+  color: #dde4ec;
+  background-color: #465c71;
+  white-space: nowrap;
+}
+
+#SiteMap ul li a:hover {
+  text-decoration: none;
+  color: #465c71;
+  background-color: #bfcbd6;
+}
+
+#SiteMap ul li a:active {
+  text-decoration: none;
+  color: #cfdbe6;
+  background-color: #465c71;
+}
+
+/* HTML defaults
+   ===================================================== */
+
+/* Paragraph */
+
+p {
+  margin: 0;
+}
+
+p + p {
+  margin-top: 1em;
+}
+
+/* Link */
+
+a:link, a:visited {
+  color: #034af3;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #1d60ff;
+}
+
+a:active {
+  color: #034af3;
+}
+
+/* Button */
+
+input[type="submit"] {
+  margin-right: 0.2rem;
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  line-height: 0.8rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* Common classes
+   ===================================================== */
+
+/* Bars */
+
+.action-bar > * {
+  vertical-align: middle;
+}
+
+/* Indentation */
+
+.indented > *:not(:empty) ~ *:not(:empty) {
+  margin-top: 0.5rem;
+}
+
+
+/* Clearfix */
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* General view style
+   ===================================================== */
+
+.view-composition {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.view {
+  padding: 0.7rem;
+}
+
+.view-header {
+  margin-bottom: 0.6rem;
+}
+
+.view-title {
+  display: block;
+  width: auto;
+  line-height: 100%;
+  font-size: 1.5em;
+  font-weight: 600;
+  font-variant: small-caps;
+  text-transform: none;
+  color: #666666;
+}
+
+.view-footer {
+  margin-top: 0.5rem;
+}

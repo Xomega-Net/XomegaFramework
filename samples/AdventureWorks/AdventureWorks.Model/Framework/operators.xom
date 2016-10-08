@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel"
+        xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        name="framework">
+  <types>
+    <type name="operator" base="enumeration">
+      <config>
+        <xfk:property class="OperatorProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <ComboBox Style="{StaticResource OperatorStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:DropDownList runat="server" AutoPostBack="true" CssClass="operator"/>
+        </ui:web-control>
+        <ui:html-control>
+          <select xmlns="http://www.w3.org/1999/xhtml" class="operator"/>
+        </ui:html-control>
+      </config>
+      <enum ref="operators"/>
+      <usage generic="true"/>
+      <doc>
+        <summary>Enumerated operator on a value for the search criteria.</summary>
+      </doc>
+    </type>
+  </types>
+  <enums>
+    <enum name="operators">
+      <properties>
+        <property name="sort order">
+          <doc>
+            <summary>Defines the sort order of the operators with respect to other operators.</summary>
+The name should be in synch with the constant AttributeSortOrder defined in the OperatorProperty class.
+          </doc>
+        </property>
+        <property name="addl props" default="0">
+          <doc>
+            <summary>The number of additional data properties that the operator needs.
+0 (default) means it needs no additional values, 1 means it needs a value and 2 is for ranges that need both ends.</summary>
+The name should be in synch with the constant AttributeAddlProps defined in the OperatorProperty class.
+          </doc>
+        </property>
+        <property name="multival">
+          <doc>
+            <summary>1 if the additional property can be multi-valued, 0 otherwise.</summary>
+The name should be in synch with the constant AttributeMultival defined in the OperatorProperty class.
+          </doc>
+        </property>
+        <property name="type" multi-value="true">
+          <doc>
+            <summary>Fully qualified type of the additional property, which this operator applies to.
+It will also apply to all subclasses of this type. Multiple types can be specified.</summary>
+The name should be in synch with the constant AttributeType defined in the OperatorProperty class.
+          </doc>
+        </property>
+        <property name="exclude type" multi-value="true">
+          <doc>
+            <summary>Fully qualified type of the additional property, which this operator does not apply to.
+It won't also apply to all subclasses of this type. Multiple exclude types can be specified.
+Exclude types should be generally more concrete than include types.</summary>
+The name should be in synch with the constant AttributeExcludeType defined in the OperatorProperty class.
+          </doc>
+        </property>
+        <property name="null check" default="0">
+          <doc>
+            <summary>1 for null checks, otherwise 0 (default).</summary>
+The name should be in synch with the constant AttributeNullCheck defined in the OperatorProperty class.
+          </doc>
+        </property>
+      </properties>
+      <item name="Is Null" value="NULL">
+        <doc>
+          <summary>Checks if the target value is blank.</summary>
+        </doc>
+        <prop ref="sort order" value="00"/>
+        <prop ref="null check" value="1"/>
+      </item>
+      <item name="Is Not Null" value="NOTNULL">
+        <doc>
+          <summary>Checks if the target value is not blank.</summary>
+        </doc>
+        <prop ref="sort order" value="01"/>
+        <prop ref="null check" value="1"/>
+      </item>
+      <item name="Is Equal To" value="IS">
+        <doc>
+          <summary>Checks if the target value is equal to the specified value.</summary>
+        </doc>
+        <prop ref="sort order" value="02"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+      </item>
+      <item name="Is Not Equal To" value="ISNOT">
+        <doc>
+          <summary>Checks if the target value is not equal to the specified value.</summary>
+        </doc>
+        <prop ref="sort order" value="03"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+      </item>
+      <item name="Is One Of" value="ONEOF">
+        <doc>
+          <summary>Checks if the target value is one of the values listed.</summary>
+        </doc>
+        <prop ref="sort order" value="04"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="1"/>
+      </item>
+      <item name="Is None Of" value="NONEOF">
+        <doc>
+          <summary>Checks if the target value is none of the values listed.</summary>
+        </doc>
+        <prop ref="sort order" value="05"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="1"/>
+      </item>
+      <item name="Is Less Than" value="LESS">
+        <doc>
+          <summary>Checks if the target value is less than the specified values.</summary>
+        </doc>
+        <prop ref="sort order" value="06"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="IntegerProperty"/>
+        <prop ref="type" value="DecimalProperty"/>
+        <prop ref="exclude type" value="IntegerKeyProperty"/>
+      </item>
+      <item name="Is Not Less Than" value="NOTLESS">
+        <doc>
+          <summary>Checks if the target value is not less than the specified values.</summary>
+        </doc>
+        <prop ref="sort order" value="07"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="IntegerProperty"/>
+        <prop ref="type" value="DecimalProperty"/>
+        <prop ref="exclude type" value="IntegerKeyProperty"/>
+      </item>
+      <item name="Is Greater Than" value="GREATER">
+        <doc>
+          <summary>Checks if the target value is greater than the specified values.</summary>
+        </doc>
+        <prop ref="sort order" value="08"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="IntegerProperty"/>
+        <prop ref="type" value="DecimalProperty"/>
+        <prop ref="exclude type" value="IntegerKeyProperty"/>
+      </item>
+      <item name="Is Not Greater Than" value="NOTGREATER">
+        <doc>
+          <summary>Checks if the target value is not greater than the specified values.</summary>
+        </doc>
+        <prop ref="sort order" value="09"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="IntegerProperty"/>
+        <prop ref="type" value="DecimalProperty"/>
+        <prop ref="exclude type" value="IntegerKeyProperty"/>
+      </item>
+      <item name="Is Earlier Than" value="EARLIER">
+        <doc>
+          <summary>Checks if the target date/time is earlier than the specified date/time.</summary>
+        </doc>
+        <prop ref="sort order" value="10"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="DateTimeProperty"/>
+      </item>
+      <item name="Is Later Than" value="LATER">
+        <doc>
+          <summary>Checks if the target date/time is later than the specified date/time.</summary>
+        </doc>
+        <prop ref="sort order" value="11"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="DateTimeProperty"/>
+      </item>
+      <item name="Is Between" value="BETWEEN">
+        <doc>
+          <summary>Checks if the target value is between the specified values.</summary>
+        </doc>
+        <prop ref="sort order" value="12"/>
+        <prop ref="addl props" value="2"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="IntegerProperty"/>
+        <prop ref="type" value="DecimalProperty"/>
+        <prop ref="type" value="DateTimeProperty"/>
+      </item>
+      <item name="Contains" value="CONT">
+        <doc>
+          <summary>Checks if the target value contains the specified string.</summary>
+        </doc>
+        <prop ref="sort order" value="13"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="TextProperty"/>
+        <prop ref="exclude type" value="EnumProperty"/>
+      </item>
+      <item name="Does Not Contain" value="NOTCONT">
+        <doc>
+          <summary>Checks if the target value does not contain the specified string.</summary>
+        </doc>
+        <prop ref="sort order" value="14"/>
+        <prop ref="addl props" value="1"/>
+        <prop ref="multival" value="0"/>
+        <prop ref="type" value="TextProperty"/>
+        <prop ref="exclude type" value="EnumProperty"/>
+      </item>
+      <doc>
+        <summary>A list of operators to be used with filter criteria.</summary>
+The possible operators for each criteria will be a subset of this enumeration based on such parameters as
+the type of the criteria, whether or not it accepts multiple values, whether it supports specifying ranges
+and whether the underlying field is required, i.e. allows blank values.
+      </doc>
+    </enum>
+  </enums>
+</module>

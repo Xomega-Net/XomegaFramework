@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:edm="http://www.xomega.net/edm"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:uc="UserControl"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        name="framework">
+  <types>
+    <type name="boolean">
+      <config>
+        <sql:type name="bit" db="sqlsrv"/>
+        <edm:type Type="Boolean"/>
+        <clr:type name="bool" valuetype="true"/>
+        <xfk:property class="BooleanProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <CheckBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control use-in-grid="true">
+          <asp:CheckBox runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input class="boolean" type="checkbox" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Boolean value that can be either True (1) or False (0).</summary>
+      </doc>
+    </type>
+    <type name="integer">
+      <config>
+        <sql:type name="int" db="sqlsrv"/>
+        <edm:type Type="Int32"/>
+        <clr:type name="int" valuetype="true"/>
+        <xfk:property class="IntegerProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:TextBox runat="server" CssClass="integer"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input class="integer" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic signed 4-byte integer from -2^31 to 2^31-1.</summary>
+      </doc>
+    </type>
+    <type name="positive integer" base="integer">
+      <config>
+        <xfk:property class="PositiveIntegerProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Positive 4-byte integer from 0 to 2^31-1.</summary>
+      </doc>
+    </type>
+    <type name="tiny int" base="integer">
+      <config>
+        <sql:type name="tinyint" db="sqlsrv"/>
+        <edm:type Type="Byte"/>
+        <clr:type name="byte" valuetype="true"/>
+        <xfk:property class="TinyIntegerProperty" namespace="Xomega.Framework.Properties"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Small unsigned 1-byte integer from 0 to 255.</summary>
+      </doc>
+    </type>
+    <type name="small int" base="integer">
+      <config>
+        <sql:type name="smallint" db="sqlsrv"/>
+        <edm:type Type="Int16"/>
+        <clr:type name="short" valuetype="true"/>
+        <xfk:property class="SmallIntegerProperty" namespace="Xomega.Framework.Properties"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Small signed 2-byte integer from -2^15 to 2^15-1.</summary>
+      </doc>
+    </type>
+    <type name="positive small int" base="small int">
+      <config>
+        <xfk:property class="PositiveSmallIntProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Positive small 2-byte integer from 0 to 2^15-1.</summary>
+      </doc>
+    </type>
+    <type name="big int" base="integer">
+      <config>
+        <sql:type name="bigint" db="sqlsrv"/>
+        <edm:type Type="Int64"/>
+        <clr:type name="long" valuetype="true"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Large signed 8-byte integer from -2^63 to 2^63-1.</summary>
+      </doc>
+    </type>
+    <type name="integer key" base="integer">
+      <config>
+        <xfk:property class="IntegerKeyProperty" namespace="Xomega.Framework.Properties"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An integer-based key.</summary>
+      </doc>
+    </type>
+    <type name="date time">
+      <config>
+        <sql:type name="datetime" db="sqlsrv"/>
+        <edm:type Type="DateTime"/>
+        <clr:type name="DateTime" valuetype="true"/>
+        <xfk:property class="DateTimeProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <uc:DateTimeControl TextCssClass="datetime" runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input class="datetime" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic date and time.</summary>
+      </doc>
+    </type>
+    <type name="date" base="date time">
+      <config>
+        <sql:type name="date" db="sqlsrv" minver="10"/>
+        <xfk:property class="DateProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:web-control>
+          <uc:DateTimeControl TextCssClass="date" runat="server"/>
+        </ui:web-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A date with no time.</summary>
+      </doc>
+    </type>
+    <type name="time" base="date time">
+      <config>
+        <clr:type name="TimeSpan" valuetype="true"/>
+        <sql:type name="time" db="sqlsrv" minver="10"/>
+        <edm:type Type="Time"/>
+        <xfk:property class="TimeProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A time of day with no date.</summary>
+      </doc>
+    </type>
+    <type name="small date time" base="date time">
+      <config>
+        <sql:type name="smalldatetime" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A smaller-size date with time down to minutes. SQL Server 2008 only.</summary>
+      </doc>
+    </type>
+    <type name="extended date time" base="date time">
+      <config>
+        <sql:type name="datetime2" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A more precise date with time down to 100 nanoseconds. SQL Server 2008 only.</summary>
+      </doc>
+    </type>
+    <type name="date time offset" base="date time">
+      <config>
+        <sql:type name="datetimeoffset" db="sqlsrv"/>
+        <edm:type Type="DateTimeOffset"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Timezone aware date and time. SQL Server 2008 only.</summary>
+      </doc>
+    </type>
+    <type name="decimal">
+      <config>
+        <sql:type name="decimal" db="sqlsrv"/>
+        <edm:type Type="Decimal"/>
+        <clr:type name="decimal" valuetype="true"/>
+        <xfk:property class="DecimalProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:TextBox runat="server" CssClass="decimal"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input class="decimal" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic signed decimal number from -10^38+1 through 10^38-1 and no decimal digits by default.</summary>
+      </doc>
+    </type>
+    <type name="positive decimal" base="decimal">
+      <config>
+        <xfk:property class="PositiveDecimalProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic unsigned decimal number from 0 through 10^38-1 and no decimal digits by default.</summary>
+      </doc>
+    </type>
+    <type name="numeric" base="decimal">
+      <config>
+        <sql:type name="numeric" db="sqlsrv"/>
+      </config>
+      <usage generic="true" replaced-by="decimal"/>
+      <doc>
+        <summary>Same as decimal. Defined to allow default mapping for the corresponding SQL Server type.</summary>
+      </doc>
+    </type>
+    <type name="money" base="decimal">
+      <config>
+        <sql:type name="money" db="sqlsrv"/>
+        <xfk:property class="MoneyProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic number with 4 decimals that represents a monetary or a currency value.</summary>
+      </doc>
+    </type>
+    <type name="positive money" base="money">
+      <config>
+        <xfk:property class="PositiveMoneyProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Positive number with 4 decimals that represents a monetary or a currency value.</summary>
+      </doc>
+    </type>
+    <type name="small money" base="money">
+      <config>
+        <sql:type name="smallmoney" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Small number with 4 decimals for monetary values from -214,748.3648 to 214,748.3647.</summary>
+      </doc>
+    </type>
+    <type name="float">
+      <config>
+        <sql:type name="float" db="sqlsrv"/>
+        <edm:type Type="Double"/>
+        <clr:type name="float" valuetype="true"/>
+        <xfk:property class="DecimalProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Approximate 8-byte number.</summary>
+      </doc>
+    </type>
+    <type name="real" base="float">
+      <config>
+        <sql:type name="real" db="sqlsrv"/>
+      </config>
+      <usage generic="true" replaced-by="float"/>
+      <doc>
+        <summary>Approximate 4-byte number.</summary>
+      </doc>
+    </type>
+    <type name="string">
+      <config>
+        <sql:type name="nvarchar" db="sqlsrv"/>
+        <edm:type Type="String"/>
+        <clr:type name="string"/>
+        <xfk:property class="TextProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:TextBox runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Generic string with a certain maximum size.</summary>
+      </doc>
+    </type>
+    <type name="code" base="string" size="10">
+      <config>
+        <sql:type name="nchar" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A short fixed-size string that is typically used for codes.</summary>
+      </doc>
+    </type>
+    <type name="enumeration" base="code">
+      <config>
+        <xfk:property class="EnumProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <ComboBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:control multi-value="true">
+          <ListBox Style="{StaticResource ControlStyle}" MaxHeight="58" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:DropDownList runat="server"/>
+        </ui:web-control>
+        <ui:web-control multi-value="true">
+          <asp:ListBox runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <select xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+        <ui:html-control multi-value="true">
+          <select multiple="multiple" xmlns="http://www.w3.org/1999/xhtml"/>
+          <!-- use this control for check box list type of selection instead
+          <div data-control="options" xmlns="http://www.w3.org/1999/xhtml"/>
+          -->
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A code associated with an enumeration.</summary>
+      </doc>
+    </type>
+    <type name="integer enumeration" base="enumeration">
+      <config>
+        <xfk:property class="EnumIntProperty" namespace="Xomega.Framework.Properties"/>
+        <edm:type Type="Int32"/>
+        <clr:type name="int" valuetype="true"/>
+        <sql:type name="int"/>
+        <ui:web-control multi-value="true">
+          <uc:PickListControl Rows="5" runat="server"/>
+        </ui:web-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on integer values.</summary>
+      </doc>
+    </type>
+    <type name="tiny int enumeration" base="integer enumeration">
+      <config>
+        <xfk:property class="EnumByteProperty" namespace="Xomega.Framework.Properties"/>
+        <sql:type name="tinyint" db="sqlsrv"/>
+        <edm:type Type="Byte"/>
+        <clr:type name="byte" valuetype="true"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on tiny integer values.</summary>
+      </doc>
+    </type>
+    <type name="small int enumeration" base="integer enumeration">
+      <config>
+        <xfk:property class="EnumShortProperty" namespace="Xomega.Framework.Properties"/>
+        <sql:type name="smallint" db="sqlsrv"/>
+        <edm:type Type="Int16"/>
+        <clr:type name="short" valuetype="true"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on small integer values.</summary>
+      </doc>
+    </type>
+    <type name="big int enumeration" base="integer enumeration">
+      <config>
+        <xfk:property class="EnumLongProperty" namespace="Xomega.Framework.Properties"/>
+        <sql:type name="bigint" db="sqlsrv"/>
+        <edm:type Type="Int64"/>
+        <clr:type name="long" valuetype="true"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on big integer values.</summary>
+      </doc>
+    </type>
+    <type name="boolean enumeration" base="enumeration">
+      <config>
+        <xfk:property class="EnumBoolProperty" namespace="Xomega.Framework.Properties"/>
+        <edm:type Type="Boolean"/>
+        <clr:type name="bool" valuetype="true"/>
+        <sql:type name="bit"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on integer values.</summary>
+      </doc>
+    </type>
+    <type name="suggest string" base="enumeration">
+      <config>
+        <ui:html-control xmlns="http://www.w3.org/1999/xhtml">
+          <span class="autosuggest"></span>
+        </ui:html-control>
+        <ui:web-control>
+          <asp:TextBox runat="server"/>
+        </ui:web-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Text data that can be entered manually or picked from a list of suggestions.</summary>
+      </doc>
+    </type>
+    <type name="memo" base="string">
+      <config>
+        <sql:type name="nvarchar(max)" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>A large text that can be over 4000 characters long.</summary>
+      </doc>
+    </type>
+    <type name="text" base="memo">
+      <config>
+        <sql:type name="text" db="sqlsrv"/>
+      </config>
+      <usage generic="true" replaced-by="memo"/>
+      <doc>
+        <summary>A large text that can be over 8000 characters long. (Deprecated)</summary>
+      </doc>
+    </type>
+    <type name="char" base="code">
+      <config>
+        <sql:type name="char" db="sqlsrv"/>
+      </config>
+      <usage generic="true" replaced-by="code"/>
+      <doc>
+        <summary>Fixed-size set of characters.</summary>
+      </doc>
+    </type>
+    <type name="char string" base="string">
+      <config>
+        <sql:type name="varchar" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Variable size set of characters.</summary>
+      </doc>
+    </type>
+    <type name="large char string" base="string">
+      <config>
+        <sql:type name="varchar(max)" db="sqlsrv"/>
+      </config>
+      <usage generic="true" replaced-by="memo"/>
+      <doc>
+        <summary>Large set of characters that can be over 4000 characters long.</summary>
+      </doc>
+    </type>
+    <type name="guid">
+      <config>
+        <sql:type name="uniqueidentifier" db="sqlsrv"/>
+        <edm:type Type="Guid"/>
+        <clr:type name="Guid" valuetype="true"/>
+        <xfk:property class="GuidProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:TextBox runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input class="guid" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Globally unique identifier.</summary>
+      </doc>
+    </type>
+    <type name="guid enumeration" base="enumeration">
+      <config>
+        <xfk:property class="EnumGuidProperty" namespace="Xomega.Framework.Properties"/>
+        <sql:type name="uniqueidentifier" db="sqlsrv"/>
+        <edm:type Type="Guid"/>
+        <clr:type name="Guid" valuetype="true"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>An enumeration based on Guid values.</summary>
+      </doc>
+    </type>
+    <type name="binary">
+      <config>
+        <sql:type name="varbinary" db="sqlsrv"/>
+        <edm:type Type="Binary"/>
+        <clr:type name="byte[]"/>
+        <xfk:property class="DataProperty" namespace="Xomega.Framework"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Variable size binary data.</summary>
+      </doc>
+    </type>
+    <type name="fixed binary" base="binary">
+      <config>
+        <sql:type name="binary" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Fixed size binary data.</summary>
+      </doc>
+    </type>
+    <type name="large binary" base="binary">
+      <config>
+        <sql:type name="varbinary(max)" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Large binary data that can exceed 8000 bytes.</summary>
+      </doc>
+    </type>
+    <type name="xml" base="string">
+      <config>
+        <sql:type name="xml" db="sqlsrv"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Structured data stored as XML.</summary>
+      </doc>
+    </type>
+    <type name="hierarchy id">
+      <config>
+        <sql:type name="hierarchyid" db="sqlsrv" minver="10"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Represents position in a hierarchy.</summary>
+      </doc>
+    </type>
+    <type name="geometry">
+      <config>
+        <sql:type name="geometry" db="sqlsrv" minver="10"/>
+        <edm:type Type="Geometry" minFwkVer="4"/>
+        <clr:type name="DbGeometry" namespace="System.Data.Spatial"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Represents data in a Euclidean (flat) coordinate system.</summary>
+      </doc>
+    </type>
+    <type name="geography">
+      <config>
+        <sql:type name="geography" db="sqlsrv" minver="10"/>
+        <edm:type Type="Geography" minFwkVer="4"/>
+        <clr:type name="DbGeography" namespace="System.Data.Spatial"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Represents data in a round-earth coordinate system.</summary>
+      </doc>
+    </type>
+    <type name="yesno" base="boolean enumeration">
+      <enum ref="yesno"/>
+      <usage generic="true"/>
+    </type>
+  </types>
+  <enums>
+    <enum name="yesno">
+      <item name="Yes" value="true"/>
+      <item name="No" value="false"/>
+    </enum>
+  </enums>
+</module>
