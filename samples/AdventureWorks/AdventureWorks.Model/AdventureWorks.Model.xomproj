@@ -885,7 +885,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomFile Include="Import\Sales\currency_rate.xom" />
     <XomFile Include="Import\Sales\customer.xom" />
     <XomFile Include="Import\Sales\person_credit_card.xom" />
-    <XomFile Include="Import\Sales\sales_order_header.xom" />
+    <XomFile Include="Import\Sales\sales_order.xom" />
     <XomFile Include="Import\Sales\sales_person.xom" />
     <XomFile Include="Import\Sales\sales_person_quota_history.xom" />
     <XomFile Include="Import\Sales\sales_reason.xom" />

@@ -9,14 +9,14 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
+    <type name="sales order" base="integer key"/>
     <type name="sales order detail" base="integer key"/>
-    <type name="sales order header" base="integer key"/>
-    <type name="sales order header sales reason" base="sales reason"/>
+    <type name="sales order reason" base="sales reason"/>
   </types>
   <objects>
-    <object name="sales order header">
+    <object name="sales order">
       <fields>
-        <field name="sales order id" type="sales order header" key="serial" required="true">
+        <field name="sales order id" type="sales order" key="serial" required="true">
           <config>
             <sql:column name="SalesOrderID"/>
           </config>
@@ -229,7 +229,7 @@
         <summary>General sales order information.</summary>
       </doc>
       <subobjects>
-        <object name="sales order detail">
+        <object name="detail">
           <fields>
             <field name="sales order detail id" type="sales order detail" key="serial"
                    required="true">
@@ -302,9 +302,9 @@
             <summary>Individual products associated with a specific sales order. See SalesOrderHeader.</summary>
           </doc>
         </object>
-        <object name="sales reason">
+        <object name="reason">
           <fields>
-            <field name="sales reason id" type="sales order header sales reason" key="supplied"
+            <field name="sales reason id" type="sales order reason" key="supplied"
                    required="true">
               <config>
                 <sql:column name="SalesReasonID"/>
