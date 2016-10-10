@@ -70,10 +70,6 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Xomega.Framework, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xomega.Framework.1.6\lib\net45\Xomega.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -320,6 +316,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Xomega.Framework\Xomega.Framework.csproj">
+      <Project>{22ccc22d-05fa-4230-adc6-076dcb39a53a}</Project>
+      <Name>Xomega.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdventureWorks.Services\AdventureWorks.Services.csproj">
       <Project>{3F039622-5D05-483B-A8F3-18D2020F49E3}</Project>
       <Name>AdventureWorks.Services</Name>

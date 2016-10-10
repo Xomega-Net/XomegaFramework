@@ -80,12 +80,12 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Xomega.Framework, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xomega.Framework.1.6\lib\net45\Xomega.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Xomega.Framework\Xomega.Framework.csproj">
+      <Project>{22ccc22d-05fa-4230-adc6-076dcb39a53a}</Project>
+      <Name>Xomega.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdventureWorks.Client.Objects\AdventureWorks.Client.Objects.csproj">
       <Project>{307261DE-7386-4B1F-9E16-8FFCBD727BDA}</Project>
       <Name>AdventureWorks.Client.Objects</Name>
