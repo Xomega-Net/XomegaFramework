@@ -12,12 +12,12 @@ namespace AdventureWorks.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class SalesOrderHeader
+    public partial class SalesOrder
     {
-        public SalesOrderHeader()
+        public SalesOrder()
         {
-            this.SalesOrderDetailObjectList = new HashSet<SalesOrderHeaderSalesOrderDetail>();
-            this.SalesReasonObjectList = new HashSet<SalesOrderHeaderSalesReason>();
+            this.DetailObjectList = new HashSet<SalesOrderDetail>();
+            this.ReasonObjectList = new HashSet<SalesOrderReason>();
         }
     
         public int SalesOrderId { get; set; }
@@ -47,7 +47,7 @@ namespace AdventureWorks.Entities
         public virtual ShipMethod ShipMethodIdObject { get; set; }
         public virtual CreditCard CreditCardIdObject { get; set; }
         public virtual CurrencyRate CurrencyRateIdObject { get; set; }
-        public virtual ICollection<SalesOrderHeaderSalesOrderDetail> SalesOrderDetailObjectList { get; set; }
-        public virtual ICollection<SalesOrderHeaderSalesReason> SalesReasonObjectList { get; set; }
+        public virtual ICollection<SalesOrderDetail> DetailObjectList { get; set; }
+        public virtual ICollection<SalesOrderReason> ReasonObjectList { get; set; }
     }
 }

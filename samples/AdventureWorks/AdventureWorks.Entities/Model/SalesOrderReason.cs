@@ -12,13 +12,13 @@ namespace AdventureWorks.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class SalesOrderHeaderSalesReason
+    public partial class SalesOrderReason
     {
         public int SalesOrderId { get; set; }
         public int SalesReasonId { get; set; }
         public System.DateTime ModifiedDate { get; set; }
     
-        public virtual SalesOrderHeader SalesOrderHeaderObject { get; set; }
+        public virtual SalesOrder SalesOrderObject { get; set; }
         public virtual SalesReason SalesReasonIdObject { get; set; }
     }
 }

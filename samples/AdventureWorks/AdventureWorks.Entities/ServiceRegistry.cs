@@ -12,6 +12,7 @@ namespace AdventureWorks.Entities
         /// </summary>
         public static void RegisterTypes()
         {
+            DI.RegisterType<ISalesOrderService, AdventureWorks.Entities.Services.SalesOrderService>();
             // GENPOINT - generated code will be inserted here. DO NOT REMOVE this line!
         }
     }

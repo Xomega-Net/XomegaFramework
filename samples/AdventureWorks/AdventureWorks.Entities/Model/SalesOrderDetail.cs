@@ -12,7 +12,7 @@ namespace AdventureWorks.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class SalesOrderHeaderSalesOrderDetail
+    public partial class SalesOrderDetail
     {
         public int SalesOrderDetailId { get; set; }
         public string CarrierTrackingNumber { get; set; }
@@ -23,7 +23,7 @@ namespace AdventureWorks.Entities
         public System.Guid Rowguid { get; set; }
         public System.DateTime ModifiedDate { get; set; }
     
-        public virtual SalesOrderHeader SalesOrderHeaderObject { get; set; }
+        public virtual SalesOrder SalesOrderObject { get; set; }
         public virtual SpecialOfferProduct SpecialOfferProductObject { get; set; }
     }
 }

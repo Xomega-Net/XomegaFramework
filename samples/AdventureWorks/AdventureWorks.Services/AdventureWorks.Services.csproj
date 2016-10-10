@@ -79,6 +79,9 @@
       <Compile Include="CacheLoaders\LookupCacheLoaders.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\_ISalesOrderService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

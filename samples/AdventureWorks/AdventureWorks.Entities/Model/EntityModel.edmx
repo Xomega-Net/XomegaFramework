@@ -2581,11 +2581,9 @@
                <EntitySet Name="ProductVendor" EntityType="Self.ProductVendor"/>
                <EntitySet Name="PurchaseOrderDetail" EntityType="Self.PurchaseOrderDetail"/>
                <EntitySet Name="PurchaseOrderHeader" EntityType="Self.PurchaseOrderHeader"/>
-               <EntitySet Name="SalesOrderHeader" EntityType="Self.SalesOrderHeader"/>
-               <EntitySet Name="SalesOrderHeaderSalesOrderDetail"
-                          EntityType="Self.SalesOrderHeaderSalesOrderDetail"/>
-               <EntitySet Name="SalesOrderHeaderSalesReason"
-                          EntityType="Self.SalesOrderHeaderSalesReason"/>
+               <EntitySet Name="SalesOrder" EntityType="Self.SalesOrder"/>
+               <EntitySet Name="SalesOrderDetail" EntityType="Self.SalesOrderDetail"/>
+               <EntitySet Name="SalesOrderReason" EntityType="Self.SalesOrderReason"/>
                <EntitySet Name="SalesPerson" EntityType="Self.SalesPerson"/>
                <EntitySet Name="SalesPersonQuotaHistory" EntityType="Self.SalesPersonQuotaHistory"/>
                <EntitySet Name="SalesReason" EntityType="Self.SalesReason"/>
@@ -2873,67 +2871,57 @@
                   <End Role="Vendor" EntitySet="Vendor"/>
                   <End Role="PurchaseOrderHeader" EntitySet="PurchaseOrderHeader"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeaderSalesOrderDetail_SalesOrderHeader"
-                               Association="Self.SalesOrderHeaderSalesOrderDetail_SalesOrderHeader">
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
-                  <End Role="SalesOrderHeaderSalesOrderDetail"
-                       EntitySet="SalesOrderHeaderSalesOrderDetail"/>
+               <AssociationSet Name="SalesOrderDetail_SalesOrder"
+                               Association="Self.SalesOrderDetail_SalesOrder">
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
+                  <End Role="SalesOrderDetail" EntitySet="SalesOrderDetail"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct"
-                               Association="Self.SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct">
+               <AssociationSet Name="SalesOrderDetail_SpecialOfferProduct"
+                               Association="Self.SalesOrderDetail_SpecialOfferProduct">
                   <End Role="SpecialOfferProduct" EntitySet="SpecialOfferProduct"/>
-                  <End Role="SalesOrderHeaderSalesOrderDetail"
-                       EntitySet="SalesOrderHeaderSalesOrderDetail"/>
+                  <End Role="SalesOrderDetail" EntitySet="SalesOrderDetail"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeaderSalesReason_SalesOrderHeader"
-                               Association="Self.SalesOrderHeaderSalesReason_SalesOrderHeader">
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
-                  <End Role="SalesOrderHeaderSalesReason" EntitySet="SalesOrderHeaderSalesReason"/>
+               <AssociationSet Name="SalesOrderReason_SalesOrder"
+                               Association="Self.SalesOrderReason_SalesOrder">
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
+                  <End Role="SalesOrderReason" EntitySet="SalesOrderReason"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeaderSalesReason_SalesReasonId"
-                               Association="Self.SalesOrderHeaderSalesReason_SalesReasonId">
+               <AssociationSet Name="SalesOrderReason_SalesReasonId"
+                               Association="Self.SalesOrderReason_SalesReasonId">
                   <End Role="SalesReason" EntitySet="SalesReason"/>
-                  <End Role="SalesOrderHeaderSalesReason" EntitySet="SalesOrderHeaderSalesReason"/>
+                  <End Role="SalesOrderReason" EntitySet="SalesOrderReason"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_BillToAddressId"
-                               Association="Self.SalesOrderHeader_BillToAddressId">
+               <AssociationSet Name="SalesOrder_BillToAddressId" Association="Self.SalesOrder_BillToAddressId">
                   <End Role="Address" EntitySet="Address"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_CreditCardId"
-                               Association="Self.SalesOrderHeader_CreditCardId">
+               <AssociationSet Name="SalesOrder_CreditCardId" Association="Self.SalesOrder_CreditCardId">
                   <End Role="CreditCard" EntitySet="CreditCard"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_CurrencyRateId"
-                               Association="Self.SalesOrderHeader_CurrencyRateId">
+               <AssociationSet Name="SalesOrder_CurrencyRateId" Association="Self.SalesOrder_CurrencyRateId">
                   <End Role="CurrencyRate" EntitySet="CurrencyRate"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_CustomerId"
-                               Association="Self.SalesOrderHeader_CustomerId">
+               <AssociationSet Name="SalesOrder_CustomerId" Association="Self.SalesOrder_CustomerId">
                   <End Role="Customer" EntitySet="Customer"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_SalesPersonId"
-                               Association="Self.SalesOrderHeader_SalesPersonId">
+               <AssociationSet Name="SalesOrder_SalesPersonId" Association="Self.SalesOrder_SalesPersonId">
                   <End Role="SalesPerson" EntitySet="SalesPerson"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_ShipMethodId"
-                               Association="Self.SalesOrderHeader_ShipMethodId">
+               <AssociationSet Name="SalesOrder_ShipMethodId" Association="Self.SalesOrder_ShipMethodId">
                   <End Role="ShipMethod" EntitySet="ShipMethod"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_ShipToAddressId"
-                               Association="Self.SalesOrderHeader_ShipToAddressId">
+               <AssociationSet Name="SalesOrder_ShipToAddressId" Association="Self.SalesOrder_ShipToAddressId">
                   <End Role="Address" EntitySet="Address"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
-               <AssociationSet Name="SalesOrderHeader_TerritoryId"
-                               Association="Self.SalesOrderHeader_TerritoryId">
+               <AssociationSet Name="SalesOrder_TerritoryId" Association="Self.SalesOrder_TerritoryId">
                   <End Role="SalesTerritory" EntitySet="SalesTerritory"/>
-                  <End Role="SalesOrderHeader" EntitySet="SalesOrderHeader"/>
+                  <End Role="SalesOrder" EntitySet="SalesOrder"/>
                </AssociationSet>
                <AssociationSet Name="SalesPersonQuotaHistory_BusinessEntityId"
                                Association="Self.SalesPersonQuotaHistory_BusinessEntityId">
@@ -4840,7 +4828,7 @@
                                    FromRole="PurchaseOrderHeader"
                                    ToRole="ShipMethod"/>
             </EntityType>
-            <EntityType Name="SalesOrderHeader">
+            <EntityType Name="SalesOrder">
                <Documentation>
                   <Summary>General sales order information.</Summary>
                </Documentation>
@@ -4934,42 +4922,38 @@
                      <Summary>Date and time the record was last updated.</Summary>
                   </Documentation>
                </Property>
-               <NavigationProperty Name="CustomerIdObject" Relationship="Self.SalesOrderHeader_CustomerId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="CustomerIdObject" Relationship="Self.SalesOrder_CustomerId"
+                                   FromRole="SalesOrder"
                                    ToRole="Customer"/>
-               <NavigationProperty Name="SalesPersonIdObject" Relationship="Self.SalesOrderHeader_SalesPersonId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="SalesPersonIdObject" Relationship="Self.SalesOrder_SalesPersonId"
+                                   FromRole="SalesOrder"
                                    ToRole="SalesPerson"/>
-               <NavigationProperty Name="TerritoryIdObject" Relationship="Self.SalesOrderHeader_TerritoryId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="TerritoryIdObject" Relationship="Self.SalesOrder_TerritoryId"
+                                   FromRole="SalesOrder"
                                    ToRole="SalesTerritory"/>
-               <NavigationProperty Name="BillToAddressIdObject"
-                                   Relationship="Self.SalesOrderHeader_BillToAddressId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="BillToAddressIdObject" Relationship="Self.SalesOrder_BillToAddressId"
+                                   FromRole="SalesOrder"
                                    ToRole="Address"/>
-               <NavigationProperty Name="ShipToAddressIdObject"
-                                   Relationship="Self.SalesOrderHeader_ShipToAddressId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="ShipToAddressIdObject" Relationship="Self.SalesOrder_ShipToAddressId"
+                                   FromRole="SalesOrder"
                                    ToRole="Address"/>
-               <NavigationProperty Name="ShipMethodIdObject" Relationship="Self.SalesOrderHeader_ShipMethodId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="ShipMethodIdObject" Relationship="Self.SalesOrder_ShipMethodId"
+                                   FromRole="SalesOrder"
                                    ToRole="ShipMethod"/>
-               <NavigationProperty Name="CreditCardIdObject" Relationship="Self.SalesOrderHeader_CreditCardId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="CreditCardIdObject" Relationship="Self.SalesOrder_CreditCardId"
+                                   FromRole="SalesOrder"
                                    ToRole="CreditCard"/>
-               <NavigationProperty Name="CurrencyRateIdObject" Relationship="Self.SalesOrderHeader_CurrencyRateId"
-                                   FromRole="SalesOrderHeader"
+               <NavigationProperty Name="CurrencyRateIdObject" Relationship="Self.SalesOrder_CurrencyRateId"
+                                   FromRole="SalesOrder"
                                    ToRole="CurrencyRate"/>
-               <NavigationProperty Name="SalesOrderDetailObjectList"
-                                   Relationship="Self.SalesOrderHeaderSalesOrderDetail_SalesOrderHeader"
-                                   FromRole="SalesOrderHeader"
-                                   ToRole="SalesOrderHeaderSalesOrderDetail"/>
-               <NavigationProperty Name="SalesReasonObjectList"
-                                   Relationship="Self.SalesOrderHeaderSalesReason_SalesOrderHeader"
-                                   FromRole="SalesOrderHeader"
-                                   ToRole="SalesOrderHeaderSalesReason"/>
+               <NavigationProperty Name="DetailObjectList" Relationship="Self.SalesOrderDetail_SalesOrder"
+                                   FromRole="SalesOrder"
+                                   ToRole="SalesOrderDetail"/>
+               <NavigationProperty Name="ReasonObjectList" Relationship="Self.SalesOrderReason_SalesOrder"
+                                   FromRole="SalesOrder"
+                                   ToRole="SalesOrderReason"/>
             </EntityType>
-            <EntityType Name="SalesOrderHeaderSalesOrderDetail">
+            <EntityType Name="SalesOrderDetail">
                <Documentation>
                   <Summary>Individual products associated with a specific sales order. See SalesOrderHeader.</Summary>
                </Documentation>
@@ -5013,16 +4997,15 @@
                      <Summary>Date and time the record was last updated.</Summary>
                   </Documentation>
                </Property>
-               <NavigationProperty Name="SalesOrderHeaderObject"
-                                   Relationship="Self.SalesOrderHeaderSalesOrderDetail_SalesOrderHeader"
-                                   FromRole="SalesOrderHeaderSalesOrderDetail"
-                                   ToRole="SalesOrderHeader"/>
+               <NavigationProperty Name="SalesOrderObject" Relationship="Self.SalesOrderDetail_SalesOrder"
+                                   FromRole="SalesOrderDetail"
+                                   ToRole="SalesOrder"/>
                <NavigationProperty Name="SpecialOfferProductObject"
-                                   Relationship="Self.SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct"
-                                   FromRole="SalesOrderHeaderSalesOrderDetail"
+                                   Relationship="Self.SalesOrderDetail_SpecialOfferProduct"
+                                   FromRole="SalesOrderDetail"
                                    ToRole="SpecialOfferProduct"/>
             </EntityType>
-            <EntityType Name="SalesOrderHeaderSalesReason">
+            <EntityType Name="SalesOrderReason">
                <Documentation>
                   <Summary>Cross-reference table mapping sales orders to sales reason codes.</Summary>
                </Documentation>
@@ -5038,13 +5021,11 @@
                      <Summary>Date and time the record was last updated.</Summary>
                   </Documentation>
                </Property>
-               <NavigationProperty Name="SalesOrderHeaderObject"
-                                   Relationship="Self.SalesOrderHeaderSalesReason_SalesOrderHeader"
-                                   FromRole="SalesOrderHeaderSalesReason"
-                                   ToRole="SalesOrderHeader"/>
-               <NavigationProperty Name="SalesReasonIdObject"
-                                   Relationship="Self.SalesOrderHeaderSalesReason_SalesReasonId"
-                                   FromRole="SalesOrderHeaderSalesReason"
+               <NavigationProperty Name="SalesOrderObject" Relationship="Self.SalesOrderReason_SalesOrder"
+                                   FromRole="SalesOrderReason"
+                                   ToRole="SalesOrder"/>
+               <NavigationProperty Name="SalesReasonIdObject" Relationship="Self.SalesOrderReason_SalesReasonId"
+                                   FromRole="SalesOrderReason"
                                    ToRole="SalesReason"/>
             </EntityType>
             <EntityType Name="SalesPerson">
@@ -6379,79 +6360,73 @@
                <End Role="Vendor" Type="Self.Vendor" Multiplicity="1"/>
                <End Role="PurchaseOrderHeader" Type="Self.PurchaseOrderHeader" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeaderSalesOrderDetail_SalesOrderHeader">
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="1">
+            <Association Name="SalesOrderDetail_SalesOrder">
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="1">
                   <OnDelete Action="Cascade"/>
                </End>
-               <End Role="SalesOrderHeaderSalesOrderDetail"
-                    Type="Self.SalesOrderHeaderSalesOrderDetail"
-                    Multiplicity="*"/>
+               <End Role="SalesOrderDetail" Type="Self.SalesOrderDetail" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct">
+            <Association Name="SalesOrderDetail_SpecialOfferProduct">
                <End Role="SpecialOfferProduct" Type="Self.SpecialOfferProduct" Multiplicity="1"/>
-               <End Role="SalesOrderHeaderSalesOrderDetail"
-                    Type="Self.SalesOrderHeaderSalesOrderDetail"
-                    Multiplicity="*"/>
+               <End Role="SalesOrderDetail" Type="Self.SalesOrderDetail" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeaderSalesReason_SalesOrderHeader">
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="1">
+            <Association Name="SalesOrderReason_SalesOrder">
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="1">
                   <OnDelete Action="Cascade"/>
                </End>
-               <End Role="SalesOrderHeaderSalesReason" Type="Self.SalesOrderHeaderSalesReason"
-                    Multiplicity="*"/>
+               <End Role="SalesOrderReason" Type="Self.SalesOrderReason" Multiplicity="*"/>
                <ReferentialConstraint>
-                  <Principal Role="SalesOrderHeader">
+                  <Principal Role="SalesOrder">
                      <PropertyRef Name="SalesOrderId"/>
                   </Principal>
-                  <Dependent Role="SalesOrderHeaderSalesReason">
+                  <Dependent Role="SalesOrderReason">
                      <PropertyRef Name="SalesOrderId"/>
                   </Dependent>
                </ReferentialConstraint>
             </Association>
-            <Association Name="SalesOrderHeaderSalesReason_SalesReasonId">
+            <Association Name="SalesOrderReason_SalesReasonId">
                <End Role="SalesReason" Type="Self.SalesReason" Multiplicity="1"/>
-               <End Role="SalesOrderHeaderSalesReason" Type="Self.SalesOrderHeaderSalesReason"
-                    Multiplicity="*"/>
+               <End Role="SalesOrderReason" Type="Self.SalesOrderReason" Multiplicity="*"/>
                <ReferentialConstraint>
                   <Principal Role="SalesReason">
                      <PropertyRef Name="SalesReasonId"/>
                   </Principal>
-                  <Dependent Role="SalesOrderHeaderSalesReason">
+                  <Dependent Role="SalesOrderReason">
                      <PropertyRef Name="SalesReasonId"/>
                   </Dependent>
                </ReferentialConstraint>
             </Association>
-            <Association Name="SalesOrderHeader_BillToAddressId">
+            <Association Name="SalesOrder_BillToAddressId">
                <End Role="Address" Type="Self.Address" Multiplicity="1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_CreditCardId">
+            <Association Name="SalesOrder_CreditCardId">
                <End Role="CreditCard" Type="Self.CreditCard" Multiplicity="0..1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_CurrencyRateId">
+            <Association Name="SalesOrder_CurrencyRateId">
                <End Role="CurrencyRate" Type="Self.CurrencyRate" Multiplicity="0..1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_CustomerId">
+            <Association Name="SalesOrder_CustomerId">
                <End Role="Customer" Type="Self.Customer" Multiplicity="1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_SalesPersonId">
+            <Association Name="SalesOrder_SalesPersonId">
                <End Role="SalesPerson" Type="Self.SalesPerson" Multiplicity="0..1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_ShipMethodId">
+            <Association Name="SalesOrder_ShipMethodId">
                <End Role="ShipMethod" Type="Self.ShipMethod" Multiplicity="1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_ShipToAddressId">
+            <Association Name="SalesOrder_ShipToAddressId">
                <End Role="Address" Type="Self.Address" Multiplicity="1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
-            <Association Name="SalesOrderHeader_TerritoryId">
+            <Association Name="SalesOrder_TerritoryId">
                <End Role="SalesTerritory" Type="Self.SalesTerritory" Multiplicity="0..1"/>
-               <End Role="SalesOrderHeader" Type="Self.SalesOrderHeader" Multiplicity="*"/>
+               <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*"/>
             </Association>
             <Association Name="SalesPersonQuotaHistory_BusinessEntityId">
                <End Role="SalesPerson" Type="Self.SalesPerson" Multiplicity="1"/>
@@ -7154,8 +7129,8 @@
                      </MappingFragment>
                   </EntityTypeMapping>
                </EntitySetMapping>
-               <EntitySetMapping Name="SalesOrderHeader">
-                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrderHeader">
+               <EntitySetMapping Name="SalesOrder">
+                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrder">
                      <MappingFragment StoreEntitySet="SalesOrderHeader">
                         <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                         <ScalarProperty Name="RevisionNumber" ColumnName="RevisionNumber"/>
@@ -7178,8 +7153,8 @@
                      </MappingFragment>
                   </EntityTypeMapping>
                </EntitySetMapping>
-               <EntitySetMapping Name="SalesOrderHeaderSalesOrderDetail">
-                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrderHeaderSalesOrderDetail">
+               <EntitySetMapping Name="SalesOrderDetail">
+                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrderDetail">
                      <MappingFragment StoreEntitySet="SalesOrderDetail">
                         <ScalarProperty Name="SalesOrderDetailId" ColumnName="SalesOrderDetailID"/>
                         <ScalarProperty Name="CarrierTrackingNumber" ColumnName="CarrierTrackingNumber"/>
@@ -7192,8 +7167,8 @@
                      </MappingFragment>
                   </EntityTypeMapping>
                </EntitySetMapping>
-               <EntitySetMapping Name="SalesOrderHeaderSalesReason">
-                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrderHeaderSalesReason">
+               <EntitySetMapping Name="SalesOrderReason">
+                  <EntityTypeMapping TypeName="AdventureWorksModel.SalesOrderReason">
                      <MappingFragment StoreEntitySet="SalesOrderHeaderSalesReason">
                         <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                         <ScalarProperty Name="SalesReasonId" ColumnName="SalesReasonID"/>
@@ -7669,107 +7644,107 @@
                      <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeaderSalesOrderDetail_SalesOrderHeader"
-                                      TypeName="AdventureWorksModel.SalesOrderHeaderSalesOrderDetail_SalesOrderHeader"
+               <AssociationSetMapping Name="SalesOrderDetail_SalesOrder"
+                                      TypeName="AdventureWorksModel.SalesOrderDetail_SalesOrder"
                                       StoreEntitySet="SalesOrderDetail">
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeaderSalesOrderDetail">
+                  <EndProperty Name="SalesOrderDetail">
                      <ScalarProperty Name="SalesOrderDetailId" ColumnName="SalesOrderDetailID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct"
-                                      TypeName="AdventureWorksModel.SalesOrderHeaderSalesOrderDetail_SpecialOfferProduct"
+               <AssociationSetMapping Name="SalesOrderDetail_SpecialOfferProduct"
+                                      TypeName="AdventureWorksModel.SalesOrderDetail_SpecialOfferProduct"
                                       StoreEntitySet="SalesOrderDetail">
                   <EndProperty Name="SpecialOfferProduct">
                      <ScalarProperty Name="SpecialOfferId" ColumnName="SpecialOfferID"/>
                      <ScalarProperty Name="ProductId" ColumnName="ProductID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeaderSalesOrderDetail">
+                  <EndProperty Name="SalesOrderDetail">
                      <ScalarProperty Name="SalesOrderDetailId" ColumnName="SalesOrderDetailID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_BillToAddressId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_BillToAddressId"
+               <AssociationSetMapping Name="SalesOrder_BillToAddressId"
+                                      TypeName="AdventureWorksModel.SalesOrder_BillToAddressId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="Address">
                      <ScalarProperty Name="AddressId" ColumnName="BillToAddressID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_CreditCardId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_CreditCardId"
+               <AssociationSetMapping Name="SalesOrder_CreditCardId"
+                                      TypeName="AdventureWorksModel.SalesOrder_CreditCardId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="CreditCard">
                      <ScalarProperty Name="CreditCardId" ColumnName="CreditCardID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                   <Condition ColumnName="CreditCardID" IsNull="false"/>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_CurrencyRateId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_CurrencyRateId"
+               <AssociationSetMapping Name="SalesOrder_CurrencyRateId"
+                                      TypeName="AdventureWorksModel.SalesOrder_CurrencyRateId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="CurrencyRate">
                      <ScalarProperty Name="CurrencyRateId" ColumnName="CurrencyRateID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                   <Condition ColumnName="CurrencyRateID" IsNull="false"/>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_CustomerId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_CustomerId"
+               <AssociationSetMapping Name="SalesOrder_CustomerId"
+                                      TypeName="AdventureWorksModel.SalesOrder_CustomerId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="Customer">
                      <ScalarProperty Name="CustomerId" ColumnName="CustomerID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_SalesPersonId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_SalesPersonId"
+               <AssociationSetMapping Name="SalesOrder_SalesPersonId"
+                                      TypeName="AdventureWorksModel.SalesOrder_SalesPersonId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="SalesPerson">
                      <ScalarProperty Name="BusinessEntityId" ColumnName="SalesPersonID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                   <Condition ColumnName="SalesPersonID" IsNull="false"/>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_ShipMethodId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_ShipMethodId"
+               <AssociationSetMapping Name="SalesOrder_ShipMethodId"
+                                      TypeName="AdventureWorksModel.SalesOrder_ShipMethodId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="ShipMethod">
                      <ScalarProperty Name="ShipMethodId" ColumnName="ShipMethodID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_ShipToAddressId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_ShipToAddressId"
+               <AssociationSetMapping Name="SalesOrder_ShipToAddressId"
+                                      TypeName="AdventureWorksModel.SalesOrder_ShipToAddressId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="Address">
                      <ScalarProperty Name="AddressId" ColumnName="ShipToAddressID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                </AssociationSetMapping>
-               <AssociationSetMapping Name="SalesOrderHeader_TerritoryId"
-                                      TypeName="AdventureWorksModel.SalesOrderHeader_TerritoryId"
+               <AssociationSetMapping Name="SalesOrder_TerritoryId"
+                                      TypeName="AdventureWorksModel.SalesOrder_TerritoryId"
                                       StoreEntitySet="SalesOrderHeader">
                   <EndProperty Name="SalesTerritory">
                      <ScalarProperty Name="TerritoryId" ColumnName="TerritoryID"/>
                   </EndProperty>
-                  <EndProperty Name="SalesOrderHeader">
+                  <EndProperty Name="SalesOrder">
                      <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderID"/>
                   </EndProperty>
                   <Condition ColumnName="TerritoryID" IsNull="false"/>

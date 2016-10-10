@@ -71,9 +71,9 @@ namespace AdventureWorks.Entities
         public virtual DbSet<ProductVendor> ProductVendor { get; set; }
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetail { get; set; }
         public virtual DbSet<PurchaseOrderHeader> PurchaseOrderHeader { get; set; }
-        public virtual DbSet<SalesOrderHeader> SalesOrderHeader { get; set; }
-        public virtual DbSet<SalesOrderHeaderSalesOrderDetail> SalesOrderHeaderSalesOrderDetail { get; set; }
-        public virtual DbSet<SalesOrderHeaderSalesReason> SalesOrderHeaderSalesReason { get; set; }
+        public virtual DbSet<SalesOrder> SalesOrder { get; set; }
+        public virtual DbSet<SalesOrderDetail> SalesOrderDetail { get; set; }
+        public virtual DbSet<SalesOrderReason> SalesOrderReason { get; set; }
         public virtual DbSet<SalesPerson> SalesPerson { get; set; }
         public virtual DbSet<SalesPersonQuotaHistory> SalesPersonQuotaHistory { get; set; }
         public virtual DbSet<SalesReason> SalesReason { get; set; }
