@@ -102,7 +102,7 @@ namespace Xomega.Framework.Web
             if (listObj != null) listObj.RowSelectionMode = query[QuerySelectionMode];
 
             BindObjects(); // bind before search to output criteria labels properly
-            if (query[QueryAction] == ActionSearch) Search(false);
+            if (query[QueryAction] == ActionSearch || criteriaObj == null) Search(false);
             // try to auto-select as appropriate and don't show the view if succeeded
             if (query[QueryAction] == ActionSelect && AutoSelect()) return false;
             // make Select button visible only in Select mode
@@ -119,7 +119,7 @@ namespace Xomega.Framework.Web
         {
             if (criteriaObj != null) criteriaObj.ResetData();
             if (listObj != null) listObj.ResetData();
-            if (AutoCollapseCriteria) ucl_Criteria.Collapsed = false;
+            if (ucl_Criteria != null && AutoCollapseCriteria) ucl_Criteria.Collapsed = false;
         }
 
         #endregion
