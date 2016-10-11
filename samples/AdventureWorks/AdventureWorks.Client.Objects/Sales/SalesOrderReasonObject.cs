@@ -40,10 +40,8 @@ namespace AdventureWorks.Client.Objects
             ModifiedDateProperty.Required = true;
             SalesOrderIdProperty = new IntegerKeyProperty(this, SalesOrderId);
             SalesOrderIdProperty.Required = true;
-            SalesOrderIdProperty.Editable = false;
             SalesReasonIdProperty = new IntegerKeyProperty(this, SalesReasonId);
             SalesReasonIdProperty.Required = true;
-            SalesReasonIdProperty.Editable = false;
         }
 
         #endregion

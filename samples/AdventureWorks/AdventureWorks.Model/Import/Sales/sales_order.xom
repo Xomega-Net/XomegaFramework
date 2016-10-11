@@ -338,6 +338,9 @@
                 <xfk:add-to-object class="SalesOrderObject"/>
               </config>
             </struct>
+            <config>
+              <xfk:add-to-object class="SalesOrderObject"/>
+            </config>
           </input>
           <doc>
             <summary>Updates existing Sales Order object using the specified data.</summary>
@@ -780,6 +783,9 @@
                     <xfk:add-to-object class="SalesOrderDetailObject"/>
                   </config>
                 </struct>
+                <config>
+                  <xfk:add-to-object class="SalesOrderDetailObject"/>
+                </config>
               </input>
               <doc>
                 <summary>Updates existing Sales Order Detail object using the specified data.</summary>
@@ -889,6 +895,9 @@
                     <xfk:add-to-object class="SalesOrderReasonObject"/>
                   </config>
                 </struct>
+                <config>
+                  <xfk:add-to-object class="SalesOrderReasonObject"/>
+                </config>
               </input>
               <doc>
                 <summary>Updates existing or creates a new Sales Order Reason object using the specified data.</summary>

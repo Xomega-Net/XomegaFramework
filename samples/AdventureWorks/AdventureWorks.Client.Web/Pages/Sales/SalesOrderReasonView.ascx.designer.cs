@@ -14,9 +14,9 @@ namespace AdventureWorks.Client.Web
         protected global::AdventureWorks.Client.Web.Errors errors;
         protected global::System.Web.UI.WebControls.Panel pnlMain;
         protected global::System.Web.UI.WebControls.Label lblSalesOrderId;
-        protected global::System.Web.UI.WebControls.Label ctlSalesOrderId;
+        protected global::System.Web.UI.WebControls.TextBox ctlSalesOrderId;
         protected global::System.Web.UI.WebControls.Label lblSalesReasonId;
-        protected global::System.Web.UI.WebControls.Label ctlSalesReasonId;
+        protected global::System.Web.UI.WebControls.TextBox ctlSalesReasonId;
         protected global::System.Web.UI.WebControls.Label lblModifiedDate;
         protected global::AdventureWorks.Client.Web.DateTimeControl ctlModifiedDate;
         protected global::System.Web.UI.WebControls.Button btnSave;
