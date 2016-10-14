@@ -188,31 +188,11 @@
               <uc:AppliedCriteria ID="uclAppliedCriteria" runat="server"></uc:AppliedCriteria>
               <asp:GridView ID="grd_Results" runat="server">
                 <Columns>
-                  <asp:TemplateField HeaderText="Sales Order Id">
+                  <asp:TemplateField HeaderText="Sales Order Number">
                     <ItemTemplate>
                       <asp:LinkButton ID="lnkDetails" runat="server" OnCommand="lnkDetails_Click" CommandArgument="<%# Container.DataItemIndex %>">
-                        <asp:Label ID="fldSalesOrderId" Property="<%# SalesOrderList.SalesOrderId %>" runat="server"></asp:Label>
+                        <asp:Label ID="fldSalesOrderNumber" Property="<%# SalesOrderList.SalesOrderNumber %>" runat="server"></asp:Label>
                       </asp:LinkButton>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Revision Number">
-                    <ItemTemplate>
-                      <asp:Label ID="fldRevisionNumber" Property="<%# SalesOrderList.RevisionNumber %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Order Date">
-                    <ItemTemplate>
-                      <asp:Label ID="fldOrderDate" Property="<%# SalesOrderList.OrderDate %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Due Date">
-                    <ItemTemplate>
-                      <asp:Label ID="fldDueDate" Property="<%# SalesOrderList.DueDate %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Ship Date">
-                    <ItemTemplate>
-                      <asp:Label ID="fldShipDate" Property="<%# SalesOrderList.ShipDate %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
                   <asp:TemplateField HeaderText="Status">
@@ -220,29 +200,39 @@
                       <asp:Label ID="fldStatus" Property="<%# SalesOrderList.Status %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Online Order Flag">
+                  <asp:TemplateField HeaderText="Order Date">
+                    <ItemTemplate>
+                      <asp:Label ID="fldOrderDate" Property="<%# SalesOrderList.OrderDate %>" runat="server"></asp:Label>
+                    </ItemTemplate>
+                  </asp:TemplateField>
+                  <asp:TemplateField HeaderText="Ship Date">
+                    <ItemTemplate>
+                      <asp:Label ID="fldShipDate" Property="<%# SalesOrderList.ShipDate %>" runat="server"></asp:Label>
+                    </ItemTemplate>
+                  </asp:TemplateField>
+                  <asp:TemplateField HeaderText="Due Date">
+                    <ItemTemplate>
+                      <asp:Label ID="fldDueDate" Property="<%# SalesOrderList.DueDate %>" runat="server"></asp:Label>
+                    </ItemTemplate>
+                  </asp:TemplateField>
+                  <asp:TemplateField HeaderText="Total Due">
+                    <ItemTemplate>
+                      <asp:Label ID="fldTotalDue" Property="<%# SalesOrderList.TotalDue %>" runat="server"></asp:Label>
+                    </ItemTemplate>
+                  </asp:TemplateField>
+                  <asp:TemplateField HeaderText="Online">
                     <ItemTemplate>
                       <asp:Label ID="fldOnlineOrderFlag" Property="<%# SalesOrderList.OnlineOrderFlag %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Sales Order Number">
+                  <asp:TemplateField HeaderText="Customer Store">
                     <ItemTemplate>
-                      <asp:Label ID="fldSalesOrderNumber" Property="<%# SalesOrderList.SalesOrderNumber %>" runat="server"></asp:Label>
+                      <asp:Label ID="fldCustomerStore" Property="<%# SalesOrderList.CustomerStore %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Purchase Order Number">
+                  <asp:TemplateField HeaderText="Customer Name">
                     <ItemTemplate>
-                      <asp:Label ID="fldPurchaseOrderNumber" Property="<%# SalesOrderList.PurchaseOrderNumber %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Account Number">
-                    <ItemTemplate>
-                      <asp:Label ID="fldAccountNumber" Property="<%# SalesOrderList.AccountNumber %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Customer Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldCustomerId" Property="<%# SalesOrderList.CustomerId %>" runat="server"></asp:Label>
+                      <asp:Label ID="fldCustomerName" Property="<%# SalesOrderList.CustomerName %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
                   <asp:TemplateField HeaderText="Sales Person Id">
@@ -253,71 +243,6 @@
                   <asp:TemplateField HeaderText="Territory Id">
                     <ItemTemplate>
                       <asp:Label ID="fldTerritoryId" Property="<%# SalesOrderList.TerritoryId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Bill To Address Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldBillToAddressId" Property="<%# SalesOrderList.BillToAddressId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Ship To Address Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldShipToAddressId" Property="<%# SalesOrderList.ShipToAddressId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Ship Method Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldShipMethodId" Property="<%# SalesOrderList.ShipMethodId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Credit Card Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldCreditCardId" Property="<%# SalesOrderList.CreditCardId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Credit Card Approval Code">
-                    <ItemTemplate>
-                      <asp:Label ID="fldCreditCardApprovalCode" Property="<%# SalesOrderList.CreditCardApprovalCode %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Currency Rate Id">
-                    <ItemTemplate>
-                      <asp:Label ID="fldCurrencyRateId" Property="<%# SalesOrderList.CurrencyRateId %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Sub Total">
-                    <ItemTemplate>
-                      <asp:Label ID="fldSubTotal" Property="<%# SalesOrderList.SubTotal %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Tax Amt">
-                    <ItemTemplate>
-                      <asp:Label ID="fldTaxAmt" Property="<%# SalesOrderList.TaxAmt %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Freight">
-                    <ItemTemplate>
-                      <asp:Label ID="fldFreight" Property="<%# SalesOrderList.Freight %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Total Due">
-                    <ItemTemplate>
-                      <asp:Label ID="fldTotalDue" Property="<%# SalesOrderList.TotalDue %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Comment">
-                    <ItemTemplate>
-                      <asp:Label ID="fldComment" Property="<%# SalesOrderList.Comment %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Rowguid">
-                    <ItemTemplate>
-                      <asp:Label ID="fldRowguid" Property="<%# SalesOrderList.Rowguid %>" runat="server"></asp:Label>
-                    </ItemTemplate>
-                  </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Modified Date">
-                    <ItemTemplate>
-                      <asp:Label ID="fldModifiedDate" Property="<%# SalesOrderList.ModifiedDate %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
                 </Columns>

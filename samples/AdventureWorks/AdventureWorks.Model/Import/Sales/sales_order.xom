@@ -602,31 +602,17 @@
           </input>
           <output list="true">
             <param name="sales order id"/>
-            <param name="revision number"/>
-            <param name="order date"/>
-            <param name="due date"/>
-            <param name="ship date"/>
-            <param name="status"/>
-            <param name="online order flag" type="yesno" required="true"/>
             <param name="sales order number"/>
-            <param name="purchase order number"/>
-            <param name="account number"/>
-            <param name="customer id"/>
+            <param name="status"/>
+            <param name="order date" type="date"/>
+            <param name="ship date" type="date"/>
+            <param name="due date" type="date"/>
+            <param name="total due"/>
+            <param name="online order flag" type="yesno" required="true"/>
+            <param name="customer store" type="string"/>
+            <param name="customer name" type="string"/>
             <param name="sales person id"/>
             <param name="territory id"/>
-            <param name="bill to address id"/>
-            <param name="ship to address id"/>
-            <param name="ship method id"/>
-            <param name="credit card id"/>
-            <param name="credit card approval code"/>
-            <param name="currency rate id"/>
-            <param name="sub total"/>
-            <param name="tax amt"/>
-            <param name="freight"/>
-            <param name="total due"/>
-            <param name="comment"/>
-            <param name="rowguid"/>
-            <param name="modified date"/>
             <config>
               <xfk:add-to-object class="SalesOrderList"/>
             </config>
@@ -952,11 +938,15 @@
     </xfk:data-object>
     <xfk:data-object class="SalesOrderCriteria"/>
     <xfk:data-object class="SalesOrderList" list="true">
+      <ui:display>
+        <ui:field param="sales order id" hidden="true"/>
+        <ui:field param="online order flag" label="Online"/>
+      </ui:display>
       <ui:link name="details" view="SalesOrderView" child="true">
         <ui:params>
           <ui:param name="sales order id" field="sales order id"/>
         </ui:params>
-        <ui:display on-field="sales order id"/>
+        <ui:display on-field="sales order number"/>
       </ui:link>
       <ui:link name="new" view="SalesOrderView" child="true">
         <ui:params>

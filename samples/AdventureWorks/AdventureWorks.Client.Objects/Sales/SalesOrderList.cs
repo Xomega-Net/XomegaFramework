@@ -18,30 +18,16 @@ namespace AdventureWorks.Client.Objects
     {
         #region Constants
 
-        public const string AccountNumber = "AccountNumber";
-        public const string BillToAddressId = "BillToAddressId";
-        public const string Comment = "Comment";
-        public const string CreditCardApprovalCode = "CreditCardApprovalCode";
-        public const string CreditCardId = "CreditCardId";
-        public const string CurrencyRateId = "CurrencyRateId";
-        public const string CustomerId = "CustomerId";
+        public const string CustomerName = "CustomerName";
+        public const string CustomerStore = "CustomerStore";
         public const string DueDate = "DueDate";
-        public const string Freight = "Freight";
-        public const string ModifiedDate = "ModifiedDate";
         public const string OnlineOrderFlag = "OnlineOrderFlag";
         public const string OrderDate = "OrderDate";
-        public const string PurchaseOrderNumber = "PurchaseOrderNumber";
-        public const string RevisionNumber = "RevisionNumber";
-        public const string Rowguid = "Rowguid";
         public const string SalesOrderId = "SalesOrderId";
         public const string SalesOrderNumber = "SalesOrderNumber";
         public const string SalesPersonId = "SalesPersonId";
         public const string ShipDate = "ShipDate";
-        public const string ShipMethodId = "ShipMethodId";
-        public const string ShipToAddressId = "ShipToAddressId";
         public const string Status = "Status";
-        public const string SubTotal = "SubTotal";
-        public const string TaxAmt = "TaxAmt";
         public const string TerritoryId = "TerritoryId";
         public const string TotalDue = "TotalDue";
 
@@ -49,30 +35,16 @@ namespace AdventureWorks.Client.Objects
 
         #region Properties
 
-        public TextProperty AccountNumberProperty { get; private set; }
-        public IntegerKeyProperty BillToAddressIdProperty { get; private set; }
-        public TextProperty CommentProperty { get; private set; }
-        public TextProperty CreditCardApprovalCodeProperty { get; private set; }
-        public IntegerKeyProperty CreditCardIdProperty { get; private set; }
-        public IntegerKeyProperty CurrencyRateIdProperty { get; private set; }
-        public IntegerKeyProperty CustomerIdProperty { get; private set; }
-        public DateTimeProperty DueDateProperty { get; private set; }
-        public MoneyProperty FreightProperty { get; private set; }
-        public DateTimeProperty ModifiedDateProperty { get; private set; }
+        public TextProperty CustomerNameProperty { get; private set; }
+        public TextProperty CustomerStoreProperty { get; private set; }
+        public DateProperty DueDateProperty { get; private set; }
         public EnumBoolProperty OnlineOrderFlagProperty { get; private set; }
-        public DateTimeProperty OrderDateProperty { get; private set; }
-        public TextProperty PurchaseOrderNumberProperty { get; private set; }
-        public TinyIntegerProperty RevisionNumberProperty { get; private set; }
-        public GuidProperty RowguidProperty { get; private set; }
+        public DateProperty OrderDateProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
         public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
-        public DateTimeProperty ShipDateProperty { get; private set; }
-        public IntegerKeyProperty ShipMethodIdProperty { get; private set; }
-        public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
+        public DateProperty ShipDateProperty { get; private set; }
         public TinyIntegerProperty StatusProperty { get; private set; }
-        public MoneyProperty SubTotalProperty { get; private set; }
-        public MoneyProperty TaxAmtProperty { get; private set; }
         public IntegerKeyProperty TerritoryIdProperty { get; private set; }
         public MoneyProperty TotalDueProperty { get; private set; }
 
@@ -82,51 +54,21 @@ namespace AdventureWorks.Client.Objects
 
         protected override void Initialize()
         {
-            AccountNumberProperty = new TextProperty(this, AccountNumber);
-            AccountNumberProperty.Size = 15;
-            AccountNumberProperty.Editable = false;
-            BillToAddressIdProperty = new IntegerKeyProperty(this, BillToAddressId);
-            BillToAddressIdProperty.Required = true;
-            BillToAddressIdProperty.Editable = false;
-            CommentProperty = new TextProperty(this, Comment);
-            CommentProperty.Size = 128;
-            CommentProperty.Editable = false;
-            CreditCardApprovalCodeProperty = new TextProperty(this, CreditCardApprovalCode);
-            CreditCardApprovalCodeProperty.Size = 15;
-            CreditCardApprovalCodeProperty.Editable = false;
-            CreditCardIdProperty = new IntegerKeyProperty(this, CreditCardId);
-            CreditCardIdProperty.Editable = false;
-            CurrencyRateIdProperty = new IntegerKeyProperty(this, CurrencyRateId);
-            CurrencyRateIdProperty.Editable = false;
-            CustomerIdProperty = new IntegerKeyProperty(this, CustomerId);
-            CustomerIdProperty.Required = true;
-            CustomerIdProperty.Editable = false;
-            DueDateProperty = new DateTimeProperty(this, DueDate);
+            CustomerNameProperty = new TextProperty(this, CustomerName);
+            CustomerNameProperty.Editable = false;
+            CustomerStoreProperty = new TextProperty(this, CustomerStore);
+            CustomerStoreProperty.Editable = false;
+            DueDateProperty = new DateProperty(this, DueDate);
             DueDateProperty.Required = true;
             DueDateProperty.Editable = false;
-            FreightProperty = new MoneyProperty(this, Freight);
-            FreightProperty.Required = true;
-            FreightProperty.Editable = false;
-            ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
-            ModifiedDateProperty.Required = true;
-            ModifiedDateProperty.Editable = false;
             OnlineOrderFlagProperty = new EnumBoolProperty(this, OnlineOrderFlag);
             OnlineOrderFlagProperty.Required = true;
             OnlineOrderFlagProperty.Size = 10;
             OnlineOrderFlagProperty.EnumType = "yesno";
             OnlineOrderFlagProperty.Editable = false;
-            OrderDateProperty = new DateTimeProperty(this, OrderDate);
+            OrderDateProperty = new DateProperty(this, OrderDate);
             OrderDateProperty.Required = true;
             OrderDateProperty.Editable = false;
-            PurchaseOrderNumberProperty = new TextProperty(this, PurchaseOrderNumber);
-            PurchaseOrderNumberProperty.Size = 25;
-            PurchaseOrderNumberProperty.Editable = false;
-            RevisionNumberProperty = new TinyIntegerProperty(this, RevisionNumber);
-            RevisionNumberProperty.Required = true;
-            RevisionNumberProperty.Editable = false;
-            RowguidProperty = new GuidProperty(this, Rowguid);
-            RowguidProperty.Required = true;
-            RowguidProperty.Editable = false;
             SalesOrderIdProperty = new IntegerKeyProperty(this, SalesOrderId);
             SalesOrderIdProperty.Required = true;
             SalesOrderIdProperty.Editable = false;
@@ -136,23 +78,11 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberProperty.Editable = false;
             SalesPersonIdProperty = new IntegerKeyProperty(this, SalesPersonId);
             SalesPersonIdProperty.Editable = false;
-            ShipDateProperty = new DateTimeProperty(this, ShipDate);
+            ShipDateProperty = new DateProperty(this, ShipDate);
             ShipDateProperty.Editable = false;
-            ShipMethodIdProperty = new IntegerKeyProperty(this, ShipMethodId);
-            ShipMethodIdProperty.Required = true;
-            ShipMethodIdProperty.Editable = false;
-            ShipToAddressIdProperty = new IntegerKeyProperty(this, ShipToAddressId);
-            ShipToAddressIdProperty.Required = true;
-            ShipToAddressIdProperty.Editable = false;
             StatusProperty = new TinyIntegerProperty(this, Status);
             StatusProperty.Required = true;
             StatusProperty.Editable = false;
-            SubTotalProperty = new MoneyProperty(this, SubTotal);
-            SubTotalProperty.Required = true;
-            SubTotalProperty.Editable = false;
-            TaxAmtProperty = new MoneyProperty(this, TaxAmt);
-            TaxAmtProperty.Required = true;
-            TaxAmtProperty.Editable = false;
             TerritoryIdProperty = new IntegerKeyProperty(this, TerritoryId);
             TerritoryIdProperty.Editable = false;
             TotalDueProperty = new MoneyProperty(this, TotalDue);
