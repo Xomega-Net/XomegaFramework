@@ -13,8 +13,6 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblSalesOrderReasonViewTitle;
         protected global::AdventureWorks.Client.Web.Errors errors;
         protected global::System.Web.UI.WebControls.Panel pnlMain;
-        protected global::System.Web.UI.WebControls.Label lblSalesOrderId;
-        protected global::System.Web.UI.WebControls.TextBox ctlSalesOrderId;
         protected global::System.Web.UI.WebControls.Label lblSalesReasonId;
         protected global::System.Web.UI.WebControls.TextBox ctlSalesReasonId;
         protected global::System.Web.UI.WebControls.Label lblModifiedDate;

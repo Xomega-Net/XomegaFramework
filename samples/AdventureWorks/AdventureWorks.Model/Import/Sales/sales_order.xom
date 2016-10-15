@@ -935,6 +935,9 @@
     <xfk:data-object class="SalesOrderObject">
       <xfk:add-child name="Detail" class="SalesOrderDetailList"/>
       <xfk:add-child name="Reason" class="SalesOrderReasonList"/>
+      <ui:display>
+        <ui:field param="sales order id" hidden="true"/>
+      </ui:display>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderCriteria"/>
     <xfk:data-object class="SalesOrderList" list="true">
@@ -954,13 +957,20 @@
         </ui:params>
       </ui:link>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderDetailObject"/>
+    <xfk:data-object class="SalesOrderDetailObject">
+      <ui:display>
+        <ui:field param="sales order detail id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
     <xfk:data-object class="SalesOrderDetailList" list="true">
+      <ui:display>
+        <ui:field param="sales order detail id" hidden="true"/>
+      </ui:display>
       <ui:link name="details" view="SalesOrderDetailView" child="true">
         <ui:params>
           <ui:param name="sales order detail id" field="sales order detail id"/>
         </ui:params>
-        <ui:display on-field="sales order detail id"/>
+        <ui:display on-field="carrier tracking number"/>
       </ui:link>
       <ui:link name="new" view="SalesOrderDetailView" child="true">
         <ui:params>
@@ -969,7 +979,11 @@
         </ui:params>
       </ui:link>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderReasonObject"/>
+    <xfk:data-object class="SalesOrderReasonObject">
+      <ui:display>
+        <ui:field param="sales order id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
     <xfk:data-object class="SalesOrderReasonList" list="true">
       <ui:link name="details" view="SalesOrderReasonView" child="true">
         <ui:params>

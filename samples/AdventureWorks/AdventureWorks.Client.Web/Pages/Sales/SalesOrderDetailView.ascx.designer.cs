@@ -13,8 +13,6 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblSalesOrderDetailViewTitle;
         protected global::AdventureWorks.Client.Web.Errors errors;
         protected global::System.Web.UI.WebControls.Panel pnlMain;
-        protected global::System.Web.UI.WebControls.Label lblSalesOrderDetailId;
-        protected global::System.Web.UI.WebControls.Label ctlSalesOrderDetailId;
         protected global::System.Web.UI.WebControls.Label lblSalesOrderId;
         protected global::System.Web.UI.WebControls.Label ctlSalesOrderId;
         protected global::System.Web.UI.WebControls.Label lblCarrierTrackingNumber;

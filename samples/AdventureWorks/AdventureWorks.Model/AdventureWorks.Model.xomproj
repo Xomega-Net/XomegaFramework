@@ -256,7 +256,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <GenerateLinks-type>System.Boolean</GenerateLinks-type>
       <GenerateLinks-desc>Whether to generate links to corresponding details views on list objects.</GenerateLinks-desc>
       <GenerateLinks-category>Data Objects</GenerateLinks-category>
-      <MakeSerialKeysHidden-param>False</MakeSerialKeysHidden-param>
+      <MakeSerialKeysHidden-param>True</MakeSerialKeysHidden-param>
       <MakeSerialKeysHidden-type>System.Boolean</MakeSerialKeysHidden-type>
       <MakeSerialKeysHidden-desc>Whether to configure serial key fields as hidden on views.</MakeSerialKeysHidden-desc>
       <MakeSerialKeysHidden-category>Data Objects</MakeSerialKeysHidden-category>

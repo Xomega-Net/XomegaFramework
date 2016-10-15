@@ -29,10 +29,6 @@
                   <tr>
                     <td class="fieldColumn">
                       <div class="field">
-                        <asp:Label ID="lblSalesOrderId" Text="Sales Order Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:Label LabelID="lblSalesOrderId" ID="ctlSalesOrderId" Property="<%# SalesOrderObject.SalesOrderId %>" runat="server"></asp:Label>
-                      </div>
-                      <div class="field">
                         <asp:Label ID="lblRevisionNumber" Text="Revision Number:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblRevisionNumber" ID="ctlRevisionNumber" Property="<%# SalesOrderObject.RevisionNumber %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
@@ -80,12 +76,12 @@
                         <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblTerritoryId" ID="ctlTerritoryId" Property="<%# SalesOrderObject.TerritoryId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
-                    </td>
-                    <td class="fieldColumn">
                       <div class="field">
                         <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblBillToAddressId" ID="ctlBillToAddressId" Property="<%# SalesOrderObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
+                    </td>
+                    <td class="fieldColumn">
                       <div class="field">
                         <asp:Label ID="lblShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblShipToAddressId" ID="ctlShipToAddressId" Property="<%# SalesOrderObject.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
@@ -144,16 +140,11 @@
                     <asp:Panel ID="pnlDetail" CssClass="xw-obj" runat="server">
                       <asp:GridView ID="gridDetail" runat="server" ChildObject="<%# SalesOrderObject.Detail %>">
                         <Columns>
-                          <asp:TemplateField HeaderText="Sales Order Detail Id">
-                            <ItemTemplate>
-                              <asp:LinkButton ID="lnkDetailDetails" runat="server" OnCommand="lnkDetailDetails_Click" CommandArgument="<%# Container.DataItemIndex %>">
-                                <asp:Label ID="fldSalesOrderDetailId" Property="<%# SalesOrderDetailList.SalesOrderDetailId %>" runat="server"></asp:Label>
-                              </asp:LinkButton>
-                            </ItemTemplate>
-                          </asp:TemplateField>
                           <asp:TemplateField HeaderText="Carrier Tracking Number">
                             <ItemTemplate>
-                              <asp:Label ID="fldCarrierTrackingNumber" Property="<%# SalesOrderDetailList.CarrierTrackingNumber %>" runat="server"></asp:Label>
+                              <asp:LinkButton ID="lnkDetailDetails" runat="server" OnCommand="lnkDetailDetails_Click" CommandArgument="<%# Container.DataItemIndex %>">
+                                <asp:Label ID="fldCarrierTrackingNumber" Property="<%# SalesOrderDetailList.CarrierTrackingNumber %>" runat="server"></asp:Label>
+                              </asp:LinkButton>
                             </ItemTemplate>
                           </asp:TemplateField>
                           <asp:TemplateField HeaderText="Order Qty">

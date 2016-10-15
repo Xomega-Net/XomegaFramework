@@ -26,10 +26,6 @@
                   <tr>
                     <td class="fieldColumn">
                       <div class="field">
-                        <asp:Label ID="lblSalesOrderDetailId" Text="Sales Order Detail Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:Label LabelID="lblSalesOrderDetailId" ID="ctlSalesOrderDetailId" Property="<%# SalesOrderDetailObject.SalesOrderDetailId %>" runat="server"></asp:Label>
-                      </div>
-                      <div class="field">
                         <asp:Label ID="lblSalesOrderId" Text="Sales Order Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:Label LabelID="lblSalesOrderId" ID="ctlSalesOrderId" Property="<%# SalesOrderDetailObject.SalesOrderId %>" runat="server"></asp:Label>
                       </div>
