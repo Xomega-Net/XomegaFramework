@@ -18,69 +18,23 @@ namespace AdventureWorks.Client.Objects
     {
         #region Constants
 
-        public const string AccountNumber = "AccountNumber";
-        public const string AccountNumberOperator = "AccountNumberOperator";
-        public const string BillToAddressId = "BillToAddressId";
-        public const string BillToAddressId2 = "BillToAddressId2";
-        public const string BillToAddressIdOperator = "BillToAddressIdOperator";
-        public const string Comment = "Comment";
-        public const string CommentOperator = "CommentOperator";
-        public const string CreditCardApprovalCode = "CreditCardApprovalCode";
-        public const string CreditCardApprovalCodeOperator = "CreditCardApprovalCodeOperator";
-        public const string CreditCardId = "CreditCardId";
-        public const string CreditCardId2 = "CreditCardId2";
-        public const string CreditCardIdOperator = "CreditCardIdOperator";
-        public const string CurrencyRateId = "CurrencyRateId";
-        public const string CurrencyRateId2 = "CurrencyRateId2";
-        public const string CurrencyRateIdOperator = "CurrencyRateIdOperator";
-        public const string CustomerId = "CustomerId";
-        public const string CustomerId2 = "CustomerId2";
-        public const string CustomerIdOperator = "CustomerIdOperator";
+        public const string CustomerName = "CustomerName";
+        public const string CustomerNameOperator = "CustomerNameOperator";
+        public const string CustomerStore = "CustomerStore";
+        public const string CustomerStoreOperator = "CustomerStoreOperator";
         public const string DueDate = "DueDate";
         public const string DueDate2 = "DueDate2";
         public const string DueDateOperator = "DueDateOperator";
-        public const string Freight = "Freight";
-        public const string Freight2 = "Freight2";
-        public const string FreightOperator = "FreightOperator";
-        public const string ModifiedDate = "ModifiedDate";
-        public const string ModifiedDate2 = "ModifiedDate2";
-        public const string ModifiedDateOperator = "ModifiedDateOperator";
-        public const string OnlineOrderFlag = "OnlineOrderFlag";
         public const string OrderDate = "OrderDate";
         public const string OrderDate2 = "OrderDate2";
         public const string OrderDateOperator = "OrderDateOperator";
-        public const string PurchaseOrderNumber = "PurchaseOrderNumber";
-        public const string PurchaseOrderNumberOperator = "PurchaseOrderNumberOperator";
-        public const string RevisionNumber = "RevisionNumber";
-        public const string RevisionNumber2 = "RevisionNumber2";
-        public const string RevisionNumberOperator = "RevisionNumberOperator";
-        public const string Rowguid = "Rowguid";
-        public const string RowguidOperator = "RowguidOperator";
         public const string SalesOrderNumber = "SalesOrderNumber";
         public const string SalesOrderNumberOperator = "SalesOrderNumberOperator";
         public const string SalesPersonId = "SalesPersonId";
-        public const string SalesPersonId2 = "SalesPersonId2";
         public const string SalesPersonIdOperator = "SalesPersonIdOperator";
-        public const string ShipDate = "ShipDate";
-        public const string ShipDate2 = "ShipDate2";
-        public const string ShipDateOperator = "ShipDateOperator";
-        public const string ShipMethodId = "ShipMethodId";
-        public const string ShipMethodId2 = "ShipMethodId2";
-        public const string ShipMethodIdOperator = "ShipMethodIdOperator";
-        public const string ShipToAddressId = "ShipToAddressId";
-        public const string ShipToAddressId2 = "ShipToAddressId2";
-        public const string ShipToAddressIdOperator = "ShipToAddressIdOperator";
         public const string Status = "Status";
-        public const string Status2 = "Status2";
         public const string StatusOperator = "StatusOperator";
-        public const string SubTotal = "SubTotal";
-        public const string SubTotal2 = "SubTotal2";
-        public const string SubTotalOperator = "SubTotalOperator";
-        public const string TaxAmt = "TaxAmt";
-        public const string TaxAmt2 = "TaxAmt2";
-        public const string TaxAmtOperator = "TaxAmtOperator";
         public const string TerritoryId = "TerritoryId";
-        public const string TerritoryId2 = "TerritoryId2";
         public const string TerritoryIdOperator = "TerritoryIdOperator";
         public const string TotalDue = "TotalDue";
         public const string TotalDue2 = "TotalDue2";
@@ -90,69 +44,23 @@ namespace AdventureWorks.Client.Objects
 
         #region Properties
 
-        public TextProperty AccountNumberProperty { get; private set; }
-        public OperatorProperty AccountNumberOperatorProperty { get; private set; }
-        public IntegerKeyProperty BillToAddressIdProperty { get; private set; }
-        public IntegerKeyProperty BillToAddressId2Property { get; private set; }
-        public OperatorProperty BillToAddressIdOperatorProperty { get; private set; }
-        public TextProperty CommentProperty { get; private set; }
-        public OperatorProperty CommentOperatorProperty { get; private set; }
-        public TextProperty CreditCardApprovalCodeProperty { get; private set; }
-        public OperatorProperty CreditCardApprovalCodeOperatorProperty { get; private set; }
-        public IntegerKeyProperty CreditCardIdProperty { get; private set; }
-        public IntegerKeyProperty CreditCardId2Property { get; private set; }
-        public OperatorProperty CreditCardIdOperatorProperty { get; private set; }
-        public IntegerKeyProperty CurrencyRateIdProperty { get; private set; }
-        public IntegerKeyProperty CurrencyRateId2Property { get; private set; }
-        public OperatorProperty CurrencyRateIdOperatorProperty { get; private set; }
-        public IntegerKeyProperty CustomerIdProperty { get; private set; }
-        public IntegerKeyProperty CustomerId2Property { get; private set; }
-        public OperatorProperty CustomerIdOperatorProperty { get; private set; }
-        public DateTimeProperty DueDateProperty { get; private set; }
-        public DateTimeProperty DueDate2Property { get; private set; }
+        public TextProperty CustomerNameProperty { get; private set; }
+        public OperatorProperty CustomerNameOperatorProperty { get; private set; }
+        public TextProperty CustomerStoreProperty { get; private set; }
+        public OperatorProperty CustomerStoreOperatorProperty { get; private set; }
+        public DateProperty DueDateProperty { get; private set; }
+        public DateProperty DueDate2Property { get; private set; }
         public OperatorProperty DueDateOperatorProperty { get; private set; }
-        public MoneyProperty FreightProperty { get; private set; }
-        public MoneyProperty Freight2Property { get; private set; }
-        public OperatorProperty FreightOperatorProperty { get; private set; }
-        public DateTimeProperty ModifiedDateProperty { get; private set; }
-        public DateTimeProperty ModifiedDate2Property { get; private set; }
-        public OperatorProperty ModifiedDateOperatorProperty { get; private set; }
-        public EnumBoolProperty OnlineOrderFlagProperty { get; private set; }
-        public DateTimeProperty OrderDateProperty { get; private set; }
-        public DateTimeProperty OrderDate2Property { get; private set; }
+        public DateProperty OrderDateProperty { get; private set; }
+        public DateProperty OrderDate2Property { get; private set; }
         public OperatorProperty OrderDateOperatorProperty { get; private set; }
-        public TextProperty PurchaseOrderNumberProperty { get; private set; }
-        public OperatorProperty PurchaseOrderNumberOperatorProperty { get; private set; }
-        public TinyIntegerProperty RevisionNumberProperty { get; private set; }
-        public TinyIntegerProperty RevisionNumber2Property { get; private set; }
-        public OperatorProperty RevisionNumberOperatorProperty { get; private set; }
-        public GuidProperty RowguidProperty { get; private set; }
-        public OperatorProperty RowguidOperatorProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
         public OperatorProperty SalesOrderNumberOperatorProperty { get; private set; }
         public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
-        public IntegerKeyProperty SalesPersonId2Property { get; private set; }
         public OperatorProperty SalesPersonIdOperatorProperty { get; private set; }
-        public DateTimeProperty ShipDateProperty { get; private set; }
-        public DateTimeProperty ShipDate2Property { get; private set; }
-        public OperatorProperty ShipDateOperatorProperty { get; private set; }
-        public IntegerKeyProperty ShipMethodIdProperty { get; private set; }
-        public IntegerKeyProperty ShipMethodId2Property { get; private set; }
-        public OperatorProperty ShipMethodIdOperatorProperty { get; private set; }
-        public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
-        public IntegerKeyProperty ShipToAddressId2Property { get; private set; }
-        public OperatorProperty ShipToAddressIdOperatorProperty { get; private set; }
         public TinyIntegerProperty StatusProperty { get; private set; }
-        public TinyIntegerProperty Status2Property { get; private set; }
         public OperatorProperty StatusOperatorProperty { get; private set; }
-        public MoneyProperty SubTotalProperty { get; private set; }
-        public MoneyProperty SubTotal2Property { get; private set; }
-        public OperatorProperty SubTotalOperatorProperty { get; private set; }
-        public MoneyProperty TaxAmtProperty { get; private set; }
-        public MoneyProperty TaxAmt2Property { get; private set; }
-        public OperatorProperty TaxAmtOperatorProperty { get; private set; }
         public IntegerKeyProperty TerritoryIdProperty { get; private set; }
-        public IntegerKeyProperty TerritoryId2Property { get; private set; }
         public OperatorProperty TerritoryIdOperatorProperty { get; private set; }
         public MoneyProperty TotalDueProperty { get; private set; }
         public MoneyProperty TotalDue2Property { get; private set; }
@@ -164,128 +72,41 @@ namespace AdventureWorks.Client.Objects
 
         protected override void Initialize()
         {
-            AccountNumberProperty = new TextProperty(this, AccountNumber);
-            AccountNumberProperty.Size = 15;
-            AccountNumberOperatorProperty = new OperatorProperty(this, AccountNumberOperator);
-            AccountNumberOperatorProperty.Size = 10;
-            AccountNumberOperatorProperty.EnumType = "operators";
-            AccountNumberOperatorProperty.HasNullCheck = true;
-            BillToAddressIdProperty = new IntegerKeyProperty(this, BillToAddressId);
-            BillToAddressId2Property = new IntegerKeyProperty(this, BillToAddressId2);
-            BillToAddressIdOperatorProperty = new OperatorProperty(this, BillToAddressIdOperator);
-            BillToAddressIdOperatorProperty.Size = 10;
-            BillToAddressIdOperatorProperty.EnumType = "operators";
-            CommentProperty = new TextProperty(this, Comment);
-            CommentProperty.Size = 128;
-            CommentOperatorProperty = new OperatorProperty(this, CommentOperator);
-            CommentOperatorProperty.Size = 10;
-            CommentOperatorProperty.EnumType = "operators";
-            CommentOperatorProperty.HasNullCheck = true;
-            CreditCardApprovalCodeProperty = new TextProperty(this, CreditCardApprovalCode);
-            CreditCardApprovalCodeProperty.Size = 15;
-            CreditCardApprovalCodeOperatorProperty = new OperatorProperty(this, CreditCardApprovalCodeOperator);
-            CreditCardApprovalCodeOperatorProperty.Size = 10;
-            CreditCardApprovalCodeOperatorProperty.EnumType = "operators";
-            CreditCardApprovalCodeOperatorProperty.HasNullCheck = true;
-            CreditCardIdProperty = new IntegerKeyProperty(this, CreditCardId);
-            CreditCardId2Property = new IntegerKeyProperty(this, CreditCardId2);
-            CreditCardIdOperatorProperty = new OperatorProperty(this, CreditCardIdOperator);
-            CreditCardIdOperatorProperty.Size = 10;
-            CreditCardIdOperatorProperty.EnumType = "operators";
-            CreditCardIdOperatorProperty.HasNullCheck = true;
-            CurrencyRateIdProperty = new IntegerKeyProperty(this, CurrencyRateId);
-            CurrencyRateId2Property = new IntegerKeyProperty(this, CurrencyRateId2);
-            CurrencyRateIdOperatorProperty = new OperatorProperty(this, CurrencyRateIdOperator);
-            CurrencyRateIdOperatorProperty.Size = 10;
-            CurrencyRateIdOperatorProperty.EnumType = "operators";
-            CurrencyRateIdOperatorProperty.HasNullCheck = true;
-            CustomerIdProperty = new IntegerKeyProperty(this, CustomerId);
-            CustomerId2Property = new IntegerKeyProperty(this, CustomerId2);
-            CustomerIdOperatorProperty = new OperatorProperty(this, CustomerIdOperator);
-            CustomerIdOperatorProperty.Size = 10;
-            CustomerIdOperatorProperty.EnumType = "operators";
-            DueDateProperty = new DateTimeProperty(this, DueDate);
-            DueDate2Property = new DateTimeProperty(this, DueDate2);
+            CustomerNameProperty = new TextProperty(this, CustomerName);
+            CustomerNameOperatorProperty = new OperatorProperty(this, CustomerNameOperator);
+            CustomerNameOperatorProperty.Size = 10;
+            CustomerNameOperatorProperty.EnumType = "operators";
+            CustomerNameOperatorProperty.HasNullCheck = true;
+            CustomerStoreProperty = new TextProperty(this, CustomerStore);
+            CustomerStoreOperatorProperty = new OperatorProperty(this, CustomerStoreOperator);
+            CustomerStoreOperatorProperty.Size = 10;
+            CustomerStoreOperatorProperty.EnumType = "operators";
+            CustomerStoreOperatorProperty.HasNullCheck = true;
+            DueDateProperty = new DateProperty(this, DueDate);
+            DueDate2Property = new DateProperty(this, DueDate2);
             DueDateOperatorProperty = new OperatorProperty(this, DueDateOperator);
             DueDateOperatorProperty.Size = 10;
             DueDateOperatorProperty.EnumType = "operators";
-            FreightProperty = new MoneyProperty(this, Freight);
-            Freight2Property = new MoneyProperty(this, Freight2);
-            FreightOperatorProperty = new OperatorProperty(this, FreightOperator);
-            FreightOperatorProperty.Size = 10;
-            FreightOperatorProperty.EnumType = "operators";
-            ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
-            ModifiedDate2Property = new DateTimeProperty(this, ModifiedDate2);
-            ModifiedDateOperatorProperty = new OperatorProperty(this, ModifiedDateOperator);
-            ModifiedDateOperatorProperty.Size = 10;
-            ModifiedDateOperatorProperty.EnumType = "operators";
-            OnlineOrderFlagProperty = new EnumBoolProperty(this, OnlineOrderFlag);
-            OnlineOrderFlagProperty.Size = 10;
-            OnlineOrderFlagProperty.EnumType = "yesno";
-            OrderDateProperty = new DateTimeProperty(this, OrderDate);
-            OrderDate2Property = new DateTimeProperty(this, OrderDate2);
+            OrderDateProperty = new DateProperty(this, OrderDate);
+            OrderDate2Property = new DateProperty(this, OrderDate2);
             OrderDateOperatorProperty = new OperatorProperty(this, OrderDateOperator);
             OrderDateOperatorProperty.Size = 10;
             OrderDateOperatorProperty.EnumType = "operators";
-            PurchaseOrderNumberProperty = new TextProperty(this, PurchaseOrderNumber);
-            PurchaseOrderNumberProperty.Size = 25;
-            PurchaseOrderNumberOperatorProperty = new OperatorProperty(this, PurchaseOrderNumberOperator);
-            PurchaseOrderNumberOperatorProperty.Size = 10;
-            PurchaseOrderNumberOperatorProperty.EnumType = "operators";
-            PurchaseOrderNumberOperatorProperty.HasNullCheck = true;
-            RevisionNumberProperty = new TinyIntegerProperty(this, RevisionNumber);
-            RevisionNumber2Property = new TinyIntegerProperty(this, RevisionNumber2);
-            RevisionNumberOperatorProperty = new OperatorProperty(this, RevisionNumberOperator);
-            RevisionNumberOperatorProperty.Size = 10;
-            RevisionNumberOperatorProperty.EnumType = "operators";
-            RowguidProperty = new GuidProperty(this, Rowguid);
-            RowguidOperatorProperty = new OperatorProperty(this, RowguidOperator);
-            RowguidOperatorProperty.Size = 10;
-            RowguidOperatorProperty.EnumType = "operators";
             SalesOrderNumberProperty = new TextProperty(this, SalesOrderNumber);
             SalesOrderNumberProperty.Size = 25;
             SalesOrderNumberOperatorProperty = new OperatorProperty(this, SalesOrderNumberOperator);
             SalesOrderNumberOperatorProperty.Size = 10;
             SalesOrderNumberOperatorProperty.EnumType = "operators";
             SalesPersonIdProperty = new IntegerKeyProperty(this, SalesPersonId);
-            SalesPersonId2Property = new IntegerKeyProperty(this, SalesPersonId2);
             SalesPersonIdOperatorProperty = new OperatorProperty(this, SalesPersonIdOperator);
             SalesPersonIdOperatorProperty.Size = 10;
             SalesPersonIdOperatorProperty.EnumType = "operators";
             SalesPersonIdOperatorProperty.HasNullCheck = true;
-            ShipDateProperty = new DateTimeProperty(this, ShipDate);
-            ShipDate2Property = new DateTimeProperty(this, ShipDate2);
-            ShipDateOperatorProperty = new OperatorProperty(this, ShipDateOperator);
-            ShipDateOperatorProperty.Size = 10;
-            ShipDateOperatorProperty.EnumType = "operators";
-            ShipDateOperatorProperty.HasNullCheck = true;
-            ShipMethodIdProperty = new IntegerKeyProperty(this, ShipMethodId);
-            ShipMethodId2Property = new IntegerKeyProperty(this, ShipMethodId2);
-            ShipMethodIdOperatorProperty = new OperatorProperty(this, ShipMethodIdOperator);
-            ShipMethodIdOperatorProperty.Size = 10;
-            ShipMethodIdOperatorProperty.EnumType = "operators";
-            ShipToAddressIdProperty = new IntegerKeyProperty(this, ShipToAddressId);
-            ShipToAddressId2Property = new IntegerKeyProperty(this, ShipToAddressId2);
-            ShipToAddressIdOperatorProperty = new OperatorProperty(this, ShipToAddressIdOperator);
-            ShipToAddressIdOperatorProperty.Size = 10;
-            ShipToAddressIdOperatorProperty.EnumType = "operators";
             StatusProperty = new TinyIntegerProperty(this, Status);
-            Status2Property = new TinyIntegerProperty(this, Status2);
             StatusOperatorProperty = new OperatorProperty(this, StatusOperator);
             StatusOperatorProperty.Size = 10;
             StatusOperatorProperty.EnumType = "operators";
-            SubTotalProperty = new MoneyProperty(this, SubTotal);
-            SubTotal2Property = new MoneyProperty(this, SubTotal2);
-            SubTotalOperatorProperty = new OperatorProperty(this, SubTotalOperator);
-            SubTotalOperatorProperty.Size = 10;
-            SubTotalOperatorProperty.EnumType = "operators";
-            TaxAmtProperty = new MoneyProperty(this, TaxAmt);
-            TaxAmt2Property = new MoneyProperty(this, TaxAmt2);
-            TaxAmtOperatorProperty = new OperatorProperty(this, TaxAmtOperator);
-            TaxAmtOperatorProperty.Size = 10;
-            TaxAmtOperatorProperty.EnumType = "operators";
             TerritoryIdProperty = new IntegerKeyProperty(this, TerritoryId);
-            TerritoryId2Property = new IntegerKeyProperty(this, TerritoryId2);
             TerritoryIdOperatorProperty = new OperatorProperty(this, TerritoryIdOperator);
             TerritoryIdOperatorProperty.Size = 10;
             TerritoryIdOperatorProperty.EnumType = "operators";

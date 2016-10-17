@@ -29,126 +29,26 @@
                     <tr>
                       <td class="fieldColumn">
                         <div class="field">
-                          <asp:Label ID="lblRevisionNumber" Text="Revision Number:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblRevisionNumber" ID="ctlRevisionNumberOperator" Property="<%# SalesOrderCriteria.RevisionNumberOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlRevisionNumber" Property="<%# SalesOrderCriteria.RevisionNumber %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlRevisionNumber2" Property="<%# SalesOrderCriteria.RevisionNumber2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblOrderDate" Text="Order Date:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblOrderDate" ID="ctlOrderDateOperator" Property="<%# SalesOrderCriteria.OrderDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <uc:DateTimeControl ID="ctlOrderDate" Property="<%# SalesOrderCriteria.OrderDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                          <uc:DateTimeControl ID="ctlOrderDate2" Property="<%# SalesOrderCriteria.OrderDate2 %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblDueDate" ID="ctlDueDateOperator" Property="<%# SalesOrderCriteria.DueDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <uc:DateTimeControl ID="ctlDueDate" Property="<%# SalesOrderCriteria.DueDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                          <uc:DateTimeControl ID="ctlDueDate2" Property="<%# SalesOrderCriteria.DueDate2 %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblShipDate" Text="Ship Date:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblShipDate" ID="ctlShipDateOperator" Property="<%# SalesOrderCriteria.ShipDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <uc:DateTimeControl ID="ctlShipDate" Property="<%# SalesOrderCriteria.ShipDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                          <uc:DateTimeControl ID="ctlShipDate2" Property="<%# SalesOrderCriteria.ShipDate2 %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblStatus" Text="Status:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblStatus" ID="ctlStatusOperator" Property="<%# SalesOrderCriteria.StatusOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlStatus" Property="<%# SalesOrderCriteria.Status %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlStatus2" Property="<%# SalesOrderCriteria.Status2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblOnlineOrderFlag" Text="Online Order Flag:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblOnlineOrderFlag" ID="ctlOnlineOrderFlag" Property="<%# SalesOrderCriteria.OnlineOrderFlag %>" runat="server"></asp:DropDownList>
-                        </div>
-                        <div class="field">
                           <asp:Label ID="lblSalesOrderNumber" Text="Sales Order Number:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblSalesOrderNumber" ID="ctlSalesOrderNumberOperator" Property="<%# SalesOrderCriteria.SalesOrderNumberOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
                           <asp:TextBox ID="ctlSalesOrderNumber" Property="<%# SalesOrderCriteria.SalesOrderNumber %>" runat="server"></asp:TextBox>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblPurchaseOrderNumber" Text="Purchase Order Number:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblPurchaseOrderNumber" ID="ctlPurchaseOrderNumberOperator" Property="<%# SalesOrderCriteria.PurchaseOrderNumberOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlPurchaseOrderNumber" Property="<%# SalesOrderCriteria.PurchaseOrderNumber %>" runat="server"></asp:TextBox>
+                          <asp:Label ID="lblStatus" Text="Status:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblStatus" ID="ctlStatusOperator" Property="<%# SalesOrderCriteria.StatusOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <asp:TextBox ID="ctlStatus" Property="<%# SalesOrderCriteria.Status %>" runat="server" CssClass="integer"></asp:TextBox>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblAccountNumber" Text="Account Number:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblAccountNumber" ID="ctlAccountNumberOperator" Property="<%# SalesOrderCriteria.AccountNumberOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlAccountNumber" Property="<%# SalesOrderCriteria.AccountNumber %>" runat="server"></asp:TextBox>
+                          <asp:Label ID="lblOrderDate" Text="Order Date:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblOrderDate" ID="ctlOrderDateOperator" Property="<%# SalesOrderCriteria.OrderDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <uc:DateTimeControl ID="ctlOrderDate" Property="<%# SalesOrderCriteria.OrderDate %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
+                          <uc:DateTimeControl ID="ctlOrderDate2" Property="<%# SalesOrderCriteria.OrderDate2 %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblCustomerId" Text="Customer Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblCustomerId" ID="ctlCustomerIdOperator" Property="<%# SalesOrderCriteria.CustomerIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlCustomerId" Property="<%# SalesOrderCriteria.CustomerId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlCustomerId2" Property="<%# SalesOrderCriteria.CustomerId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonIdOperator" Property="<%# SalesOrderCriteria.SalesPersonIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlSalesPersonId" Property="<%# SalesOrderCriteria.SalesPersonId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlSalesPersonId2" Property="<%# SalesOrderCriteria.SalesPersonId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryIdOperator" Property="<%# SalesOrderCriteria.TerritoryIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlTerritoryId" Property="<%# SalesOrderCriteria.TerritoryId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlTerritoryId2" Property="<%# SalesOrderCriteria.TerritoryId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblBillToAddressId" ID="ctlBillToAddressIdOperator" Property="<%# SalesOrderCriteria.BillToAddressIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlBillToAddressId" Property="<%# SalesOrderCriteria.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlBillToAddressId2" Property="<%# SalesOrderCriteria.BillToAddressId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                      </td>
-                      <td class="fieldColumn">
-                        <div class="field">
-                          <asp:Label ID="lblShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblShipToAddressId" ID="ctlShipToAddressIdOperator" Property="<%# SalesOrderCriteria.ShipToAddressIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlShipToAddressId" Property="<%# SalesOrderCriteria.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlShipToAddressId2" Property="<%# SalesOrderCriteria.ShipToAddressId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblShipMethodId" Text="Ship Method Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblShipMethodId" ID="ctlShipMethodIdOperator" Property="<%# SalesOrderCriteria.ShipMethodIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlShipMethodId" Property="<%# SalesOrderCriteria.ShipMethodId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlShipMethodId2" Property="<%# SalesOrderCriteria.ShipMethodId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblCreditCardId" Text="Credit Card Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblCreditCardId" ID="ctlCreditCardIdOperator" Property="<%# SalesOrderCriteria.CreditCardIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlCreditCardId" Property="<%# SalesOrderCriteria.CreditCardId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlCreditCardId2" Property="<%# SalesOrderCriteria.CreditCardId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblCreditCardApprovalCode" Text="Credit Card Approval Code:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblCreditCardApprovalCode" ID="ctlCreditCardApprovalCodeOperator" Property="<%# SalesOrderCriteria.CreditCardApprovalCodeOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlCreditCardApprovalCode" Property="<%# SalesOrderCriteria.CreditCardApprovalCode %>" runat="server"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblCurrencyRateId" Text="Currency Rate Id:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblCurrencyRateId" ID="ctlCurrencyRateIdOperator" Property="<%# SalesOrderCriteria.CurrencyRateIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlCurrencyRateId" Property="<%# SalesOrderCriteria.CurrencyRateId %>" runat="server" CssClass="integer"></asp:TextBox>
-                          <asp:TextBox ID="ctlCurrencyRateId2" Property="<%# SalesOrderCriteria.CurrencyRateId2 %>" runat="server" CssClass="integer"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblSubTotal" Text="Sub Total:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblSubTotal" ID="ctlSubTotalOperator" Property="<%# SalesOrderCriteria.SubTotalOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlSubTotal" Property="<%# SalesOrderCriteria.SubTotal %>" runat="server" CssClass="decimal"></asp:TextBox>
-                          <asp:TextBox ID="ctlSubTotal2" Property="<%# SalesOrderCriteria.SubTotal2 %>" runat="server" CssClass="decimal"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblTaxAmt" Text="Tax Amt:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblTaxAmt" ID="ctlTaxAmtOperator" Property="<%# SalesOrderCriteria.TaxAmtOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlTaxAmt" Property="<%# SalesOrderCriteria.TaxAmt %>" runat="server" CssClass="decimal"></asp:TextBox>
-                          <asp:TextBox ID="ctlTaxAmt2" Property="<%# SalesOrderCriteria.TaxAmt2 %>" runat="server" CssClass="decimal"></asp:TextBox>
-                        </div>
-                        <div class="field">
-                          <asp:Label ID="lblFreight" Text="Freight:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblFreight" ID="ctlFreightOperator" Property="<%# SalesOrderCriteria.FreightOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlFreight" Property="<%# SalesOrderCriteria.Freight %>" runat="server" CssClass="decimal"></asp:TextBox>
-                          <asp:TextBox ID="ctlFreight2" Property="<%# SalesOrderCriteria.Freight2 %>" runat="server" CssClass="decimal"></asp:TextBox>
+                          <asp:Label ID="lblDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblDueDate" ID="ctlDueDateOperator" Property="<%# SalesOrderCriteria.DueDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <uc:DateTimeControl ID="ctlDueDate" Property="<%# SalesOrderCriteria.DueDate %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
+                          <uc:DateTimeControl ID="ctlDueDate2" Property="<%# SalesOrderCriteria.DueDate2 %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
                         </div>
                         <div class="field">
                           <asp:Label ID="lblTotalDue" Text="Total Due:" CssClass="label" runat="server"></asp:Label>
@@ -156,21 +56,27 @@
                           <asp:TextBox ID="ctlTotalDue" Property="<%# SalesOrderCriteria.TotalDue %>" runat="server" CssClass="decimal"></asp:TextBox>
                           <asp:TextBox ID="ctlTotalDue2" Property="<%# SalesOrderCriteria.TotalDue2 %>" runat="server" CssClass="decimal"></asp:TextBox>
                         </div>
+                      </td>
+                      <td class="fieldColumn">
                         <div class="field">
-                          <asp:Label ID="lblComment" Text="Comment:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblComment" ID="ctlCommentOperator" Property="<%# SalesOrderCriteria.CommentOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlComment" Property="<%# SalesOrderCriteria.Comment %>" runat="server"></asp:TextBox>
+                          <asp:Label ID="lblCustomerStore" Text="Customer Store:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblCustomerStore" ID="ctlCustomerStoreOperator" Property="<%# SalesOrderCriteria.CustomerStoreOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <asp:TextBox ID="ctlCustomerStore" Property="<%# SalesOrderCriteria.CustomerStore %>" runat="server"></asp:TextBox>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblRowguid" Text="Rowguid:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblRowguid" ID="ctlRowguidOperator" Property="<%# SalesOrderCriteria.RowguidOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlRowguid" Property="<%# SalesOrderCriteria.Rowguid %>" runat="server"></asp:TextBox>
+                          <asp:Label ID="lblCustomerName" Text="Customer Name:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblCustomerName" ID="ctlCustomerNameOperator" Property="<%# SalesOrderCriteria.CustomerNameOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <asp:TextBox ID="ctlCustomerName" Property="<%# SalesOrderCriteria.CustomerName %>" runat="server"></asp:TextBox>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblModifiedDate" Text="Modified Date:" CssClass="label" runat="server"></asp:Label>
-                          <asp:DropDownList LabelID="lblModifiedDate" ID="ctlModifiedDateOperator" Property="<%# SalesOrderCriteria.ModifiedDateOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <uc:DateTimeControl ID="ctlModifiedDate" Property="<%# SalesOrderCriteria.ModifiedDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                          <uc:DateTimeControl ID="ctlModifiedDate2" Property="<%# SalesOrderCriteria.ModifiedDate2 %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
+                          <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryIdOperator" Property="<%# SalesOrderCriteria.TerritoryIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <asp:TextBox ID="ctlTerritoryId" Property="<%# SalesOrderCriteria.TerritoryId %>" runat="server" CssClass="integer"></asp:TextBox>
+                        </div>
+                        <div class="field">
+                          <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonIdOperator" Property="<%# SalesOrderCriteria.SalesPersonIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
+                          <asp:TextBox ID="ctlSalesPersonId" Property="<%# SalesOrderCriteria.SalesPersonId %>" runat="server" CssClass="integer"></asp:TextBox>
                         </div>
                       </td>
                     </tr>

@@ -335,17 +335,19 @@ namespace AdventureWorks.Services
     public class SalesOrder_ReadListInput_Criteria
     {
         ///<summary>
-        /// Comparison operator for the corresponding Revision Number criteria.
+        /// Comparison operator for the corresponding Sales Order Number criteria.
         ///</summary>
         [DataMember]
-        public string RevisionNumberOperator { get; set; }
+        public string SalesOrderNumberOperator { get; set; }
         [DataMember]
-        public byte? RevisionNumber { get; set; }
+        public string SalesOrderNumber { get; set; }
         ///<summary>
-        /// End of range for the corresponding Revision Number criteria for the BETWEEN operator.
+        /// Comparison operator for the corresponding Status criteria.
         ///</summary>
         [DataMember]
-        public byte? RevisionNumber2 { get; set; }
+        public string StatusOperator { get; set; }
+        [DataMember]
+        public byte? Status { get; set; }
         ///<summary>
         /// Comparison operator for the corresponding Order Date criteria.
         ///</summary>
@@ -371,192 +373,6 @@ namespace AdventureWorks.Services
         [DataMember]
         public DateTime? DueDate2 { get; set; }
         ///<summary>
-        /// Comparison operator for the corresponding Ship Date criteria.
-        ///</summary>
-        [DataMember]
-        public string ShipDateOperator { get; set; }
-        [DataMember]
-        public DateTime? ShipDate { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Ship Date criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public DateTime? ShipDate2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Status criteria.
-        ///</summary>
-        [DataMember]
-        public string StatusOperator { get; set; }
-        [DataMember]
-        public byte? Status { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Status criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public byte? Status2 { get; set; }
-        [DataMember]
-        public bool? OnlineOrderFlag { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Sales Order Number criteria.
-        ///</summary>
-        [DataMember]
-        public string SalesOrderNumberOperator { get; set; }
-        [DataMember]
-        public string SalesOrderNumber { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Purchase Order Number criteria.
-        ///</summary>
-        [DataMember]
-        public string PurchaseOrderNumberOperator { get; set; }
-        [DataMember]
-        public string PurchaseOrderNumber { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Account Number criteria.
-        ///</summary>
-        [DataMember]
-        public string AccountNumberOperator { get; set; }
-        [DataMember]
-        public string AccountNumber { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Customer Id criteria.
-        ///</summary>
-        [DataMember]
-        public string CustomerIdOperator { get; set; }
-        [DataMember]
-        public int? CustomerId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Customer Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? CustomerId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Sales Person Id criteria.
-        ///</summary>
-        [DataMember]
-        public string SalesPersonIdOperator { get; set; }
-        [DataMember]
-        public int? SalesPersonId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Sales Person Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? SalesPersonId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Territory Id criteria.
-        ///</summary>
-        [DataMember]
-        public string TerritoryIdOperator { get; set; }
-        [DataMember]
-        public int? TerritoryId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Territory Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? TerritoryId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Bill To Address Id criteria.
-        ///</summary>
-        [DataMember]
-        public string BillToAddressIdOperator { get; set; }
-        [DataMember]
-        public int? BillToAddressId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Bill To Address Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? BillToAddressId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Ship To Address Id criteria.
-        ///</summary>
-        [DataMember]
-        public string ShipToAddressIdOperator { get; set; }
-        [DataMember]
-        public int? ShipToAddressId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Ship To Address Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? ShipToAddressId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Ship Method Id criteria.
-        ///</summary>
-        [DataMember]
-        public string ShipMethodIdOperator { get; set; }
-        [DataMember]
-        public int? ShipMethodId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Ship Method Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? ShipMethodId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Credit Card Id criteria.
-        ///</summary>
-        [DataMember]
-        public string CreditCardIdOperator { get; set; }
-        [DataMember]
-        public int? CreditCardId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Credit Card Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? CreditCardId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Credit Card Approval Code criteria.
-        ///</summary>
-        [DataMember]
-        public string CreditCardApprovalCodeOperator { get; set; }
-        [DataMember]
-        public string CreditCardApprovalCode { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Currency Rate Id criteria.
-        ///</summary>
-        [DataMember]
-        public string CurrencyRateIdOperator { get; set; }
-        [DataMember]
-        public int? CurrencyRateId { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Currency Rate Id criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public int? CurrencyRateId2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Sub Total criteria.
-        ///</summary>
-        [DataMember]
-        public string SubTotalOperator { get; set; }
-        [DataMember]
-        public decimal? SubTotal { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Sub Total criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public decimal? SubTotal2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Tax Amt criteria.
-        ///</summary>
-        [DataMember]
-        public string TaxAmtOperator { get; set; }
-        [DataMember]
-        public decimal? TaxAmt { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Tax Amt criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public decimal? TaxAmt2 { get; set; }
-        ///<summary>
-        /// Comparison operator for the corresponding Freight criteria.
-        ///</summary>
-        [DataMember]
-        public string FreightOperator { get; set; }
-        [DataMember]
-        public decimal? Freight { get; set; }
-        ///<summary>
-        /// End of range for the corresponding Freight criteria for the BETWEEN operator.
-        ///</summary>
-        [DataMember]
-        public decimal? Freight2 { get; set; }
-        ///<summary>
         /// Comparison operator for the corresponding Total Due criteria.
         ///</summary>
         [DataMember]
@@ -569,31 +385,39 @@ namespace AdventureWorks.Services
         [DataMember]
         public decimal? TotalDue2 { get; set; }
         ///<summary>
-        /// Comparison operator for the corresponding Comment criteria.
+        /// Comparison operator for the corresponding Customer Store criteria.
         ///</summary>
         [DataMember]
-        public string CommentOperator { get; set; }
-        [DataMember]
-        public string Comment { get; set; }
+        public string CustomerStoreOperator { get; set; }
         ///<summary>
-        /// Comparison operator for the corresponding Rowguid criteria.
+        /// Allows filtering by a substring of the customer store name.
         ///</summary>
         [DataMember]
-        public string RowguidOperator { get; set; }
-        [DataMember]
-        public Guid? Rowguid { get; set; }
+        public string CustomerStore { get; set; }
         ///<summary>
-        /// Comparison operator for the corresponding Modified Date criteria.
+        /// Comparison operator for the corresponding Customer Name criteria.
         ///</summary>
         [DataMember]
-        public string ModifiedDateOperator { get; set; }
-        [DataMember]
-        public DateTime? ModifiedDate { get; set; }
+        public string CustomerNameOperator { get; set; }
         ///<summary>
-        /// End of range for the corresponding Modified Date criteria for the BETWEEN operator.
+        /// Allows filtering by a substring of the individual customer name or a customer store contact name.
         ///</summary>
         [DataMember]
-        public DateTime? ModifiedDate2 { get; set; }
+        public string CustomerName { get; set; }
+        ///<summary>
+        /// Comparison operator for the corresponding Territory Id criteria.
+        ///</summary>
+        [DataMember]
+        public string TerritoryIdOperator { get; set; }
+        [DataMember]
+        public int? TerritoryId { get; set; }
+        ///<summary>
+        /// Comparison operator for the corresponding Sales Person Id criteria.
+        ///</summary>
+        [DataMember]
+        public string SalesPersonIdOperator { get; set; }
+        [DataMember]
+        public int? SalesPersonId { get; set; }
     }
     #endregion
 

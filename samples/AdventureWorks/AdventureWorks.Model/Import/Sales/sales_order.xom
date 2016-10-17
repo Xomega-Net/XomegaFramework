@@ -360,24 +360,25 @@
         <operation name="read list" type="readlist">
           <input>
             <struct name="criteria">
-              <param name="revision number operator" type="operator">
+              <param name="sales order number operator" type="operator">
                 <doc>
-                  <summary>Comparison operator for the corresponding Revision Number criteria.</summary>
+                  <summary>Comparison operator for the corresponding Sales Order Number criteria.</summary>
                 </doc>
               </param>
-              <param name="revision number" required="false"/>
-              <param name="revision number2" type="tiny int" required="false">
+              <param name="sales order number" required="false"/>
+              <param name="status operator" type="operator">
                 <doc>
-                  <summary>End of range for the corresponding Revision Number criteria for the BETWEEN operator.</summary>
+                  <summary>Comparison operator for the corresponding Status criteria.</summary>
                 </doc>
               </param>
+              <param name="status" required="false"/>
               <param name="order date operator" type="operator">
                 <doc>
                   <summary>Comparison operator for the corresponding Order Date criteria.</summary>
                 </doc>
               </param>
-              <param name="order date" required="false"/>
-              <param name="order date2" type="date time" required="false">
+              <param name="order date" type="date" required="false"/>
+              <param name="order date2" type="date" required="false">
                 <doc>
                   <summary>End of range for the corresponding Order Date criteria for the BETWEEN operator.</summary>
                 </doc>
@@ -387,178 +388,10 @@
                   <summary>Comparison operator for the corresponding Due Date criteria.</summary>
                 </doc>
               </param>
-              <param name="due date" required="false"/>
-              <param name="due date2" type="date time" required="false">
+              <param name="due date" type="date" required="false"/>
+              <param name="due date2" type="date" required="false">
                 <doc>
                   <summary>End of range for the corresponding Due Date criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="ship date operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Ship Date criteria.</summary>
-                </doc>
-              </param>
-              <param name="ship date" required="false"/>
-              <param name="ship date2" type="date time" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Ship Date criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="status operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Status criteria.</summary>
-                </doc>
-              </param>
-              <param name="status" required="false"/>
-              <param name="status2" type="tiny int" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Status criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="online order flag" required="false" type="yesno"/>
-              <param name="sales order number operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Sales Order Number criteria.</summary>
-                </doc>
-              </param>
-              <param name="sales order number" required="false"/>
-              <param name="purchase order number operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Purchase Order Number criteria.</summary>
-                </doc>
-              </param>
-              <param name="purchase order number" required="false"/>
-              <param name="account number operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Account Number criteria.</summary>
-                </doc>
-              </param>
-              <param name="account number" required="false"/>
-              <param name="customer id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Customer Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="customer id" required="false"/>
-              <param name="customer id2" type="customer" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Customer Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="sales person id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Sales Person Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="sales person id" required="false"/>
-              <param name="sales person id2" type="sales person" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Sales Person Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="territory id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Territory Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="territory id" required="false"/>
-              <param name="territory id2" type="sales territory" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Territory Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="bill to address id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Bill To Address Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="bill to address id" required="false"/>
-              <param name="bill to address id2" type="address" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Bill To Address Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="ship to address id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Ship To Address Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="ship to address id" required="false"/>
-              <param name="ship to address id2" type="address" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Ship To Address Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="ship method id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Ship Method Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="ship method id" required="false"/>
-              <param name="ship method id2" type="ship method" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Ship Method Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="credit card id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Credit Card Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="credit card id" required="false"/>
-              <param name="credit card id2" type="credit card" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Credit Card Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="credit card approval code operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Credit Card Approval Code criteria.</summary>
-                </doc>
-              </param>
-              <param name="credit card approval code" required="false"/>
-              <param name="currency rate id operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Currency Rate Id criteria.</summary>
-                </doc>
-              </param>
-              <param name="currency rate id" required="false"/>
-              <param name="currency rate id2" type="currency rate" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Currency Rate Id criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="sub total operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Sub Total criteria.</summary>
-                </doc>
-              </param>
-              <param name="sub total" required="false"/>
-              <param name="sub total2" type="money" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Sub Total criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="tax amt operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Tax Amt criteria.</summary>
-                </doc>
-              </param>
-              <param name="tax amt" required="false"/>
-              <param name="tax amt2" type="money" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Tax Amt criteria for the BETWEEN operator.</summary>
-                </doc>
-              </param>
-              <param name="freight operator" type="operator">
-                <doc>
-                  <summary>Comparison operator for the corresponding Freight criteria.</summary>
-                </doc>
-              </param>
-              <param name="freight" required="false"/>
-              <param name="freight2" type="money" required="false">
-                <doc>
-                  <summary>End of range for the corresponding Freight criteria for the BETWEEN operator.</summary>
                 </doc>
               </param>
               <param name="total due operator" type="operator">
@@ -572,29 +405,38 @@
                   <summary>End of range for the corresponding Total Due criteria for the BETWEEN operator.</summary>
                 </doc>
               </param>
-              <param name="comment operator" type="operator">
+              <param name="customer store operator" type="operator">
                 <doc>
-                  <summary>Comparison operator for the corresponding Comment criteria.</summary>
+                  <summary>Comparison operator for the corresponding Customer Store criteria.</summary>
                 </doc>
               </param>
-              <param name="comment" required="false"/>
-              <param name="rowguid operator" type="operator">
+              <param name="customer store" type="string">
                 <doc>
-                  <summary>Comparison operator for the corresponding Rowguid criteria.</summary>
+                  <summary>Allows filtering by a substring of the customer store name.</summary>
                 </doc>
               </param>
-              <param name="rowguid" required="false"/>
-              <param name="modified date operator" type="operator">
+              <param name="customer name operator" type="operator">
                 <doc>
-                  <summary>Comparison operator for the corresponding Modified Date criteria.</summary>
+                  <summary>Comparison operator for the corresponding Customer Name criteria.</summary>
                 </doc>
               </param>
-              <param name="modified date" required="false"/>
-              <param name="modified date2" type="date time" required="false">
+              <param name="customer name" type="string">
                 <doc>
-                  <summary>End of range for the corresponding Modified Date criteria for the BETWEEN operator.</summary>
+                  <summary>Allows filtering by a substring of the individual customer name or a customer store contact name.</summary>
                 </doc>
               </param>
+              <param name="territory id operator" type="operator">
+                <doc>
+                  <summary>Comparison operator for the corresponding Territory Id criteria.</summary>
+                </doc>
+              </param>
+              <param name="territory id" required="false"/>
+              <param name="sales person id operator" type="operator">
+                <doc>
+                  <summary>Comparison operator for the corresponding Sales Person Id criteria.</summary>
+                </doc>
+              </param>
+              <param name="sales person id" required="false"/>
               <config>
                 <xfk:add-to-object class="SalesOrderCriteria"/>
               </config>

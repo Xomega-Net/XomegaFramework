@@ -179,343 +179,6 @@ namespace AdventureWorks.Entities.Services
                 #region Source filter
                 if (_criteria != null)
                 {
-                    #region RevisionNumber
-                    if (_criteria.RevisionNumberOperator != null)
-                    {
-                        switch (_criteria.RevisionNumberOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.RevisionNumber == _criteria.RevisionNumber); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.RevisionNumber != _criteria.RevisionNumber); break;
-                            case Operators.IsLessThan:
-                                src = src.Where(o => o.RevisionNumber < _criteria.RevisionNumber); break;
-                            case Operators.IsNotLessThan:
-                                src = src.Where(o => o.RevisionNumber >= _criteria.RevisionNumber); break;
-                            case Operators.IsGreaterThan:
-                                src = src.Where(o => o.RevisionNumber > _criteria.RevisionNumber); break;
-                            case Operators.IsNotGreaterThan:
-                                src = src.Where(o => o.RevisionNumber <= _criteria.RevisionNumber); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.RevisionNumber >= _criteria.RevisionNumber && o.RevisionNumber <= _criteria.RevisionNumber2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Revision Number.", _criteria.RevisionNumberOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region PurchaseOrderNumber
-                    if (_criteria.PurchaseOrderNumberOperator != null)
-                    {
-                        switch (_criteria.PurchaseOrderNumberOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.PurchaseOrderNumber == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.PurchaseOrderNumber != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.PurchaseOrderNumber == _criteria.PurchaseOrderNumber); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.PurchaseOrderNumber != _criteria.PurchaseOrderNumber); break;
-                            case Operators.Contains:
-                                src = src.Where(o => o.PurchaseOrderNumber.Contains(_criteria.PurchaseOrderNumber)); break;
-                            case Operators.DoesNotContain:
-                                src = src.Where(o => !o.PurchaseOrderNumber.Contains(_criteria.PurchaseOrderNumber)); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Purchase Order Number.", _criteria.PurchaseOrderNumberOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region AccountNumber
-                    if (_criteria.AccountNumberOperator != null)
-                    {
-                        switch (_criteria.AccountNumberOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.AccountNumber == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.AccountNumber != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.AccountNumber == _criteria.AccountNumber); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.AccountNumber != _criteria.AccountNumber); break;
-                            case Operators.Contains:
-                                src = src.Where(o => o.AccountNumber.Contains(_criteria.AccountNumber)); break;
-                            case Operators.DoesNotContain:
-                                src = src.Where(o => !o.AccountNumber.Contains(_criteria.AccountNumber)); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Account Number.", _criteria.AccountNumberOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region CustomerId
-                    if (_criteria.CustomerIdOperator != null)
-                    {
-                        switch (_criteria.CustomerIdOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.CustomerIdObject.CustomerId == _criteria.CustomerId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.CustomerIdObject.CustomerId != _criteria.CustomerId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.CustomerIdObject.CustomerId >= _criteria.CustomerId && o.CustomerIdObject.CustomerId <= _criteria.CustomerId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Customer Id.", _criteria.CustomerIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region BillToAddressId
-                    if (_criteria.BillToAddressIdOperator != null)
-                    {
-                        switch (_criteria.BillToAddressIdOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.BillToAddressIdObject.AddressId == _criteria.BillToAddressId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.BillToAddressIdObject.AddressId != _criteria.BillToAddressId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.BillToAddressIdObject.AddressId >= _criteria.BillToAddressId && o.BillToAddressIdObject.AddressId <= _criteria.BillToAddressId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Bill To Address Id.", _criteria.BillToAddressIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region ShipToAddressId
-                    if (_criteria.ShipToAddressIdOperator != null)
-                    {
-                        switch (_criteria.ShipToAddressIdOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.ShipToAddressIdObject.AddressId == _criteria.ShipToAddressId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.ShipToAddressIdObject.AddressId != _criteria.ShipToAddressId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.ShipToAddressIdObject.AddressId >= _criteria.ShipToAddressId && o.ShipToAddressIdObject.AddressId <= _criteria.ShipToAddressId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Ship To Address Id.", _criteria.ShipToAddressIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region ShipMethodId
-                    if (_criteria.ShipMethodIdOperator != null)
-                    {
-                        switch (_criteria.ShipMethodIdOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.ShipMethodIdObject.ShipMethodId == _criteria.ShipMethodId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.ShipMethodIdObject.ShipMethodId != _criteria.ShipMethodId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.ShipMethodIdObject.ShipMethodId >= _criteria.ShipMethodId && o.ShipMethodIdObject.ShipMethodId <= _criteria.ShipMethodId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Ship Method Id.", _criteria.ShipMethodIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region CreditCardId
-                    if (_criteria.CreditCardIdOperator != null)
-                    {
-                        switch (_criteria.CreditCardIdOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.CreditCardIdObject == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.CreditCardIdObject != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.CreditCardIdObject.CreditCardId == _criteria.CreditCardId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.CreditCardIdObject.CreditCardId != _criteria.CreditCardId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.CreditCardIdObject.CreditCardId >= _criteria.CreditCardId && o.CreditCardIdObject.CreditCardId <= _criteria.CreditCardId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Credit Card Id.", _criteria.CreditCardIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region CreditCardApprovalCode
-                    if (_criteria.CreditCardApprovalCodeOperator != null)
-                    {
-                        switch (_criteria.CreditCardApprovalCodeOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.CreditCardApprovalCode == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.CreditCardApprovalCode != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.CreditCardApprovalCode == _criteria.CreditCardApprovalCode); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.CreditCardApprovalCode != _criteria.CreditCardApprovalCode); break;
-                            case Operators.Contains:
-                                src = src.Where(o => o.CreditCardApprovalCode.Contains(_criteria.CreditCardApprovalCode)); break;
-                            case Operators.DoesNotContain:
-                                src = src.Where(o => !o.CreditCardApprovalCode.Contains(_criteria.CreditCardApprovalCode)); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Credit Card Approval Code.", _criteria.CreditCardApprovalCodeOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region CurrencyRateId
-                    if (_criteria.CurrencyRateIdOperator != null)
-                    {
-                        switch (_criteria.CurrencyRateIdOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.CurrencyRateIdObject == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.CurrencyRateIdObject != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.CurrencyRateIdObject.CurrencyRateId == _criteria.CurrencyRateId); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.CurrencyRateIdObject.CurrencyRateId != _criteria.CurrencyRateId); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.CurrencyRateIdObject.CurrencyRateId >= _criteria.CurrencyRateId && o.CurrencyRateIdObject.CurrencyRateId <= _criteria.CurrencyRateId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Currency Rate Id.", _criteria.CurrencyRateIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region SubTotal
-                    if (_criteria.SubTotalOperator != null)
-                    {
-                        switch (_criteria.SubTotalOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.SubTotal == _criteria.SubTotal); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.SubTotal != _criteria.SubTotal); break;
-                            case Operators.IsLessThan:
-                                src = src.Where(o => o.SubTotal < _criteria.SubTotal); break;
-                            case Operators.IsNotLessThan:
-                                src = src.Where(o => o.SubTotal >= _criteria.SubTotal); break;
-                            case Operators.IsGreaterThan:
-                                src = src.Where(o => o.SubTotal > _criteria.SubTotal); break;
-                            case Operators.IsNotGreaterThan:
-                                src = src.Where(o => o.SubTotal <= _criteria.SubTotal); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.SubTotal >= _criteria.SubTotal && o.SubTotal <= _criteria.SubTotal2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Sub Total.", _criteria.SubTotalOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region TaxAmt
-                    if (_criteria.TaxAmtOperator != null)
-                    {
-                        switch (_criteria.TaxAmtOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.TaxAmt == _criteria.TaxAmt); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.TaxAmt != _criteria.TaxAmt); break;
-                            case Operators.IsLessThan:
-                                src = src.Where(o => o.TaxAmt < _criteria.TaxAmt); break;
-                            case Operators.IsNotLessThan:
-                                src = src.Where(o => o.TaxAmt >= _criteria.TaxAmt); break;
-                            case Operators.IsGreaterThan:
-                                src = src.Where(o => o.TaxAmt > _criteria.TaxAmt); break;
-                            case Operators.IsNotGreaterThan:
-                                src = src.Where(o => o.TaxAmt <= _criteria.TaxAmt); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.TaxAmt >= _criteria.TaxAmt && o.TaxAmt <= _criteria.TaxAmt2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Tax Amt.", _criteria.TaxAmtOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region Freight
-                    if (_criteria.FreightOperator != null)
-                    {
-                        switch (_criteria.FreightOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.Freight == _criteria.Freight); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.Freight != _criteria.Freight); break;
-                            case Operators.IsLessThan:
-                                src = src.Where(o => o.Freight < _criteria.Freight); break;
-                            case Operators.IsNotLessThan:
-                                src = src.Where(o => o.Freight >= _criteria.Freight); break;
-                            case Operators.IsGreaterThan:
-                                src = src.Where(o => o.Freight > _criteria.Freight); break;
-                            case Operators.IsNotGreaterThan:
-                                src = src.Where(o => o.Freight <= _criteria.Freight); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.Freight >= _criteria.Freight && o.Freight <= _criteria.Freight2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Freight.", _criteria.FreightOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region Comment
-                    if (_criteria.CommentOperator != null)
-                    {
-                        switch (_criteria.CommentOperator)
-                        {
-                            case Operators.IsNull:
-                                src = src.Where(o => o.Comment == null); break;
-                            case Operators.IsNotNull:
-                                src = src.Where(o => o.Comment != null); break;
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.Comment == _criteria.Comment); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.Comment != _criteria.Comment); break;
-                            case Operators.Contains:
-                                src = src.Where(o => o.Comment.Contains(_criteria.Comment)); break;
-                            case Operators.DoesNotContain:
-                                src = src.Where(o => !o.Comment.Contains(_criteria.Comment)); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Comment.", _criteria.CommentOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region Rowguid
-                    if (_criteria.RowguidOperator != null)
-                    {
-                        switch (_criteria.RowguidOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.Rowguid == _criteria.Rowguid); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.Rowguid != _criteria.Rowguid); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Rowguid.", _criteria.RowguidOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region ModifiedDate
-                    if (_criteria.ModifiedDateOperator != null)
-                    {
-                        switch (_criteria.ModifiedDateOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                src = src.Where(o => o.ModifiedDate == _criteria.ModifiedDate); break;
-                            case Operators.IsNotEqualTo:
-                                src = src.Where(o => o.ModifiedDate != _criteria.ModifiedDate); break;
-                            case Operators.IsEarlierThan:
-                                src = src.Where(o => o.ModifiedDate < _criteria.ModifiedDate); break;
-                            case Operators.IsLaterThan:
-                                src = src.Where(o => o.ModifiedDate > _criteria.ModifiedDate); break;
-                            case Operators.IsBetween:
-                                src = src.Where(o => o.ModifiedDate >= _criteria.ModifiedDate && o.ModifiedDate <= _criteria.ModifiedDate2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Modified Date.", _criteria.ModifiedDateOperator); break;
-                        }
-                    }
-                    #endregion
                 }
                 // CUSTOM_CODE_START: add custom filter criteria to the source query for ReadList operation below
                 // src = src.Where(o => o.FieldName == VALUE);
@@ -542,6 +205,47 @@ namespace AdventureWorks.Entities.Services
                 #region Result filter
                 if (_criteria != null)
                 {
+                    #region SalesOrderNumber
+                    if (_criteria.SalesOrderNumberOperator != null)
+                    {
+                        switch (_criteria.SalesOrderNumberOperator)
+                        {
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.SalesOrderNumber == _criteria.SalesOrderNumber); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.SalesOrderNumber != _criteria.SalesOrderNumber); break;
+                            case Operators.Contains:
+                                qry = qry.Where(o => o.SalesOrderNumber.Contains(_criteria.SalesOrderNumber)); break;
+                            case Operators.DoesNotContain:
+                                qry = qry.Where(o => !o.SalesOrderNumber.Contains(_criteria.SalesOrderNumber)); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Sales Order Number.", _criteria.SalesOrderNumberOperator); break;
+                        }
+                    }
+                    #endregion
+
+                    #region Status
+                    if (_criteria.StatusOperator != null)
+                    {
+                        switch (_criteria.StatusOperator)
+                        {
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.Status == _criteria.Status); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.Status != _criteria.Status); break;
+                            case Operators.IsLessThan:
+                                qry = qry.Where(o => o.Status < _criteria.Status); break;
+                            case Operators.IsNotLessThan:
+                                qry = qry.Where(o => o.Status >= _criteria.Status); break;
+                            case Operators.IsGreaterThan:
+                                qry = qry.Where(o => o.Status > _criteria.Status); break;
+                            case Operators.IsNotGreaterThan:
+                                qry = qry.Where(o => o.Status <= _criteria.Status); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Status.", _criteria.StatusOperator); break;
+                        }
+                    }
+                    #endregion
 
                     #region OrderDate
                     if (_criteria.OrderDateOperator != null)
@@ -585,120 +289,6 @@ namespace AdventureWorks.Entities.Services
                     }
                     #endregion
 
-                    #region ShipDate
-                    if (_criteria.ShipDateOperator != null)
-                    {
-                        switch (_criteria.ShipDateOperator)
-                        {
-                            case Operators.IsNull:
-                                qry = qry.Where(o => o.ShipDate == null); break;
-                            case Operators.IsNotNull:
-                                qry = qry.Where(o => o.ShipDate != null); break;
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.ShipDate == _criteria.ShipDate); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.ShipDate != _criteria.ShipDate); break;
-                            case Operators.IsEarlierThan:
-                                qry = qry.Where(o => o.ShipDate < _criteria.ShipDate); break;
-                            case Operators.IsLaterThan:
-                                qry = qry.Where(o => o.ShipDate > _criteria.ShipDate); break;
-                            case Operators.IsBetween:
-                                qry = qry.Where(o => o.ShipDate >= _criteria.ShipDate && o.ShipDate <= _criteria.ShipDate2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Ship Date.", _criteria.ShipDateOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region Status
-                    if (_criteria.StatusOperator != null)
-                    {
-                        switch (_criteria.StatusOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.Status == _criteria.Status); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.Status != _criteria.Status); break;
-                            case Operators.IsLessThan:
-                                qry = qry.Where(o => o.Status < _criteria.Status); break;
-                            case Operators.IsNotLessThan:
-                                qry = qry.Where(o => o.Status >= _criteria.Status); break;
-                            case Operators.IsGreaterThan:
-                                qry = qry.Where(o => o.Status > _criteria.Status); break;
-                            case Operators.IsNotGreaterThan:
-                                qry = qry.Where(o => o.Status <= _criteria.Status); break;
-                            case Operators.IsBetween:
-                                qry = qry.Where(o => o.Status >= _criteria.Status && o.Status <= _criteria.Status2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Status.", _criteria.StatusOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    if (_criteria.OnlineOrderFlag != null)
-                        qry = qry.Where(o => o.OnlineOrderFlag == _criteria.OnlineOrderFlag);
-
-                    #region SalesOrderNumber
-                    if (_criteria.SalesOrderNumberOperator != null)
-                    {
-                        switch (_criteria.SalesOrderNumberOperator)
-                        {
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.SalesOrderNumber == _criteria.SalesOrderNumber); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.SalesOrderNumber != _criteria.SalesOrderNumber); break;
-                            case Operators.Contains:
-                                qry = qry.Where(o => o.SalesOrderNumber.Contains(_criteria.SalesOrderNumber)); break;
-                            case Operators.DoesNotContain:
-                                qry = qry.Where(o => !o.SalesOrderNumber.Contains(_criteria.SalesOrderNumber)); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Sales Order Number.", _criteria.SalesOrderNumberOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region SalesPersonId
-                    if (_criteria.SalesPersonIdOperator != null)
-                    {
-                        switch (_criteria.SalesPersonIdOperator)
-                        {
-                            case Operators.IsNull:
-                                qry = qry.Where(o => o.SalesPersonId == null); break;
-                            case Operators.IsNotNull:
-                                qry = qry.Where(o => o.SalesPersonId != null); break;
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.SalesPersonId == _criteria.SalesPersonId); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.SalesPersonId != _criteria.SalesPersonId); break;
-                            case Operators.IsBetween:
-                                qry = qry.Where(o => o.SalesPersonId >= _criteria.SalesPersonId && o.SalesPersonId <= _criteria.SalesPersonId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Sales Person Id.", _criteria.SalesPersonIdOperator); break;
-                        }
-                    }
-                    #endregion
-
-                    #region TerritoryId
-                    if (_criteria.TerritoryIdOperator != null)
-                    {
-                        switch (_criteria.TerritoryIdOperator)
-                        {
-                            case Operators.IsNull:
-                                qry = qry.Where(o => o.TerritoryId == null); break;
-                            case Operators.IsNotNull:
-                                qry = qry.Where(o => o.TerritoryId != null); break;
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.TerritoryId == _criteria.TerritoryId); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.TerritoryId != _criteria.TerritoryId); break;
-                            case Operators.IsBetween:
-                                qry = qry.Where(o => o.TerritoryId >= _criteria.TerritoryId && o.TerritoryId <= _criteria.TerritoryId2); break;
-                            default:
-                                ErrorList.Current.AddError("Unsupported operator {0} for the Territory Id.", _criteria.TerritoryIdOperator); break;
-                        }
-                    }
-                    #endregion
-
                     #region TotalDue
                     if (_criteria.TotalDueOperator != null)
                     {
@@ -720,6 +310,90 @@ namespace AdventureWorks.Entities.Services
                                 qry = qry.Where(o => o.TotalDue >= _criteria.TotalDue && o.TotalDue <= _criteria.TotalDue2); break;
                             default:
                                 ErrorList.Current.AddError("Unsupported operator {0} for the Total Due.", _criteria.TotalDueOperator); break;
+                        }
+                    }
+                    #endregion
+
+                    #region CustomerStore
+                    if (_criteria.CustomerStoreOperator != null)
+                    {
+                        switch (_criteria.CustomerStoreOperator)
+                        {
+                            case Operators.IsNull:
+                                qry = qry.Where(o => o.CustomerStore == null); break;
+                            case Operators.IsNotNull:
+                                qry = qry.Where(o => o.CustomerStore != null); break;
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.CustomerStore == _criteria.CustomerStore); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.CustomerStore != _criteria.CustomerStore); break;
+                            case Operators.Contains:
+                                qry = qry.Where(o => o.CustomerStore.Contains(_criteria.CustomerStore)); break;
+                            case Operators.DoesNotContain:
+                                qry = qry.Where(o => !o.CustomerStore.Contains(_criteria.CustomerStore)); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Customer Store.", _criteria.CustomerStoreOperator); break;
+                        }
+                    }
+                    #endregion
+
+                    #region CustomerName
+                    if (_criteria.CustomerNameOperator != null)
+                    {
+                        switch (_criteria.CustomerNameOperator)
+                        {
+                            case Operators.IsNull:
+                                qry = qry.Where(o => o.CustomerName == null); break;
+                            case Operators.IsNotNull:
+                                qry = qry.Where(o => o.CustomerName != null); break;
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.CustomerName == _criteria.CustomerName); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.CustomerName != _criteria.CustomerName); break;
+                            case Operators.Contains:
+                                qry = qry.Where(o => o.CustomerName.Contains(_criteria.CustomerName)); break;
+                            case Operators.DoesNotContain:
+                                qry = qry.Where(o => !o.CustomerName.Contains(_criteria.CustomerName)); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Customer Name.", _criteria.CustomerNameOperator); break;
+                        }
+                    }
+                    #endregion
+
+                    #region TerritoryId
+                    if (_criteria.TerritoryIdOperator != null)
+                    {
+                        switch (_criteria.TerritoryIdOperator)
+                        {
+                            case Operators.IsNull:
+                                qry = qry.Where(o => o.TerritoryId == null); break;
+                            case Operators.IsNotNull:
+                                qry = qry.Where(o => o.TerritoryId != null); break;
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.TerritoryId == _criteria.TerritoryId); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.TerritoryId != _criteria.TerritoryId); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Territory Id.", _criteria.TerritoryIdOperator); break;
+                        }
+                    }
+                    #endregion
+
+                    #region SalesPersonId
+                    if (_criteria.SalesPersonIdOperator != null)
+                    {
+                        switch (_criteria.SalesPersonIdOperator)
+                        {
+                            case Operators.IsNull:
+                                qry = qry.Where(o => o.SalesPersonId == null); break;
+                            case Operators.IsNotNull:
+                                qry = qry.Where(o => o.SalesPersonId != null); break;
+                            case Operators.IsEqualTo:
+                                qry = qry.Where(o => o.SalesPersonId == _criteria.SalesPersonId); break;
+                            case Operators.IsNotEqualTo:
+                                qry = qry.Where(o => o.SalesPersonId != _criteria.SalesPersonId); break;
+                            default:
+                                ErrorList.Current.AddError("Unsupported operator {0} for the Sales Person Id.", _criteria.SalesPersonIdOperator); break;
                         }
                     }
                     #endregion
