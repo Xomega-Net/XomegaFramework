@@ -115,6 +115,37 @@ namespace AdventureWorks.Enumerations
     }
     #endregion
 
+    #region SalesOrderStatus
+    public class SalesOrderStatus
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "sales order status";
+
+        public const string InProcess = "1";
+        public const string Approved = "2";
+        public const string Backordered = "3";
+        public const string Rejected = "4";
+        public const string Shipped = "5";
+        public const string Cancelled = "6";
+    }
+    #endregion
+
+    #region SalesTerritoryGroup
+    public class SalesTerritoryGroup
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "sales territory group";
+
+        public const string NorthAmerica = "North America";
+        public const string Europe = "Europe";
+        public const string Pacific = "Pacific";
+    }
+    #endregion
+
     #region Yesno
     public class Yesno
     {

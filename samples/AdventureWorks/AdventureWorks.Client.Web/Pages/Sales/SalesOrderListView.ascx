@@ -36,7 +36,7 @@
                         <div class="field">
                           <asp:Label ID="lblStatus" Text="Status:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblStatus" ID="ctlStatusOperator" Property="<%# SalesOrderCriteria.StatusOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlStatus" Property="<%# SalesOrderCriteria.Status %>" runat="server" CssClass="integer"></asp:TextBox>
+                          <asp:DropDownList ID="ctlStatus" Property="<%# SalesOrderCriteria.Status %>" runat="server"></asp:DropDownList>
                         </div>
                         <div class="field">
                           <asp:Label ID="lblOrderDate" Text="Order Date:" CssClass="label" runat="server"></asp:Label>
@@ -67,6 +67,10 @@
                           <asp:Label ID="lblCustomerName" Text="Customer Name:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblCustomerName" ID="ctlCustomerNameOperator" Property="<%# SalesOrderCriteria.CustomerNameOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
                           <asp:TextBox ID="ctlCustomerName" Property="<%# SalesOrderCriteria.CustomerName %>" runat="server"></asp:TextBox>
+                        </div>
+                        <div class="field">
+                          <asp:Label ID="lblGlobalRegion" Text="Global Region:" CssClass="label" runat="server"></asp:Label>
+                          <asp:DropDownList LabelID="lblGlobalRegion" ID="ctlGlobalRegion" Property="<%# SalesOrderCriteria.GlobalRegion %>" runat="server"></asp:DropDownList>
                         </div>
                         <div class="field">
                           <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>

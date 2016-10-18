@@ -25,6 +25,7 @@ namespace AdventureWorks.Client.Objects
         public const string DueDate = "DueDate";
         public const string DueDate2 = "DueDate2";
         public const string DueDateOperator = "DueDateOperator";
+        public const string GlobalRegion = "GlobalRegion";
         public const string OrderDate = "OrderDate";
         public const string OrderDate2 = "OrderDate2";
         public const string OrderDateOperator = "OrderDateOperator";
@@ -51,6 +52,7 @@ namespace AdventureWorks.Client.Objects
         public DateProperty DueDateProperty { get; private set; }
         public DateProperty DueDate2Property { get; private set; }
         public OperatorProperty DueDateOperatorProperty { get; private set; }
+        public EnumProperty GlobalRegionProperty { get; private set; }
         public DateProperty OrderDateProperty { get; private set; }
         public DateProperty OrderDate2Property { get; private set; }
         public OperatorProperty OrderDateOperatorProperty { get; private set; }
@@ -58,7 +60,7 @@ namespace AdventureWorks.Client.Objects
         public OperatorProperty SalesOrderNumberOperatorProperty { get; private set; }
         public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
         public OperatorProperty SalesPersonIdOperatorProperty { get; private set; }
-        public TinyIntegerProperty StatusProperty { get; private set; }
+        public EnumByteProperty StatusProperty { get; private set; }
         public OperatorProperty StatusOperatorProperty { get; private set; }
         public IntegerKeyProperty TerritoryIdProperty { get; private set; }
         public OperatorProperty TerritoryIdOperatorProperty { get; private set; }
@@ -87,6 +89,9 @@ namespace AdventureWorks.Client.Objects
             DueDateOperatorProperty = new OperatorProperty(this, DueDateOperator);
             DueDateOperatorProperty.Size = 10;
             DueDateOperatorProperty.EnumType = "operators";
+            GlobalRegionProperty = new EnumProperty(this, GlobalRegion);
+            GlobalRegionProperty.Size = 10;
+            GlobalRegionProperty.EnumType = "sales territory group";
             OrderDateProperty = new DateProperty(this, OrderDate);
             OrderDate2Property = new DateProperty(this, OrderDate2);
             OrderDateOperatorProperty = new OperatorProperty(this, OrderDateOperator);
@@ -102,7 +107,9 @@ namespace AdventureWorks.Client.Objects
             SalesPersonIdOperatorProperty.Size = 10;
             SalesPersonIdOperatorProperty.EnumType = "operators";
             SalesPersonIdOperatorProperty.HasNullCheck = true;
-            StatusProperty = new TinyIntegerProperty(this, Status);
+            StatusProperty = new EnumByteProperty(this, Status);
+            StatusProperty.Size = 10;
+            StatusProperty.EnumType = "sales order status";
             StatusOperatorProperty = new OperatorProperty(this, StatusOperator);
             StatusOperatorProperty.Size = 10;
             StatusOperatorProperty.EnumType = "operators";

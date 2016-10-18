@@ -113,4 +113,17 @@
    <prop ref="exclude type" value="EnumProperty"/>
   </item>
  </enum>
+ <enum name="sales order status">
+  <item name="In process" value="1"/>
+  <item name="Approved" value="2"/>
+  <item name="Backordered" value="3"/>
+  <item name="Rejected" value="4"/>
+  <item name="Shipped" value="5"/>
+  <item name="Cancelled" value="6"/>
+ </enum>
+ <enum name="sales territory group">
+  <item name="North America" value="North America"/>
+  <item name="Europe" value="Europe"/>
+  <item name="Pacific" value="Pacific"/>
+ </enum>
 </enums>

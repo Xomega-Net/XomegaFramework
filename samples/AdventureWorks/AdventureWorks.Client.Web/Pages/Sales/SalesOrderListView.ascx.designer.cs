@@ -17,7 +17,7 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.TextBox ctlSalesOrderNumber;
         protected global::System.Web.UI.WebControls.Label lblStatus;
         protected global::System.Web.UI.WebControls.DropDownList ctlStatusOperator;
-        protected global::System.Web.UI.WebControls.TextBox ctlStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ctlStatus;
         protected global::System.Web.UI.WebControls.Label lblOrderDate;
         protected global::System.Web.UI.WebControls.DropDownList ctlOrderDateOperator;
         protected global::AdventureWorks.Client.Web.DateTimeControl ctlOrderDate;
@@ -36,6 +36,8 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblCustomerName;
         protected global::System.Web.UI.WebControls.DropDownList ctlCustomerNameOperator;
         protected global::System.Web.UI.WebControls.TextBox ctlCustomerName;
+        protected global::System.Web.UI.WebControls.Label lblGlobalRegion;
+        protected global::System.Web.UI.WebControls.DropDownList ctlGlobalRegion;
         protected global::System.Web.UI.WebControls.Label lblTerritoryId;
         protected global::System.Web.UI.WebControls.DropDownList ctlTerritoryIdOperator;
         protected global::System.Web.UI.WebControls.TextBox ctlTerritoryId;

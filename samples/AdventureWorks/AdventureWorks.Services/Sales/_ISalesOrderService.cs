@@ -404,6 +404,8 @@ namespace AdventureWorks.Services
         ///</summary>
         [DataMember]
         public string CustomerName { get; set; }
+        [DataMember]
+        public string GlobalRegion { get; set; }
         ///<summary>
         /// Comparison operator for the corresponding Territory Id criteria.
         ///</summary>

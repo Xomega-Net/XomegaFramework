@@ -179,6 +179,12 @@ namespace AdventureWorks.Entities.Services
                 #region Source filter
                 if (_criteria != null)
                 {
+
+                    // CUSTOM_CODE_START: add code for GlobalRegion criteria of ReadList operation below
+                    if (_criteria.GlobalRegion != null)
+                    {
+                        src = src.Where(o => _criteria.GlobalRegion == o.TerritoryIdObject.Group);
+                    } // CUSTOM_CODE_END
                 }
                 // CUSTOM_CODE_START: add custom filter criteria to the source query for ReadList operation below
                 // src = src.Where(o => o.FieldName == VALUE);
@@ -233,14 +239,6 @@ namespace AdventureWorks.Entities.Services
                                 qry = qry.Where(o => o.Status == _criteria.Status); break;
                             case Operators.IsNotEqualTo:
                                 qry = qry.Where(o => o.Status != _criteria.Status); break;
-                            case Operators.IsLessThan:
-                                qry = qry.Where(o => o.Status < _criteria.Status); break;
-                            case Operators.IsNotLessThan:
-                                qry = qry.Where(o => o.Status >= _criteria.Status); break;
-                            case Operators.IsGreaterThan:
-                                qry = qry.Where(o => o.Status > _criteria.Status); break;
-                            case Operators.IsNotGreaterThan:
-                                qry = qry.Where(o => o.Status <= _criteria.Status); break;
                             default:
                                 ErrorList.Current.AddError("Unsupported operator {0} for the Status.", _criteria.StatusOperator); break;
                         }

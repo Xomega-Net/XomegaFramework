@@ -46,7 +46,7 @@
                       </div>
                       <div class="field">
                         <asp:Label ID="lblStatus" Text="Status:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblStatus" ID="ctlStatus" Property="<%# SalesOrderObject.Status %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:DropDownList LabelID="lblStatus" ID="ctlStatus" Property="<%# SalesOrderObject.Status %>" runat="server"></asp:DropDownList>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblOnlineOrderFlag" Text="Online Order Flag:" CssClass="label" runat="server"></asp:Label>

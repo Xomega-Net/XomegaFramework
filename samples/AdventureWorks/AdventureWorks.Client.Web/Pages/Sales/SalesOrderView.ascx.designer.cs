@@ -22,7 +22,7 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblShipDate;
         protected global::AdventureWorks.Client.Web.DateTimeControl ctlShipDate;
         protected global::System.Web.UI.WebControls.Label lblStatus;
-        protected global::System.Web.UI.WebControls.TextBox ctlStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ctlStatus;
         protected global::System.Web.UI.WebControls.Label lblOnlineOrderFlag;
         protected global::System.Web.UI.WebControls.CheckBox ctlOnlineOrderFlag;
         protected global::System.Web.UI.WebControls.Label lblSalesOrderNumber;

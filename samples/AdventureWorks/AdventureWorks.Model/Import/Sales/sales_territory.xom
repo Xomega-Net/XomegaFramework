@@ -10,7 +10,17 @@
         name="sales">
   <types>
     <type name="sales territory" base="integer key"/>
+    <type name="sales territory group" base="enumeration" size="50">
+      <enum ref="sales territory group"/>
+    </type>
   </types>
+  <enums>
+    <enum name="sales territory group">
+      <item name="North America" value="North America"/>
+      <item name="Europe" value="Europe"/>
+      <item name="Pacific" value="Pacific"/>
+    </enum>
+  </enums>
   <objects>
     <object name="sales territory">
       <fields>
@@ -35,7 +45,7 @@
             <summary>ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode. </summary>
           </doc>
         </field>
-        <field name="group" type="string50" required="true">
+        <field name="group" type="sales territory group" required="true">
           <config>
             <sql:column name="Group"/>
           </config>
