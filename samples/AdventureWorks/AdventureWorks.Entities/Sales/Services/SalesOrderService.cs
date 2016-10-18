@@ -386,10 +386,10 @@ namespace AdventureWorks.Entities.Services
                                 qry = qry.Where(o => o.SalesPersonId == null); break;
                             case Operators.IsNotNull:
                                 qry = qry.Where(o => o.SalesPersonId != null); break;
-                            case Operators.IsEqualTo:
-                                qry = qry.Where(o => o.SalesPersonId == _criteria.SalesPersonId); break;
-                            case Operators.IsNotEqualTo:
-                                qry = qry.Where(o => o.SalesPersonId != _criteria.SalesPersonId); break;
+                            case Operators.IsOneOf:
+                                qry = qry.WhereIn(o => o.SalesPersonId, _criteria.SalesPersonId); break;
+                            case Operators.IsNoneOf:
+                                qry = qry.WhereNotIn(o => o.SalesPersonId, _criteria.SalesPersonId); break;
                             default:
                                 ErrorList.Current.AddError("Unsupported operator {0} for the Sales Person Id.", _criteria.SalesPersonIdOperator); break;
                         }

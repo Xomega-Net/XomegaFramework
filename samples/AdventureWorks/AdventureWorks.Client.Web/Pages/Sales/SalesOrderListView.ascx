@@ -73,14 +73,14 @@
                           <asp:DropDownList LabelID="lblGlobalRegion" ID="ctlGlobalRegion" Property="<%# SalesOrderCriteria.GlobalRegion %>" runat="server"></asp:DropDownList>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
+                          <asp:Label ID="lblTerritoryId" Text="Sales Territory:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryIdOperator" Property="<%# SalesOrderCriteria.TerritoryIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlTerritoryId" Property="<%# SalesOrderCriteria.TerritoryId %>" runat="server" CssClass="integer"></asp:TextBox>
+                          <asp:DropDownList ID="ctlTerritoryId" Property="<%# SalesOrderCriteria.TerritoryId %>" runat="server"></asp:DropDownList>
                         </div>
                         <div class="field">
-                          <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
+                          <asp:Label ID="lblSalesPersonId" Text="Sales Person:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonIdOperator" Property="<%# SalesOrderCriteria.SalesPersonIdOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
-                          <asp:TextBox ID="ctlSalesPersonId" Property="<%# SalesOrderCriteria.SalesPersonId %>" runat="server" CssClass="integer"></asp:TextBox>
+                          <asp:ListBox ID="ctlSalesPersonId" Property="<%# SalesOrderCriteria.SalesPersonId %>" runat="server"></asp:ListBox>
                         </div>
                       </td>
                     </tr>
@@ -145,12 +145,12 @@
                       <asp:Label ID="fldCustomerName" Property="<%# SalesOrderList.CustomerName %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Sales Person Id">
+                  <asp:TemplateField HeaderText="Sales Person">
                     <ItemTemplate>
                       <asp:Label ID="fldSalesPersonId" Property="<%# SalesOrderList.SalesPersonId %>" runat="server"></asp:Label>
                     </ItemTemplate>
                   </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Territory Id">
+                  <asp:TemplateField HeaderText="Sales Territory">
                     <ItemTemplate>
                       <asp:Label ID="fldTerritoryId" Property="<%# SalesOrderList.TerritoryId %>" runat="server"></asp:Label>
                     </ItemTemplate>

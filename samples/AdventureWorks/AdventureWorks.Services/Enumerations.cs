@@ -132,6 +132,53 @@ namespace AdventureWorks.Enumerations
     }
     #endregion
 
+    #region SalesPerson
+    ///<summary>
+    /// Cached enumeration returned by the ISalesPersonService.ReadList operation.
+    ///  
+    ///</summary>
+    public class SalesPerson
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "sales person";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'sales person'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string TerritoryId = "territory id";
+        }
+
+    }
+    #endregion
+
+    #region SalesTerritory
+    ///<summary>
+    /// Cached enumeration returned by the ISalesTerritoryService.ReadList operation.
+    ///  
+    ///</summary>
+    public class SalesTerritory
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "sales territory";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'sales territory'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string CountryRegionCode = "country region code";
+            public const string Group = "group";
+        }
+
+    }
+    #endregion
+
     #region SalesTerritoryGroup
     public class SalesTerritoryGroup
     {

@@ -58,11 +58,11 @@ namespace AdventureWorks.Client.Objects
         public OperatorProperty OrderDateOperatorProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
         public OperatorProperty SalesOrderNumberOperatorProperty { get; private set; }
-        public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
+        public EnumIntProperty SalesPersonIdProperty { get; private set; }
         public OperatorProperty SalesPersonIdOperatorProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
         public OperatorProperty StatusOperatorProperty { get; private set; }
-        public IntegerKeyProperty TerritoryIdProperty { get; private set; }
+        public EnumIntProperty TerritoryIdProperty { get; private set; }
         public OperatorProperty TerritoryIdOperatorProperty { get; private set; }
         public MoneyProperty TotalDueProperty { get; private set; }
         public MoneyProperty TotalDue2Property { get; private set; }
@@ -90,7 +90,7 @@ namespace AdventureWorks.Client.Objects
             DueDateOperatorProperty.Size = 10;
             DueDateOperatorProperty.EnumType = "operators";
             GlobalRegionProperty = new EnumProperty(this, GlobalRegion);
-            GlobalRegionProperty.Size = 10;
+            GlobalRegionProperty.Size = 50;
             GlobalRegionProperty.EnumType = "sales territory group";
             OrderDateProperty = new DateProperty(this, OrderDate);
             OrderDate2Property = new DateProperty(this, OrderDate2);
@@ -102,7 +102,9 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberOperatorProperty = new OperatorProperty(this, SalesOrderNumberOperator);
             SalesOrderNumberOperatorProperty.Size = 10;
             SalesOrderNumberOperatorProperty.EnumType = "operators";
-            SalesPersonIdProperty = new IntegerKeyProperty(this, SalesPersonId);
+            SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
+            SalesPersonIdProperty.IsMultiValued = true;
+            SalesPersonIdProperty.EnumType = "sales person";
             SalesPersonIdOperatorProperty = new OperatorProperty(this, SalesPersonIdOperator);
             SalesPersonIdOperatorProperty.Size = 10;
             SalesPersonIdOperatorProperty.EnumType = "operators";
@@ -113,7 +115,9 @@ namespace AdventureWorks.Client.Objects
             StatusOperatorProperty = new OperatorProperty(this, StatusOperator);
             StatusOperatorProperty.Size = 10;
             StatusOperatorProperty.EnumType = "operators";
-            TerritoryIdProperty = new IntegerKeyProperty(this, TerritoryId);
+            TerritoryIdProperty = new EnumIntProperty(this, TerritoryId);
+            TerritoryIdProperty.Size = 10;
+            TerritoryIdProperty.EnumType = "sales territory";
             TerritoryIdOperatorProperty = new OperatorProperty(this, TerritoryIdOperator);
             TerritoryIdOperatorProperty.Size = 10;
             TerritoryIdOperatorProperty.EnumType = "operators";

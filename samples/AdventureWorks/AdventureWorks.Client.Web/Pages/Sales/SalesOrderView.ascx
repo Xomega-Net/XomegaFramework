@@ -70,11 +70,11 @@
                       </div>
                       <div class="field">
                         <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblSalesPersonId" ID="ctlSalesPersonId" Property="<%# SalesOrderObject.SalesPersonId %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonId" Property="<%# SalesOrderObject.SalesPersonId %>" runat="server"></asp:DropDownList>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblTerritoryId" ID="ctlTerritoryId" Property="<%# SalesOrderObject.TerritoryId %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryId" Property="<%# SalesOrderObject.TerritoryId %>" runat="server"></asp:DropDownList>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>

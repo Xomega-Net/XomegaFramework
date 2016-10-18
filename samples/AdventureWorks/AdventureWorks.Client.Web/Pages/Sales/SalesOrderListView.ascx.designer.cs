@@ -40,10 +40,10 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.DropDownList ctlGlobalRegion;
         protected global::System.Web.UI.WebControls.Label lblTerritoryId;
         protected global::System.Web.UI.WebControls.DropDownList ctlTerritoryIdOperator;
-        protected global::System.Web.UI.WebControls.TextBox ctlTerritoryId;
+        protected global::System.Web.UI.WebControls.DropDownList ctlTerritoryId;
         protected global::System.Web.UI.WebControls.Label lblSalesPersonId;
         protected global::System.Web.UI.WebControls.DropDownList ctlSalesPersonIdOperator;
-        protected global::System.Web.UI.WebControls.TextBox ctlSalesPersonId;
+        protected global::System.Web.UI.WebControls.ListBox ctlSalesPersonId;
         protected global::AdventureWorks.Client.Web.Errors errors;
         protected global::System.Web.UI.WebControls.Button btnSearch;
         protected global::System.Web.UI.WebControls.Button btnReset;

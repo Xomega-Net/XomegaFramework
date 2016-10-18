@@ -419,7 +419,7 @@ namespace AdventureWorks.Services
         [DataMember]
         public string SalesPersonIdOperator { get; set; }
         [DataMember]
-        public int? SalesPersonId { get; set; }
+        public IEnumerable<int> SalesPersonId { get; set; }
     }
     #endregion
 

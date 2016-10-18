@@ -9,7 +9,18 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
-    <type name="sales person" base="employee"/>
+    <type name="sales person" base="employee">
+      <config>
+        <xfk:property class="EnumIntProperty" namespace="Xomega.Framework.Properties"/>
+        <ui:web-control>
+          <asp:DropDownList runat="server"/>
+        </ui:web-control>
+        <ui:web-control multi-value="true">
+          <asp:ListBox runat="server"/>
+        </ui:web-control>
+      </config>
+      <enum ref="sales person"/>
+    </type>
   </types>
   <objects>
     <object name="sales person">
@@ -84,6 +95,25 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <output list="true">
+            <param name="business entity id"/>
+            <param name="name" type="string"/>
+            <param name="territory id"/>
+          </output>
+          <config>
+            <xfk:enum-cache enum-name="sales person" id-param="business entity id"
+                            desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads a list of Sales Person objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Sales Person objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Sales.SalesPerson"/>
       </config>
@@ -92,4 +122,6 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects/>
+  <ui:views/>
 </module>

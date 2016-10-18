@@ -21,6 +21,8 @@ namespace AdventureWorks.Services
         // This will ensure they will be registered only once.
         static LookupCacheLoaders()
         {
+            LookupCache.AddCacheLoader(new SalesPersonReadListCacheLoader());
+            LookupCache.AddCacheLoader(new SalesTerritoryReadListCacheLoader());
         }
 
         public static void EnsureRegistered() {}

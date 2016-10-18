@@ -68,14 +68,14 @@ namespace AdventureWorks.Client.Objects
         public GuidProperty RowguidProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
-        public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
+        public EnumIntProperty SalesPersonIdProperty { get; private set; }
         public DateTimeProperty ShipDateProperty { get; private set; }
         public IntegerKeyProperty ShipMethodIdProperty { get; private set; }
         public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
         public MoneyProperty SubTotalProperty { get; private set; }
         public MoneyProperty TaxAmtProperty { get; private set; }
-        public IntegerKeyProperty TerritoryIdProperty { get; private set; }
+        public EnumIntProperty TerritoryIdProperty { get; private set; }
         public MoneyProperty TotalDueProperty { get; private set; }
 
         #endregion
@@ -125,7 +125,8 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberProperty = new TextProperty(this, SalesOrderNumber);
             SalesOrderNumberProperty.Required = true;
             SalesOrderNumberProperty.Size = 25;
-            SalesPersonIdProperty = new IntegerKeyProperty(this, SalesPersonId);
+            SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
+            SalesPersonIdProperty.EnumType = "sales person";
             ShipDateProperty = new DateTimeProperty(this, ShipDate);
             ShipMethodIdProperty = new IntegerKeyProperty(this, ShipMethodId);
             ShipMethodIdProperty.Required = true;
@@ -139,7 +140,9 @@ namespace AdventureWorks.Client.Objects
             SubTotalProperty.Required = true;
             TaxAmtProperty = new MoneyProperty(this, TaxAmt);
             TaxAmtProperty.Required = true;
-            TerritoryIdProperty = new IntegerKeyProperty(this, TerritoryId);
+            TerritoryIdProperty = new EnumIntProperty(this, TerritoryId);
+            TerritoryIdProperty.Size = 10;
+            TerritoryIdProperty.EnumType = "sales territory";
             TotalDueProperty = new MoneyProperty(this, TotalDue);
             TotalDueProperty.Required = true;
             DataObject objDetail = new SalesOrderDetailList();

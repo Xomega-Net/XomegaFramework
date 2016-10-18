@@ -42,10 +42,10 @@ namespace AdventureWorks.Client.Objects
         public DateProperty OrderDateProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
-        public IntegerKeyProperty SalesPersonIdProperty { get; private set; }
+        public EnumIntProperty SalesPersonIdProperty { get; private set; }
         public DateProperty ShipDateProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
-        public IntegerKeyProperty TerritoryIdProperty { get; private set; }
+        public EnumIntProperty TerritoryIdProperty { get; private set; }
         public MoneyProperty TotalDueProperty { get; private set; }
 
         #endregion
@@ -76,7 +76,8 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberProperty.Required = true;
             SalesOrderNumberProperty.Size = 25;
             SalesOrderNumberProperty.Editable = false;
-            SalesPersonIdProperty = new IntegerKeyProperty(this, SalesPersonId);
+            SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
+            SalesPersonIdProperty.EnumType = "sales person";
             SalesPersonIdProperty.Editable = false;
             ShipDateProperty = new DateProperty(this, ShipDate);
             ShipDateProperty.Editable = false;
@@ -85,7 +86,9 @@ namespace AdventureWorks.Client.Objects
             StatusProperty.Size = 10;
             StatusProperty.EnumType = "sales order status";
             StatusProperty.Editable = false;
-            TerritoryIdProperty = new IntegerKeyProperty(this, TerritoryId);
+            TerritoryIdProperty = new EnumIntProperty(this, TerritoryId);
+            TerritoryIdProperty.Size = 10;
+            TerritoryIdProperty.EnumType = "sales territory";
             TerritoryIdProperty.Editable = false;
             TotalDueProperty = new MoneyProperty(this, TotalDue);
             TotalDueProperty.Required = true;

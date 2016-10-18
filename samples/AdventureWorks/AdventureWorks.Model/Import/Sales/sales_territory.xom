@@ -9,8 +9,13 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
-    <type name="sales territory" base="integer key"/>
+    <type name="sales territory" base="integer enumeration">
+      <enum ref="sales territory"/>
+    </type>
     <type name="sales territory group" base="enumeration" size="50">
+      <config>
+        <sql:type name="nvarchar"/>
+      </config>
       <enum ref="sales territory group"/>
     </type>
   </types>
@@ -102,6 +107,25 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <output list="true">
+            <param name="territory id"/>
+            <param name="name"/>
+            <param name="country region code"/>
+            <param name="group"/>
+          </output>
+          <config>
+            <xfk:enum-cache enum-name="sales territory" id-param="territory id" desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads a list of Sales Territory objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Sales Territory objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Sales.SalesTerritory"/>
       </config>
@@ -110,4 +134,6 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects/>
+  <ui:views/>
 </module>

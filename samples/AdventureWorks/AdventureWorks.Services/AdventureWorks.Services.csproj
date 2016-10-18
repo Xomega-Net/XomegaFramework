@@ -78,6 +78,18 @@
       <Compile Include="Sales\_ISalesOrderService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\_ISalesPersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\_ISalesTerritoryService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\SalesPersonReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\SalesTerritoryReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>
