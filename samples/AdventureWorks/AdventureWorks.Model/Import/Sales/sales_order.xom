@@ -795,7 +795,7 @@
         <ui:field param="sales order id" hidden="true"/>
       </ui:display>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderCriteria">
+    <xfk:data-object class="SalesOrderCriteria" customize="true">
       <ui:display>
         <ui:field param="sales person id" label="Sales Person"/>
         <ui:field param="territory id" label="Sales Territory"/>
@@ -868,7 +868,7 @@
       <ui:view-model data-object="SalesOrderObject"/>
     </ui:view>
     <ui:view name="SalesOrderListView" title="Sales Order List">
-      <ui:view-model data-object="SalesOrderList"/>
+      <ui:view-model data-object="SalesOrderList" customize="true"/>
     </ui:view>
     <ui:view name="SalesOrderDetailView" title="Detail" child="true">
       <ui:view-model data-object="SalesOrderDetailObject"/>

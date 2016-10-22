@@ -70,6 +70,9 @@
       <Compile Include="Sales\SalesOrderReasonList.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\SalesOrderCriteriaCustomized.cs">
+         <DependentUpon>SalesOrderCriteria.cs</DependentUpon>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

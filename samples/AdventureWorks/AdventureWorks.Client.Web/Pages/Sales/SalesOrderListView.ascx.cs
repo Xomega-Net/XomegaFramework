@@ -18,12 +18,12 @@ namespace AdventureWorks.Client.Web
     public partial class SalesOrderListView : SearchView
     {
         protected SalesOrderList list;
-        protected SalesOrderCriteria criteria;
+        protected SalesOrderCriteriaCustomized criteria;
 
         protected override void InitObjects(bool createNew)
         {
             listObj = list = GetList<SalesOrderList>(createNew);
-            criteriaObj = criteria = GetCriteria<SalesOrderCriteria>(createNew);
+            criteriaObj = criteria = GetCriteria<SalesOrderCriteriaCustomized>(createNew);
         }
 
         protected override void OnInit(EventArgs e)

@@ -4,7 +4,7 @@
  Manual CHANGES to this file WILL BE LOST when the code is regenerated.
 ----------------------------------------------------------------------------------------------%>
 
-<%@ Control Language="C#" Inherits="AdventureWorks.Client.Web.SalesOrderListView" %>
+<%@ Control Language="C#" Inherits="AdventureWorks.Client.Web.SalesOrderListViewCustomized" %>
 
 <%@ Import Namespace="AdventureWorks.Client.Objects" %>
 <%@ Register src="~/Controls/CollapsiblePanel.ascx" tagname="CollapsiblePanel" tagprefix="uc" %>
