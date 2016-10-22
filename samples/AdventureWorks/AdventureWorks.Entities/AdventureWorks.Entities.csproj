@@ -90,9 +90,6 @@
       <None Include="packages.config"/>
    </ItemGroup>
    <ItemGroup>
-      <Compile Include="CacheLoaders\_LookupCacheLoaders.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="Model\Address.cs">
          <DependentUpon>Model.tt</DependentUpon>
       </Compile>

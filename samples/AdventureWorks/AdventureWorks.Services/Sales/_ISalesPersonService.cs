@@ -45,6 +45,8 @@ namespace AdventureWorks.Services
         [DataMember]
         public string Name { get; set; }
         [DataMember]
+        public bool IsCurrent { get; set; }
+        [DataMember]
         public int? TerritoryId { get; set; }
     }
     #endregion

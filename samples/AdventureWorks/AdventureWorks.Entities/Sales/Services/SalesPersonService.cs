@@ -50,6 +50,8 @@ namespace AdventureWorks.Entities.Services
                               // CUSTOM_CODE_START: set the Name output parameter of ReadList operation below
                               Name = obj.BusinessEntityIdObject.BusinessEntityIdObject.LastName + ", "
                               + obj.BusinessEntityIdObject.BusinessEntityIdObject.FirstName, // CUSTOM_CODE_END
+                              // CUSTOM_CODE_START: set the IsCurrent output parameter of ReadList operation below
+                              IsCurrent = obj.BusinessEntityIdObject.CurrentFlag, // CUSTOM_CODE_END
                               TerritoryId = obj.TerritoryIdObject.TerritoryId,
                           };
                 #region Result filter

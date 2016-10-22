@@ -42,7 +42,11 @@ namespace AdventureWorks.Services
 
                 string id = "" + row.BusinessEntityId;
                 Header h;
-                if (!tbl.TryGetValue(id, out h)) tbl[id] = h = new Header(type, id, row.Name);
+                if (!tbl.TryGetValue(id, out h))
+                {
+                    tbl[id] = h = new Header(type, id, row.Name);
+                    h.IsActive = row.IsCurrent;
+                }
                 h.AddToAttribute("territory id", row.TerritoryId);
             }
             // if no data is returned we still need to update cache to get the notify listener removed

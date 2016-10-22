@@ -100,11 +100,12 @@
           <output list="true">
             <param name="business entity id"/>
             <param name="name" type="string"/>
+            <param name="is current" type="boolean" required="true"/>
             <param name="territory id"/>
           </output>
           <config>
             <xfk:enum-cache enum-name="sales person" id-param="business entity id"
-                            desc-param="name"/>
+                            desc-param="name" is-active-param="is current"/>
           </config>
           <doc>
             <summary>Reads a list of Sales Person objects based on the specified criteria.</summary>

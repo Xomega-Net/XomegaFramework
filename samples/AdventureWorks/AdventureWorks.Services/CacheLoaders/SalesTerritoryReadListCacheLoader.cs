@@ -42,7 +42,10 @@ namespace AdventureWorks.Services
 
                 string id = "" + row.TerritoryId;
                 Header h;
-                if (!tbl.TryGetValue(id, out h)) tbl[id] = h = new Header(type, id, row.Name);
+                if (!tbl.TryGetValue(id, out h))
+                {
+                    tbl[id] = h = new Header(type, id, row.Name);
+                }
                 h.AddToAttribute("country region code", row.CountryRegionCode);
                 h.AddToAttribute("group", row.Group);
             }
