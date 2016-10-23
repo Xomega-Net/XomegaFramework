@@ -9,7 +9,9 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
-    <type name="special offer" base="integer key"/>
+    <type name="special offer" base="integer enumeration">
+      <enum ref="special offer"/>
+    </type>
   </types>
   <objects>
     <object name="special offer">
@@ -100,6 +102,26 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <output list="true">
+            <param name="special offer id"/>
+            <param name="description"/>
+            <param name="is active" type="boolean" required="true"/>
+            <param name="category"/>
+          </output>
+          <config>
+            <xfk:enum-cache enum-name="special offer" id-param="special offer id"
+                            desc-param="description" is-active-param="is active"/>
+          </config>
+          <doc>
+            <summary>Reads a list of Special Offer objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Special Offer objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Sales.SpecialOffer"/>
       </config>
@@ -108,4 +130,6 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects/>
+  <ui:views/>
 </module>

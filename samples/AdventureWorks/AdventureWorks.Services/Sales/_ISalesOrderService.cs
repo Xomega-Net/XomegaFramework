@@ -573,23 +573,19 @@ namespace AdventureWorks.Services
         [DataMember]
         public int SalesOrderDetailId { get; set; }
         [DataMember]
-        public string CarrierTrackingNumber { get; set; }
+        public int Product { get; set; }
         [DataMember]
         public short OrderQty { get; set; }
-        [DataMember]
-        public int SpecialOfferId { get; set; }
-        [DataMember]
-        public int ProductId { get; set; }
         [DataMember]
         public decimal UnitPrice { get; set; }
         [DataMember]
         public decimal UnitPriceDiscount { get; set; }
         [DataMember]
+        public int SpecialOffer { get; set; }
+        [DataMember]
         public decimal LineTotal { get; set; }
         [DataMember]
-        public Guid Rowguid { get; set; }
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
+        public string CarrierTrackingNumber { get; set; }
     }
     #endregion
 

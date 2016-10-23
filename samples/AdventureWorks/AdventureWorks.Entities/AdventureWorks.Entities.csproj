@@ -318,6 +318,12 @@
       <Compile Include="Sales\Services\SalesTerritoryService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Production\Services\ProductService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\Services\SpecialOfferService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <ProjectReference Include="..\..\..\src\Xomega.Framework\Xomega.Framework.csproj">

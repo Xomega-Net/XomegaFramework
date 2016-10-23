@@ -9,6 +9,11 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
+    <type name="line total" base="money">
+      <config>
+        <sql:type name="numeric(38,6)" db="sqlsrv"/>
+      </config>
+    </type>
     <type name="sales order" base="integer key"/>
     <type name="sales order detail" base="integer key"/>
     <type name="sales order reason" base="sales reason"/>
@@ -530,7 +535,7 @@
                 <summary>Discount amount.</summary>
               </doc>
             </field>
-            <field name="line total" type="numeric_38_6" required="true">
+            <field name="line total" type="line total" required="true">
               <config>
                 <sql:column name="LineTotal"/>
               </config>
@@ -650,15 +655,13 @@
               </input>
               <output list="true">
                 <param name="sales order detail id"/>
-                <param name="carrier tracking number"/>
+                <param name="product" type="product" required="true"/>
                 <param name="order qty"/>
-                <param name="special offer id" type="special offer" required="true"/>
-                <param name="product id" type="product" required="true"/>
                 <param name="unit price"/>
                 <param name="unit price discount"/>
+                <param name="special offer" type="special offer" required="true"/>
                 <param name="line total"/>
-                <param name="rowguid"/>
-                <param name="modified date"/>
+                <param name="carrier tracking number"/>
                 <config>
                   <xfk:add-to-object class="SalesOrderDetailList"/>
                 </config>
@@ -828,12 +831,17 @@
     <xfk:data-object class="SalesOrderDetailList" list="true">
       <ui:display>
         <ui:field param="sales order detail id" hidden="true"/>
+        <ui:field param="carrier tracking number" label="Tracking #"/>
+        <ui:field param="order qty" label="Qty"/>
+        <ui:field param="unit price" label="Price"/>
+        <ui:field param="unit price discount" label="Discount"/>
+        <ui:field param="line total" label="Total"/>
       </ui:display>
       <ui:link name="details" view="SalesOrderDetailView" child="true">
         <ui:params>
           <ui:param name="sales order detail id" field="sales order detail id"/>
         </ui:params>
-        <ui:display on-field="carrier tracking number"/>
+        <ui:display on-field="product"/>
       </ui:link>
       <ui:link name="new" view="SalesOrderDetailView" child="true">
         <ui:params>

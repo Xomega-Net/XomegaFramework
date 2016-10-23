@@ -115,6 +115,30 @@ namespace AdventureWorks.Enumerations
     }
     #endregion
 
+    #region Product
+    ///<summary>
+    /// Cached enumeration returned by the IProductService.ReadList operation.
+    ///  
+    ///</summary>
+    public class Product
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "product";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'product'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string ProductSubcategoryId = "product subcategory id";
+            public const string ProductModelId = "product model id";
+        }
+
+    }
+    #endregion
+
     #region SalesOrderStatus
     public class SalesOrderStatus
     {
@@ -190,6 +214,29 @@ namespace AdventureWorks.Enumerations
         public const string NorthAmerica = "North America";
         public const string Europe = "Europe";
         public const string Pacific = "Pacific";
+    }
+    #endregion
+
+    #region SpecialOffer
+    ///<summary>
+    /// Cached enumeration returned by the ISpecialOfferService.ReadList operation.
+    ///  
+    ///</summary>
+    public class SpecialOffer
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "special offer";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'special offer'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string Category = "category";
+        }
+
     }
     #endregion
 

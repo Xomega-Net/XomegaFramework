@@ -519,17 +519,15 @@ namespace AdventureWorks.Entities.Services
                 var qry = from obj in src
                           select new SalesOrderDetail_ReadListOutput() {
                               SalesOrderDetailId = obj.SalesOrderDetailId,
-                              CarrierTrackingNumber = obj.CarrierTrackingNumber,
+                              // CUSTOM_CODE_START: set the Product output parameter of Detail_ReadList operation below
+                              Product = obj.SpecialOfferProductObject.ProductId, // CUSTOM_CODE_END
                               OrderQty = obj.OrderQty,
-                              // CUSTOM_CODE_START: set the SpecialOfferId output parameter of Detail_ReadList operation below
-                              // TODO: SpecialOfferId = obj.SpecialOfferId, // CUSTOM_CODE_END
-                              // CUSTOM_CODE_START: set the ProductId output parameter of Detail_ReadList operation below
-                              // TODO: ProductId = obj.ProductId, // CUSTOM_CODE_END
                               UnitPrice = obj.UnitPrice,
                               UnitPriceDiscount = obj.UnitPriceDiscount,
+                              // CUSTOM_CODE_START: set the SpecialOffer output parameter of Detail_ReadList operation below
+                              SpecialOffer = obj.SpecialOfferProductObject.SpecialOfferId, // CUSTOM_CODE_END
                               LineTotal = obj.LineTotal,
-                              Rowguid = obj.Rowguid,
-                              ModifiedDate = obj.ModifiedDate,
+                              CarrierTrackingNumber = obj.CarrierTrackingNumber,
                           };
                 #region Result filter
                 if (true)

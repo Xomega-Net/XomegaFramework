@@ -31,11 +31,6 @@
         <sql:type name="decimal(9,4)" db="sqlsrv"/>
       </config>
     </type>
-    <type name="numeric_38_6" base="numeric">
-      <config>
-        <sql:type name="numeric(38,6)" db="sqlsrv"/>
-      </config>
-    </type>
     <type name="string10" base="string" size="10"/>
     <type name="string1024" base="string" size="1024"/>
     <type name="string126" base="string" size="126"/>

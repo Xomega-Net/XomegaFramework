@@ -140,51 +140,41 @@
                     <asp:Panel ID="pnlDetail" CssClass="xw-obj" runat="server">
                       <asp:GridView ID="gridDetail" runat="server" ChildObject="<%# SalesOrderObject.Detail %>">
                         <Columns>
-                          <asp:TemplateField HeaderText="Carrier Tracking Number">
+                          <asp:TemplateField HeaderText="Product">
                             <ItemTemplate>
                               <asp:LinkButton ID="lnkDetailDetails" runat="server" OnCommand="lnkDetailDetails_Click" CommandArgument="<%# Container.DataItemIndex %>">
-                                <asp:Label ID="fldCarrierTrackingNumber" Property="<%# SalesOrderDetailList.CarrierTrackingNumber %>" runat="server"></asp:Label>
+                                <asp:Label ID="fldProduct" Property="<%# SalesOrderDetailList.Product %>" runat="server"></asp:Label>
                               </asp:LinkButton>
                             </ItemTemplate>
                           </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Order Qty">
+                          <asp:TemplateField HeaderText="Qty">
                             <ItemTemplate>
                               <asp:Label ID="fldOrderQty" Property="<%# SalesOrderDetailList.OrderQty %>" runat="server"></asp:Label>
                             </ItemTemplate>
                           </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Special Offer Id">
-                            <ItemTemplate>
-                              <asp:Label ID="fldSpecialOfferId" Property="<%# SalesOrderDetailList.SpecialOfferId %>" runat="server"></asp:Label>
-                            </ItemTemplate>
-                          </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Product Id">
-                            <ItemTemplate>
-                              <asp:Label ID="fldProductId" Property="<%# SalesOrderDetailList.ProductId %>" runat="server"></asp:Label>
-                            </ItemTemplate>
-                          </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Unit Price">
+                          <asp:TemplateField HeaderText="Price">
                             <ItemTemplate>
                               <asp:Label ID="fldUnitPrice" Property="<%# SalesOrderDetailList.UnitPrice %>" runat="server"></asp:Label>
                             </ItemTemplate>
                           </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Unit Price Discount">
+                          <asp:TemplateField HeaderText="Discount">
                             <ItemTemplate>
                               <asp:Label ID="fldUnitPriceDiscount" Property="<%# SalesOrderDetailList.UnitPriceDiscount %>" runat="server"></asp:Label>
                             </ItemTemplate>
                           </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Line Total">
+                          <asp:TemplateField HeaderText="Special Offer">
+                            <ItemTemplate>
+                              <asp:Label ID="fldSpecialOffer" Property="<%# SalesOrderDetailList.SpecialOffer %>" runat="server"></asp:Label>
+                            </ItemTemplate>
+                          </asp:TemplateField>
+                          <asp:TemplateField HeaderText="Total">
                             <ItemTemplate>
                               <asp:Label ID="fldLineTotal" Property="<%# SalesOrderDetailList.LineTotal %>" runat="server"></asp:Label>
                             </ItemTemplate>
                           </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Rowguid">
+                          <asp:TemplateField HeaderText="Tracking #">
                             <ItemTemplate>
-                              <asp:Label ID="fldRowguid" Property="<%# SalesOrderDetailList.Rowguid %>" runat="server"></asp:Label>
-                            </ItemTemplate>
-                          </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Modified Date">
-                            <ItemTemplate>
-                              <asp:Label ID="fldModifiedDate" Property="<%# SalesOrderDetailList.ModifiedDate %>" runat="server"></asp:Label>
+                              <asp:Label ID="fldCarrierTrackingNumber" Property="<%# SalesOrderDetailList.CarrierTrackingNumber %>" runat="server"></asp:Label>
                             </ItemTemplate>
                           </asp:TemplateField>
                         </Columns>

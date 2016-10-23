@@ -20,9 +20,9 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblOrderQty;
         protected global::System.Web.UI.WebControls.TextBox ctlOrderQty;
         protected global::System.Web.UI.WebControls.Label lblSpecialOfferId;
-        protected global::System.Web.UI.WebControls.TextBox ctlSpecialOfferId;
+        protected global::System.Web.UI.WebControls.DropDownList ctlSpecialOfferId;
         protected global::System.Web.UI.WebControls.Label lblProductId;
-        protected global::System.Web.UI.WebControls.TextBox ctlProductId;
+        protected global::System.Web.UI.WebControls.DropDownList ctlProductId;
         protected global::System.Web.UI.WebControls.Label lblUnitPrice;
         protected global::System.Web.UI.WebControls.TextBox ctlUnitPrice;
         protected global::System.Web.UI.WebControls.Label lblUnitPriceDiscount;

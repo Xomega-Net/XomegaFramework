@@ -39,11 +39,11 @@
                       </div>
                       <div class="field">
                         <asp:Label ID="lblSpecialOfferId" Text="Special Offer Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblSpecialOfferId" ID="ctlSpecialOfferId" Property="<%# SalesOrderDetailObject.SpecialOfferId %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:DropDownList LabelID="lblSpecialOfferId" ID="ctlSpecialOfferId" Property="<%# SalesOrderDetailObject.SpecialOfferId %>" runat="server"></asp:DropDownList>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblProductId" Text="Product Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblProductId" ID="ctlProductId" Property="<%# SalesOrderDetailObject.ProductId %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:DropDownList LabelID="lblProductId" ID="ctlProductId" Property="<%# SalesOrderDetailObject.ProductId %>" runat="server"></asp:DropDownList>
                       </div>
                     </td>
                     <td class="fieldColumn">

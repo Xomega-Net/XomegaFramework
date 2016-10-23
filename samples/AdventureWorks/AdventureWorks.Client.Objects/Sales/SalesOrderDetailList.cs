@@ -20,12 +20,10 @@ namespace AdventureWorks.Client.Objects
 
         public const string CarrierTrackingNumber = "CarrierTrackingNumber";
         public const string LineTotal = "LineTotal";
-        public const string ModifiedDate = "ModifiedDate";
         public const string OrderQty = "OrderQty";
-        public const string ProductId = "ProductId";
-        public const string Rowguid = "Rowguid";
+        public const string Product = "Product";
         public const string SalesOrderDetailId = "SalesOrderDetailId";
-        public const string SpecialOfferId = "SpecialOfferId";
+        public const string SpecialOffer = "SpecialOffer";
         public const string UnitPrice = "UnitPrice";
         public const string UnitPriceDiscount = "UnitPriceDiscount";
 
@@ -34,13 +32,11 @@ namespace AdventureWorks.Client.Objects
         #region Properties
 
         public TextProperty CarrierTrackingNumberProperty { get; private set; }
-        public DecimalProperty LineTotalProperty { get; private set; }
-        public DateTimeProperty ModifiedDateProperty { get; private set; }
+        public MoneyProperty LineTotalProperty { get; private set; }
         public SmallIntegerProperty OrderQtyProperty { get; private set; }
-        public IntegerKeyProperty ProductIdProperty { get; private set; }
-        public GuidProperty RowguidProperty { get; private set; }
+        public EnumIntProperty ProductProperty { get; private set; }
         public IntegerKeyProperty SalesOrderDetailIdProperty { get; private set; }
-        public IntegerKeyProperty SpecialOfferIdProperty { get; private set; }
+        public EnumIntProperty SpecialOfferProperty { get; private set; }
         public MoneyProperty UnitPriceProperty { get; private set; }
         public MoneyProperty UnitPriceDiscountProperty { get; private set; }
 
@@ -53,27 +49,25 @@ namespace AdventureWorks.Client.Objects
             CarrierTrackingNumberProperty = new TextProperty(this, CarrierTrackingNumber);
             CarrierTrackingNumberProperty.Size = 25;
             CarrierTrackingNumberProperty.Editable = false;
-            LineTotalProperty = new DecimalProperty(this, LineTotal);
+            LineTotalProperty = new MoneyProperty(this, LineTotal);
             LineTotalProperty.Required = true;
             LineTotalProperty.Editable = false;
-            ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
-            ModifiedDateProperty.Required = true;
-            ModifiedDateProperty.Editable = false;
             OrderQtyProperty = new SmallIntegerProperty(this, OrderQty);
             OrderQtyProperty.Required = true;
             OrderQtyProperty.Editable = false;
-            ProductIdProperty = new IntegerKeyProperty(this, ProductId);
-            ProductIdProperty.Required = true;
-            ProductIdProperty.Editable = false;
-            RowguidProperty = new GuidProperty(this, Rowguid);
-            RowguidProperty.Required = true;
-            RowguidProperty.Editable = false;
+            ProductProperty = new EnumIntProperty(this, Product);
+            ProductProperty.Required = true;
+            ProductProperty.Size = 10;
+            ProductProperty.EnumType = "product";
+            ProductProperty.Editable = false;
             SalesOrderDetailIdProperty = new IntegerKeyProperty(this, SalesOrderDetailId);
             SalesOrderDetailIdProperty.Required = true;
             SalesOrderDetailIdProperty.Editable = false;
-            SpecialOfferIdProperty = new IntegerKeyProperty(this, SpecialOfferId);
-            SpecialOfferIdProperty.Required = true;
-            SpecialOfferIdProperty.Editable = false;
+            SpecialOfferProperty = new EnumIntProperty(this, SpecialOffer);
+            SpecialOfferProperty.Required = true;
+            SpecialOfferProperty.Size = 10;
+            SpecialOfferProperty.EnumType = "special offer";
+            SpecialOfferProperty.Editable = false;
             UnitPriceProperty = new MoneyProperty(this, UnitPrice);
             UnitPriceProperty.Required = true;
             UnitPriceProperty.Editable = false;
