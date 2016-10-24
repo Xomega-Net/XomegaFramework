@@ -219,13 +219,13 @@
           <output list="true">
             <param name="product id"/>
             <param name="name"/>
-            <param name="is-active" type="boolean" required="true"/>
+            <param name="is active" type="boolean" required="true"/>
             <param name="product subcategory id"/>
             <param name="product model id"/>
           </output>
           <config>
             <xfk:enum-cache enum-name="product" id-param="product id"
-                            desc-param="name" is-active-param="is-active"/>
+                            desc-param="name" is-active-param="is active"/>
           </config>
           <doc>
             <summary>Reads a list of Product objects based on the specified criteria.</summary>
