@@ -13,10 +13,10 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.Label lblSalesOrderViewTitle;
         protected global::AdventureWorks.Client.Web.Errors errors;
         protected global::System.Web.UI.WebControls.Panel pnlMain;
-        protected global::System.Web.UI.WebControls.Label lblRevisionNumber;
-        protected global::System.Web.UI.WebControls.TextBox ctlRevisionNumber;
+        protected global::System.Web.UI.WebControls.Label lblSalesOrderNumber;
+        protected global::System.Web.UI.WebControls.Label ctlSalesOrderNumber;
         protected global::System.Web.UI.WebControls.Label lblOrderDate;
-        protected global::AdventureWorks.Client.Web.DateTimeControl ctlOrderDate;
+        protected global::System.Web.UI.WebControls.Label ctlOrderDate;
         protected global::System.Web.UI.WebControls.Label lblDueDate;
         protected global::AdventureWorks.Client.Web.DateTimeControl ctlDueDate;
         protected global::System.Web.UI.WebControls.Label lblShipDate;
@@ -25,8 +25,6 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.DropDownList ctlStatus;
         protected global::System.Web.UI.WebControls.Label lblOnlineOrderFlag;
         protected global::System.Web.UI.WebControls.CheckBox ctlOnlineOrderFlag;
-        protected global::System.Web.UI.WebControls.Label lblSalesOrderNumber;
-        protected global::System.Web.UI.WebControls.TextBox ctlSalesOrderNumber;
         protected global::System.Web.UI.WebControls.Label lblPurchaseOrderNumber;
         protected global::System.Web.UI.WebControls.TextBox ctlPurchaseOrderNumber;
         protected global::System.Web.UI.WebControls.Label lblAccountNumber;
@@ -59,10 +57,10 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.TextBox ctlTotalDue;
         protected global::System.Web.UI.WebControls.Label lblComment;
         protected global::System.Web.UI.WebControls.TextBox ctlComment;
-        protected global::System.Web.UI.WebControls.Label lblRowguid;
-        protected global::System.Web.UI.WebControls.TextBox ctlRowguid;
+        protected global::System.Web.UI.WebControls.Label lblRevisionNumber;
+        protected global::System.Web.UI.WebControls.Label ctlRevisionNumber;
         protected global::System.Web.UI.WebControls.Label lblModifiedDate;
-        protected global::AdventureWorks.Client.Web.DateTimeControl ctlModifiedDate;
+        protected global::System.Web.UI.WebControls.Label ctlModifiedDate;
         protected global::AjaxControlToolkit.TabContainer tbcChildren;
         protected global::AjaxControlToolkit.TabPanel tabDetail;
         protected global::System.Web.UI.WebControls.Panel pnlDetail;

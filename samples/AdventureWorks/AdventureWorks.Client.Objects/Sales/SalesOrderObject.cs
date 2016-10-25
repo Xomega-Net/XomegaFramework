@@ -34,7 +34,6 @@ namespace AdventureWorks.Client.Objects
         public const string PurchaseOrderNumber = "PurchaseOrderNumber";
         public const string Reason = "Reason";
         public const string RevisionNumber = "RevisionNumber";
-        public const string Rowguid = "Rowguid";
         public const string SalesOrderId = "SalesOrderId";
         public const string SalesOrderNumber = "SalesOrderNumber";
         public const string SalesPersonId = "SalesPersonId";
@@ -62,10 +61,9 @@ namespace AdventureWorks.Client.Objects
         public MoneyProperty FreightProperty { get; private set; }
         public DateTimeProperty ModifiedDateProperty { get; private set; }
         public BooleanProperty OnlineOrderFlagProperty { get; private set; }
-        public DateTimeProperty OrderDateProperty { get; private set; }
+        public DateProperty OrderDateProperty { get; private set; }
         public TextProperty PurchaseOrderNumberProperty { get; private set; }
         public TinyIntegerProperty RevisionNumberProperty { get; private set; }
-        public GuidProperty RowguidProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
         public EnumIntProperty SalesPersonIdProperty { get; private set; }
@@ -109,22 +107,24 @@ namespace AdventureWorks.Client.Objects
             FreightProperty.Required = true;
             ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
             ModifiedDateProperty.Required = true;
+            ModifiedDateProperty.Editable = false;
             OnlineOrderFlagProperty = new BooleanProperty(this, OnlineOrderFlag);
             OnlineOrderFlagProperty.Required = true;
-            OrderDateProperty = new DateTimeProperty(this, OrderDate);
+            OrderDateProperty = new DateProperty(this, OrderDate);
             OrderDateProperty.Required = true;
+            OrderDateProperty.Editable = false;
             PurchaseOrderNumberProperty = new TextProperty(this, PurchaseOrderNumber);
             PurchaseOrderNumberProperty.Size = 25;
             RevisionNumberProperty = new TinyIntegerProperty(this, RevisionNumber);
             RevisionNumberProperty.Required = true;
-            RowguidProperty = new GuidProperty(this, Rowguid);
-            RowguidProperty.Required = true;
+            RevisionNumberProperty.Editable = false;
             SalesOrderIdProperty = new IntegerKeyProperty(this, SalesOrderId);
             SalesOrderIdProperty.Required = true;
             SalesOrderIdProperty.Editable = false;
             SalesOrderNumberProperty = new TextProperty(this, SalesOrderNumber);
             SalesOrderNumberProperty.Required = true;
             SalesOrderNumberProperty.Size = 25;
+            SalesOrderNumberProperty.Editable = false;
             SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
             SalesPersonIdProperty.EnumType = "sales person";
             ShipDateProperty = new DateTimeProperty(this, ShipDate);

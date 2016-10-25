@@ -249,13 +249,12 @@
             </config>
           </input>
           <output>
-            <param name="revision number"/>
-            <param name="order date"/>
+            <param name="sales order number"/>
+            <param name="order date" type="date"/>
             <param name="due date"/>
             <param name="ship date"/>
             <param name="status"/>
             <param name="online order flag"/>
-            <param name="sales order number"/>
             <param name="purchase order number"/>
             <param name="account number"/>
             <param name="customer id"/>
@@ -272,7 +271,7 @@
             <param name="freight"/>
             <param name="total due"/>
             <param name="comment"/>
-            <param name="rowguid"/>
+            <param name="revision number"/>
             <param name="modified date"/>
             <config>
               <xfk:add-to-object class="SalesOrderObject"/>
@@ -284,13 +283,10 @@
         </operation>
         <operation name="create" type="create">
           <input arg="data">
-            <param name="revision number"/>
-            <param name="order date"/>
             <param name="due date"/>
             <param name="ship date"/>
             <param name="status"/>
             <param name="online order flag"/>
-            <param name="sales order number"/>
             <param name="purchase order number"/>
             <param name="account number"/>
             <param name="customer id"/>
@@ -307,8 +303,6 @@
             <param name="freight"/>
             <param name="total due"/>
             <param name="comment"/>
-            <param name="rowguid"/>
-            <param name="modified date"/>
             <config>
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
@@ -327,13 +321,10 @@
           <input>
             <param name="sales order id"/>
             <struct name="data">
-              <param name="revision number"/>
-              <param name="order date"/>
               <param name="due date"/>
               <param name="ship date"/>
               <param name="status"/>
               <param name="online order flag"/>
-              <param name="sales order number"/>
               <param name="purchase order number"/>
               <param name="account number"/>
               <param name="customer id"/>
@@ -350,8 +341,6 @@
               <param name="freight"/>
               <param name="total due"/>
               <param name="comment"/>
-              <param name="rowguid"/>
-              <param name="modified date"/>
               <config>
                 <xfk:add-to-object class="SalesOrderObject"/>
               </config>

@@ -139,7 +139,7 @@ namespace AdventureWorks.Services
     public class SalesOrder_ReadOutput
     {
         [DataMember]
-        public byte RevisionNumber { get; set; }
+        public string SalesOrderNumber { get; set; }
         [DataMember]
         public DateTime OrderDate { get; set; }
         [DataMember]
@@ -150,8 +150,6 @@ namespace AdventureWorks.Services
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
-        [DataMember]
-        public string SalesOrderNumber { get; set; }
         [DataMember]
         public string PurchaseOrderNumber { get; set; }
         [DataMember]
@@ -185,7 +183,7 @@ namespace AdventureWorks.Services
         [DataMember]
         public string Comment { get; set; }
         [DataMember]
-        public Guid Rowguid { get; set; }
+        public byte RevisionNumber { get; set; }
         [DataMember]
         public DateTime ModifiedDate { get; set; }
     }
@@ -200,10 +198,6 @@ namespace AdventureWorks.Services
     public class SalesOrder_CreateInput
     {
         [DataMember]
-        public byte RevisionNumber { get; set; }
-        [DataMember]
-        public DateTime OrderDate { get; set; }
-        [DataMember]
         public DateTime DueDate { get; set; }
         [DataMember]
         public DateTime? ShipDate { get; set; }
@@ -211,8 +205,6 @@ namespace AdventureWorks.Services
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
-        [DataMember]
-        public string SalesOrderNumber { get; set; }
         [DataMember]
         public string PurchaseOrderNumber { get; set; }
         [DataMember]
@@ -245,10 +237,6 @@ namespace AdventureWorks.Services
         public decimal TotalDue { get; set; }
         [DataMember]
         public string Comment { get; set; }
-        [DataMember]
-        public Guid Rowguid { get; set; }
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
     }
     #endregion
 
@@ -274,10 +262,6 @@ namespace AdventureWorks.Services
     public class SalesOrder_UpdateInput_Data
     {
         [DataMember]
-        public byte RevisionNumber { get; set; }
-        [DataMember]
-        public DateTime OrderDate { get; set; }
-        [DataMember]
         public DateTime DueDate { get; set; }
         [DataMember]
         public DateTime? ShipDate { get; set; }
@@ -285,8 +269,6 @@ namespace AdventureWorks.Services
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
-        [DataMember]
-        public string SalesOrderNumber { get; set; }
         [DataMember]
         public string PurchaseOrderNumber { get; set; }
         [DataMember]
@@ -319,10 +301,6 @@ namespace AdventureWorks.Services
         public decimal TotalDue { get; set; }
         [DataMember]
         public string Comment { get; set; }
-        [DataMember]
-        public Guid Rowguid { get; set; }
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
     }
     #endregion
 

@@ -29,12 +29,12 @@
                   <tr>
                     <td class="fieldColumn">
                       <div class="field">
-                        <asp:Label ID="lblRevisionNumber" Text="Revision Number:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblRevisionNumber" ID="ctlRevisionNumber" Property="<%# SalesOrderObject.RevisionNumber %>" runat="server" CssClass="integer"></asp:TextBox>
+                        <asp:Label ID="lblSalesOrderNumber" Text="Sales Order Number:" CssClass="label" runat="server"></asp:Label>
+                        <asp:Label LabelID="lblSalesOrderNumber" ID="ctlSalesOrderNumber" Property="<%# SalesOrderObject.SalesOrderNumber %>" runat="server"></asp:Label>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblOrderDate" Text="Order Date:" CssClass="label" runat="server"></asp:Label>
-                        <uc:DateTimeControl LabelID="lblOrderDate" ID="ctlOrderDate" Property="<%# SalesOrderObject.OrderDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
+                        <asp:Label LabelID="lblOrderDate" ID="ctlOrderDate" Property="<%# SalesOrderObject.OrderDate %>" runat="server"></asp:Label>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
@@ -51,10 +51,6 @@
                       <div class="field">
                         <asp:Label ID="lblOnlineOrderFlag" Text="Online Order Flag:" CssClass="label" runat="server"></asp:Label>
                         <asp:CheckBox LabelID="lblOnlineOrderFlag" ID="ctlOnlineOrderFlag" Property="<%# SalesOrderObject.OnlineOrderFlag %>" runat="server"></asp:CheckBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblSalesOrderNumber" Text="Sales Order Number:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblSalesOrderNumber" ID="ctlSalesOrderNumber" Property="<%# SalesOrderObject.SalesOrderNumber %>" runat="server"></asp:TextBox>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblPurchaseOrderNumber" Text="Purchase Order Number:" CssClass="label" runat="server"></asp:Label>
@@ -123,12 +119,12 @@
                         <asp:TextBox LabelID="lblComment" ID="ctlComment" Property="<%# SalesOrderObject.Comment %>" runat="server"></asp:TextBox>
                       </div>
                       <div class="field">
-                        <asp:Label ID="lblRowguid" Text="Rowguid:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblRowguid" ID="ctlRowguid" Property="<%# SalesOrderObject.Rowguid %>" runat="server"></asp:TextBox>
+                        <asp:Label ID="lblRevisionNumber" Text="Revision Number:" CssClass="label" runat="server"></asp:Label>
+                        <asp:Label LabelID="lblRevisionNumber" ID="ctlRevisionNumber" Property="<%# SalesOrderObject.RevisionNumber %>" runat="server"></asp:Label>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblModifiedDate" Text="Modified Date:" CssClass="label" runat="server"></asp:Label>
-                        <uc:DateTimeControl LabelID="lblModifiedDate" ID="ctlModifiedDate" Property="<%# SalesOrderObject.ModifiedDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
+                        <asp:Label LabelID="lblModifiedDate" ID="ctlModifiedDate" Property="<%# SalesOrderObject.ModifiedDate %>" runat="server"></asp:Label>
                       </div>
                     </td>
                   </tr>

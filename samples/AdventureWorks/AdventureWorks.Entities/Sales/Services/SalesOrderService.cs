@@ -101,6 +101,8 @@ namespace AdventureWorks.Entities.Services
                 if (_data.CurrencyRateId != null && obj.CurrencyRateIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter CurrencyRateId. Cannot find the corresponding CurrencyRate object.", _data.CurrencyRateId);
                 // CUSTOM_CODE_START: add custom code for Create operation below
+                obj.OrderDate = DateTime.Now;
+                obj.ModifiedDate = DateTime.Now;
                 // CUSTOM_CODE_END
                 ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
                 ctx.SaveChanges();
@@ -145,6 +147,7 @@ namespace AdventureWorks.Entities.Services
                 if (_data.CurrencyRateId != null && obj.CurrencyRateIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter CurrencyRateId. Cannot find the corresponding CurrencyRate object.", _data.CurrencyRateId);
                 // CUSTOM_CODE_START: add custom code for Update operation below
+                obj.ModifiedDate = DateTime.Now;
                 // CUSTOM_CODE_END
                 ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
                 ctx.SaveChanges();
