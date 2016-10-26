@@ -143,10 +143,6 @@ namespace AdventureWorks.Services
         [DataMember]
         public DateTime OrderDate { get; set; }
         [DataMember]
-        public DateTime DueDate { get; set; }
-        [DataMember]
-        public DateTime? ShipDate { get; set; }
-        [DataMember]
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
@@ -165,21 +161,9 @@ namespace AdventureWorks.Services
         [DataMember]
         public int ShipToAddressId { get; set; }
         [DataMember]
-        public int ShipMethodId { get; set; }
+        public DateTime? ShipDate { get; set; }
         [DataMember]
-        public int? CreditCardId { get; set; }
-        [DataMember]
-        public string CreditCardApprovalCode { get; set; }
-        [DataMember]
-        public int? CurrencyRateId { get; set; }
-        [DataMember]
-        public decimal SubTotal { get; set; }
-        [DataMember]
-        public decimal TaxAmt { get; set; }
-        [DataMember]
-        public decimal Freight { get; set; }
-        [DataMember]
-        public decimal TotalDue { get; set; }
+        public PaymentInfo Payment { get; set; }
         [DataMember]
         public string Comment { get; set; }
         [DataMember]
@@ -198,10 +182,6 @@ namespace AdventureWorks.Services
     public class SalesOrder_CreateInput
     {
         [DataMember]
-        public DateTime DueDate { get; set; }
-        [DataMember]
-        public DateTime? ShipDate { get; set; }
-        [DataMember]
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
@@ -220,21 +200,9 @@ namespace AdventureWorks.Services
         [DataMember]
         public int ShipToAddressId { get; set; }
         [DataMember]
-        public int ShipMethodId { get; set; }
+        public DateTime? ShipDate { get; set; }
         [DataMember]
-        public int? CreditCardId { get; set; }
-        [DataMember]
-        public string CreditCardApprovalCode { get; set; }
-        [DataMember]
-        public int? CurrencyRateId { get; set; }
-        [DataMember]
-        public decimal SubTotal { get; set; }
-        [DataMember]
-        public decimal TaxAmt { get; set; }
-        [DataMember]
-        public decimal Freight { get; set; }
-        [DataMember]
-        public decimal TotalDue { get; set; }
+        public PaymentUpdate Payment { get; set; }
         [DataMember]
         public string Comment { get; set; }
     }
@@ -262,10 +230,6 @@ namespace AdventureWorks.Services
     public class SalesOrder_UpdateInput_Data
     {
         [DataMember]
-        public DateTime DueDate { get; set; }
-        [DataMember]
-        public DateTime? ShipDate { get; set; }
-        [DataMember]
         public byte Status { get; set; }
         [DataMember]
         public bool OnlineOrderFlag { get; set; }
@@ -284,21 +248,9 @@ namespace AdventureWorks.Services
         [DataMember]
         public int ShipToAddressId { get; set; }
         [DataMember]
-        public int ShipMethodId { get; set; }
+        public DateTime? ShipDate { get; set; }
         [DataMember]
-        public int? CreditCardId { get; set; }
-        [DataMember]
-        public string CreditCardApprovalCode { get; set; }
-        [DataMember]
-        public int? CurrencyRateId { get; set; }
-        [DataMember]
-        public decimal SubTotal { get; set; }
-        [DataMember]
-        public decimal TaxAmt { get; set; }
-        [DataMember]
-        public decimal Freight { get; set; }
-        [DataMember]
-        public decimal TotalDue { get; set; }
+        public PaymentUpdate Payment { get; set; }
         [DataMember]
         public string Comment { get; set; }
     }

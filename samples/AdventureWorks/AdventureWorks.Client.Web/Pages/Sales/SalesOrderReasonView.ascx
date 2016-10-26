@@ -24,13 +24,13 @@
               <asp:Panel ID="pnlMain" CssClass="xw-obj" GroupingText="Reason" runat="server">
                 <table class="xw-fieldset-layout">
                   <tr>
-                    <td class="fieldColumn">
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblSalesReasonId" Text="Sales Reason Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblSalesReasonId" ID="ctlSalesReasonId" Property="<%# SalesOrderReasonObject.SalesReasonId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
                     </td>
-                    <td class="fieldColumn">
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblModifiedDate" Text="Modified Date:" CssClass="label" runat="server"></asp:Label>
                         <uc:DateTimeControl LabelID="lblModifiedDate" ID="ctlModifiedDate" Property="<%# SalesOrderReasonObject.ModifiedDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>

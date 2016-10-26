@@ -27,7 +27,7 @@
                 <asp:Panel ID="pnlCriteria" CssClass="xw-obj" runat="server">
                   <table class="xw-fieldset-layout">
                     <tr>
-                      <td class="fieldColumn">
+                      <td class="fieldColumn" style="width: 50%">
                         <div class="field">
                           <asp:Label ID="lblSalesOrderNumber" Text="Sales Order Number:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblSalesOrderNumber" ID="ctlSalesOrderNumberOperator" Property="<%# SalesOrderCriteria.SalesOrderNumberOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>
@@ -57,7 +57,7 @@
                           <asp:TextBox ID="ctlTotalDue2" Property="<%# SalesOrderCriteria.TotalDue2 %>" runat="server" CssClass="decimal"></asp:TextBox>
                         </div>
                       </td>
-                      <td class="fieldColumn">
+                      <td class="fieldColumn" style="width: 50%">
                         <div class="field">
                           <asp:Label ID="lblCustomerStore" Text="Customer Store:" CssClass="label" runat="server"></asp:Label>
                           <asp:DropDownList LabelID="lblCustomerStore" ID="ctlCustomerStoreOperator" Property="<%# SalesOrderCriteria.CustomerStoreOperator %>" runat="server" AutoPostBack="true" CssClass="operator"></asp:DropDownList>

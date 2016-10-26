@@ -27,7 +27,7 @@
               <asp:Panel ID="pnlMain" CssClass="xw-obj" GroupingText="Sales Order" runat="server">
                 <table class="xw-fieldset-layout">
                   <tr>
-                    <td class="fieldColumn">
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblSalesOrderNumber" Text="Sales Order Number:" CssClass="label" runat="server"></asp:Label>
                         <asp:Label LabelID="lblSalesOrderNumber" ID="ctlSalesOrderNumber" Property="<%# SalesOrderObject.SalesOrderNumber %>" runat="server"></asp:Label>
@@ -35,14 +35,6 @@
                       <div class="field">
                         <asp:Label ID="lblOrderDate" Text="Order Date:" CssClass="label" runat="server"></asp:Label>
                         <asp:Label LabelID="lblOrderDate" ID="ctlOrderDate" Property="<%# SalesOrderObject.OrderDate %>" runat="server"></asp:Label>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
-                        <uc:DateTimeControl LabelID="lblDueDate" ID="ctlDueDate" Property="<%# SalesOrderObject.DueDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblShipDate" Text="Ship Date:" CssClass="label" runat="server"></asp:Label>
-                        <uc:DateTimeControl LabelID="lblShipDate" ID="ctlShipDate" Property="<%# SalesOrderObject.ShipDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblStatus" Text="Status:" CssClass="label" runat="server"></asp:Label>
@@ -68,6 +60,8 @@
                         <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonId" Property="<%# SalesOrderObject.SalesPersonId %>" runat="server"></asp:DropDownList>
                       </div>
+                    </td>
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryId" Property="<%# SalesOrderObject.TerritoryId %>" runat="server"></asp:DropDownList>
@@ -76,43 +70,13 @@
                         <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblBillToAddressId" ID="ctlBillToAddressId" Property="<%# SalesOrderObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
-                    </td>
-                    <td class="fieldColumn">
                       <div class="field">
                         <asp:Label ID="lblShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblShipToAddressId" ID="ctlShipToAddressId" Property="<%# SalesOrderObject.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
                       <div class="field">
-                        <asp:Label ID="lblShipMethodId" Text="Ship Method Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblShipMethodId" ID="ctlShipMethodId" Property="<%# SalesOrderObject.ShipMethodId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblCreditCardId" Text="Credit Card Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblCreditCardId" ID="ctlCreditCardId" Property="<%# SalesOrderObject.CreditCardId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblCreditCardApprovalCode" Text="Credit Card Approval Code:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblCreditCardApprovalCode" ID="ctlCreditCardApprovalCode" Property="<%# SalesOrderObject.CreditCardApprovalCode %>" runat="server"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblCurrencyRateId" Text="Currency Rate Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblCurrencyRateId" ID="ctlCurrencyRateId" Property="<%# SalesOrderObject.CurrencyRateId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblSubTotal" Text="Sub Total:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblSubTotal" ID="ctlSubTotal" Property="<%# SalesOrderObject.SubTotal %>" runat="server" CssClass="decimal"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblTaxAmt" Text="Tax Amt:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblTaxAmt" ID="ctlTaxAmt" Property="<%# SalesOrderObject.TaxAmt %>" runat="server" CssClass="decimal"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblFreight" Text="Freight:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblFreight" ID="ctlFreight" Property="<%# SalesOrderObject.Freight %>" runat="server" CssClass="decimal"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblTotalDue" Text="Total Due:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblTotalDue" ID="ctlTotalDue" Property="<%# SalesOrderObject.TotalDue %>" runat="server" CssClass="decimal"></asp:TextBox>
+                        <asp:Label ID="lblShipDate" Text="Ship Date:" CssClass="label" runat="server"></asp:Label>
+                        <uc:DateTimeControl LabelID="lblShipDate" ID="ctlShipDate" Property="<%# SalesOrderObject.ShipDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblComment" Text="Comment:" CssClass="label" runat="server"></asp:Label>
@@ -176,6 +140,56 @@
                         </Columns>
                       </asp:GridView>
                       <asp:LinkButton ID="lnkDetailNew" runat="server" OnCommand="lnkDetailNew_Click">New</asp:LinkButton>
+                    </asp:Panel>
+                  </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <ajaxToolkit:TabPanel ID="tabPayment" HeaderText="Payment" runat="server">
+                  <ContentTemplate>
+                    <asp:Panel ID="pnlPayment" CssClass="xw-obj" runat="server" ChildObject="<%# SalesOrderObject.Payment %>">
+                      <table class="xw-fieldset-layout">
+                        <tr>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblPaymentSubTotal" Text="Sub Total:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblPaymentSubTotal" ID="ctlPaymentSubTotal" Property="<%# SalesOrderPaymentObject.SubTotal %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentShipMethodId" Text="Shipment Method:" CssClass="label" runat="server"></asp:Label>
+                              <asp:DropDownList LabelID="lblPaymentShipMethodId" ID="ctlPaymentShipMethodId" Property="<%# SalesOrderPaymentObject.ShipMethodId %>" runat="server"></asp:DropDownList>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentTaxAmt" Text="Tax Amt:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblPaymentTaxAmt" ID="ctlPaymentTaxAmt" Property="<%# SalesOrderPaymentObject.TaxAmt %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentFreight" Text="Freight:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblPaymentFreight" ID="ctlPaymentFreight" Property="<%# SalesOrderPaymentObject.Freight %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentTotalDue" Text="Total Due:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblPaymentTotalDue" ID="ctlPaymentTotalDue" Property="<%# SalesOrderPaymentObject.TotalDue %>" runat="server"></asp:Label>
+                            </div>
+                          </td>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblPaymentDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
+                              <uc:DateTimeControl LabelID="lblPaymentDueDate" ID="ctlPaymentDueDate" Property="<%# SalesOrderPaymentObject.DueDate %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentCurrencyRate" Text="Currency Rate:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblPaymentCurrencyRate" ID="ctlPaymentCurrencyRate" Property="<%# SalesOrderPaymentObject.CurrencyRate %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentCreditCardId" Text="Credit Card Id:" CssClass="label" runat="server"></asp:Label>
+                              <asp:TextBox LabelID="lblPaymentCreditCardId" ID="ctlPaymentCreditCardId" Property="<%# SalesOrderPaymentObject.CreditCardId %>" runat="server" CssClass="integer"></asp:TextBox>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblPaymentCreditCardApprovalCode" Text="Credit Card Approval Code:" CssClass="label" runat="server"></asp:Label>
+                              <asp:TextBox LabelID="lblPaymentCreditCardApprovalCode" ID="ctlPaymentCreditCardApprovalCode" Property="<%# SalesOrderPaymentObject.CreditCardApprovalCode %>" runat="server"></asp:TextBox>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
                     </asp:Panel>
                   </ContentTemplate>
                 </ajaxToolkit:TabPanel>

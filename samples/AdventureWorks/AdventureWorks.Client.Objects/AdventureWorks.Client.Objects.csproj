@@ -73,6 +73,9 @@
       <Compile Include="Sales\SalesOrderCriteriaCustomized.cs">
          <DependentUpon>SalesOrderCriteria.cs</DependentUpon>
       </Compile>
+      <Compile Include="Sales\SalesOrderPaymentObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

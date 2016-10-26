@@ -21,16 +21,12 @@ namespace AdventureWorks.Client.Objects
         public const string AccountNumber = "AccountNumber";
         public const string BillToAddressId = "BillToAddressId";
         public const string Comment = "Comment";
-        public const string CreditCardApprovalCode = "CreditCardApprovalCode";
-        public const string CreditCardId = "CreditCardId";
-        public const string CurrencyRateId = "CurrencyRateId";
         public const string CustomerId = "CustomerId";
         public const string Detail = "Detail";
-        public const string DueDate = "DueDate";
-        public const string Freight = "Freight";
         public const string ModifiedDate = "ModifiedDate";
         public const string OnlineOrderFlag = "OnlineOrderFlag";
         public const string OrderDate = "OrderDate";
+        public const string Payment = "Payment";
         public const string PurchaseOrderNumber = "PurchaseOrderNumber";
         public const string Reason = "Reason";
         public const string RevisionNumber = "RevisionNumber";
@@ -38,13 +34,9 @@ namespace AdventureWorks.Client.Objects
         public const string SalesOrderNumber = "SalesOrderNumber";
         public const string SalesPersonId = "SalesPersonId";
         public const string ShipDate = "ShipDate";
-        public const string ShipMethodId = "ShipMethodId";
         public const string ShipToAddressId = "ShipToAddressId";
         public const string Status = "Status";
-        public const string SubTotal = "SubTotal";
-        public const string TaxAmt = "TaxAmt";
         public const string TerritoryId = "TerritoryId";
-        public const string TotalDue = "TotalDue";
 
         #endregion
 
@@ -53,12 +45,7 @@ namespace AdventureWorks.Client.Objects
         public TextProperty AccountNumberProperty { get; private set; }
         public IntegerKeyProperty BillToAddressIdProperty { get; private set; }
         public TextProperty CommentProperty { get; private set; }
-        public TextProperty CreditCardApprovalCodeProperty { get; private set; }
-        public IntegerKeyProperty CreditCardIdProperty { get; private set; }
-        public IntegerKeyProperty CurrencyRateIdProperty { get; private set; }
         public IntegerKeyProperty CustomerIdProperty { get; private set; }
-        public DateTimeProperty DueDateProperty { get; private set; }
-        public MoneyProperty FreightProperty { get; private set; }
         public DateTimeProperty ModifiedDateProperty { get; private set; }
         public BooleanProperty OnlineOrderFlagProperty { get; private set; }
         public DateProperty OrderDateProperty { get; private set; }
@@ -68,19 +55,16 @@ namespace AdventureWorks.Client.Objects
         public TextProperty SalesOrderNumberProperty { get; private set; }
         public EnumIntProperty SalesPersonIdProperty { get; private set; }
         public DateTimeProperty ShipDateProperty { get; private set; }
-        public IntegerKeyProperty ShipMethodIdProperty { get; private set; }
         public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
-        public MoneyProperty SubTotalProperty { get; private set; }
-        public MoneyProperty TaxAmtProperty { get; private set; }
         public EnumIntProperty TerritoryIdProperty { get; private set; }
-        public MoneyProperty TotalDueProperty { get; private set; }
 
         #endregion
 
         #region Child Objects
 
         public SalesOrderDetailList DetailList { get { return (SalesOrderDetailList)GetChildObject(Detail); } }
+        public SalesOrderPaymentObject PaymentObject { get { return (SalesOrderPaymentObject)GetChildObject(Payment); } }
         public SalesOrderReasonList ReasonList { get { return (SalesOrderReasonList)GetChildObject(Reason); } }
 
         #endregion
@@ -95,16 +79,8 @@ namespace AdventureWorks.Client.Objects
             BillToAddressIdProperty.Required = true;
             CommentProperty = new TextProperty(this, Comment);
             CommentProperty.Size = 128;
-            CreditCardApprovalCodeProperty = new TextProperty(this, CreditCardApprovalCode);
-            CreditCardApprovalCodeProperty.Size = 15;
-            CreditCardIdProperty = new IntegerKeyProperty(this, CreditCardId);
-            CurrencyRateIdProperty = new IntegerKeyProperty(this, CurrencyRateId);
             CustomerIdProperty = new IntegerKeyProperty(this, CustomerId);
             CustomerIdProperty.Required = true;
-            DueDateProperty = new DateTimeProperty(this, DueDate);
-            DueDateProperty.Required = true;
-            FreightProperty = new MoneyProperty(this, Freight);
-            FreightProperty.Required = true;
             ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
             ModifiedDateProperty.Required = true;
             ModifiedDateProperty.Editable = false;
@@ -128,25 +104,19 @@ namespace AdventureWorks.Client.Objects
             SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
             SalesPersonIdProperty.EnumType = "sales person";
             ShipDateProperty = new DateTimeProperty(this, ShipDate);
-            ShipMethodIdProperty = new IntegerKeyProperty(this, ShipMethodId);
-            ShipMethodIdProperty.Required = true;
             ShipToAddressIdProperty = new IntegerKeyProperty(this, ShipToAddressId);
             ShipToAddressIdProperty.Required = true;
             StatusProperty = new EnumByteProperty(this, Status);
             StatusProperty.Required = true;
             StatusProperty.Size = 10;
             StatusProperty.EnumType = "sales order status";
-            SubTotalProperty = new MoneyProperty(this, SubTotal);
-            SubTotalProperty.Required = true;
-            TaxAmtProperty = new MoneyProperty(this, TaxAmt);
-            TaxAmtProperty.Required = true;
             TerritoryIdProperty = new EnumIntProperty(this, TerritoryId);
             TerritoryIdProperty.Size = 10;
             TerritoryIdProperty.EnumType = "sales territory";
-            TotalDueProperty = new MoneyProperty(this, TotalDue);
-            TotalDueProperty.Required = true;
             DataObject objDetail = new SalesOrderDetailList();
             AddChildObject(Detail, objDetail);
+            DataObject objPayment = new SalesOrderPaymentObject();
+            AddChildObject(Payment, objPayment);
             DataObject objReason = new SalesOrderReasonList();
             AddChildObject(Reason, objReason);
         }

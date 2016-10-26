@@ -9,7 +9,9 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="purchasing">
   <types>
-    <type name="ship method" base="integer key"/>
+    <type name="ship method" base="integer enumeration">
+      <enum ref="ship method"/>
+    </type>
   </types>
   <objects>
     <object name="ship method">
@@ -60,6 +62,24 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <output list="true">
+            <param name="ship method id"/>
+            <param name="name"/>
+          </output>
+          <config>
+            <xfk:enum-cache enum-name="ship method" id-param="ship method id"
+                            desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads a list of Ship Method objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Ship Method objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Purchasing.ShipMethod"/>
       </config>
@@ -68,4 +88,6 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects/>
+  <ui:views/>
 </module>

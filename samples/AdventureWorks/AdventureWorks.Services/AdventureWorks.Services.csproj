@@ -102,6 +102,15 @@
       <Compile Include="CacheLoaders\SpecialOfferReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\_SalesStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Purchasing\_IShipMethodService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\ShipMethodReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

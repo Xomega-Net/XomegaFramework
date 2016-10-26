@@ -24,7 +24,7 @@
               <asp:Panel ID="pnlMain" CssClass="xw-obj" GroupingText="Detail" runat="server">
                 <table class="xw-fieldset-layout">
                   <tr>
-                    <td class="fieldColumn">
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblSalesOrderId" Text="Sales Order Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:Label LabelID="lblSalesOrderId" ID="ctlSalesOrderId" Property="<%# SalesOrderDetailObject.SalesOrderId %>" runat="server"></asp:Label>
@@ -46,7 +46,7 @@
                         <asp:DropDownList LabelID="lblProductId" ID="ctlProductId" Property="<%# SalesOrderDetailObject.ProductId %>" runat="server"></asp:DropDownList>
                       </div>
                     </td>
-                    <td class="fieldColumn">
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblUnitPrice" Text="Unit Price:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblUnitPrice" ID="ctlUnitPrice" Property="<%# SalesOrderDetailObject.UnitPrice %>" runat="server" CssClass="decimal"></asp:TextBox>

@@ -31,6 +31,31 @@
       <item name="Cancelled" value="6"/>
     </enum>
   </enums>
+  <structs>
+    <struct name="payment info" object="sales order">
+      <param name="sub total"/>
+      <param name="ship method id"/>
+      <param name="tax amt"/>
+      <param name="freight"/>
+      <param name="total due"/>
+      <param name="due date" type="date"/>
+      <param name="currency rate" type="string"/>
+      <param name="credit card id"/>
+      <param name="credit card approval code"/>
+      <config>
+        <xfk:add-to-object class="SalesOrderPaymentObject"/>
+      </config>
+    </struct>
+    <struct name="payment update" object="sales order">
+      <param name="ship method id"/>
+      <param name="due date" type="date"/>
+      <param name="credit card id"/>
+      <param name="credit card approval code"/>
+      <config>
+        <xfk:add-to-object class="SalesOrderPaymentObject"/>
+      </config>
+    </struct>
+  </structs>
   <objects>
     <object name="sales order">
       <fields>
@@ -251,8 +276,6 @@
           <output>
             <param name="sales order number"/>
             <param name="order date" type="date"/>
-            <param name="due date"/>
-            <param name="ship date"/>
             <param name="status"/>
             <param name="online order flag"/>
             <param name="purchase order number"/>
@@ -262,14 +285,8 @@
             <param name="territory id"/>
             <param name="bill to address id"/>
             <param name="ship to address id"/>
-            <param name="ship method id"/>
-            <param name="credit card id"/>
-            <param name="credit card approval code"/>
-            <param name="currency rate id"/>
-            <param name="sub total"/>
-            <param name="tax amt"/>
-            <param name="freight"/>
-            <param name="total due"/>
+            <param name="ship date"/>
+            <struct name="payment" ref="payment info"/>
             <param name="comment"/>
             <param name="revision number"/>
             <param name="modified date"/>
@@ -283,8 +300,6 @@
         </operation>
         <operation name="create" type="create">
           <input arg="data">
-            <param name="due date"/>
-            <param name="ship date"/>
             <param name="status"/>
             <param name="online order flag"/>
             <param name="purchase order number"/>
@@ -294,14 +309,8 @@
             <param name="territory id"/>
             <param name="bill to address id"/>
             <param name="ship to address id"/>
-            <param name="ship method id"/>
-            <param name="credit card id"/>
-            <param name="credit card approval code"/>
-            <param name="currency rate id"/>
-            <param name="sub total"/>
-            <param name="tax amt"/>
-            <param name="freight"/>
-            <param name="total due"/>
+            <param name="ship date"/>
+            <struct name="payment" ref="payment update"/>
             <param name="comment"/>
             <config>
               <xfk:add-to-object class="SalesOrderObject"/>
@@ -321,8 +330,6 @@
           <input>
             <param name="sales order id"/>
             <struct name="data">
-              <param name="due date"/>
-              <param name="ship date"/>
               <param name="status"/>
               <param name="online order flag"/>
               <param name="purchase order number"/>
@@ -332,14 +339,8 @@
               <param name="territory id"/>
               <param name="bill to address id"/>
               <param name="ship to address id"/>
-              <param name="ship method id"/>
-              <param name="credit card id"/>
-              <param name="credit card approval code"/>
-              <param name="currency rate id"/>
-              <param name="sub total"/>
-              <param name="tax amt"/>
-              <param name="freight"/>
-              <param name="total due"/>
+              <param name="ship date"/>
+              <struct name="payment" ref="payment update"/>
               <param name="comment"/>
               <config>
                 <xfk:add-to-object class="SalesOrderObject"/>
@@ -478,6 +479,7 @@
       </operations>
       <config>
         <sql:table name="Sales.SalesOrderHeader"/>
+        <wcf:customize extend="true" preserve-on-clean="true"/>
       </config>
       <doc>
         <summary>General sales order information.</summary>
@@ -781,10 +783,16 @@
   </objects>
   <xfk:data-objects>
     <xfk:data-object class="SalesOrderObject">
-      <xfk:add-child name="Detail" class="SalesOrderDetailList"/>
-      <xfk:add-child name="Reason" class="SalesOrderReasonList"/>
+      <xfk:add-child name="detail" class="SalesOrderDetailList"/>
+      <xfk:add-child name="payment" class="SalesOrderPaymentObject"/>
+      <xfk:add-child name="reason" class="SalesOrderReasonList"/>
       <ui:display>
         <ui:field param="sales order id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
+    <xfk:data-object class="SalesOrderPaymentObject">
+      <ui:display>
+        <ui:field param="ship method id" label="Shipment Method"/>
       </ui:display>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderCriteria" customize="true">

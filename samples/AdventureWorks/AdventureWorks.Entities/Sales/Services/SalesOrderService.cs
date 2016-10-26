@@ -3,9 +3,6 @@
 //
 // Manual CHANGES to this file WILL BE LOST when the code is regenerated
 // unless they are placed between corresponding CUSTOM_CODE_START/CUSTOM_CODE_END lines.
-//
-// This file can be DELETED DURING REGENERATION IF NO LONGER NEEDED, e.g. if it gets renamed.
-// To prevent this and preserve manual custom changes please remove the line above.
 //---------------------------------------------------------------------------------------------
 
 using AdventureWorks.Enumerations;
@@ -54,12 +51,8 @@ namespace AdventureWorks.Entities.Services
                   res.BillToAddressId = obj.BillToAddressIdObject.AddressId;
                 if (obj.ShipToAddressIdObject != null)
                   res.ShipToAddressId = obj.ShipToAddressIdObject.AddressId;
-                if (obj.ShipMethodIdObject != null)
-                  res.ShipMethodId = obj.ShipMethodIdObject.ShipMethodId;
-                if (obj.CreditCardIdObject != null)
-                  res.CreditCardId = obj.CreditCardIdObject.CreditCardId;
-                if (obj.CurrencyRateIdObject != null)
-                  res.CurrencyRateId = obj.CurrencyRateIdObject.CurrencyRateId;
+                // CUSTOM_CODE_START: populate the Payment output structure of Read operation below
+                res.Payment = GetPaymentInfo(obj); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Read operation below
                 // CUSTOM_CODE_END
             }
@@ -91,15 +84,8 @@ namespace AdventureWorks.Entities.Services
                 obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
                 if (obj.ShipToAddressIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
-                obj.ShipMethodIdObject = ctx.ShipMethod.Find(_data.ShipMethodId);
-                if (obj.ShipMethodIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter ShipMethodId. Cannot find the corresponding ShipMethod object.", _data.ShipMethodId);
-                obj.CreditCardIdObject = ctx.CreditCard.Find(_data.CreditCardId);
-                if (_data.CreditCardId != null && obj.CreditCardIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CreditCardId. Cannot find the corresponding CreditCard object.", _data.CreditCardId);
-                obj.CurrencyRateIdObject = ctx.CurrencyRate.Find(_data.CurrencyRateId);
-                if (_data.CurrencyRateId != null && obj.CurrencyRateIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CurrencyRateId. Cannot find the corresponding CurrencyRate object.", _data.CurrencyRateId);
+                // CUSTOM_CODE_START: use the Payment input parameter of Create operation below
+                UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Create operation below
                 obj.OrderDate = DateTime.Now;
                 obj.ModifiedDate = DateTime.Now;
@@ -137,15 +123,8 @@ namespace AdventureWorks.Entities.Services
                 obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
                 if (obj.ShipToAddressIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
-                obj.ShipMethodIdObject = ctx.ShipMethod.Find(_data.ShipMethodId);
-                if (obj.ShipMethodIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter ShipMethodId. Cannot find the corresponding ShipMethod object.", _data.ShipMethodId);
-                obj.CreditCardIdObject = ctx.CreditCard.Find(_data.CreditCardId);
-                if (_data.CreditCardId != null && obj.CreditCardIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CreditCardId. Cannot find the corresponding CreditCard object.", _data.CreditCardId);
-                obj.CurrencyRateIdObject = ctx.CurrencyRate.Find(_data.CurrencyRateId);
-                if (_data.CurrencyRateId != null && obj.CurrencyRateIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CurrencyRateId. Cannot find the corresponding CurrencyRate object.", _data.CurrencyRateId);
+                // CUSTOM_CODE_START: use the Payment input parameter of Update operation below
+                UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Update operation below
                 obj.ModifiedDate = DateTime.Now;
                 // CUSTOM_CODE_END

@@ -22,6 +22,7 @@ namespace AdventureWorks.Services
         static LookupCacheLoaders()
         {
             LookupCache.AddCacheLoader(new ProductReadListCacheLoader());
+            LookupCache.AddCacheLoader(new ShipMethodReadListCacheLoader());
             LookupCache.AddCacheLoader(new SalesPersonReadListCacheLoader());
             LookupCache.AddCacheLoader(new SalesTerritoryReadListCacheLoader());
             LookupCache.AddCacheLoader(new SpecialOfferReadListCacheLoader());
