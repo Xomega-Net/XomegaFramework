@@ -64,17 +64,17 @@
       <Compile Include="Sales\SalesOrderDetailList.cs">
          <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Include="Sales\SalesOrderReasonObject.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\SalesOrderReasonList.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="Sales\SalesOrderCriteriaCustomized.cs">
          <DependentUpon>SalesOrderCriteria.cs</DependentUpon>
       </Compile>
       <Compile Include="Sales\SalesOrderPaymentObject.cs">
          <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\SalesOrderSalesObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\SalesOrderSalesObjectCustomized.cs">
+         <DependentUpon>SalesOrderSalesObject.cs</DependentUpon>
       </Compile>
    </ItemGroup>
    <ItemGroup>

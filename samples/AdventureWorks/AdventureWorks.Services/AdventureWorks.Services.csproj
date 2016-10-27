@@ -111,6 +111,12 @@
       <Compile Include="CacheLoaders\ShipMethodReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\_ISalesReasonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\SalesReasonReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

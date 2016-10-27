@@ -330,6 +330,9 @@
       <Compile Include="Purchasing\Services\ShipMethodService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\Services\SalesReasonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <ProjectReference Include="..\..\..\src\Xomega.Framework\Xomega.Framework.csproj">

@@ -55,6 +55,14 @@
         <xfk:add-to-object class="SalesOrderPaymentObject"/>
       </config>
     </struct>
+    <struct name="sales info" object="sales order">
+      <param name="territory id"/>
+      <param name="sales person id"/>
+      <param name="sales reason" type="sales reason" list="true"/>
+      <config>
+        <xfk:add-to-object class="SalesOrderSalesObject"/>
+      </config>
+    </struct>
   </structs>
   <objects>
     <object name="sales order">
@@ -281,12 +289,11 @@
             <param name="purchase order number"/>
             <param name="account number"/>
             <param name="customer id"/>
-            <param name="sales person id"/>
-            <param name="territory id"/>
             <param name="bill to address id"/>
             <param name="ship to address id"/>
             <param name="ship date"/>
             <struct name="payment" ref="payment info"/>
+            <struct name="sales" ref="sales info"/>
             <param name="comment"/>
             <param name="revision number"/>
             <param name="modified date"/>
@@ -305,12 +312,11 @@
             <param name="purchase order number"/>
             <param name="account number"/>
             <param name="customer id"/>
-            <param name="sales person id"/>
-            <param name="territory id"/>
             <param name="bill to address id"/>
             <param name="ship to address id"/>
             <param name="ship date"/>
             <struct name="payment" ref="payment update"/>
+            <struct name="sales" ref="sales info"/>
             <param name="comment"/>
             <config>
               <xfk:add-to-object class="SalesOrderObject"/>
@@ -335,12 +341,11 @@
               <param name="purchase order number"/>
               <param name="account number"/>
               <param name="customer id"/>
-              <param name="sales person id"/>
-              <param name="territory id"/>
               <param name="bill to address id"/>
               <param name="ship to address id"/>
               <param name="ship date"/>
               <struct name="payment" ref="payment update"/>
+              <struct name="sales" ref="sales info"/>
               <param name="comment"/>
               <config>
                 <xfk:add-to-object class="SalesOrderObject"/>
@@ -689,88 +694,6 @@
               </doc>
             </field>
           </fields>
-          <operations>
-            <operation name="read" type="read">
-              <input>
-                <param name="sales order id" type="sales order" required="true"/>
-                <param name="sales reason id"/>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonObject"/>
-                </config>
-              </input>
-              <output>
-                <param name="modified date"/>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonObject"/>
-                </config>
-              </output>
-              <doc>
-                <summary>Reads the values of a Sales Order Reason object by its key.</summary>
-              </doc>
-            </operation>
-            <operation name="create" type="create">
-              <input arg="data">
-                <param name="sales order id" type="sales order" required="true"/>
-                <param name="sales reason id"/>
-                <param name="modified date"/>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonObject"/>
-                </config>
-              </input>
-              <doc>
-                <summary>Creates a new Sales Order Reason object using the specified data.</summary>
-              </doc>
-            </operation>
-            <operation name="update" type="update">
-              <input>
-                <param name="sales order id" type="sales order" required="true"/>
-                <param name="sales reason id"/>
-                <struct name="data">
-                  <param name="modified date"/>
-                  <config>
-                    <xfk:add-to-object class="SalesOrderReasonObject"/>
-                  </config>
-                </struct>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonObject"/>
-                </config>
-              </input>
-              <doc>
-                <summary>Updates existing or creates a new Sales Order Reason object using the specified data.</summary>
-              </doc>
-            </operation>
-            <operation name="delete" type="delete">
-              <input>
-                <param name="sales order id" type="sales order" required="true"/>
-                <param name="sales reason id"/>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonObject"/>
-                </config>
-              </input>
-              <doc>
-                <summary>Deletes the specified Sales Order Reason object.</summary>
-              </doc>
-            </operation>
-            <operation name="read list" type="readlist">
-              <input>
-                <param name="sales order id" type="sales order" required="true"/>
-              </input>
-              <output list="true">
-                <param name="sales reason id"/>
-                <param name="modified date"/>
-                <config>
-                  <xfk:add-to-object class="SalesOrderReasonList"/>
-                </config>
-              </output>
-              <config/>
-              <doc>
-                <summary>Reads a list of Sales Order Reason objects based on the specified criteria.</summary>
-              </doc>
-            </operation>
-            <doc>
-              <summary>A service for quering and managing Sales Order Reason objects.</summary>
-            </doc>
-          </operations>
           <config>
             <sql:table name="Sales.SalesOrderHeaderSalesReason"/>
           </config>
@@ -785,7 +708,7 @@
     <xfk:data-object class="SalesOrderObject">
       <xfk:add-child name="detail" class="SalesOrderDetailList"/>
       <xfk:add-child name="payment" class="SalesOrderPaymentObject"/>
-      <xfk:add-child name="reason" class="SalesOrderReasonList"/>
+      <xfk:add-child name="sales" class="SalesOrderSalesObject"/>
       <ui:display>
         <ui:field param="sales order id" hidden="true"/>
       </ui:display>
@@ -847,39 +770,22 @@
         </ui:params>
       </ui:link>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderReasonObject">
+    <xfk:data-object class="SalesOrderSalesObject" customize="true">
       <ui:display>
-        <ui:field param="sales order id" hidden="true"/>
+        <ui:field param="territory id" label="Territory"/>
+        <ui:field param="sales person id" label="Sales Person"/>
       </ui:display>
-    </xfk:data-object>
-    <xfk:data-object class="SalesOrderReasonList" list="true">
-      <ui:link name="details" view="SalesOrderReasonView" child="true">
-        <ui:params>
-          <ui:param name="sales order id" field="sales order id" data-object=".."/>
-          <ui:param name="sales reason id" field="sales reason id"/>
-        </ui:params>
-        <ui:display on-field="sales reason id"/>
-      </ui:link>
-      <ui:link name="new" view="SalesOrderReasonView" child="true">
-        <ui:params>
-          <ui:param name="_action" value="create"/>
-          <ui:param name="sales order id" field="sales order id" data-object=".."/>
-        </ui:params>
-      </ui:link>
     </xfk:data-object>
   </xfk:data-objects>
   <ui:views>
     <ui:view name="SalesOrderView" title="Sales Order">
-      <ui:view-model data-object="SalesOrderObject"/>
+      <ui:view-model data-object="SalesOrderObject" customize="true"/>
     </ui:view>
     <ui:view name="SalesOrderListView" title="Sales Order List">
       <ui:view-model data-object="SalesOrderList" customize="true"/>
     </ui:view>
     <ui:view name="SalesOrderDetailView" title="Detail" child="true">
       <ui:view-model data-object="SalesOrderDetailObject"/>
-    </ui:view>
-    <ui:view name="SalesOrderReasonView" title="Reason" child="true">
-      <ui:view-model data-object="SalesOrderReasonObject"/>
     </ui:view>
   </ui:views>
 </module>

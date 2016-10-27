@@ -27,10 +27,6 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.TextBox ctlAccountNumber;
         protected global::System.Web.UI.WebControls.Label lblCustomerId;
         protected global::System.Web.UI.WebControls.TextBox ctlCustomerId;
-        protected global::System.Web.UI.WebControls.Label lblSalesPersonId;
-        protected global::System.Web.UI.WebControls.DropDownList ctlSalesPersonId;
-        protected global::System.Web.UI.WebControls.Label lblTerritoryId;
-        protected global::System.Web.UI.WebControls.DropDownList ctlTerritoryId;
         protected global::System.Web.UI.WebControls.Label lblBillToAddressId;
         protected global::System.Web.UI.WebControls.TextBox ctlBillToAddressId;
         protected global::System.Web.UI.WebControls.Label lblShipToAddressId;
@@ -68,15 +64,17 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.TextBox ctlPaymentCreditCardId;
         protected global::System.Web.UI.WebControls.Label lblPaymentCreditCardApprovalCode;
         protected global::System.Web.UI.WebControls.TextBox ctlPaymentCreditCardApprovalCode;
-        protected global::AjaxControlToolkit.TabPanel tabReason;
-        protected global::System.Web.UI.WebControls.Panel pnlReason;
-        protected global::System.Web.UI.WebControls.GridView gridReason;
-        protected global::System.Web.UI.WebControls.LinkButton lnkReasonNew;
+        protected global::AjaxControlToolkit.TabPanel tabSales;
+        protected global::System.Web.UI.WebControls.Panel pnlSales;
+        protected global::System.Web.UI.WebControls.Label lblSalesTerritoryId;
+        protected global::System.Web.UI.WebControls.DropDownList ctlSalesTerritoryId;
+        protected global::System.Web.UI.WebControls.Label lblSalesSalesPersonId;
+        protected global::System.Web.UI.WebControls.DropDownList ctlSalesSalesPersonId;
+        protected global::System.Web.UI.WebControls.Label lblSalesSalesReason;
+        protected global::AdventureWorks.Client.Web.PickListControl ctlSalesSalesReason;
         protected global::System.Web.UI.WebControls.Button btnSave;
         protected global::System.Web.UI.WebControls.Button btnDelete;
         protected global::System.Web.UI.UpdatePanel uplSalesOrderDetailView;
         protected global::AdventureWorks.Client.Web.SalesOrderDetailView uclSalesOrderDetailView;
-        protected global::System.Web.UI.UpdatePanel uplSalesOrderReasonView;
-        protected global::AdventureWorks.Client.Web.SalesOrderReasonView uclSalesOrderReasonView;
     }
 }

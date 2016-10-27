@@ -4,14 +4,14 @@
  Manual CHANGES to this file WILL BE LOST when the code is regenerated.
 ----------------------------------------------------------------------------------------------%>
 
-<%@ Control Language="C#" Inherits="AdventureWorks.Client.Web.SalesOrderView" %>
+<%@ Control Language="C#" Inherits="AdventureWorks.Client.Web.SalesOrderViewCustomized" %>
 
 <%@ Import Namespace="AdventureWorks.Client.Objects" %>
 <%@ Register Namespace="AjaxControlToolkit" Assembly="AjaxControlToolkit" tagprefix="ajaxToolkit" %>
 <%@ Register src="~/Controls/Errors.ascx" tagname="Errors" tagprefix="uc" %>
 <%@ Register src="~/Controls/Editors/DateTimeControl.ascx" tagname="DateTimeControl" tagprefix="uc" %>
+<%@ Register src="~/Controls/Editors/PickListControl.ascx" tagname="PickListControl" tagprefix="uc" %>
 <%@ Register src="~/Pages/Sales/SalesOrderDetailView.ascx" tagname="SalesOrderDetailView" tagprefix="uc" %>
-<%@ Register src="~/Pages/Sales/SalesOrderReasonView.ascx" tagname="SalesOrderReasonView" tagprefix="uc" %>
 
 <asp:Panel ID="pnlComposition" CssClass="view-composition" runat="server">
   <asp:UpdatePanel ID="upl_Main" UpdateMode="Conditional" runat="server">
@@ -56,16 +56,8 @@
                         <asp:Label ID="lblCustomerId" Text="Customer Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblCustomerId" ID="ctlCustomerId" Property="<%# SalesOrderObject.CustomerId %>" runat="server" CssClass="integer"></asp:TextBox>
                       </div>
-                      <div class="field">
-                        <asp:Label ID="lblSalesPersonId" Text="Sales Person Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:DropDownList LabelID="lblSalesPersonId" ID="ctlSalesPersonId" Property="<%# SalesOrderObject.SalesPersonId %>" runat="server"></asp:DropDownList>
-                      </div>
                     </td>
                     <td class="fieldColumn" style="width: 50%">
-                      <div class="field">
-                        <asp:Label ID="lblTerritoryId" Text="Territory Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:DropDownList LabelID="lblTerritoryId" ID="ctlTerritoryId" Property="<%# SalesOrderObject.TerritoryId %>" runat="server"></asp:DropDownList>
-                      </div>
                       <div class="field">
                         <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblBillToAddressId" ID="ctlBillToAddressId" Property="<%# SalesOrderObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
@@ -193,26 +185,29 @@
                     </asp:Panel>
                   </ContentTemplate>
                 </ajaxToolkit:TabPanel>
-                <ajaxToolkit:TabPanel ID="tabReason" HeaderText="Reason" runat="server">
+                <ajaxToolkit:TabPanel ID="tabSales" HeaderText="Sales" runat="server">
                   <ContentTemplate>
-                    <asp:Panel ID="pnlReason" CssClass="xw-obj" runat="server">
-                      <asp:GridView ID="gridReason" runat="server" ChildObject="<%# SalesOrderObject.Reason %>">
-                        <Columns>
-                          <asp:TemplateField HeaderText="Sales Reason Id">
-                            <ItemTemplate>
-                              <asp:LinkButton ID="lnkReasonDetails" runat="server" OnCommand="lnkReasonDetails_Click" CommandArgument="<%# Container.DataItemIndex %>">
-                                <asp:Label ID="fldSalesReasonId" Property="<%# SalesOrderReasonList.SalesReasonId %>" runat="server"></asp:Label>
-                              </asp:LinkButton>
-                            </ItemTemplate>
-                          </asp:TemplateField>
-                          <asp:TemplateField HeaderText="Modified Date">
-                            <ItemTemplate>
-                              <asp:Label ID="fldModifiedDate" Property="<%# SalesOrderReasonList.ModifiedDate %>" runat="server"></asp:Label>
-                            </ItemTemplate>
-                          </asp:TemplateField>
-                        </Columns>
-                      </asp:GridView>
-                      <asp:LinkButton ID="lnkReasonNew" runat="server" OnCommand="lnkReasonNew_Click">New</asp:LinkButton>
+                    <asp:Panel ID="pnlSales" CssClass="xw-obj" runat="server" ChildObject="<%# SalesOrderObject.Sales %>">
+                      <table class="xw-fieldset-layout">
+                        <tr>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblSalesTerritoryId" Text="Territory:" CssClass="label" runat="server"></asp:Label>
+                              <asp:DropDownList LabelID="lblSalesTerritoryId" ID="ctlSalesTerritoryId" Property="<%# SalesOrderSalesObject.TerritoryId %>" runat="server"></asp:DropDownList>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblSalesSalesPersonId" Text="Sales Person:" CssClass="label" runat="server"></asp:Label>
+                              <asp:DropDownList LabelID="lblSalesSalesPersonId" ID="ctlSalesSalesPersonId" Property="<%# SalesOrderSalesObject.SalesPersonId %>" runat="server"></asp:DropDownList>
+                            </div>
+                          </td>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblSalesSalesReason" Text="Sales Reason:" CssClass="label" runat="server"></asp:Label>
+                              <uc:PickListControl LabelID="lblSalesSalesReason" ID="ctlSalesSalesReason" Property="<%# SalesOrderSalesObject.SalesReason %>" Rows="6" runat="server"></uc:PickListControl>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
                     </asp:Panel>
                   </ContentTemplate>
                 </ajaxToolkit:TabPanel>
@@ -231,11 +226,6 @@
   <asp:UpdatePanel ID="uplSalesOrderDetailView" UpdateMode="Conditional" runat="server">
     <ContentTemplate>
       <uc:SalesOrderDetailView ID="uclSalesOrderDetailView" Visible="false" runat="server"></uc:SalesOrderDetailView>
-    </ContentTemplate>
-  </asp:UpdatePanel>
-  <asp:UpdatePanel ID="uplSalesOrderReasonView" UpdateMode="Conditional" runat="server">
-    <ContentTemplate>
-      <uc:SalesOrderReasonView ID="uclSalesOrderReasonView" Visible="false" runat="server"></uc:SalesOrderReasonView>
     </ContentTemplate>
   </asp:UpdatePanel>
 </asp:Panel>

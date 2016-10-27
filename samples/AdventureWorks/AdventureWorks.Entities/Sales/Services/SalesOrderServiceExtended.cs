@@ -42,5 +42,41 @@ namespace AdventureWorks.Entities.Services
             if (_data.CreditCardId != null && obj.CreditCardIdObject == null)
                 ErrorList.Current.AddError("Cannot find CreditCard with ID {0}.", _data.CreditCardId);
         }
+
+        protected SalesInfo GetSalesInfo(SalesOrder obj)
+        {
+            SalesInfo res = new SalesInfo();
+            if (obj.SalesPersonIdObject != null)
+                res.SalesPersonId = obj.SalesPersonIdObject.BusinessEntityId;
+            if (obj.TerritoryIdObject != null)
+                res.TerritoryId = obj.TerritoryIdObject.TerritoryId;
+            // select a list of sales reason IDs from the child list
+            res.SalesReason = obj.ReasonObjectList.Select(r => r.SalesReasonId).ToList();
+            return res;
+        }
+
+        protected void UpdateSales(AdventureWorksEntities ctx, SalesOrder obj, SalesInfo _data)
+        {
+            obj.TerritoryIdObject = ctx.SalesTerritory.Find(_data.TerritoryId);
+            if (_data.TerritoryId != null && obj.TerritoryIdObject == null)
+                ErrorList.Current.AddError("Cannot find Sales Territory with ID {0}.", _data.TerritoryId);
+            obj.SalesPersonIdObject = ctx.SalesPerson.Find(_data.SalesPersonId);
+            if (_data.SalesPersonId != null && obj.SalesPersonIdObject == null)
+                ErrorList.Current.AddError("Cannot find Sales Person with ID {0}.", _data.SalesPersonId);
+            // remove sales reason that are not in the provided list
+            obj.ReasonObjectList.Where(r => _data.SalesReason == null || !_data.SalesReason.Contains(r.SalesReasonId))
+                .ToList().ForEach(r => obj.ReasonObjectList.Remove(r));
+            if (_data.SalesReason != null)
+            {
+                // add sales reasons from provided list that don't exist yet
+                _data.SalesReason.Where(rId => obj.ReasonObjectList.Where(r => r.SalesReasonId == rId).ToList().Count == 0)
+                    .ToList().ForEach(rId => obj.ReasonObjectList.Add(new SalesOrderReason()
+                    {
+                        SalesOrderObject = obj,
+                        SalesReasonId = rId,
+                        ModifiedDate = DateTime.Now
+                    }));
+            }
+        }
     }
 }

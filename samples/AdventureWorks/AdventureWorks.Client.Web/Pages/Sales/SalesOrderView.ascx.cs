@@ -32,7 +32,6 @@ namespace AdventureWorks.Client.Web
         {
             base.OnInit(e);
             SubscribeToChildEvents(uclSalesOrderDetailView);
-            SubscribeToChildEvents(uclSalesOrderReasonView);
         }
 
         protected override void OnPreRender(EventArgs e)
@@ -40,7 +39,6 @@ namespace AdventureWorks.Client.Web
             base.OnPreRender(e);
             btnDelete.Enabled = !IsNew;
             lnkDetailNew.Enabled = !IsNew;
-            lnkReasonNew.Enabled = !IsNew;
         }
 
         public override bool Activate(NameValueCollection query)
@@ -75,17 +73,6 @@ namespace AdventureWorks.Client.Web
                 using (TimeTracker.ServiceCall)
                     outDetail_ReadList = svcSalesOrder.Detail_ReadList((int)obj.SalesOrderIdProperty.TransportValue);
                 obj.DetailList.FromDataContract(outDetail_ReadList);
-            }
-            catch(Exception ex)
-            {
-                errorList.MergeWith(ErrorList.FromException(ex));
-            }
-            try
-            {
-                IEnumerable<SalesOrderReason_ReadListOutput> outReason_ReadList;
-                using (TimeTracker.ServiceCall)
-                    outReason_ReadList = svcSalesOrder.Reason_ReadList((int)obj.SalesOrderIdProperty.TransportValue);
-                obj.ReasonList.FromDataContract(outReason_ReadList);
             }
             catch(Exception ex)
             {
@@ -187,33 +174,10 @@ namespace AdventureWorks.Client.Web
             NavigateTo(uclSalesOrderDetailView, query, ModePopup);
         }
 
-        protected virtual void lnkReasonDetails_Click(object sender, CommandEventArgs e)
-        {
-            NameValueCollection query = new NameValueCollection();
-            DataListObject list = this.obj.ReasonList;
-            list.CurrentRow = int.Parse(e.CommandArgument.ToString());
-            list.SelectRow(list.CurrentRow);
-            query.Add("SalesOrderId", this.obj.SalesOrderIdProperty.EditStringValue);
-            query.Add("SalesReasonId", this.obj.ReasonList.SalesReasonIdProperty.EditStringValue);
-            query.Add(QuerySource, "lnkReasonDetails");
-            NavigateTo(uclSalesOrderReasonView, query, ModePopup);
-        }
-
-        protected virtual void lnkReasonNew_Click(object sender, CommandEventArgs e)
-        {
-            NameValueCollection query = new NameValueCollection();
-            query.Add(QueryAction, "create");
-            query.Add("SalesOrderId", this.obj.SalesOrderIdProperty.EditStringValue);
-            query.Add(QuerySource, "lnkReasonNew");
-            NavigateTo(uclSalesOrderReasonView, query, ModePopup);
-        }
-
         protected override void OnChildClosed(object childView, EventArgs e)
         {
             this.obj.DetailList.ClearSelectedRows();
             this.obj.DetailList.FireCollectionChanged();
-            this.obj.ReasonList.ClearSelectedRows();
-            this.obj.ReasonList.FireCollectionChanged();
             base.OnChildClosed(childView, e);
         }
 

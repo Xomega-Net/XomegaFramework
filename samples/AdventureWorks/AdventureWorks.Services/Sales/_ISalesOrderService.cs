@@ -92,41 +92,6 @@ namespace AdventureWorks.Services
         [FaultContract(typeof(ErrorList))]
         IEnumerable<SalesOrderDetail_ReadListOutput> Detail_ReadList(int _salesOrderId);
 
-        ///<summary>
-        /// Reads the values of a Sales Order Reason object by its key.
-        ///</summary>
-        [OperationContract]
-        [FaultContract(typeof(ErrorList))]
-        SalesOrderReason_ReadOutput Reason_Read(int _salesOrderId, int _salesReasonId);
-
-        ///<summary>
-        /// Creates a new Sales Order Reason object using the specified data.
-        ///</summary>
-        [OperationContract]
-        [FaultContract(typeof(ErrorList))]
-        void Reason_Create(SalesOrderReason_CreateInput _data);
-
-        ///<summary>
-        /// Updates existing or creates a new Sales Order Reason object using the specified data.
-        ///</summary>
-        [OperationContract]
-        [FaultContract(typeof(ErrorList))]
-        void Reason_Update(int _salesOrderId, int _salesReasonId, SalesOrderReason_UpdateInput_Data _data);
-
-        ///<summary>
-        /// Deletes the specified Sales Order Reason object.
-        ///</summary>
-        [OperationContract]
-        [FaultContract(typeof(ErrorList))]
-        void Reason_Delete(int _salesOrderId, int _salesReasonId);
-
-        ///<summary>
-        /// Reads a list of Sales Order Reason objects based on the specified criteria.
-        ///</summary>
-        [OperationContract]
-        [FaultContract(typeof(ErrorList))]
-        IEnumerable<SalesOrderReason_ReadListOutput> Reason_ReadList(int _salesOrderId);
-
     }
     #endregion
 
@@ -153,10 +118,6 @@ namespace AdventureWorks.Services
         [DataMember]
         public int CustomerId { get; set; }
         [DataMember]
-        public int? SalesPersonId { get; set; }
-        [DataMember]
-        public int? TerritoryId { get; set; }
-        [DataMember]
         public int BillToAddressId { get; set; }
         [DataMember]
         public int ShipToAddressId { get; set; }
@@ -164,6 +125,8 @@ namespace AdventureWorks.Services
         public DateTime? ShipDate { get; set; }
         [DataMember]
         public PaymentInfo Payment { get; set; }
+        [DataMember]
+        public SalesInfo Sales { get; set; }
         [DataMember]
         public string Comment { get; set; }
         [DataMember]
@@ -192,10 +155,6 @@ namespace AdventureWorks.Services
         [DataMember]
         public int CustomerId { get; set; }
         [DataMember]
-        public int? SalesPersonId { get; set; }
-        [DataMember]
-        public int? TerritoryId { get; set; }
-        [DataMember]
         public int BillToAddressId { get; set; }
         [DataMember]
         public int ShipToAddressId { get; set; }
@@ -203,6 +162,8 @@ namespace AdventureWorks.Services
         public DateTime? ShipDate { get; set; }
         [DataMember]
         public PaymentUpdate Payment { get; set; }
+        [DataMember]
+        public SalesInfo Sales { get; set; }
         [DataMember]
         public string Comment { get; set; }
     }
@@ -240,10 +201,6 @@ namespace AdventureWorks.Services
         [DataMember]
         public int CustomerId { get; set; }
         [DataMember]
-        public int? SalesPersonId { get; set; }
-        [DataMember]
-        public int? TerritoryId { get; set; }
-        [DataMember]
         public int BillToAddressId { get; set; }
         [DataMember]
         public int ShipToAddressId { get; set; }
@@ -251,6 +208,8 @@ namespace AdventureWorks.Services
         public DateTime? ShipDate { get; set; }
         [DataMember]
         public PaymentUpdate Payment { get; set; }
+        [DataMember]
+        public SalesInfo Sales { get; set; }
         [DataMember]
         public string Comment { get; set; }
     }
@@ -516,64 +475,6 @@ namespace AdventureWorks.Services
         public decimal LineTotal { get; set; }
         [DataMember]
         public string CarrierTrackingNumber { get; set; }
-    }
-    #endregion
-
-    #region SalesOrderReason_ReadOutput structure
-
-    ///<summary>
-    /// The output structure of operation IReasonService.Reason_Read.
-    ///</summary>
-    [DataContract]
-    public class SalesOrderReason_ReadOutput
-    {
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
-    }
-    #endregion
-
-    #region SalesOrderReason_CreateInput structure
-
-    ///<summary>
-    /// The input structure of operation IReasonService.Reason_Create.
-    ///</summary>
-    [DataContract]
-    public class SalesOrderReason_CreateInput
-    {
-        [DataMember]
-        public int SalesOrderId { get; set; }
-        [DataMember]
-        public int SalesReasonId { get; set; }
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
-    }
-    #endregion
-
-    #region SalesOrderReason_UpdateInput_Data structure
-
-    ///<summary>
-    /// Structure of parameter Data of the input structure of operation IReasonService.Reason_Update.
-    ///</summary>
-    [DataContract]
-    public class SalesOrderReason_UpdateInput_Data
-    {
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
-    }
-    #endregion
-
-    #region SalesOrderReason_ReadListOutput structure
-
-    ///<summary>
-    /// The output structure of operation IReasonService.Reason_ReadList.
-    ///</summary>
-    [DataContract]
-    public class SalesOrderReason_ReadListOutput
-    {
-        [DataMember]
-        public int SalesReasonId { get; set; }
-        [DataMember]
-        public DateTime ModifiedDate { get; set; }
     }
     #endregion
 

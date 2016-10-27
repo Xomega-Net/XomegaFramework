@@ -28,15 +28,13 @@ namespace AdventureWorks.Client.Objects
         public const string OrderDate = "OrderDate";
         public const string Payment = "Payment";
         public const string PurchaseOrderNumber = "PurchaseOrderNumber";
-        public const string Reason = "Reason";
         public const string RevisionNumber = "RevisionNumber";
+        public const string Sales = "Sales";
         public const string SalesOrderId = "SalesOrderId";
         public const string SalesOrderNumber = "SalesOrderNumber";
-        public const string SalesPersonId = "SalesPersonId";
         public const string ShipDate = "ShipDate";
         public const string ShipToAddressId = "ShipToAddressId";
         public const string Status = "Status";
-        public const string TerritoryId = "TerritoryId";
 
         #endregion
 
@@ -53,11 +51,9 @@ namespace AdventureWorks.Client.Objects
         public TinyIntegerProperty RevisionNumberProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
-        public EnumIntProperty SalesPersonIdProperty { get; private set; }
         public DateTimeProperty ShipDateProperty { get; private set; }
         public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
-        public EnumIntProperty TerritoryIdProperty { get; private set; }
 
         #endregion
 
@@ -65,7 +61,7 @@ namespace AdventureWorks.Client.Objects
 
         public SalesOrderDetailList DetailList { get { return (SalesOrderDetailList)GetChildObject(Detail); } }
         public SalesOrderPaymentObject PaymentObject { get { return (SalesOrderPaymentObject)GetChildObject(Payment); } }
-        public SalesOrderReasonList ReasonList { get { return (SalesOrderReasonList)GetChildObject(Reason); } }
+        public SalesOrderSalesObjectCustomized SalesObject { get { return (SalesOrderSalesObjectCustomized)GetChildObject(Sales); } }
 
         #endregion
 
@@ -101,8 +97,6 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberProperty.Required = true;
             SalesOrderNumberProperty.Size = 25;
             SalesOrderNumberProperty.Editable = false;
-            SalesPersonIdProperty = new EnumIntProperty(this, SalesPersonId);
-            SalesPersonIdProperty.EnumType = "sales person";
             ShipDateProperty = new DateTimeProperty(this, ShipDate);
             ShipToAddressIdProperty = new IntegerKeyProperty(this, ShipToAddressId);
             ShipToAddressIdProperty.Required = true;
@@ -110,15 +104,12 @@ namespace AdventureWorks.Client.Objects
             StatusProperty.Required = true;
             StatusProperty.Size = 10;
             StatusProperty.EnumType = "sales order status";
-            TerritoryIdProperty = new EnumIntProperty(this, TerritoryId);
-            TerritoryIdProperty.Size = 10;
-            TerritoryIdProperty.EnumType = "sales territory";
             DataObject objDetail = new SalesOrderDetailList();
             AddChildObject(Detail, objDetail);
             DataObject objPayment = new SalesOrderPaymentObject();
             AddChildObject(Payment, objPayment);
-            DataObject objReason = new SalesOrderReasonList();
-            AddChildObject(Reason, objReason);
+            DataObject objSales = new SalesOrderSalesObjectCustomized();
+            AddChildObject(Sales, objSales);
         }
 
         #endregion

@@ -55,4 +55,18 @@ namespace AdventureWorks.Services
     }
     #endregion
 
+    #region SalesInfo structure
+
+    [DataContract]
+    public class SalesInfo
+    {
+        [DataMember]
+        public int? TerritoryId { get; set; }
+        [DataMember]
+        public int? SalesPersonId { get; set; }
+        [DataMember]
+        public IEnumerable<int> SalesReason { get; set; }
+    }
+    #endregion
+
 }

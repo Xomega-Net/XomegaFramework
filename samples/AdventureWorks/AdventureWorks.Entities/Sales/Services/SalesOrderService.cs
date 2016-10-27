@@ -43,16 +43,14 @@ namespace AdventureWorks.Entities.Services
                 ServiceUtil.CopyProperties(obj, res);
                 if (obj.CustomerIdObject != null)
                   res.CustomerId = obj.CustomerIdObject.CustomerId;
-                if (obj.SalesPersonIdObject != null)
-                  res.SalesPersonId = obj.SalesPersonIdObject.BusinessEntityId;
-                if (obj.TerritoryIdObject != null)
-                  res.TerritoryId = obj.TerritoryIdObject.TerritoryId;
                 if (obj.BillToAddressIdObject != null)
                   res.BillToAddressId = obj.BillToAddressIdObject.AddressId;
                 if (obj.ShipToAddressIdObject != null)
                   res.ShipToAddressId = obj.ShipToAddressIdObject.AddressId;
                 // CUSTOM_CODE_START: populate the Payment output structure of Read operation below
                 res.Payment = GetPaymentInfo(obj); // CUSTOM_CODE_END
+                // CUSTOM_CODE_START: populate the Sales output structure of Read operation below
+                res.Sales = GetSalesInfo(obj); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Read operation below
                 // CUSTOM_CODE_END
             }
@@ -72,12 +70,6 @@ namespace AdventureWorks.Entities.Services
                 obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
                 if (obj.CustomerIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter CustomerId. Cannot find the corresponding Customer object.", _data.CustomerId);
-                obj.SalesPersonIdObject = ctx.SalesPerson.Find(_data.SalesPersonId);
-                if (_data.SalesPersonId != null && obj.SalesPersonIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter SalesPersonId. Cannot find the corresponding SalesPerson object.", _data.SalesPersonId);
-                obj.TerritoryIdObject = ctx.SalesTerritory.Find(_data.TerritoryId);
-                if (_data.TerritoryId != null && obj.TerritoryIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter TerritoryId. Cannot find the corresponding SalesTerritory object.", _data.TerritoryId);
                 obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
                 if (obj.BillToAddressIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter BillToAddressId. Cannot find the corresponding Address object.", _data.BillToAddressId);
@@ -86,6 +78,8 @@ namespace AdventureWorks.Entities.Services
                     ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
                 // CUSTOM_CODE_START: use the Payment input parameter of Create operation below
                 UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
+                // CUSTOM_CODE_START: use the Sales input parameter of Create operation below
+                UpdateSales(ctx, obj, _data.Sales); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Create operation below
                 obj.OrderDate = DateTime.Now;
                 obj.ModifiedDate = DateTime.Now;
@@ -111,12 +105,6 @@ namespace AdventureWorks.Entities.Services
                 obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
                 if (obj.CustomerIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter CustomerId. Cannot find the corresponding Customer object.", _data.CustomerId);
-                obj.SalesPersonIdObject = ctx.SalesPerson.Find(_data.SalesPersonId);
-                if (_data.SalesPersonId != null && obj.SalesPersonIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter SalesPersonId. Cannot find the corresponding SalesPerson object.", _data.SalesPersonId);
-                obj.TerritoryIdObject = ctx.SalesTerritory.Find(_data.TerritoryId);
-                if (_data.TerritoryId != null && obj.TerritoryIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter TerritoryId. Cannot find the corresponding SalesTerritory object.", _data.TerritoryId);
                 obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
                 if (obj.BillToAddressIdObject == null)
                     ErrorList.Current.AddError("Invalid value {0} for parameter BillToAddressId. Cannot find the corresponding Address object.", _data.BillToAddressId);
@@ -125,6 +113,8 @@ namespace AdventureWorks.Entities.Services
                     ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
                 // CUSTOM_CODE_START: use the Payment input parameter of Update operation below
                 UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
+                // CUSTOM_CODE_START: use the Sales input parameter of Update operation below
+                UpdateSales(ctx, obj, _data.Sales); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: add custom code for Update operation below
                 obj.ModifiedDate = DateTime.Now;
                 // CUSTOM_CODE_END
@@ -516,124 +506,6 @@ namespace AdventureWorks.Entities.Services
                 {
                 }
                 // CUSTOM_CODE_START: add custom filter criteria to the result query for Detail_ReadList operation below
-                // qry = qry.Where(o => o.FieldName == VALUE);
-                // CUSTOM_CODE_END
-                #endregion
-                ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
-                res = qry.ToList();
-            }
-            return res;
-        }
-
-        public virtual SalesOrderReason_ReadOutput Reason_Read(int _salesOrderId, int _salesReasonId)
-        {
-            SalesOrderReason_ReadOutput res = new SalesOrderReason_ReadOutput();
-            using (AdventureWorksEntities ctx = new AdventureWorksEntities())
-            {
-                SalesOrderReason obj = ctx.SalesOrderReason.Find(_salesOrderId, _salesReasonId);
-                if (obj == null)
-                {
-                    ErrorList.Current.CriticalError(HttpStatusCode.NotFound, "SalesOrderReason with id {0}{1} not found", _salesOrderId, _salesReasonId);
-                }
-                ServiceUtil.CopyProperties(obj, res);
-                // CUSTOM_CODE_START: add custom code for Reason_Read operation below
-                // CUSTOM_CODE_END
-            }
-            return res;
-        }
-
-        public virtual void Reason_Create(SalesOrderReason_CreateInput _data)
-        {
-            using (AdventureWorksEntities ctx = new AdventureWorksEntities())
-            {
-                EntityState state = EntityState.Unchanged;
-                SalesOrderReason obj = ctx.SalesOrderReason.Find(_data.SalesOrderId, _data.SalesReasonId);
-                if (obj == null)
-                {
-                    obj = new SalesOrderReason();
-                    state = EntityState.Added;
-                }
-                var entry = ctx.Entry(obj);
-                entry.State = state;
-                entry.CurrentValues.SetValues(_data);
-                obj.SalesOrderObject = ctx.SalesOrder.Find(_data.SalesOrderId);
-                if (obj.SalesOrderObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter SalesOrderId. Cannot find the corresponding SalesOrder object.", _data.SalesOrderId);
-                // CUSTOM_CODE_START: add custom code for Reason_Create operation below
-                // CUSTOM_CODE_END
-                ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
-                ctx.SaveChanges();
-            }
-        }
-
-        public virtual void Reason_Update(int _salesOrderId, int _salesReasonId, SalesOrderReason_UpdateInput_Data _data)
-        {
-            using (AdventureWorksEntities ctx = new AdventureWorksEntities())
-            {
-                SalesOrderReason obj = ctx.SalesOrderReason.Find(_salesOrderId, _salesReasonId);
-                if (obj == null)
-                {
-                    ErrorList.Current.CriticalError(HttpStatusCode.NotFound, "SalesOrderReason with id {0}{1} not found", _salesOrderId, _salesReasonId);
-                }
-                var entry = ctx.Entry(obj);
-                entry.CurrentValues.SetValues(_data);
-                // CUSTOM_CODE_START: add custom code for Reason_Update operation below
-                // CUSTOM_CODE_END
-                ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
-                ctx.SaveChanges();
-            }
-        }
-
-        public virtual void Reason_Delete(int _salesOrderId, int _salesReasonId)
-        {
-            using (AdventureWorksEntities ctx = new AdventureWorksEntities())
-            {
-                EntityState state = EntityState.Deleted;
-                SalesOrderReason obj = ctx.SalesOrderReason.Find(_salesOrderId, _salesReasonId);
-                if (obj == null)
-                {
-                    ErrorList.Current.CriticalError(HttpStatusCode.NotFound, "SalesOrderReason with id {0}{1} not found", _salesOrderId, _salesReasonId);
-                }
-                var entry = ctx.Entry(obj);
-                entry.State = state;
-                // CUSTOM_CODE_START: add custom code for Reason_Delete operation below
-                // CUSTOM_CODE_END
-                ErrorList.Current.AbortIfHasErrors(HttpStatusCode.BadRequest);
-                ctx.SaveChanges();
-            }
-        }
-
-        public virtual IEnumerable<SalesOrderReason_ReadListOutput> Reason_ReadList(int _salesOrderId)
-        {
-            IEnumerable<SalesOrderReason_ReadListOutput> res = null;
-            using (AdventureWorksEntities ctx = new AdventureWorksEntities())
-            {
-                var src = from obj in ctx.SalesOrderReason
-                          where obj.SalesOrderObject.SalesOrderId == _salesOrderId
-                          select obj;
-                #region Source filter
-                if (true)
-                {
-                    // CUSTOM_CODE_START: add code for SalesOrderId criteria of Reason_ReadList operation below
-                    if (_salesOrderId != null)
-                    {
-                        // TODO: src = src.Where(o => _salesOrderId == _salesOrderId);
-                    } // CUSTOM_CODE_END
-                }
-                // CUSTOM_CODE_START: add custom filter criteria to the source query for Reason_ReadList operation below
-                // src = src.Where(o => o.FieldName == VALUE);
-                // CUSTOM_CODE_END
-                #endregion
-                var qry = from obj in src
-                          select new SalesOrderReason_ReadListOutput() {
-                              SalesReasonId = obj.SalesReasonId,
-                              ModifiedDate = obj.ModifiedDate,
-                          };
-                #region Result filter
-                if (true)
-                {
-                }
-                // CUSTOM_CODE_START: add custom filter criteria to the result query for Reason_ReadList operation below
                 // qry = qry.Where(o => o.FieldName == VALUE);
                 // CUSTOM_CODE_END
                 #endregion
