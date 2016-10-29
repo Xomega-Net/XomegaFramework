@@ -32,6 +32,28 @@
     </enum>
   </enums>
   <structs>
+    <struct name="customer info" object="customer">
+      <param name="customer id"/>
+      <param name="store id"/>
+      <param name="store name" type="string" required="false"/>
+      <param name="person id"/>
+      <param name="person name" type="string" required="false"/>
+      <param name="account number"/>
+      <param name="territory id"/>
+      <param name="bill to address id" type="address"/>
+      <param name="ship to address id" type="address"/>
+      <config>
+        <xfk:add-to-object class="SalesOrderCustomerObject"/>
+      </config>
+    </struct>
+    <struct name="customer update" object="customer">
+      <param name="customer id"/>
+      <param name="bill to address id" type="address"/>
+      <param name="ship to address id" type="address"/>
+      <config>
+        <xfk:add-to-object class="SalesOrderCustomerObject"/>
+      </config>
+    </struct>
     <struct name="payment info" object="sales order">
       <param name="sub total"/>
       <param name="ship method id"/>
@@ -288,10 +310,8 @@
             <param name="online order flag"/>
             <param name="purchase order number"/>
             <param name="account number"/>
-            <param name="customer id"/>
-            <param name="bill to address id"/>
-            <param name="ship to address id"/>
-            <param name="ship date"/>
+            <struct name="customer" ref="customer info"/>
+            <param name="ship date" type="date"/>
             <struct name="payment" ref="payment info"/>
             <struct name="sales" ref="sales info"/>
             <param name="comment"/>
@@ -311,10 +331,8 @@
             <param name="online order flag"/>
             <param name="purchase order number"/>
             <param name="account number"/>
-            <param name="customer id"/>
-            <param name="bill to address id"/>
-            <param name="ship to address id"/>
-            <param name="ship date"/>
+            <struct name="customer" ref="customer update"/>
+            <param name="ship date" type="date"/>
             <struct name="payment" ref="payment update"/>
             <struct name="sales" ref="sales info"/>
             <param name="comment"/>
@@ -340,10 +358,8 @@
               <param name="online order flag"/>
               <param name="purchase order number"/>
               <param name="account number"/>
-              <param name="customer id"/>
-              <param name="bill to address id"/>
-              <param name="ship to address id"/>
-              <param name="ship date"/>
+              <struct name="customer" ref="customer update"/>
+              <param name="ship date" type="date"/>
               <struct name="payment" ref="payment update"/>
               <struct name="sales" ref="sales info"/>
               <param name="comment"/>
@@ -706,11 +722,20 @@
   </objects>
   <xfk:data-objects>
     <xfk:data-object class="SalesOrderObject">
+      <xfk:add-child name="customer" class="SalesOrderCustomerObject"/>
       <xfk:add-child name="detail" class="SalesOrderDetailList"/>
       <xfk:add-child name="payment" class="SalesOrderPaymentObject"/>
       <xfk:add-child name="sales" class="SalesOrderSalesObject"/>
       <ui:display>
         <ui:field param="sales order id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
+    <xfk:data-object class="SalesOrderCustomerObject">
+      <ui:display>
+        <ui:field param="customer id" hidden="true"/>
+        <ui:field param="person id" hidden="true"/>
+        <ui:field param="store id" hidden="true"/>
+        <ui:field param="territory id" label="Territory"/>
       </ui:display>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderPaymentObject">

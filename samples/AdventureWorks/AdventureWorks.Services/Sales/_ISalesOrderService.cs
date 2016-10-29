@@ -116,11 +116,7 @@ namespace AdventureWorks.Services
         [DataMember]
         public string AccountNumber { get; set; }
         [DataMember]
-        public int CustomerId { get; set; }
-        [DataMember]
-        public int BillToAddressId { get; set; }
-        [DataMember]
-        public int ShipToAddressId { get; set; }
+        public CustomerInfo Customer { get; set; }
         [DataMember]
         public DateTime? ShipDate { get; set; }
         [DataMember]
@@ -153,11 +149,7 @@ namespace AdventureWorks.Services
         [DataMember]
         public string AccountNumber { get; set; }
         [DataMember]
-        public int CustomerId { get; set; }
-        [DataMember]
-        public int BillToAddressId { get; set; }
-        [DataMember]
-        public int ShipToAddressId { get; set; }
+        public CustomerUpdate Customer { get; set; }
         [DataMember]
         public DateTime? ShipDate { get; set; }
         [DataMember]
@@ -199,11 +191,7 @@ namespace AdventureWorks.Services
         [DataMember]
         public string AccountNumber { get; set; }
         [DataMember]
-        public int CustomerId { get; set; }
-        [DataMember]
-        public int BillToAddressId { get; set; }
-        [DataMember]
-        public int ShipToAddressId { get; set; }
+        public CustomerUpdate Customer { get; set; }
         [DataMember]
         public DateTime? ShipDate { get; set; }
         [DataMember]

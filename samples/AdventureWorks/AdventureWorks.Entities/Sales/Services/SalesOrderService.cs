@@ -41,12 +41,8 @@ namespace AdventureWorks.Entities.Services
                     ErrorList.Current.CriticalError(HttpStatusCode.NotFound, "SalesOrder with id {0} not found", _salesOrderId);
                 }
                 ServiceUtil.CopyProperties(obj, res);
-                if (obj.CustomerIdObject != null)
-                  res.CustomerId = obj.CustomerIdObject.CustomerId;
-                if (obj.BillToAddressIdObject != null)
-                  res.BillToAddressId = obj.BillToAddressIdObject.AddressId;
-                if (obj.ShipToAddressIdObject != null)
-                  res.ShipToAddressId = obj.ShipToAddressIdObject.AddressId;
+                // CUSTOM_CODE_START: populate the Customer output structure of Read operation below
+                res.Customer = GetCustomerInfo(obj); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: populate the Payment output structure of Read operation below
                 res.Payment = GetPaymentInfo(obj); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: populate the Sales output structure of Read operation below
@@ -67,15 +63,8 @@ namespace AdventureWorks.Entities.Services
                 var entry = ctx.Entry(obj);
                 entry.State = state;
                 entry.CurrentValues.SetValues(_data);
-                obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
-                if (obj.CustomerIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CustomerId. Cannot find the corresponding Customer object.", _data.CustomerId);
-                obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
-                if (obj.BillToAddressIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter BillToAddressId. Cannot find the corresponding Address object.", _data.BillToAddressId);
-                obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
-                if (obj.ShipToAddressIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
+                // CUSTOM_CODE_START: use the Customer input parameter of Create operation below
+                UpdateCustomer(ctx, obj, _data.Customer); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: use the Payment input parameter of Create operation below
                 UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: use the Sales input parameter of Create operation below
@@ -102,15 +91,8 @@ namespace AdventureWorks.Entities.Services
                 }
                 var entry = ctx.Entry(obj);
                 entry.CurrentValues.SetValues(_data);
-                obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
-                if (obj.CustomerIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter CustomerId. Cannot find the corresponding Customer object.", _data.CustomerId);
-                obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
-                if (obj.BillToAddressIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter BillToAddressId. Cannot find the corresponding Address object.", _data.BillToAddressId);
-                obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
-                if (obj.ShipToAddressIdObject == null)
-                    ErrorList.Current.AddError("Invalid value {0} for parameter ShipToAddressId. Cannot find the corresponding Address object.", _data.ShipToAddressId);
+                // CUSTOM_CODE_START: use the Customer input parameter of Update operation below
+                UpdateCustomer(ctx, obj, _data.Customer); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: use the Payment input parameter of Update operation below
                 UpdatePayment(ctx, obj, _data.Payment); // CUSTOM_CODE_END
                 // CUSTOM_CODE_START: use the Sales input parameter of Update operation below

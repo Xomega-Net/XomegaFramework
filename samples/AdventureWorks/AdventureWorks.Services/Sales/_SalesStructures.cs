@@ -13,6 +13,46 @@ using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
+    #region CustomerInfo structure
+
+    [DataContract]
+    public class CustomerInfo
+    {
+        [DataMember]
+        public int CustomerId { get; set; }
+        [DataMember]
+        public int? StoreId { get; set; }
+        [DataMember]
+        public string StoreName { get; set; }
+        [DataMember]
+        public int? PersonId { get; set; }
+        [DataMember]
+        public string PersonName { get; set; }
+        [DataMember]
+        public string AccountNumber { get; set; }
+        [DataMember]
+        public int? TerritoryId { get; set; }
+        [DataMember]
+        public int? BillToAddressId { get; set; }
+        [DataMember]
+        public int? ShipToAddressId { get; set; }
+    }
+    #endregion
+
+    #region CustomerUpdate structure
+
+    [DataContract]
+    public class CustomerUpdate
+    {
+        [DataMember]
+        public int CustomerId { get; set; }
+        [DataMember]
+        public int? BillToAddressId { get; set; }
+        [DataMember]
+        public int? ShipToAddressId { get; set; }
+    }
+    #endregion
+
     #region PaymentInfo structure
 
     [DataContract]

@@ -76,6 +76,9 @@
       <Compile Include="Sales\SalesOrderSalesObjectCustomized.cs">
          <DependentUpon>SalesOrderSalesObject.cs</DependentUpon>
       </Compile>
+      <Compile Include="Sales\SalesOrderCustomerObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

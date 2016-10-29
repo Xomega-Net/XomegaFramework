@@ -10,6 +10,51 @@ namespace AdventureWorks.Entities.Services
     {
         // add methods that can be used in the inline custom code of the generated service
 
+        protected CustomerInfo GetCustomerInfo(SalesOrder obj)
+        {
+            CustomerInfo res = new CustomerInfo();
+            if (obj.CustomerIdObject != null)
+            {
+                res.CustomerId = obj.CustomerIdObject.CustomerId;
+                res.AccountNumber = obj.CustomerIdObject.AccountNumber;
+                res.PersonId = obj.CustomerIdObject.PersonIdObject == null ? null :
+                         (int?)obj.CustomerIdObject.PersonIdObject.BusinessEntityId;
+                res.PersonName = obj.CustomerIdObject.PersonIdObject == null ? null :
+                                 obj.CustomerIdObject.PersonIdObject.LastName + ", " +
+                                 obj.CustomerIdObject.PersonIdObject.FirstName;
+                res.StoreId = obj.CustomerIdObject.StoreIdObject == null ? null :
+                        (int?)obj.CustomerIdObject.StoreIdObject.BusinessEntityId;
+                res.StoreName = obj.CustomerIdObject.StoreIdObject == null ? null :
+                                obj.CustomerIdObject.StoreIdObject.Name;
+                res.TerritoryId = obj.CustomerIdObject.TerritoryIdObject == null ? null :
+                            (int?)obj.CustomerIdObject.TerritoryIdObject.TerritoryId;
+            };
+            if (obj.BillToAddressIdObject != null)
+                res.BillToAddressId = obj.BillToAddressIdObject.AddressId;
+            if (obj.ShipToAddressIdObject != null)
+                res.ShipToAddressId = obj.ShipToAddressIdObject.AddressId;
+            return res;
+        }
+
+        protected void UpdateCustomer(AdventureWorksEntities ctx, SalesOrder obj, CustomerUpdate _data)
+        {
+            obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
+            if (obj.CustomerIdObject == null)
+                ErrorList.Current.AddError("Cannot find Customer with ID {0}.", _data.CustomerId);
+            if (_data.BillToAddressId != null)
+            {
+                obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
+                if (_data.BillToAddressId != 0 && obj.BillToAddressIdObject == null)
+                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.BillToAddressId);
+            }
+            if (_data.ShipToAddressId != null)
+            {
+                obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
+                if (_data.ShipToAddressId != 0 && obj.ShipToAddressIdObject == null)
+                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.ShipToAddressId);
+            }
+        }
+
         protected PaymentInfo GetPaymentInfo(SalesOrder obj)
         {
             PaymentInfo res = new PaymentInfo()

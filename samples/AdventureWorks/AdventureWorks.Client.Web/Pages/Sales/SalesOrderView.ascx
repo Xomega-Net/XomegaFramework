@@ -48,27 +48,15 @@
                         <asp:Label ID="lblPurchaseOrderNumber" Text="Purchase Order Number:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblPurchaseOrderNumber" ID="ctlPurchaseOrderNumber" Property="<%# SalesOrderObject.PurchaseOrderNumber %>" runat="server"></asp:TextBox>
                       </div>
+                    </td>
+                    <td class="fieldColumn" style="width: 50%">
                       <div class="field">
                         <asp:Label ID="lblAccountNumber" Text="Account Number:" CssClass="label" runat="server"></asp:Label>
                         <asp:TextBox LabelID="lblAccountNumber" ID="ctlAccountNumber" Property="<%# SalesOrderObject.AccountNumber %>" runat="server"></asp:TextBox>
                       </div>
                       <div class="field">
-                        <asp:Label ID="lblCustomerId" Text="Customer Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblCustomerId" ID="ctlCustomerId" Property="<%# SalesOrderObject.CustomerId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                    </td>
-                    <td class="fieldColumn" style="width: 50%">
-                      <div class="field">
-                        <asp:Label ID="lblBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblBillToAddressId" ID="ctlBillToAddressId" Property="<%# SalesOrderObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                      <div class="field">
-                        <asp:Label ID="lblShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
-                        <asp:TextBox LabelID="lblShipToAddressId" ID="ctlShipToAddressId" Property="<%# SalesOrderObject.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
-                      </div>
-                      <div class="field">
                         <asp:Label ID="lblShipDate" Text="Ship Date:" CssClass="label" runat="server"></asp:Label>
-                        <uc:DateTimeControl LabelID="lblShipDate" ID="ctlShipDate" Property="<%# SalesOrderObject.ShipDate %>" TextCssClass="datetime" runat="server"></uc:DateTimeControl>
+                        <uc:DateTimeControl LabelID="lblShipDate" ID="ctlShipDate" Property="<%# SalesOrderObject.ShipDate %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
                       </div>
                       <div class="field">
                         <asp:Label ID="lblComment" Text="Comment:" CssClass="label" runat="server"></asp:Label>
@@ -87,6 +75,44 @@
                 </table>
               </asp:Panel>
               <ajaxToolkit:TabContainer ID="tbcChildren" ActiveTabIndex="1" runat="server">
+                <ajaxToolkit:TabPanel ID="tabCustomer" HeaderText="Customer" runat="server">
+                  <ContentTemplate>
+                    <asp:Panel ID="pnlCustomer" CssClass="xw-obj" runat="server" ChildObject="<%# SalesOrderObject.Customer %>">
+                      <table class="xw-fieldset-layout">
+                        <tr>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblCustomerStoreName" Text="Store Name:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblCustomerStoreName" ID="ctlCustomerStoreName" Property="<%# SalesOrderCustomerObject.StoreName %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblCustomerPersonName" Text="Person Name:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblCustomerPersonName" ID="ctlCustomerPersonName" Property="<%# SalesOrderCustomerObject.PersonName %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblCustomerAccountNumber" Text="Account Number:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblCustomerAccountNumber" ID="ctlCustomerAccountNumber" Property="<%# SalesOrderCustomerObject.AccountNumber %>" runat="server"></asp:Label>
+                            </div>
+                          </td>
+                          <td class="fieldColumn" style="width: 50%">
+                            <div class="field">
+                              <asp:Label ID="lblCustomerTerritoryId" Text="Territory:" CssClass="label" runat="server"></asp:Label>
+                              <asp:Label LabelID="lblCustomerTerritoryId" ID="ctlCustomerTerritoryId" Property="<%# SalesOrderCustomerObject.TerritoryId %>" runat="server"></asp:Label>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblCustomerBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
+                              <asp:TextBox LabelID="lblCustomerBillToAddressId" ID="ctlCustomerBillToAddressId" Property="<%# SalesOrderCustomerObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
+                            </div>
+                            <div class="field">
+                              <asp:Label ID="lblCustomerShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
+                              <asp:TextBox LabelID="lblCustomerShipToAddressId" ID="ctlCustomerShipToAddressId" Property="<%# SalesOrderCustomerObject.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </asp:Panel>
+                  </ContentTemplate>
+                </ajaxToolkit:TabPanel>
                 <ajaxToolkit:TabPanel ID="tabDetail" HeaderText="Detail" runat="server">
                   <ContentTemplate>
                     <asp:Panel ID="pnlDetail" CssClass="xw-obj" runat="server">

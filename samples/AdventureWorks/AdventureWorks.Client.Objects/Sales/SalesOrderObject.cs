@@ -19,9 +19,8 @@ namespace AdventureWorks.Client.Objects
         #region Constants
 
         public const string AccountNumber = "AccountNumber";
-        public const string BillToAddressId = "BillToAddressId";
         public const string Comment = "Comment";
-        public const string CustomerId = "CustomerId";
+        public const string Customer = "Customer";
         public const string Detail = "Detail";
         public const string ModifiedDate = "ModifiedDate";
         public const string OnlineOrderFlag = "OnlineOrderFlag";
@@ -33,7 +32,6 @@ namespace AdventureWorks.Client.Objects
         public const string SalesOrderId = "SalesOrderId";
         public const string SalesOrderNumber = "SalesOrderNumber";
         public const string ShipDate = "ShipDate";
-        public const string ShipToAddressId = "ShipToAddressId";
         public const string Status = "Status";
 
         #endregion
@@ -41,9 +39,7 @@ namespace AdventureWorks.Client.Objects
         #region Properties
 
         public TextProperty AccountNumberProperty { get; private set; }
-        public IntegerKeyProperty BillToAddressIdProperty { get; private set; }
         public TextProperty CommentProperty { get; private set; }
-        public IntegerKeyProperty CustomerIdProperty { get; private set; }
         public DateTimeProperty ModifiedDateProperty { get; private set; }
         public BooleanProperty OnlineOrderFlagProperty { get; private set; }
         public DateProperty OrderDateProperty { get; private set; }
@@ -51,14 +47,14 @@ namespace AdventureWorks.Client.Objects
         public TinyIntegerProperty RevisionNumberProperty { get; private set; }
         public IntegerKeyProperty SalesOrderIdProperty { get; private set; }
         public TextProperty SalesOrderNumberProperty { get; private set; }
-        public DateTimeProperty ShipDateProperty { get; private set; }
-        public IntegerKeyProperty ShipToAddressIdProperty { get; private set; }
+        public DateProperty ShipDateProperty { get; private set; }
         public EnumByteProperty StatusProperty { get; private set; }
 
         #endregion
 
         #region Child Objects
 
+        public SalesOrderCustomerObject CustomerObject { get { return (SalesOrderCustomerObject)GetChildObject(Customer); } }
         public SalesOrderDetailList DetailList { get { return (SalesOrderDetailList)GetChildObject(Detail); } }
         public SalesOrderPaymentObject PaymentObject { get { return (SalesOrderPaymentObject)GetChildObject(Payment); } }
         public SalesOrderSalesObjectCustomized SalesObject { get { return (SalesOrderSalesObjectCustomized)GetChildObject(Sales); } }
@@ -71,12 +67,8 @@ namespace AdventureWorks.Client.Objects
         {
             AccountNumberProperty = new TextProperty(this, AccountNumber);
             AccountNumberProperty.Size = 15;
-            BillToAddressIdProperty = new IntegerKeyProperty(this, BillToAddressId);
-            BillToAddressIdProperty.Required = true;
             CommentProperty = new TextProperty(this, Comment);
             CommentProperty.Size = 128;
-            CustomerIdProperty = new IntegerKeyProperty(this, CustomerId);
-            CustomerIdProperty.Required = true;
             ModifiedDateProperty = new DateTimeProperty(this, ModifiedDate);
             ModifiedDateProperty.Required = true;
             ModifiedDateProperty.Editable = false;
@@ -97,13 +89,13 @@ namespace AdventureWorks.Client.Objects
             SalesOrderNumberProperty.Required = true;
             SalesOrderNumberProperty.Size = 25;
             SalesOrderNumberProperty.Editable = false;
-            ShipDateProperty = new DateTimeProperty(this, ShipDate);
-            ShipToAddressIdProperty = new IntegerKeyProperty(this, ShipToAddressId);
-            ShipToAddressIdProperty.Required = true;
+            ShipDateProperty = new DateProperty(this, ShipDate);
             StatusProperty = new EnumByteProperty(this, Status);
             StatusProperty.Required = true;
             StatusProperty.Size = 10;
             StatusProperty.EnumType = "sales order status";
+            DataObject objCustomer = new SalesOrderCustomerObject();
+            AddChildObject(Customer, objCustomer);
             DataObject objDetail = new SalesOrderDetailList();
             AddChildObject(Detail, objDetail);
             DataObject objPayment = new SalesOrderPaymentObject();
