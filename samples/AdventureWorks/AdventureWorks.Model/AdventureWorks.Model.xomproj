@@ -179,6 +179,88 @@ The path may contain {Module/} and {File} placeholders to output files by databa
       <IncludeInBuild>true</IncludeInBuild>
       <TargetFrameworkVersion>$(TargetFrameworkVersion)</TargetFrameworkVersion>
     </XomGenerator>
+    <XomGenerator Include="$(XomegaHome14)Xsl\model_ops.xsl">
+      <Name>Lookup View</Name>
+      <Folder>Model Enhancement</Folder>
+      <IncludeInBuild>false</IncludeInBuild>
+      <IndividualFiles>true</IndividualFiles>
+      <GeneratorGroup>model</GeneratorGroup>
+      <GenerateCRUD-param>False</GenerateCRUD-param>
+      <GenerateCRUD-type>System.Boolean</GenerateCRUD-type>
+      <GenerateCRUD-desc>Whether to generate Create, Read, Update and Delete operations.</GenerateCRUD-desc>
+      <GenerateCRUD-category>Operations</GenerateCRUD-category>
+      <GenerateReadList-param>True</GenerateReadList-param>
+      <GenerateReadList-type>System.Boolean</GenerateReadList-type>
+      <GenerateReadList-desc>Whether to generate Read List operation.</GenerateReadList-desc>
+      <GenerateReadList-category>Operations</GenerateReadList-category>
+      <GenerateReadListCriteria-param>True</GenerateReadListCriteria-param>
+      <GenerateReadListCriteria-type>System.Boolean</GenerateReadListCriteria-type>
+      <GenerateReadListCriteria-desc>Whether to generate criteria for Read List operation.</GenerateReadListCriteria-desc>
+      <GenerateReadListCriteria-category>Operations</GenerateReadListCriteria-category>
+      <GenerateReadListOperators-param>True</GenerateReadListOperators-param>
+      <GenerateReadListOperators-type>System.Boolean</GenerateReadListOperators-type>
+      <GenerateReadListOperators-desc>Whether to generate operators for search criteria.</GenerateReadListOperators-desc>
+      <GenerateReadListOperators-category>Operations</GenerateReadListOperators-category>
+      <GenerateSubobjectCRUD-param>True</GenerateSubobjectCRUD-param>
+      <GenerateSubobjectCRUD-type>System.Boolean</GenerateSubobjectCRUD-type>
+      <GenerateSubobjectCRUD-desc>Whether to generate Create, Read, Update and Delete operations on sub-objects.</GenerateSubobjectCRUD-desc>
+      <GenerateSubobjectCRUD-category>Operations</GenerateSubobjectCRUD-category>
+      <GenerateSubobjectReadList-param>True</GenerateSubobjectReadList-param>
+      <GenerateSubobjectReadList-type>System.Boolean</GenerateSubobjectReadList-type>
+      <GenerateSubobjectReadList-desc>Whether to generate Read List operation on sub-objects.</GenerateSubobjectReadList-desc>
+      <GenerateSubobjectReadList-category>Operations</GenerateSubobjectReadList-category>
+      <GenerateRestMethods-param>False</GenerateRestMethods-param>
+      <GenerateRestMethods-type>System.Boolean</GenerateRestMethods-type>
+      <GenerateRestMethods-desc>Whether to generate REST API methods on operations.</GenerateRestMethods-desc>
+      <GenerateRestMethods-category>Operations</GenerateRestMethods-category>
+      <UseYesNoSubstitution-param>True</UseYesNoSubstitution-param>
+      <UseYesNoSubstitution-type>System.Boolean</UseYesNoSubstitution-type>
+      <UseYesNoSubstitution-desc>Whether to substitute boolean type with yesno for non-required parameters of CRUD operations.</UseYesNoSubstitution-desc>
+      <UseYesNoSubstitution-category>Operations</UseYesNoSubstitution-category>
+      <GenerateDataObjects-param>True</GenerateDataObjects-param>
+      <GenerateDataObjects-type>System.Boolean</GenerateDataObjects-type>
+      <GenerateDataObjects-desc>Whether to generate Xomega.Framework Data Object definitions for operations.</GenerateDataObjects-desc>
+      <GenerateDataObjects-category>Data Objects</GenerateDataObjects-category>
+      <GenerateLinks-param>True</GenerateLinks-param>
+      <GenerateLinks-type>System.Boolean</GenerateLinks-type>
+      <GenerateLinks-desc>Whether to generate links to corresponding details views on list objects.</GenerateLinks-desc>
+      <GenerateLinks-category>Data Objects</GenerateLinks-category>
+      <MakeSerialKeysHidden-param>True</MakeSerialKeysHidden-param>
+      <MakeSerialKeysHidden-type>System.Boolean</MakeSerialKeysHidden-type>
+      <MakeSerialKeysHidden-desc>Whether to configure serial key fields as hidden on views.</MakeSerialKeysHidden-desc>
+      <MakeSerialKeysHidden-category>Data Objects</MakeSerialKeysHidden-category>
+      <GenerateSearchView-param>True</GenerateSearchView-param>
+      <GenerateSearchView-type>System.Boolean</GenerateSearchView-type>
+      <GenerateSearchView-desc>Whether to generate a search view for list objects.</GenerateSearchView-desc>
+      <GenerateSearchView-category>Views</GenerateSearchView-category>
+      <GenerateDetailsView-param>True</GenerateDetailsView-param>
+      <GenerateDetailsView-type>System.Boolean</GenerateDetailsView-type>
+      <GenerateDetailsView-desc>Whether to generate a details view for CRUD objects.</GenerateDetailsView-desc>
+      <GenerateDetailsView-category>Views</GenerateDetailsView-category>
+      <SearchViewLayout-param>
+      </SearchViewLayout-param>
+      <SearchViewLayout-desc>Named layout from the global config to use for the search view.</SearchViewLayout-desc>
+      <SearchViewLayout-category>Views</SearchViewLayout-category>
+      <DetailsViewLayout-param>
+      </DetailsViewLayout-param>
+      <DetailsViewLayout-desc>Named layout from the global config to use for the details view.</DetailsViewLayout-desc>
+      <DetailsViewLayout-category>Views</DetailsViewLayout-category>
+      <ViewNamePostfix-param>View</ViewNamePostfix-param>
+      <ViewNamePostfix-desc>Postfix to use for view names.</ViewNamePostfix-desc>
+      <ViewNamePostfix-category>Views</ViewNamePostfix-category>
+      <AddReadListEnumeration-param>False</AddReadListEnumeration-param>
+      <AddReadListEnumeration-type>System.Boolean</AddReadListEnumeration-type>
+      <AddReadListEnumeration-desc>Whether to add enumeration definition to the Read List operation.</AddReadListEnumeration-desc>
+      <AddReadListEnumeration-category>Enumeration</AddReadListEnumeration-category>
+      <MakeKeyTypeEnumerated-param>False</MakeKeyTypeEnumerated-param>
+      <MakeKeyTypeEnumerated-type>System.Boolean</MakeKeyTypeEnumerated-type>
+      <MakeKeyTypeEnumerated-desc>Whether to update the key type to reference generated enumeration.</MakeKeyTypeEnumerated-desc>
+      <MakeKeyTypeEnumerated-category>Enumeration</MakeKeyTypeEnumerated-category>
+      <AddSuggestType-param>False</AddSuggestType-param>
+      <AddSuggestType-type>System.Boolean</AddSuggestType-type>
+      <AddSuggestType-desc>Whether to add a separate type linked to the generated enumeration to suggest values, which also accepts other values.</AddSuggestType-desc>
+      <AddSuggestType-category>Enumeration</AddSuggestType-category>
+    </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_svcimpl.xsl">
       <Name>Service Implementations</Name>
       <Folder>Business Layer</Folder>

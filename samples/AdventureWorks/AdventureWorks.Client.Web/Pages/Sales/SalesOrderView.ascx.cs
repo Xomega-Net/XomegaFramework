@@ -31,6 +31,7 @@ namespace AdventureWorks.Client.Web
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
+            SubscribeToChildEvents(uclCustomerListView);
             SubscribeToChildEvents(uclSalesOrderDetailView);
         }
 
@@ -154,6 +155,32 @@ namespace AdventureWorks.Client.Web
 
         #region Navigation
 
+        protected virtual void lnkCustomerLookupLookUp_Click(object sender, CommandEventArgs e)
+        {
+            NameValueCollection query = new NameValueCollection();
+            query.Add(QueryAction, "select");
+            query.Add(BaseSearchView.QuerySelectionMode, "single");
+            query.Add("StoreNameOperator", "CONT");
+            query.Add("StoreName", this.obj.CustomerObject.LookupObject.StoreNameProperty.EditStringValue);
+            query.Add("PersonNameOperator", "CONT");
+            query.Add("PersonName", this.obj.CustomerObject.LookupObject.PersonNameProperty.EditStringValue);
+            query.Add(QuerySource, "lnkCustomerLookupLookUp");
+            NavigateTo(uclCustomerListView, query, ModePopup);
+        }
+
+        protected virtual void lnkCustomerLookupLookUp_HandleResult(object sender, List<DataRow> selectedRows)
+        {
+            if (selectedRows == null || selectedRows.Count != 1) return;
+            DataRow row = selectedRows[0];
+            this.obj.CustomerObject.CustomerIdProperty.SetValue(DataRow.GetValue(row, CustomerList.CustomerId));
+            this.obj.CustomerObject.PersonIdProperty.SetValue(DataRow.GetValue(row, CustomerList.PersonId));
+            this.obj.CustomerObject.PersonNameProperty.SetValue(DataRow.GetValue(row, CustomerList.PersonName));
+            this.obj.CustomerObject.StoreIdProperty.SetValue(DataRow.GetValue(row, CustomerList.StoreId));
+            this.obj.CustomerObject.StoreNameProperty.SetValue(DataRow.GetValue(row, CustomerList.StoreName));
+            this.obj.CustomerObject.TerritoryIdProperty.SetValue(DataRow.GetValue(row, CustomerList.TerritoryId));
+            this.obj.CustomerObject.AccountNumberProperty.SetValue(DataRow.GetValue(row, CustomerList.AccountNumber));
+        }
+
         protected virtual void lnkDetailDetails_Click(object sender, CommandEventArgs e)
         {
             NameValueCollection query = new NameValueCollection();
@@ -172,6 +199,13 @@ namespace AdventureWorks.Client.Web
             query.Add("SalesOrderId", this.obj.SalesOrderIdProperty.EditStringValue);
             query.Add(QuerySource, "lnkDetailNew");
             NavigateTo(uclSalesOrderDetailView, query, ModePopup);
+        }
+
+        protected override void OnChildSelection(object searchView, List<DataRow> selectedRows)
+        {
+            BaseView childView = searchView as BaseView;
+            if (childView == uclCustomerListView && childView.ParentSource == "lnkCustomerLookupLookUp")
+                lnkCustomerLookupLookUp_HandleResult(searchView, selectedRows);
         }
 
         protected override void OnChildClosed(object childView, EventArgs e)

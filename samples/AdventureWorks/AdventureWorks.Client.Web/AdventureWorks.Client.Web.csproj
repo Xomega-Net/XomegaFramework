@@ -257,6 +257,30 @@
          <DependentUpon>SalesOrderView.ascx.cs</DependentUpon>
          <SubType>ASPXCodeBehind</SubType>
       </Compile>
+      <Content Include="Pages\Sales\CustomerListViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Pages\Sales\CustomerListViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Pages\Sales\CustomerListViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Pages\Sales\CustomerListView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Pages\Sales\CustomerListView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Pages\Sales\CustomerListView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListView.ascx</DependentUpon>
+      </Compile>
       <Content Include="Web.sitemap"/>
       <Content Include="Scripts\Client\autocomplete.js"/>
       <Content Include="Scripts\Client\dialog.js"/>

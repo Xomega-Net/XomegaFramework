@@ -79,6 +79,15 @@
       <Compile Include="Sales\SalesOrderCustomerObject.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\CustomerCriteria.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\CustomerList.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\SalesCustomerLookupObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

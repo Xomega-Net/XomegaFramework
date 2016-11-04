@@ -68,6 +68,43 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <input>
+            <struct name="criteria">
+              <param name="territory id" required="false"/>
+              <param name="person name operator" type="operator"/>
+              <param name="person name" type="string"/>
+              <param name="store name operator" type="operator"/>
+              <param name="store name" type="string"/>
+              <param name="account number operator" type="operator"/>
+              <param name="account number" required="false"/>
+              <config>
+                <xfk:add-to-object class="CustomerCriteria"/>
+              </config>
+            </struct>
+          </input>
+          <output list="true">
+            <param name="customer id"/>
+            <param name="store id"/>
+            <param name="store name" type="string" required="false"/>
+            <param name="person id"/>
+            <param name="person name" type="string" required="false"/>
+            <param name="account number"/>
+            <param name="territory id"/>
+            <config>
+              <xfk:add-to-object class="CustomerList"/>
+            </config>
+          </output>
+          <config/>
+          <doc>
+            <summary>Reads a list of Customer objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Customer objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Sales.Customer"/>
       </config>
@@ -76,4 +113,17 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects>
+    <xfk:data-object class="CustomerCriteria"/>
+    <xfk:data-object class="CustomerList" list="true">
+      <ui:display>
+        <ui:field param="customer id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
+  </xfk:data-objects>
+  <ui:views>
+    <ui:view name="CustomerListView" title="Customer List">
+      <ui:view-model data-object="CustomerList"/>
+    </ui:view>
+  </ui:views>
 </module>

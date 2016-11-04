@@ -53,6 +53,18 @@ namespace AdventureWorks.Services
     }
     #endregion
 
+    #region CustomerLookup structure
+
+    [DataContract]
+    public class CustomerLookup
+    {
+        [DataMember]
+        public string StoreName { get; set; }
+        [DataMember]
+        public string PersonName { get; set; }
+    }
+    #endregion
+
     #region PaymentInfo structure
 
     [DataContract]

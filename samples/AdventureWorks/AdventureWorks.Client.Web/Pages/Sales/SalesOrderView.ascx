@@ -11,6 +11,7 @@
 <%@ Register src="~/Controls/Errors.ascx" tagname="Errors" tagprefix="uc" %>
 <%@ Register src="~/Controls/Editors/DateTimeControl.ascx" tagname="DateTimeControl" tagprefix="uc" %>
 <%@ Register src="~/Controls/Editors/PickListControl.ascx" tagname="PickListControl" tagprefix="uc" %>
+<%@ Register src="~/Pages/Sales/CustomerListView.ascx" tagname="CustomerListView" tagprefix="uc" %>
 <%@ Register src="~/Pages/Sales/SalesOrderDetailView.ascx" tagname="SalesOrderDetailView" tagprefix="uc" %>
 
 <asp:Panel ID="pnlComposition" CssClass="view-composition" runat="server">
@@ -110,6 +111,27 @@
                           </td>
                         </tr>
                       </table>
+                    </asp:Panel>
+                    <asp:Panel ID="pnlCustomerChildren" ChildObject="<%# SalesOrderObject.Customer %>" runat="server">
+                      <asp:Panel ID="pnlLookup" CssClass="xw-obj" runat="server" GroupingText="Lookup" ChildObject="<%# SalesOrderCustomerObject.Lookup %>">
+                        <table class="xw-fieldset-layout">
+                          <tr>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblLookupStoreName" Text="Store Name:" CssClass="label" runat="server"></asp:Label>
+                                <asp:TextBox LabelID="lblLookupStoreName" ID="ctlLookupStoreName" Property="<%# SalesCustomerLookupObject.StoreName %>" runat="server"></asp:TextBox>
+                              </div>
+                            </td>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblLookupPersonName" Text="Person Name:" CssClass="label" runat="server"></asp:Label>
+                                <asp:TextBox LabelID="lblLookupPersonName" ID="ctlLookupPersonName" Property="<%# SalesCustomerLookupObject.PersonName %>" runat="server"></asp:TextBox>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                        <asp:LinkButton ID="lnkCustomerLookupLookUp" runat="server" OnCommand="lnkCustomerLookupLookUp_Click">Look Up</asp:LinkButton>
+                      </asp:Panel>
                     </asp:Panel>
                   </ContentTemplate>
                 </ajaxToolkit:TabPanel>
@@ -247,6 +269,11 @@
           <asp:Button ID="btn_Close" Text="Close" OnClick="Close" runat="server"></asp:Button>
         </div>
       </asp:Panel>
+    </ContentTemplate>
+  </asp:UpdatePanel>
+  <asp:UpdatePanel ID="uplCustomerListView" UpdateMode="Conditional" runat="server">
+    <ContentTemplate>
+      <uc:CustomerListView ID="uclCustomerListView" Visible="false" runat="server"></uc:CustomerListView>
     </ContentTemplate>
   </asp:UpdatePanel>
   <asp:UpdatePanel ID="uplSalesOrderDetailView" UpdateMode="Conditional" runat="server">

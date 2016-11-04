@@ -5,6 +5,7 @@
     <siteMapNode title="Sales">
       <siteMapNode url="~/Pages/Sales/SalesOrderListViewPage.aspx" title="Sales Order List"/>
       <siteMapNode url="~/Pages/Sales/SalesOrderViewPage.aspx?_action=create" title="Sales Order"/>
+      <siteMapNode url="~/Pages/Sales/CustomerListViewPage.aspx" title="Customer List"/>
     </siteMapNode>
   </siteMapNode>
 </siteMap>

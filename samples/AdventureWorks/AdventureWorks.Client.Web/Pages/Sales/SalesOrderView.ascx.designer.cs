@@ -48,6 +48,13 @@ namespace AdventureWorks.Client.Web
         protected global::System.Web.UI.WebControls.TextBox ctlCustomerBillToAddressId;
         protected global::System.Web.UI.WebControls.Label lblCustomerShipToAddressId;
         protected global::System.Web.UI.WebControls.TextBox ctlCustomerShipToAddressId;
+        protected global::System.Web.UI.WebControls.Panel pnlCustomerChildren;
+        protected global::System.Web.UI.WebControls.Panel pnlLookup;
+        protected global::System.Web.UI.WebControls.Label lblLookupStoreName;
+        protected global::System.Web.UI.WebControls.TextBox ctlLookupStoreName;
+        protected global::System.Web.UI.WebControls.Label lblLookupPersonName;
+        protected global::System.Web.UI.WebControls.TextBox ctlLookupPersonName;
+        protected global::System.Web.UI.WebControls.LinkButton lnkCustomerLookupLookUp;
         protected global::AjaxControlToolkit.TabPanel tabDetail;
         protected global::System.Web.UI.WebControls.Panel pnlDetail;
         protected global::System.Web.UI.WebControls.GridView gridDetail;
@@ -82,6 +89,8 @@ namespace AdventureWorks.Client.Web
         protected global::AdventureWorks.Client.Web.PickListControl ctlSalesSalesReason;
         protected global::System.Web.UI.WebControls.Button btnSave;
         protected global::System.Web.UI.WebControls.Button btnDelete;
+        protected global::System.Web.UI.UpdatePanel uplCustomerListView;
+        protected global::AdventureWorks.Client.Web.CustomerListView uclCustomerListView;
         protected global::System.Web.UI.UpdatePanel uplSalesOrderDetailView;
         protected global::AdventureWorks.Client.Web.SalesOrderDetailView uclSalesOrderDetailView;
     }

@@ -54,6 +54,14 @@
         <xfk:add-to-object class="SalesOrderCustomerObject"/>
       </config>
     </struct>
+    <struct name="customer lookup">
+      <param name="store name" type="string"/>
+      <param name="person name" type="string"/>
+      <config>
+        <xfk:add-to-object class="SalesCustomerLookupObject"/>
+      </config>
+      <usage generic="true"/>
+    </struct>
     <struct name="payment info" object="sales order">
       <param name="sub total"/>
       <param name="ship method id"/>
@@ -731,12 +739,34 @@
       </ui:display>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderCustomerObject">
+      <xfk:add-child name="lookup" class="SalesCustomerLookupObject"/>
       <ui:display>
         <ui:field param="customer id" hidden="true"/>
         <ui:field param="person id" hidden="true"/>
         <ui:field param="store id" hidden="true"/>
         <ui:field param="territory id" label="Territory"/>
       </ui:display>
+    </xfk:data-object>
+    <xfk:data-object class="SalesCustomerLookupObject">
+      <ui:link name="look up" view="CustomerListView" child="true">
+        <ui:params>
+          <ui:param name="_action" value="select"/>
+          <ui:param name="_selection" value="single"/>
+          <ui:param name="store name operator" value="CONT"/>
+          <ui:param name="store name" field="store name"/>
+          <ui:param name="person name operator" value="CONT"/>
+          <ui:param name="person name" field="person name"/>
+        </ui:params>
+        <ui:result data-object="..">
+          <ui:param name="customer id" field="customer id"/>
+          <ui:param name="person id" field="person id"/>
+          <ui:param name="person name" field="person name"/>
+          <ui:param name="store id" field="store id"/>
+          <ui:param name="store name" field="store name"/>
+          <ui:param name="territory id" field="territory id"/>
+          <ui:param name="account number" field="account number"/>
+        </ui:result>
+      </ui:link>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderPaymentObject">
       <ui:display>
