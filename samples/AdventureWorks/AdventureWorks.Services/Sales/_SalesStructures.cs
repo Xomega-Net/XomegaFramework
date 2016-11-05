@@ -33,9 +33,9 @@ namespace AdventureWorks.Services
         [DataMember]
         public int? TerritoryId { get; set; }
         [DataMember]
-        public int? BillToAddressId { get; set; }
+        public AddressKey BillingAddress { get; set; }
         [DataMember]
-        public int? ShipToAddressId { get; set; }
+        public AddressKey ShippingAddress { get; set; }
     }
     #endregion
 
@@ -47,9 +47,9 @@ namespace AdventureWorks.Services
         [DataMember]
         public int CustomerId { get; set; }
         [DataMember]
-        public int? BillToAddressId { get; set; }
+        public AddressKey BillingAddress { get; set; }
         [DataMember]
-        public int? ShipToAddressId { get; set; }
+        public AddressKey ShippingAddress { get; set; }
     }
     #endregion
 

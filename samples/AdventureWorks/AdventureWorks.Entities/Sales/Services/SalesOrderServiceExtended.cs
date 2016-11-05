@@ -30,9 +30,9 @@ namespace AdventureWorks.Entities.Services
                             (int?)obj.CustomerIdObject.TerritoryIdObject.TerritoryId;
             };
             if (obj.BillToAddressIdObject != null)
-                res.BillToAddressId = obj.BillToAddressIdObject.AddressId;
+                res.BillingAddress = new AddressKey { AddressId = obj.BillToAddressIdObject.AddressId };
             if (obj.ShipToAddressIdObject != null)
-                res.ShipToAddressId = obj.ShipToAddressIdObject.AddressId;
+                res.ShippingAddress = new AddressKey { AddressId = obj.ShipToAddressIdObject.AddressId };
             return res;
         }
 
@@ -41,17 +41,17 @@ namespace AdventureWorks.Entities.Services
             obj.CustomerIdObject = ctx.Customer.Find(_data.CustomerId);
             if (obj.CustomerIdObject == null)
                 ErrorList.Current.AddError("Cannot find Customer with ID {0}.", _data.CustomerId);
-            if (_data.BillToAddressId != null)
+            if (_data.BillingAddress != null)
             {
-                obj.BillToAddressIdObject = ctx.Address.Find(_data.BillToAddressId);
-                if (_data.BillToAddressId != 0 && obj.BillToAddressIdObject == null)
-                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.BillToAddressId);
+                obj.BillToAddressIdObject = ctx.Address.Find(_data.BillingAddress.AddressId);
+                if (obj.BillToAddressIdObject == null)
+                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.BillingAddress.AddressId);
             }
-            if (_data.ShipToAddressId != null)
+            if (_data.ShippingAddress != null)
             {
-                obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShipToAddressId);
-                if (_data.ShipToAddressId != 0 && obj.ShipToAddressIdObject == null)
-                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.ShipToAddressId);
+                obj.ShipToAddressIdObject = ctx.Address.Find(_data.ShippingAddress.AddressId);
+                if (obj.ShipToAddressIdObject == null)
+                    ErrorList.Current.AddError("Cannot find Address with ID {0}.", _data.ShippingAddress.AddressId);
             }
         }
 

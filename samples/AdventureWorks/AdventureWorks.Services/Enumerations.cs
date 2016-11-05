@@ -6,6 +6,34 @@
 
 namespace AdventureWorks.Enumerations
 {
+    #region BusinessEntityAddress
+    ///<summary>
+    /// Cached enumeration returned by the IBusinessEntityAddressService.ReadList operation.
+    ///  
+    ///</summary>
+    public class BusinessEntityAddress
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "business entity address";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'business entity address'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string AddressLine1 = "address line1";
+            public const string AddressLine2 = "address line2";
+            public const string City = "city";
+            public const string State = "state";
+            public const string PostalCode = "postal code";
+            public const string Country = "country";
+        }
+
+    }
+    #endregion
+
     #region Operators
     ///<summary>
     /// A list of operators to be used with filter criteria.

@@ -14,7 +14,6 @@
     <type name="char string15" base="char string" size="15"/>
     <type name="code1" base="code" size="1"/>
     <type name="code2" base="code" size="2"/>
-    <type name="code3" base="code" size="3"/>
     <type name="code5" base="code" size="5"/>
     <type name="decimal_8_2" base="decimal">
       <config>
@@ -39,13 +38,11 @@
     <type name="string25" base="string" size="25"/>
     <type name="string255" base="string" size="255"/>
     <type name="string256" base="string" size="256"/>
-    <type name="string30" base="string" size="30"/>
     <type name="string3850" base="string" size="3850"/>
     <type name="string400" base="string" size="400"/>
     <type name="string4000" base="string" size="4000"/>
     <type name="string5" base="string" size="5"/>
-    <type name="string50" base="string" size="50"/>
-    <type name="string60" base="string" size="60"/>
+    <type name="name" base="string" size="50"/>
     <type name="string8" base="string" size="8"/>
   </types>
 </module>

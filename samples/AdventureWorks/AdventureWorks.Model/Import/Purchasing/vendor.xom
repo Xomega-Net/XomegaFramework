@@ -27,7 +27,7 @@
             <summary>Vendor account (identification) number.</summary>
           </doc>
         </field>
-        <field name="name" type="string50" required="true">
+        <field name="name" type="name" required="true">
           <config>
             <sql:column name="Name"/>
           </config>

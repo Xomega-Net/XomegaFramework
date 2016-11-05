@@ -20,7 +20,7 @@
             <sql:column name="ShoppingCartItemID"/>
           </config>
         </field>
-        <field name="shopping cart id" type="string50" required="true">
+        <field name="shopping cart id" type="name" required="true">
           <config>
             <sql:column name="ShoppingCartID"/>
           </config>

@@ -120,6 +120,15 @@
       <Compile Include="Sales\_ICustomerService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Person\_IBusinessEntityAddressService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\BusinessEntityAddressReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Person\_PersonStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

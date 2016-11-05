@@ -54,7 +54,7 @@ namespace AdventureWorks.Client.Objects
 
         #region Child Objects
 
-        public SalesOrderCustomerObject CustomerObject { get { return (SalesOrderCustomerObject)GetChildObject(Customer); } }
+        public SalesOrderCustomerObjectCustomized CustomerObject { get { return (SalesOrderCustomerObjectCustomized)GetChildObject(Customer); } }
         public SalesOrderDetailList DetailList { get { return (SalesOrderDetailList)GetChildObject(Detail); } }
         public SalesOrderPaymentObject PaymentObject { get { return (SalesOrderPaymentObject)GetChildObject(Payment); } }
         public SalesOrderSalesObjectCustomized SalesObject { get { return (SalesOrderSalesObjectCustomized)GetChildObject(Sales); } }
@@ -94,7 +94,7 @@ namespace AdventureWorks.Client.Objects
             StatusProperty.Required = true;
             StatusProperty.Size = 10;
             StatusProperty.EnumType = "sales order status";
-            DataObject objCustomer = new SalesOrderCustomerObject();
+            DataObject objCustomer = new SalesOrderCustomerObjectCustomized();
             AddChildObject(Customer, objCustomer);
             DataObject objDetail = new SalesOrderDetailList();
             AddChildObject(Detail, objDetail);

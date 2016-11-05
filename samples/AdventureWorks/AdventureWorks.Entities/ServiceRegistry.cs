@@ -20,6 +20,7 @@ namespace AdventureWorks.Entities
             DI.RegisterType<IShipMethodService, AdventureWorks.Entities.Services.ShipMethodService>();
             DI.RegisterType<ISalesReasonService, AdventureWorks.Entities.Services.SalesReasonService>();
             DI.RegisterType<ICustomerService, AdventureWorks.Entities.Services.CustomerService>();
+            DI.RegisterType<IBusinessEntityAddressService, AdventureWorks.Entities.Services.BusinessEntityAddressService>();
             // GENPOINT - generated code will be inserted here. DO NOT REMOVE this line!
         }
     }

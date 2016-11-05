@@ -27,7 +27,7 @@
             <summary>Small image of the product.</summary>
           </doc>
         </field>
-        <field name="thumbnail photo file name" type="string50">
+        <field name="thumbnail photo file name" type="name">
           <config>
             <sql:column name="ThumbnailPhotoFileName"/>
           </config>
@@ -43,7 +43,7 @@
             <summary>Large image of the product.</summary>
           </doc>
         </field>
-        <field name="large photo file name" type="string50">
+        <field name="large photo file name" type="name">
           <config>
             <sql:column name="LargePhotoFileName"/>
           </config>

@@ -32,7 +32,7 @@
     <object name="email address">
       <fields>
         <fieldset ref="email address" key="supplied" required="true"/>
-        <field name="email address" type="string50">
+        <field name="email address" type="name">
           <config>
             <sql:column name="EmailAddress"/>
           </config>

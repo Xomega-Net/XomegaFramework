@@ -88,6 +88,15 @@
       <Compile Include="Sales\SalesCustomerLookupObject.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\SalesOrderCustomerObjectCustomized.cs">
+         <DependentUpon>SalesOrderCustomerObject.cs</DependentUpon>
+      </Compile>
+      <Compile Include="Person\AddressObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Person\AddressObjectCustomized.cs">
+         <DependentUpon>AddressObject.cs</DependentUpon>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

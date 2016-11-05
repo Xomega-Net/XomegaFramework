@@ -27,7 +27,7 @@
             <summary>Product identification number. Foreign key to Product.ProductID.</summary>
           </doc>
         </field>
-        <field name="reviewer name" type="string50" required="true">
+        <field name="reviewer name" type="name" required="true">
           <config>
             <sql:column name="ReviewerName"/>
           </config>
@@ -43,7 +43,7 @@
             <summary>Date review was submitted.</summary>
           </doc>
         </field>
-        <field name="email address" type="string50" required="true">
+        <field name="email address" type="name" required="true">
           <config>
             <sql:column name="EmailAddress"/>
           </config>

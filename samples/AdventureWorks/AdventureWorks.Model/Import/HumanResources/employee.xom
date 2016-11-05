@@ -51,7 +51,7 @@
             <summary>The depth of the employee in the corporate hierarchy.</summary>
           </doc>
         </field>
-        <field name="job title" type="string50" required="true">
+        <field name="job title" type="name" required="true">
           <config>
             <sql:column name="JobTitle"/>
           </config>

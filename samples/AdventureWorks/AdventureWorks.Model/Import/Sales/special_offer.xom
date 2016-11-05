@@ -37,7 +37,7 @@
             <summary>Discount precentage.</summary>
           </doc>
         </field>
-        <field name="type" type="string50" required="true">
+        <field name="type" type="name" required="true">
           <config>
             <sql:column name="Type"/>
           </config>
@@ -45,7 +45,7 @@
             <summary>Discount type category.</summary>
           </doc>
         </field>
-        <field name="category" type="string50" required="true">
+        <field name="category" type="name" required="true">
           <config>
             <sql:column name="Category"/>
           </config>

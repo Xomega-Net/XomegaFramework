@@ -19,7 +19,7 @@
             <sql:column name="DepartmentID"/>
           </config>
         </field>
-        <field name="name" type="string50" required="true">
+        <field name="name" type="name" required="true">
           <config>
             <sql:column name="Name"/>
           </config>
@@ -27,7 +27,7 @@
             <summary>Name of the department.</summary>
           </doc>
         </field>
-        <field name="group name" type="string50" required="true">
+        <field name="group name" type="name" required="true">
           <config>
             <sql:column name="GroupName"/>
           </config>

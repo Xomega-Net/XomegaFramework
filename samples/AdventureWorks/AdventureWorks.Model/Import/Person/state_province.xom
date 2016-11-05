@@ -19,7 +19,7 @@
             <sql:column name="StateProvinceID"/>
           </config>
         </field>
-        <field name="state province code" type="code3" required="true">
+        <field name="state province code" type="state province code" required="true">
           <config>
             <sql:column name="StateProvinceCode"/>
           </config>
@@ -43,7 +43,7 @@
             <summary>0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.</summary>
           </doc>
         </field>
-        <field name="name" type="string50" required="true">
+        <field name="name" type="name" required="true">
           <config>
             <sql:column name="Name"/>
           </config>

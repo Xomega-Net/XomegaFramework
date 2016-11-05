@@ -40,16 +40,16 @@
       <param name="person name" type="string" required="false"/>
       <param name="account number"/>
       <param name="territory id"/>
-      <param name="bill to address id" type="address"/>
-      <param name="ship to address id" type="address"/>
+      <struct name="billing address" ref="address key"/>
+      <struct name="shipping address" ref="address key"/>
       <config>
         <xfk:add-to-object class="SalesOrderCustomerObject"/>
       </config>
     </struct>
     <struct name="customer update" object="customer">
       <param name="customer id"/>
-      <param name="bill to address id" type="address"/>
-      <param name="ship to address id" type="address"/>
+      <struct name="billing address" ref="address key"/>
+      <struct name="shipping address" ref="address key"/>
       <config>
         <xfk:add-to-object class="SalesOrderCustomerObject"/>
       </config>
@@ -738,8 +738,10 @@
         <ui:field param="sales order id" hidden="true"/>
       </ui:display>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderCustomerObject">
+    <xfk:data-object class="SalesOrderCustomerObject" customize="true">
       <xfk:add-child name="lookup" class="SalesCustomerLookupObject"/>
+      <xfk:add-child name="billing address" class="AddressObject"/>
+      <xfk:add-child name="shipping address" class="AddressObject"/>
       <ui:display>
         <ui:field param="customer id" hidden="true"/>
         <ui:field param="person id" hidden="true"/>

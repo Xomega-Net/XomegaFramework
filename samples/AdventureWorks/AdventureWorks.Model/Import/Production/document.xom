@@ -27,7 +27,7 @@
             <summary>Depth in the document hierarchy.</summary>
           </doc>
         </field>
-        <field name="title" type="string50" required="true">
+        <field name="title" type="name" required="true">
           <config>
             <sql:column name="Title"/>
           </config>

@@ -9,8 +9,37 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="person">
   <types>
-    <type name="address" base="integer key"/>
+    <type name="address" base="integer enumeration"/>
+    <type name="address line" base="string" size="60"/>
+    <type name="city name" base="string" size="30"/>
+    <type name="postal code" base="string" size="15"/>
+    <type name="state province code" base="code" size="3"/>
   </types>
+  <structs>
+    <struct name="address key" object="address">
+      <param name="address id"/>
+      <config>
+        <xfk:add-to-object class="AddressObject"/>
+      </config>
+      <doc>
+        <summary>Address key information</summary>
+      </doc>
+    </struct>
+    <struct name="address info" object="address">
+      <param name="address line1"/>
+      <param name="address line2"/>
+      <param name="city state" type="city name"/>
+      <param name="postal code"/>
+      <param name="country" type="country region"/>
+      <config>
+        <xfk:add-to-object class="AddressObject"/>
+      </config>
+      <usage generic="true"/>
+      <doc>
+        <summary>Full address information</summary>
+      </doc>
+    </struct>
+  </structs>
   <objects>
     <object name="address">
       <fields>
@@ -19,7 +48,7 @@
             <sql:column name="AddressID"/>
           </config>
         </field>
-        <field name="address line1" type="string60" required="true">
+        <field name="address line1" type="address line" required="true">
           <config>
             <sql:column name="AddressLine1"/>
           </config>
@@ -27,7 +56,7 @@
             <summary>First street address line.</summary>
           </doc>
         </field>
-        <field name="address line2" type="string60">
+        <field name="address line2" type="address line">
           <config>
             <sql:column name="AddressLine2"/>
           </config>
@@ -35,7 +64,7 @@
             <summary>Second street address line.</summary>
           </doc>
         </field>
-        <field name="city" type="string30" required="true">
+        <field name="city" type="city name" required="true">
           <config>
             <sql:column name="City"/>
           </config>
@@ -51,7 +80,7 @@
             <summary>Unique identification number for the state or province. Foreign key to StateProvince table.</summary>
           </doc>
         </field>
-        <field name="postal code" type="string15" required="true">
+        <field name="postal code" type="postal code" required="true">
           <config>
             <sql:column name="PostalCode"/>
           </config>
@@ -92,4 +121,16 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects>
+    <xfk:data-object class="AddressObject" customize="true">
+      <ui:display>
+        <ui:field param="address id" label="Address Type"/>
+        <ui:field param="address line1" editable="false"/>
+        <ui:field param="address line2" editable="false"/>
+        <ui:field param="city state" editable="false" label="City/State"/>
+        <ui:field param="postal code" editable="false"/>
+        <ui:field param="country" editable="false"/>
+      </ui:display>
+    </xfk:data-object>
+  </xfk:data-objects>
 </module>

@@ -43,7 +43,7 @@
             <summary>A courtesy title. For example, Mr. or Ms.</summary>
           </doc>
         </field>
-        <field name="first name" type="string50" required="true">
+        <field name="first name" type="name" required="true">
           <config>
             <sql:column name="FirstName"/>
           </config>
@@ -51,7 +51,7 @@
             <summary>First name of the person.</summary>
           </doc>
         </field>
-        <field name="middle name" type="string50">
+        <field name="middle name" type="name">
           <config>
             <sql:column name="MiddleName"/>
           </config>
@@ -59,7 +59,7 @@
             <summary>Middle name or middle initial of the person.</summary>
           </doc>
         </field>
-        <field name="last name" type="string50" required="true">
+        <field name="last name" type="name" required="true">
           <config>
             <sql:column name="LastName"/>
           </config>

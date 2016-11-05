@@ -90,23 +90,15 @@
                               <asp:Label ID="lblCustomerPersonName" Text="Person Name:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblCustomerPersonName" ID="ctlCustomerPersonName" Property="<%# SalesOrderCustomerObject.PersonName %>" runat="server"></asp:Label>
                             </div>
+                          </td>
+                          <td class="fieldColumn" style="width: 50%">
                             <div class="field">
                               <asp:Label ID="lblCustomerAccountNumber" Text="Account Number:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblCustomerAccountNumber" ID="ctlCustomerAccountNumber" Property="<%# SalesOrderCustomerObject.AccountNumber %>" runat="server"></asp:Label>
                             </div>
-                          </td>
-                          <td class="fieldColumn" style="width: 50%">
                             <div class="field">
                               <asp:Label ID="lblCustomerTerritoryId" Text="Territory:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblCustomerTerritoryId" ID="ctlCustomerTerritoryId" Property="<%# SalesOrderCustomerObject.TerritoryId %>" runat="server"></asp:Label>
-                            </div>
-                            <div class="field">
-                              <asp:Label ID="lblCustomerBillToAddressId" Text="Bill To Address Id:" CssClass="label" runat="server"></asp:Label>
-                              <asp:TextBox LabelID="lblCustomerBillToAddressId" ID="ctlCustomerBillToAddressId" Property="<%# SalesOrderCustomerObject.BillToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
-                            </div>
-                            <div class="field">
-                              <asp:Label ID="lblCustomerShipToAddressId" Text="Ship To Address Id:" CssClass="label" runat="server"></asp:Label>
-                              <asp:TextBox LabelID="lblCustomerShipToAddressId" ID="ctlCustomerShipToAddressId" Property="<%# SalesOrderCustomerObject.ShipToAddressId %>" runat="server" CssClass="integer"></asp:TextBox>
                             </div>
                           </td>
                         </tr>
@@ -131,6 +123,74 @@
                           </tr>
                         </table>
                         <asp:LinkButton ID="lnkCustomerLookupLookUp" runat="server" OnCommand="lnkCustomerLookupLookUp_Click">Look Up</asp:LinkButton>
+                      </asp:Panel>
+                      <asp:Panel ID="pnlBillingAddress" CssClass="xw-obj" runat="server" GroupingText="Billing Address" ChildObject="<%# SalesOrderCustomerObject.BillingAddress %>">
+                        <table class="xw-fieldset-layout">
+                          <tr>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressAddressId" Text="Address Type:" CssClass="label" runat="server"></asp:Label>
+                                <asp:DropDownList LabelID="lblBillingAddressAddressId" ID="ctlBillingAddressAddressId" Property="<%# AddressObject.AddressId %>" runat="server"></asp:DropDownList>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressAddressLine1" Text="Address Line1:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblBillingAddressAddressLine1" ID="ctlBillingAddressAddressLine1" Property="<%# AddressObject.AddressLine1 %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressAddressLine2" Text="Address Line2:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblBillingAddressAddressLine2" ID="ctlBillingAddressAddressLine2" Property="<%# AddressObject.AddressLine2 %>" runat="server"></asp:Label>
+                              </div>
+                            </td>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressCityState" Text="City/State:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblBillingAddressCityState" ID="ctlBillingAddressCityState" Property="<%# AddressObject.CityState %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressPostalCode" Text="Postal Code:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblBillingAddressPostalCode" ID="ctlBillingAddressPostalCode" Property="<%# AddressObject.PostalCode %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblBillingAddressCountry" Text="Country:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblBillingAddressCountry" ID="ctlBillingAddressCountry" Property="<%# AddressObject.Country %>" runat="server"></asp:Label>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </asp:Panel>
+                      <asp:Panel ID="pnlShippingAddress" CssClass="xw-obj" runat="server" GroupingText="Shipping Address" ChildObject="<%# SalesOrderCustomerObject.ShippingAddress %>">
+                        <table class="xw-fieldset-layout">
+                          <tr>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressAddressId" Text="Address Type:" CssClass="label" runat="server"></asp:Label>
+                                <asp:DropDownList LabelID="lblShippingAddressAddressId" ID="ctlShippingAddressAddressId" Property="<%# AddressObject.AddressId %>" runat="server"></asp:DropDownList>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressAddressLine1" Text="Address Line1:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblShippingAddressAddressLine1" ID="ctlShippingAddressAddressLine1" Property="<%# AddressObject.AddressLine1 %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressAddressLine2" Text="Address Line2:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblShippingAddressAddressLine2" ID="ctlShippingAddressAddressLine2" Property="<%# AddressObject.AddressLine2 %>" runat="server"></asp:Label>
+                              </div>
+                            </td>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressCityState" Text="City/State:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblShippingAddressCityState" ID="ctlShippingAddressCityState" Property="<%# AddressObject.CityState %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressPostalCode" Text="Postal Code:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblShippingAddressPostalCode" ID="ctlShippingAddressPostalCode" Property="<%# AddressObject.PostalCode %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblShippingAddressCountry" Text="Country:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblShippingAddressCountry" ID="ctlShippingAddressCountry" Property="<%# AddressObject.Country %>" runat="server"></asp:Label>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
                       </asp:Panel>
                     </asp:Panel>
                   </ContentTemplate>
