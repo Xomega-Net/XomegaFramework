@@ -59,7 +59,8 @@ namespace AdventureWorks.Entities.Services
         {
             PaymentInfo res = new PaymentInfo()
             {
-                CreditCardApprovalCode = obj.CreditCardApprovalCode,
+                CreditCard = new PaymentInfo_CreditCard {
+                    CreditCardApprovalCode = obj.CreditCardApprovalCode },
                 DueDate = obj.DueDate,
                 SubTotal = obj.SubTotal,
                 Freight = obj.Freight,
@@ -67,7 +68,7 @@ namespace AdventureWorks.Entities.Services
                 TotalDue = obj.TotalDue,
             };
             if (obj.CreditCardIdObject != null)
-                res.CreditCardId = obj.CreditCardIdObject.CreditCardId;
+                res.CreditCard.CreditCardId = obj.CreditCardIdObject.CreditCardId;
             if (obj.ShipMethodIdObject != null)
                 res.ShipMethodId = obj.ShipMethodIdObject.ShipMethodId;
             if (obj.CurrencyRateIdObject != null)
@@ -79,13 +80,17 @@ namespace AdventureWorks.Entities.Services
         protected void UpdatePayment(AdventureWorksEntities ctx, SalesOrder obj, PaymentUpdate _data)
         {
             obj.DueDate = _data.DueDate;
-            obj.CreditCardApprovalCode = _data.CreditCardApprovalCode;
+            obj.CreditCardApprovalCode = _data.CreditCard.CreditCardApprovalCode;
             obj.ShipMethodIdObject = ctx.ShipMethod.Find(_data.ShipMethodId);
             if (obj.ShipMethodIdObject == null)
                 ErrorList.Current.AddError("Cannot find ShipMethod with ID {0}.", _data.ShipMethodId);
-            obj.CreditCardIdObject = ctx.CreditCard.Find(_data.CreditCardId);
-            if (_data.CreditCardId != null && obj.CreditCardIdObject == null)
-                ErrorList.Current.AddError("Cannot find CreditCard with ID {0}.", _data.CreditCardId);
+            if (_data.CreditCard != null)
+            {
+                obj.CreditCardIdObject = ctx.CreditCard.Find(_data.CreditCard.CreditCardId);
+                if (obj.CreditCardIdObject == null)
+                    ErrorList.Current.AddError("Cannot find CreditCard with ID {0}.",
+                                                _data.CreditCard.CreditCardId);
+            }
         }
 
         protected SalesInfo GetSalesInfo(SalesOrder obj)

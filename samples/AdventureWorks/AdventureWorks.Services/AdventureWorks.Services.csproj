@@ -129,6 +129,12 @@
       <Compile Include="Person\_PersonStructures.cs">
          <AutoGen>True</AutoGen>
       </Compile>
+      <Compile Include="Sales\_IPersonCreditCardService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\PersonCreditCardReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

@@ -13,6 +13,20 @@ using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
+    #region CreditCardInfo structure
+
+    [DataContract]
+    public class CreditCardInfo
+    {
+        [DataMember]
+        public int CreditCardId { get; set; }
+        [DataMember]
+        public string CardNumber { get; set; }
+        [DataMember]
+        public string Expiration { get; set; }
+    }
+    #endregion
+
     #region CustomerInfo structure
 
     [DataContract]
@@ -85,6 +99,19 @@ namespace AdventureWorks.Services
         [DataMember]
         public string CurrencyRate { get; set; }
         [DataMember]
+        public PaymentInfo_CreditCard CreditCard { get; set; }
+    }
+    #endregion
+
+    #region PaymentInfo_CreditCard structure
+
+    ///<summary>
+    /// Structure of parameter CreditCard of structure PaymentInfo.
+    ///</summary>
+    [DataContract]
+    public class PaymentInfo_CreditCard
+    {
+        [DataMember]
         public int? CreditCardId { get; set; }
         [DataMember]
         public string CreditCardApprovalCode { get; set; }
@@ -101,7 +128,20 @@ namespace AdventureWorks.Services
         [DataMember]
         public DateTime DueDate { get; set; }
         [DataMember]
-        public int? CreditCardId { get; set; }
+        public PaymentUpdate_CreditCard CreditCard { get; set; }
+    }
+    #endregion
+
+    #region PaymentUpdate_CreditCard structure
+
+    ///<summary>
+    /// Structure of parameter CreditCard of structure PaymentUpdate.
+    ///</summary>
+    [DataContract]
+    public class PaymentUpdate_CreditCard
+    {
+        [DataMember]
+        public int CreditCardId { get; set; }
         [DataMember]
         public string CreditCardApprovalCode { get; set; }
     }

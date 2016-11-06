@@ -12,6 +12,7 @@ namespace AdventureWorks.Client.Web
             ctlSalesTerritoryId.AutoPostBack = true;
             ctlBillingAddressAddressId.AutoPostBack = true;
             ctlShippingAddressAddressId.AutoPostBack = true;
+            ctlCreditCardCreditCardId.AutoPostBack = true;
         }
 
         // add custom code here

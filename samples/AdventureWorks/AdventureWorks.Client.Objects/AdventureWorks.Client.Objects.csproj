@@ -97,6 +97,15 @@
       <Compile Include="Person\AddressObjectCustomized.cs">
          <DependentUpon>AddressObject.cs</DependentUpon>
       </Compile>
+      <Compile Include="Sales\CreditCardPaymentObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\CreditCardPaymentObjectCustomized.cs">
+         <DependentUpon>CreditCardPaymentObject.cs</DependentUpon>
+      </Compile>
+      <Compile Include="Sales\SalesOrderObjectCustomized.cs">
+         <DependentUpon>SalesOrderObject.cs</DependentUpon>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>

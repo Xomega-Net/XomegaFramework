@@ -21,11 +21,11 @@ namespace AdventureWorks.Client.Web
     {
         #region Initialization/Activation
 
-        protected SalesOrderObject obj;
+        protected SalesOrderObjectCustomized obj;
 
         protected override void InitObjects(bool createNew)
         {
-            dataObj = obj = GetObject<SalesOrderObject>(createNew);
+            dataObj = obj = GetObject<SalesOrderObjectCustomized>(createNew);
         }
 
         protected override void OnInit(EventArgs e)

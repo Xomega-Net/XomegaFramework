@@ -18,8 +18,7 @@ namespace AdventureWorks.Client.Objects
     {
         #region Constants
 
-        public const string CreditCardApprovalCode = "CreditCardApprovalCode";
-        public const string CreditCardId = "CreditCardId";
+        public const string CreditCard = "CreditCard";
         public const string CurrencyRate = "CurrencyRate";
         public const string DueDate = "DueDate";
         public const string Freight = "Freight";
@@ -32,8 +31,6 @@ namespace AdventureWorks.Client.Objects
 
         #region Properties
 
-        public TextProperty CreditCardApprovalCodeProperty { get; private set; }
-        public IntegerKeyProperty CreditCardIdProperty { get; private set; }
         public TextProperty CurrencyRateProperty { get; private set; }
         public DateProperty DueDateProperty { get; private set; }
         public MoneyProperty FreightProperty { get; private set; }
@@ -44,13 +41,16 @@ namespace AdventureWorks.Client.Objects
 
         #endregion
 
+        #region Child Objects
+
+        public CreditCardPaymentObjectCustomized CreditCardObject { get { return (CreditCardPaymentObjectCustomized)GetChildObject(CreditCard); } }
+
+        #endregion
+
         #region Construction
 
         protected override void Initialize()
         {
-            CreditCardApprovalCodeProperty = new TextProperty(this, CreditCardApprovalCode);
-            CreditCardApprovalCodeProperty.Size = 15;
-            CreditCardIdProperty = new IntegerKeyProperty(this, CreditCardId);
             CurrencyRateProperty = new TextProperty(this, CurrencyRate);
             CurrencyRateProperty.Editable = false;
             DueDateProperty = new DateProperty(this, DueDate);
@@ -71,6 +71,8 @@ namespace AdventureWorks.Client.Objects
             TotalDueProperty = new MoneyProperty(this, TotalDue);
             TotalDueProperty.Required = true;
             TotalDueProperty.Editable = false;
+            DataObject objCreditCard = new CreditCardPaymentObjectCustomized();
+            AddChildObject(CreditCard, objCreditCard);
         }
 
         #endregion

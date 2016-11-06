@@ -143,6 +143,33 @@ namespace AdventureWorks.Enumerations
     }
     #endregion
 
+    #region PersonCreditCard
+    ///<summary>
+    /// Cached enumeration returned by the IPersonCreditCardService.ReadList operation.
+    ///  
+    ///</summary>
+    public class PersonCreditCard
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "person credit card";
+
+        ///<summary>
+        /// Additional attributes for enumeration 'person credit card'.
+        ///</summary>
+        public class Attributes
+        {
+            public const string PersonName = "person name";
+            public const string CardType = "card type";
+            public const string CardNumber = "card number";
+            public const string ExpMonth = "exp month";
+            public const string ExpYear = "exp year";
+        }
+
+    }
+    #endregion
+
     #region Product
     ///<summary>
     /// Cached enumeration returned by the IProductService.ReadList operation.

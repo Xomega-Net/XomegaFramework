@@ -265,12 +265,12 @@
                               <asp:Label ID="lblPaymentFreight" Text="Freight:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblPaymentFreight" ID="ctlPaymentFreight" Property="<%# SalesOrderPaymentObject.Freight %>" runat="server"></asp:Label>
                             </div>
+                          </td>
+                          <td class="fieldColumn" style="width: 50%">
                             <div class="field">
                               <asp:Label ID="lblPaymentTotalDue" Text="Total Due:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblPaymentTotalDue" ID="ctlPaymentTotalDue" Property="<%# SalesOrderPaymentObject.TotalDue %>" runat="server"></asp:Label>
                             </div>
-                          </td>
-                          <td class="fieldColumn" style="width: 50%">
                             <div class="field">
                               <asp:Label ID="lblPaymentDueDate" Text="Due Date:" CssClass="label" runat="server"></asp:Label>
                               <uc:DateTimeControl LabelID="lblPaymentDueDate" ID="ctlPaymentDueDate" Property="<%# SalesOrderPaymentObject.DueDate %>" TextCssClass="date" runat="server"></uc:DateTimeControl>
@@ -279,17 +279,37 @@
                               <asp:Label ID="lblPaymentCurrencyRate" Text="Currency Rate:" CssClass="label" runat="server"></asp:Label>
                               <asp:Label LabelID="lblPaymentCurrencyRate" ID="ctlPaymentCurrencyRate" Property="<%# SalesOrderPaymentObject.CurrencyRate %>" runat="server"></asp:Label>
                             </div>
-                            <div class="field">
-                              <asp:Label ID="lblPaymentCreditCardId" Text="Credit Card Id:" CssClass="label" runat="server"></asp:Label>
-                              <asp:TextBox LabelID="lblPaymentCreditCardId" ID="ctlPaymentCreditCardId" Property="<%# SalesOrderPaymentObject.CreditCardId %>" runat="server" CssClass="integer"></asp:TextBox>
-                            </div>
-                            <div class="field">
-                              <asp:Label ID="lblPaymentCreditCardApprovalCode" Text="Credit Card Approval Code:" CssClass="label" runat="server"></asp:Label>
-                              <asp:TextBox LabelID="lblPaymentCreditCardApprovalCode" ID="ctlPaymentCreditCardApprovalCode" Property="<%# SalesOrderPaymentObject.CreditCardApprovalCode %>" runat="server"></asp:TextBox>
-                            </div>
                           </td>
                         </tr>
                       </table>
+                    </asp:Panel>
+                    <asp:Panel ID="pnlPaymentChildren" ChildObject="<%# SalesOrderObject.Payment %>" runat="server">
+                      <asp:Panel ID="pnlCreditCard" CssClass="xw-obj" runat="server" GroupingText="Credit Card" ChildObject="<%# SalesOrderPaymentObject.CreditCard %>">
+                        <table class="xw-fieldset-layout">
+                          <tr>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblCreditCardCreditCardId" Text="Credit Card:" CssClass="label" runat="server"></asp:Label>
+                                <asp:DropDownList LabelID="lblCreditCardCreditCardId" ID="ctlCreditCardCreditCardId" Property="<%# CreditCardPaymentObject.CreditCardId %>" runat="server"></asp:DropDownList>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblCreditCardCardNumber" Text="Card Number:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblCreditCardCardNumber" ID="ctlCreditCardCardNumber" Property="<%# CreditCardPaymentObject.CardNumber %>" runat="server"></asp:Label>
+                              </div>
+                            </td>
+                            <td class="fieldColumn" style="width: 50%">
+                              <div class="field">
+                                <asp:Label ID="lblCreditCardExpiration" Text="Expiration:" CssClass="label" runat="server"></asp:Label>
+                                <asp:Label LabelID="lblCreditCardExpiration" ID="ctlCreditCardExpiration" Property="<%# CreditCardPaymentObject.Expiration %>" runat="server"></asp:Label>
+                              </div>
+                              <div class="field">
+                                <asp:Label ID="lblCreditCardCreditCardApprovalCode" Text="Credit Card Approval Code:" CssClass="label" runat="server"></asp:Label>
+                                <asp:TextBox LabelID="lblCreditCardCreditCardApprovalCode" ID="ctlCreditCardCreditCardApprovalCode" Property="<%# CreditCardPaymentObject.CreditCardApprovalCode %>" runat="server"></asp:TextBox>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </asp:Panel>
                     </asp:Panel>
                   </ContentTemplate>
                 </ajaxToolkit:TabPanel>

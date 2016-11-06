@@ -41,6 +41,32 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="read list" type="readlist">
+          <input>
+            <param name="business entity id" type="person" required="true"/>
+          </input>
+          <output list="true">
+            <param name="credit card id" type="credit card" required="true"/>
+            <param name="credit card name" type="name" required="true"/>
+            <param name="person name" type="name" required="true"/>
+            <param name="card type" type="credit card type" required="true"/>
+            <param name="card number" type="credit card number" required="true"/>
+            <param name="exp month" type="tiny int" required="true"/>
+            <param name="exp year" type="small int" required="true"/>
+          </output>
+          <config>
+            <xfk:enum-cache enum-name="person credit card" skip-registration="true"
+                            id-param="credit card id" desc-param="credit card name"/>
+          </config>
+          <doc>
+            <summary>Reads a list of Person Credit Card objects based on the specified criteria.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for quering and managing Person Credit Card objects.</summary>
+        </doc>
+      </operations>
       <config>
         <sql:table name="Sales.PersonCreditCard"/>
       </config>
@@ -49,4 +75,6 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects/>
+  <ui:views/>
 </module>

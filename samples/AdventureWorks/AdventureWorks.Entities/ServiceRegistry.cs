@@ -21,6 +21,7 @@ namespace AdventureWorks.Entities
             DI.RegisterType<ISalesReasonService, AdventureWorks.Entities.Services.SalesReasonService>();
             DI.RegisterType<ICustomerService, AdventureWorks.Entities.Services.CustomerService>();
             DI.RegisterType<IBusinessEntityAddressService, AdventureWorks.Entities.Services.BusinessEntityAddressService>();
+            DI.RegisterType<IPersonCreditCardService, AdventureWorks.Entities.Services.PersonCreditCardService>();
             // GENPOINT - generated code will be inserted here. DO NOT REMOVE this line!
         }
     }

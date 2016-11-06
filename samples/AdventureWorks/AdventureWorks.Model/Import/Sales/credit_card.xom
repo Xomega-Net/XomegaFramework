@@ -9,8 +9,21 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
-    <type name="credit card" base="integer key"/>
+    <type name="credit card" base="integer enumeration"/>
+    <type name="credit card type" base="name"/>
+    <type name="credit card number" base="string25"/>
   </types>
+  <structs>
+    <struct name="credit card info" object="credit card">
+      <param name="credit card id"/>
+      <param name="card number"/>
+      <param name="expiration" type="string"/>
+      <config>
+        <xfk:add-to-object class="CreditCardPaymentObject"/>
+      </config>
+      <usage generic="true"/>
+    </struct>
+  </structs>
   <objects>
     <object name="credit card">
       <fields>
@@ -19,7 +32,7 @@
             <sql:column name="CreditCardID"/>
           </config>
         </field>
-        <field name="card type" type="name" required="true">
+        <field name="card type" type="credit card type" required="true">
           <config>
             <sql:column name="CardType"/>
           </config>
@@ -27,7 +40,7 @@
             <summary>Credit card name.</summary>
           </doc>
         </field>
-        <field name="card number" type="string25" required="true">
+        <field name="card number" type="credit card number" required="true">
           <config>
             <sql:column name="CardNumber"/>
           </config>
@@ -68,4 +81,13 @@
       </doc>
     </object>
   </objects>
+  <xfk:data-objects>
+    <xfk:data-object class="CreditCardPaymentObject" customize="true">
+      <ui:display>
+        <ui:field param="credit card id" label="Credit Card"/>
+        <ui:field param="card number" editable="false"/>
+        <ui:field param="expiration" editable="false"/>
+      </ui:display>
+    </xfk:data-object>
+  </xfk:data-objects>
 </module>

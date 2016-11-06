@@ -9,6 +9,7 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
+    <type name="credit card approval code" base="char string" size="15"/>
     <type name="line total" base="money">
       <config>
         <sql:type name="numeric(38,6)" db="sqlsrv"/>
@@ -70,8 +71,13 @@
       <param name="total due"/>
       <param name="due date" type="date"/>
       <param name="currency rate" type="string"/>
-      <param name="credit card id"/>
-      <param name="credit card approval code"/>
+      <struct name="credit card">
+        <param name="credit card id"/>
+        <param name="credit card approval code"/>
+        <config>
+          <xfk:add-to-object class="CreditCardPaymentObject"/>
+        </config>
+      </struct>
       <config>
         <xfk:add-to-object class="SalesOrderPaymentObject"/>
       </config>
@@ -79,8 +85,13 @@
     <struct name="payment update" object="sales order">
       <param name="ship method id"/>
       <param name="due date" type="date"/>
-      <param name="credit card id"/>
-      <param name="credit card approval code"/>
+      <struct name="credit card">
+        <param name="credit card id" required="true"/>
+        <param name="credit card approval code"/>
+        <config>
+          <xfk:add-to-object class="CreditCardPaymentObject"/>
+        </config>
+      </struct>
       <config>
         <xfk:add-to-object class="SalesOrderPaymentObject"/>
       </config>
@@ -230,7 +241,7 @@
             <summary>Credit card identification number. Foreign key to CreditCard.CreditCardID.</summary>
           </doc>
         </field>
-        <field name="credit card approval code" type="char string15">
+        <field name="credit card approval code" type="credit card approval code">
           <config>
             <sql:column name="CreditCardApprovalCode"/>
           </config>
@@ -729,7 +740,7 @@
     </object>
   </objects>
   <xfk:data-objects>
-    <xfk:data-object class="SalesOrderObject">
+    <xfk:data-object class="SalesOrderObject" customize="true">
       <xfk:add-child name="customer" class="SalesOrderCustomerObject"/>
       <xfk:add-child name="detail" class="SalesOrderDetailList"/>
       <xfk:add-child name="payment" class="SalesOrderPaymentObject"/>
@@ -771,6 +782,7 @@
       </ui:link>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderPaymentObject">
+      <xfk:add-child name="credit card" class="CreditCardPaymentObject"/>
       <ui:display>
         <ui:field param="ship method id" label="Shipment Method"/>
       </ui:display>
