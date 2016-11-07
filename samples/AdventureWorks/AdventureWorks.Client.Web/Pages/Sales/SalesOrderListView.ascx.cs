@@ -29,6 +29,7 @@ namespace AdventureWorks.Client.Web
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
+            Split();
             SubscribeToChildEvents(uclSalesOrderView);
         }
 
@@ -84,7 +85,7 @@ namespace AdventureWorks.Client.Web
             list.SelectRow(list.CurrentRow);
             query.Add("SalesOrderId", this.list.SalesOrderIdProperty.EditStringValue);
             query.Add(QuerySource, "lnkDetails");
-            NavigateTo(uclSalesOrderView, query, ModePopup);
+            NavigateTo(uclSalesOrderView, query, ModeInline);
         }
 
         protected virtual void lnkNew_Click(object sender, CommandEventArgs e)
@@ -92,7 +93,7 @@ namespace AdventureWorks.Client.Web
             NameValueCollection query = new NameValueCollection();
             query.Add(QueryAction, "create");
             query.Add(QuerySource, "lnkNew");
-            NavigateTo(uclSalesOrderView, query, ModePopup);
+            NavigateTo(uclSalesOrderView, query, ModeInline);
         }
     }
 }

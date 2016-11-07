@@ -17,7 +17,7 @@
 <asp:Panel ID="pnlComposition" CssClass="view-composition" runat="server">
   <asp:UpdatePanel ID="upl_Main" UpdateMode="Conditional" runat="server">
     <ContentTemplate>
-      <asp:Panel ID="pnlSalesOrderView" CssClass="view with-footer vw-sales-order-view" runat="server">
+      <asp:Panel ID="pnlSalesOrderView" CssClass="view with-footer vw-sales-order-view" style="min-width:840px;min-height:600px;" runat="server">
         <div class="view-header">
           <asp:Label ID="lblSalesOrderViewTitle" CssClass="view-title" Text="Sales Order" runat="server"></asp:Label>
         </div>

@@ -849,9 +849,13 @@
   <ui:views>
     <ui:view name="SalesOrderView" title="Sales Order">
       <ui:view-model data-object="SalesOrderObject" customize="true"/>
+      <ui:layout base="standard">
+        <ui:size width="840" height="600"/>
+      </ui:layout>
     </ui:view>
     <ui:view name="SalesOrderListView" title="Sales Order List">
       <ui:view-model data-object="SalesOrderList" customize="true"/>
+      <ui:layout base="master-details"/>
     </ui:view>
     <ui:view name="SalesOrderDetailView" title="Detail" child="true">
       <ui:view-model data-object="SalesOrderDetailObject"/>
