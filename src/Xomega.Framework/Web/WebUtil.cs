@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2010-2016 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework.Web
 {
@@ -16,28 +18,15 @@ namespace Xomega.Framework.Web
     /// </summary>
     public class WebUtil
     {
-        /// <summary>
-        /// Determines if the current request uses a POST method. This is different
-        /// than IsPostBack flag, which is false when you do Server.Transfer().
-        /// </summary>
-        /// <returns>True, if the current request uses a POST method, otherwise false.</returns>
-        public static bool IsPostRequest()
-        {
-            return (HttpContext.Current != null && HttpContext.Current.Request.HttpMethod == "POST");
-        }
+        #region Service provider
 
         /// <summary>
-        /// Get the current execution path including the query string.
+        /// The service scope for the current request
         /// </summary>
-        /// <returns>The current execution path including the query string.</returns>
-        public static string GetCurrentPath()
+        public static IServiceScope CurrentServiceScope
         {
-            if (HttpContext.Current == null) return null;
-
-            HttpRequest request = HttpContext.Current.Request;
-            string path = request.CurrentExecutionFilePath;
-            if (request.QueryString.Count > 0) path += "?" + request.QueryString;
-            return path;
+            get { return HttpContext.Current == null ? null : HttpContext.Current.Items["IServiceScope"] as IServiceScope; }
+            set { if (HttpContext.Current != null) HttpContext.Current.Items["IServiceScope"] = value; }
         }
 
         /// <summary>
@@ -49,16 +38,20 @@ namespace Xomega.Framework.Web
         /// <param name="cacheKey">A string key for storing and accessing the object.</param>
         /// <param name="createNew">True to create and store the object even if it already exists in the session.</param>
         /// <returns>The data object that has been created or retrieved from the session.</returns>
-        public static T GetCachedObject<T>(string cacheKey, bool createNew) where T : class, new()
+        public static T GetCachedObject<T>(string cacheKey, bool createNew) where T : class
         {
-            if (HttpContext.Current == null || HttpContext.Current.Session == null)
+            if (CurrentServiceScope == null || HttpContext.Current.Session == null)
                 return null;
 
             T obj = HttpContext.Current.Session[cacheKey] as T;
             if (obj == null || createNew)
-                HttpContext.Current.Session.Add(cacheKey, obj = new T());
+                HttpContext.Current.Session.Add(cacheKey, obj = CurrentServiceScope.ServiceProvider.GetService<T>());
             return obj;
         }
+
+        #endregion
+
+        #region Data object binding
 
         /// <summary>
         /// Binds a control or all of its child controls (e.g. for a containing panel)
@@ -113,6 +106,34 @@ namespace Xomega.Framework.Web
 
             IListBindable listBinding = WebPropertyBinding.Create(ctl) as IListBindable;
             if (listBinding != null) listBinding.BindTo(list);
+        }
+
+        #endregion
+
+        #region Web utilities
+
+        /// <summary>
+        /// Determines if the current request uses a POST method. This is different
+        /// than IsPostBack flag, which is false when you do Server.Transfer().
+        /// </summary>
+        /// <returns>True, if the current request uses a POST method, otherwise false.</returns>
+        public static bool IsPostRequest()
+        {
+            return (HttpContext.Current != null && HttpContext.Current.Request.HttpMethod == "POST");
+        }
+
+        /// <summary>
+        /// Get the current execution path including the query string.
+        /// </summary>
+        /// <returns>The current execution path including the query string.</returns>
+        public static string GetCurrentPath()
+        {
+            if (HttpContext.Current == null) return null;
+
+            HttpRequest request = HttpContext.Current.Request;
+            string path = request.CurrentExecutionFilePath;
+            if (request.QueryString.Count > 0) path += "?" + request.QueryString;
+            return path;
         }
 
         /// <summary>
@@ -187,5 +208,7 @@ namespace Xomega.Framework.Web
                     true);
             }
         }
+
+        #endregion
     }
 }

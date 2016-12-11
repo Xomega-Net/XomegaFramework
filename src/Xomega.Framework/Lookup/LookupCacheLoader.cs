@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 
 namespace Xomega.Framework.Lookup
@@ -38,6 +39,11 @@ namespace Xomega.Framework.Lookup
     public abstract class LookupCacheLoader : ILookupCacheLoader
     {
         /// <summary>
+        /// Service provider for the lookup cache loader
+        /// </summary>
+        protected IServiceProvider serviceProvider;
+
+        /// <summary>
         /// The cache type that this loader is designed for. This is null if any type is supported.
         /// </summary>
         protected string cacheType;
@@ -56,13 +62,15 @@ namespace Xomega.Framework.Lookup
         /// <summary>
         /// Initializes base parameters of the lookup cache loader.
         /// </summary>
+        /// <param name="serviceProvider">Service provider for the lookup cache loader</param>
         /// <param name="cacheType">The cache type that this loader is designed for.
         /// It should be null if any type is supported.</param>
         /// <param name="caseSensitive">Indicates whether or not the loaded lookup tables should be case sensitive.</param>
         /// <param name="tableTypes">A list of lookup table types that this loader can load.
         /// If null, the list will be determined based on the first run.</param>
-        protected LookupCacheLoader(string cacheType, bool caseSensitive, params string[] tableTypes)
+        protected LookupCacheLoader(IServiceProvider serviceProvider, string cacheType, bool caseSensitive, params string[] tableTypes)
         {
+            this.serviceProvider = serviceProvider;
             this.cacheType = cacheType;
             this.caseSensitive = caseSensitive;
             if (tableTypes != null && tableTypes.Length > 0)

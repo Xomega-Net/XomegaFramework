@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -52,7 +53,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="caseSensitive">A flag indicating whether or not the lookup tables should be case-sensitive.
         /// Typically this is based on whether or not the application database is case-sensitive.</param>
         public XmlLookupCacheLoader(Stream stream, string cacheType, bool caseSensitive)
-            : base(cacheType, caseSensitive)
+            : base(null, cacheType, caseSensitive)
         {
             doc = XDocument.Load(XmlReader.Create(stream));
         }
@@ -95,6 +96,23 @@ namespace Xomega.Framework.Lookup
                     data.Add(item);
                 }
                 updateCache(new LookupTable(type, data, caseSensitive));
+            }
+        }
+
+        /// <summary>
+        /// Registers an XmlLookupCacheLoader constructed from an XML resource embedded in the specified assembly.
+        /// </summary>
+        /// <param name="asm">Assembly with the resource</param>
+        /// <param name="enumResource">Resource name</param>
+        public static void RegisterFromResource(Assembly asm, string enumResource)
+        {
+            foreach (string resource in asm.GetManifestResourceNames())
+            {
+                if (resource.EndsWith(enumResource))
+                {
+                    LookupCache.AddCacheLoader(new XmlLookupCacheLoader(asm.GetManifestResourceStream(resource)));
+                    break;
+                }
             }
         }
     }

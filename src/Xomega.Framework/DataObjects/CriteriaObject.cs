@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2010-2016 Xomega.Net. All rights reserved.
 
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -12,6 +13,21 @@ namespace Xomega.Framework
     /// </summary>
     public abstract class CriteriaObject : DataObject
     {
+
+        /// <summary>
+        /// Constructs a new criteria object
+        /// </summary>
+        protected CriteriaObject()
+        {
+        }
+
+        /// <summary>
+        /// Constructs a new criteria object with a service provider
+        /// </summary>
+        protected CriteriaObject(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
 #if !SILVERLIGHT
         /// <summary>
         /// Sets values from the given collection and adjusts values for operators

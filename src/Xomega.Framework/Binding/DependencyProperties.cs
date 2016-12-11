@@ -68,7 +68,7 @@ namespace Xomega.Framework
         /// This dependency property can be set only in conjunction with the data property name.
         /// It points to a child data object contained within the data context object of the element,
         /// from which a data property with the given name should be bound to this element.
-        /// The best practice for a setting the child object path on a framework element
+        /// The best practice for setting the child object path on a framework element
         /// is to use a constant string declared in the code instead of hard coding the
         /// path in XAML. This way renaming child objects can be much easier
         /// and the compiler will validate the child object path in XAML.

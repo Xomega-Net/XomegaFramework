@@ -20,11 +20,26 @@ namespace Xomega.Framework
         #region Construction
 
         /// <summary>
+        /// Service provider for the data object
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
         /// Protected default constructor that delegates construction
         /// to the <c>Init</c> method.
         /// </summary>
         protected DataObject()
         {
+            Init();
+        }
+
+        /// <summary>
+        /// Protected default constructor that delegates construction
+        /// to the <c>Init</c> method.
+        /// </summary>
+        protected DataObject(IServiceProvider serviceProvider)
+        {
+            this.ServiceProvider = serviceProvider;
             Init();
         }
 
@@ -543,7 +558,7 @@ namespace Xomega.Framework
 
 #endregion
 
-#region Modification support
+        #region Modification support
 
         /// <summary>
         /// Tracks the modification state of the data object.
@@ -592,6 +607,6 @@ namespace Xomega.Framework
             }
         }
 
-#endregion
+        #endregion
     }
 }

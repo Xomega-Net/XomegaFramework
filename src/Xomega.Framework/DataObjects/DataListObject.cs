@@ -65,6 +65,13 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Constructs a new data list object with a service provider
+        /// </summary>
+        public DataListObject(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        /// <summary>
         /// Additional initialization after all properties are constructed
         /// </summary>
         protected override void OnInitialized()

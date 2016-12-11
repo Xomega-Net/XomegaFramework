@@ -28,9 +28,21 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="dataItem">data row to get the data from.</param>
         /// <param name="property">proprety name to retrieve.</param>
-        public static object GetString(object dataItem, string property)
+        public static string GetString(object dataItem, string property)
         {
-            return Get(dataItem, property, ValueFormat.DisplayString);
+            object val = Get(dataItem, property, ValueFormat.DisplayString);
+            return val != null ? val.ToString() : "";
+        }
+
+        /// <summary>
+        /// Gets a string value of the specified property from the given data row.
+        /// </summary>
+        /// <param name="dataItem">data row to get the data from.</param>
+        /// <param name="property">proprety name to retrieve.</param>
+        public static string GetEditString(object dataItem, string property)
+        {
+            object val = Get(dataItem, property, ValueFormat.EditString);
+            return val != null ? val.ToString() : "";
         }
 
         /// <summary>

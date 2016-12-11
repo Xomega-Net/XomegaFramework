@@ -35,6 +35,7 @@ namespace Xomega.Framework
             TextBoxPropertyBinding.Register();
             ToggleButtonPropertyBinding.Register();
             SelectorPropertyBinding.Register();
+            LinkPropertyBinding.Register();
         }
 
         /// <summary>
@@ -83,7 +84,10 @@ namespace Xomega.Framework
             if (el != null)
             {
                 el.DataContextChanged += OnDataContextChanged;
-                el.Unloaded += delegate { Dispose(); };
+                // Ideally we want to dispose the binding when the control is disposed,
+                // but we cannot rely on the Unloaded event, as it breaks for tab control, for example.
+                // Assuming lifecycle of the data objects is the same as that of the controls, it's not a big deal
+                //el.Unloaded += delegate { Dispose(); };
                 el.LostFocus += delegate { if (property != null) property.Editing = false; };
             }
         }
@@ -184,7 +188,8 @@ namespace Xomega.Framework
         protected BindingExpression GetValidationExpression()
         {
             // get a dummy binding expression so that we could use it for WPF validation framework
-            BindingExpression be = ((FrameworkElement)element).GetBindingExpression(ValidationExpressionProperty);
+            FrameworkElement fwkEl = element as FrameworkElement;
+            BindingExpression be = fwkEl == null ? null : fwkEl.GetBindingExpression(ValidationExpressionProperty);
             if (be != null) return be;
             System.Windows.Data.Binding bnd = new System.Windows.Data.Binding("Show");
             bnd.Mode = BindingMode.TwoWay;

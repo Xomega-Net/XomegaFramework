@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework", "Xomega.Framework.csproj", "{22CCC22D-05FA-4230-ADC6-076DCB39A53A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework_SL5", "Xomega.Framework_SL5.csproj", "{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,12 +18,6 @@ Global
 		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Debug-Net40|Any CPU.Build.0 = Debug-Net40|Any CPU
 		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Debug-Net40|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Debug-Net40|Any CPU.Build.0 = Debug|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AB3002C-4CED-4678-A1A3-1D02C0255AD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

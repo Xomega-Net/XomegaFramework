@@ -68,7 +68,7 @@ namespace Xomega.Framework
             FaultException<ErrorList> fex = ex as FaultException<ErrorList>;
             if (fex != null) return fex.Detail;
 
-            WebException webEx = ex as WebException;;
+            WebException webEx = ex as WebException;
             webEx = webEx ?? ex.InnerException as WebException;
             if (webEx != null && webEx.Response != null && webEx.Response.GetResponseStream() != null)
             {
@@ -80,8 +80,11 @@ namespace Xomega.Framework
                 catch (Exception) {}
             }
 
+            // use the server side exception if applicable
+            FaultException<ExceptionDetail> fexd = ex as FaultException<ExceptionDetail>;
+
             ErrorList err = new ErrorList();
-            err.Add(new ErrorMessage("EXCEPTION", ex.ToString()));
+            err.Add(new ErrorMessage("EXCEPTION", fexd != null ? fexd.Detail.ToString() : ex.ToString()));
             return err;
         }
 

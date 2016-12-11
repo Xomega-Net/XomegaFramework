@@ -19,6 +19,11 @@ namespace Xomega.Framework.Web
         #region Initialization/Activation
 
         /// <summary>
+        /// The service provider for the view
+        /// </summary>
+        public IServiceProvider ServiceProvider { get { return WebUtil.CurrentServiceScope == null ? null : WebUtil.CurrentServiceScope.ServiceProvider; } }
+
+        /// <summary>
         /// Close button
         /// </summary>
         protected Control btn_Close;

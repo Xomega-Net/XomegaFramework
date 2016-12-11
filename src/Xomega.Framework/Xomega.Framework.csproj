@@ -53,6 +53,10 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -97,6 +101,7 @@
     <Compile Include="Binding\DependencyProperties.cs" />
     <Compile Include="Binding\DataPropertyItemBinding.cs" />
     <Compile Include="Binding\SelectorPropertyBinding.cs" />
+    <Compile Include="Binding\LinkPropertyBinding.cs" />
     <Compile Include="Binding\ToggleButtonPropertyBinding.cs" />
     <Compile Include="Binding\TextBlockPropertyBinding.cs" />
     <Compile Include="Binding\TextBoxPropertyBinding.cs" />
@@ -146,6 +151,17 @@
     <Compile Include="Services\IServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataProperties\DataProperty.cs" />
+    <Compile Include="Views\IDetailsView.cs" />
+    <Compile Include="Views\ISearchView.cs" />
+    <Compile Include="Views\DetailsViewController.cs" />
+    <Compile Include="Views\RelayCommand.cs" />
+    <Compile Include="Views\SearchViewController.cs" />
+    <Compile Include="Views\WPFDetailsView.cs" />
+    <Compile Include="Views\WPFSearchView.cs" />
+    <Compile Include="Views\ViewController.cs" />
+    <Compile Include="Views\IView.cs" />
+    <Compile Include="Views\ViewParams.cs" />
+    <Compile Include="Views\WPFView.cs" />
     <Compile Include="Web\BaseCollapsiblePanel.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -173,6 +189,11 @@
     </Compile>
     <Compile Include="Web\WebPropertyBinding.cs" />
     <Compile Include="Web\WebUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
