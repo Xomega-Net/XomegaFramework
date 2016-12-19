@@ -97,9 +97,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\BaseBinding.cs" />
     <Compile Include="Binding\BasePropertyBinding.cs" />
+    <Compile Include="Binding\DataObjectBinding.cs" />
     <Compile Include="Binding\DependencyProperties.cs" />
     <Compile Include="Binding\DataPropertyItemBinding.cs" />
+    <Compile Include="Binding\ListViewBinding.cs" />
     <Compile Include="Binding\SelectorPropertyBinding.cs" />
     <Compile Include="Binding\LinkPropertyBinding.cs" />
     <Compile Include="Binding\ToggleButtonPropertyBinding.cs" />

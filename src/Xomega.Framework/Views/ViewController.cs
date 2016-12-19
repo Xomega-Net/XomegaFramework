@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -27,7 +28,7 @@ namespace Xomega.Framework.Views
         public ViewController(IServiceProvider svcProvider, IView view)
         {
             if (view == null) throw new ArgumentNullException("view");
-            this.serviceProvider = svcProvider;
+            this.serviceProvider = svcProvider.CreateScope().ServiceProvider;
             this.view = view;
             Initialize();
         }
@@ -60,6 +61,8 @@ namespace Xomega.Framework.Views
             return view.Activate();
         }
 
+        #endregion
+
         #region Show/Hide view
 
         /// <summary>
@@ -72,8 +75,6 @@ namespace Xomega.Framework.Views
             if (Activate(parameters))
                 view.Show(ownerView);
         }
-
-        #endregion
 
         /// <summary> Occurs when the view is closed </summary>
         public event EventHandler Closed;
@@ -120,16 +121,16 @@ namespace Xomega.Framework.Views
         protected virtual void SubscribeToChildEvents(ViewController child)
         {
             child.Closed += OnChildClosed;
-            //BaseDetailsView detailsView = child as BaseDetailsView;
-            //if (detailsView != null)
-            //{
-            //    detailsView.Saved += OnChildSaved;
-            //    detailsView.Deleted += OnChildDeleted;
-            //}
-            SearchViewController searchViewController = child as SearchViewController;
-            if (searchViewController != null)
+            DetailsViewController details = child as DetailsViewController;
+            if (details != null)
             {
-                searchViewController.Selected += OnChildSelection;
+                details.Saved += OnChildSaved;
+                details.Deleted += OnChildDeleted;
+            }
+            SearchViewController search = child as SearchViewController;
+            if (search != null)
+            {
+                search.Selected += OnChildSelection;
             }
         }
 

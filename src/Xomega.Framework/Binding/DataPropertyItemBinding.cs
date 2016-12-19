@@ -98,11 +98,6 @@ namespace Xomega.Framework
             if (obj == null) return null;
             DataPropertyBinding b = obj.GetValue(Property.BindingProperty) as DataPropertyBinding;
             return b;
-            // The following could've worked in Silverlight if the TemplatedParent wasn't internal
-            //if (b != null) return b;
-            //ItemsPresenter ip = obj as ItemsPresenter;
-            //if (ip != null) return GetBinding(ip.TemplatedParent);
-            //return GetBinding(VisualTreeHelper.GetParent(obj));
         }
     }
 }

@@ -130,7 +130,7 @@ namespace Xomega.Framework
         /// <param name="args">Property change event arguments.</param>
         public void FirePropertyChange(PropertyChangeEventArgs args)
         {
-            if (Change != null) Change(this, args);
+            Change?.Invoke(this, args);
         }
         #endregion
 

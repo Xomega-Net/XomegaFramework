@@ -80,6 +80,34 @@ namespace Xomega.Framework.Views
         #region Event handling
 
         /// <summary>
+        /// Occurs when the details object is successfully saved
+        /// </summary>
+        public event EventHandler Saved;
+
+        /// <summary>
+        /// Occurs when the details object is successfully deleted
+        /// </summary>
+        public event EventHandler Deleted;
+
+        /// <summary>
+        /// Raises the Saved event
+        /// </summary>
+        /// <param name="e">An System.EventArgs that contains the event data.</param>
+        protected void OnSaved(EventArgs e)
+        {
+            Saved?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Raises the Deleted event
+        /// </summary>
+        /// <param name="e">An System.EventArgs that contains the event data.</param>
+        protected void OnDeleted(EventArgs e)
+        {
+            Deleted?.Invoke(this, e);
+        }
+
+        /// <summary>
         /// Handler for saving the current view
         /// </summary>
         /// <param name="sender">Event sender</param>
@@ -87,6 +115,15 @@ namespace Xomega.Framework.Views
         public virtual void Save(object sender, EventArgs e)
         {
             // implemented in subclasses
+        }
+
+        /// <summary>
+        /// A function that determines if the current object can be saved
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool CanSave()
+        {
+            return true;
         }
 
         /// <summary>

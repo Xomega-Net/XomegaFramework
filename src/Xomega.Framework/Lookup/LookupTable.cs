@@ -49,12 +49,10 @@ namespace Xomega.Framework.Lookup
         [DataMember]
         protected bool caseSensitive;
 
-#if !SILVERLIGHT
         /// <summary>
         /// An internal reader/writer lock to synchronize access to the data.
         /// </summary>
         protected ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
-#endif
 
         /// <summary>
         /// Constructs a new lookup table from the specified data set.
@@ -92,7 +90,7 @@ namespace Xomega.Framework.Lookup
         {
             IEnumerable<Header> lst = data;
             if (filterFunc != null) lst = lst.Where(filterFunc);
-            foreach (Header h in lst) if (h != null) yield return h.Clone();
+            return lst.Where(h => h != null).Select(h => h.Clone()).AsEnumerable();
         }
 
         /// <summary>
@@ -119,9 +117,7 @@ namespace Xomega.Framework.Lookup
         /// matches the value provided. If no match is found a <c>null</c> value is returned.</returns>
         public Header LookupByFormat(string format, string value)
         {
-#if !SILVERLIGHT
             rwLock.EnterUpgradeableReadLock();
-#endif
             try
             {
                 IndexedTable tbl;
@@ -133,9 +129,7 @@ namespace Xomega.Framework.Lookup
             }
             finally
             {
-#if !SILVERLIGHT
                 rwLock.ExitUpgradeableReadLock();
-#endif
             }
         }
 
@@ -145,9 +139,6 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         public void ResetIndexes()
         {
-#if SILVERLIGHT
-            indexedData.Clear();
-#else
             rwLock.EnterWriteLock();
             try
             {
@@ -157,7 +148,6 @@ namespace Xomega.Framework.Lookup
             {
                 rwLock.ExitWriteLock();
             }
-#endif
         }
 
         /// <summary>
@@ -168,9 +158,6 @@ namespace Xomega.Framework.Lookup
         /// <returns>true if the index was found and cleared; otherwise false.</returns>
         public bool ClearIndex(string format)
         {
-#if SILVERLIGHT
-            return indexedData.Remove(format);
-#else
             rwLock.EnterWriteLock();
             try
             {
@@ -180,7 +167,6 @@ namespace Xomega.Framework.Lookup
             {
                 rwLock.ExitWriteLock();
             }
-#endif
         }
 
         /// <summary>
@@ -190,9 +176,7 @@ namespace Xomega.Framework.Lookup
         /// <returns>An indexed table for the specified format.</returns>
         protected IndexedTable BuildIndexedTable(string format)
         {
-#if !SILVERLIGHT
             rwLock.EnterWriteLock();
-#endif
             try
             {
                 IndexedTable tbl = new IndexedTable(this);
@@ -210,9 +194,7 @@ namespace Xomega.Framework.Lookup
             }
             finally
             {
-#if !SILVERLIGHT
                 rwLock.ExitWriteLock();
-#endif
             }
         }
 

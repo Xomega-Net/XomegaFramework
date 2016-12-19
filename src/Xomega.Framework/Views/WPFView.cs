@@ -11,9 +11,8 @@ namespace Xomega.Framework.Views
     /// Base class for WPF views.
     /// A view can contain other child views that can be shown or hidden dynamically.
     /// </summary>
-    public class WPFView : UserControl, IView
+    public class WPFView : UserControl, IView, INotifyPropertyChanged
     {
-
         /// <summary> Title of the view </summary>
         public string ViewTitle { get; set; }
 
@@ -35,12 +34,44 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public virtual bool CanClose() { return true; }
 
-        /// <summary>Binds the view to its controller</summary>
+        /// <summary>
+        /// Binds the view to its controller, or unbinds the current controller if null is passed.
+        /// </summary>
         public virtual void BindTo(ViewController controller)
         {
+            bool bind = controller != null;
+            ViewController vc = bind ? controller : this.Controller;
+            if (vc != null)
+            {
+                if (CloseButton != null)
+                {
+                    if (bind) CloseButton.Click += vc.Close;
+                    else CloseButton.Click -= vc.Close;
+                }
+            }
             this.Controller = controller;
-            if (Controller != null && CloseButton != null)
-                CloseButton.Click += Controller.Close;
+        }
+
+        /// <summary>
+        /// Binds a framework element to the given data object
+        /// </summary>
+        /// <param name="el">Element to bind</param>
+        /// <param name="obj">Data object to bind to</param>
+        protected void BindDataObject(FrameworkElement el, DataObject obj)
+        {
+            if (el != null) el.DataContext = obj;
+        }
+
+        /// <summary> Event for INotifyPropertyChanged to facilitate clean binding in XAML </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raises property changed event
+        /// </summary>
+        /// <param name="e">Event arguments with property name</param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -80,13 +111,17 @@ namespace Xomega.Framework.Views
                 if (Controller != null && !Controller.CanClose())
                     e.Cancel = true;
             };
-            w.Closed += delegate (object sender, EventArgs e)
-            {
-                if (!isClosed && Controller != null)
-                    Controller.FireClosed();
-                if (w.Owner != null) w.Owner.Activate();
-            };
+            w.Closed += OnClosed;
             w.Show();
+        }
+
+        protected virtual void OnClosed(object sender, EventArgs e)
+        {
+            if (!isClosed && Controller != null)
+                Controller.FireClosed();
+            BindTo(null); // unbind controller to get it garbage collected in case of weak refs on this view
+            Window w = sender as Window;
+            if (w != null && w.Owner != null) w.Owner.Activate();
         }
 
         // prevents firing Controller.Closed event twice when closing through the Hide method

@@ -52,8 +52,8 @@ namespace Xomega.Framework.Web
         /// <param name="prop">Property object.</param>
         public virtual void OnPropertyBound(DateTimeProperty prop)
         {
-            var pb = WebPropertyBinding.Create(txt_DateTime);
-            pb.BindTo(prop);
+            BasePropertyBinding pb = WebPropertyBinding.Create(txt_DateTime) as BasePropertyBinding;
+            if (pb != null) pb.BindTo(prop);
         }
 
         #endregion

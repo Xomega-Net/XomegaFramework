@@ -33,7 +33,7 @@ namespace Xomega.Framework.Web
             PostedValue = null;
             checkBox.CheckedChanged += delegate
             {
-                if (property != null && control.Page != null && !PreventPropertyUpdate)
+                if (property != null && control.Page != null && !PreventModelUpdate)
                 {
                     PostedValue = control.Page.Request.Form[control.UniqueID];
                     int row;
@@ -54,7 +54,7 @@ namespace Xomega.Framework.Web
         protected override void OnPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             // prevent posting value if property value got changed outside of control 
-            if (e.Change == PropertyChange.Value && PostedValue != "false") PreventPropertyUpdate = true;
+            if (e.Change == PropertyChange.Value && PostedValue != "false") PreventModelUpdate = true;
 
             base.OnPropertyChange(sender, e);
         }

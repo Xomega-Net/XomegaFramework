@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,19 +29,30 @@ namespace Xomega.Framework.Views
         /// <summary>Binds the view to its controller</summary>
         public override void BindTo(ViewController controller)
         {
-            base.BindTo(controller);
-            SearchViewController svController = Controller as SearchViewController;
+            bool bind = controller != null;
+            SearchViewController svController = (bind ? controller : this.Controller) as SearchViewController;
             if (svController != null)
             {
                 if (SearchButton != null)
-                    SearchButton.Click += svController.Search;
+                {
+                    if (bind) SearchButton.Click += svController.Search;
+                    else SearchButton.Click -= svController.Search;
+                }
                 if (ResetButton != null)
-                    ResetButton.Click += svController.Reset;
-                if (CriteriaPanel != null)
-                    CriteriaPanel.DataContext = svController.Criteria;
-                if (ResultsGrid != null)
-                    ResultsGrid.ItemsSource = svController.List;
+                {
+                    if (bind) ResetButton.Click += svController.Reset;
+                    else ResetButton.Click -= svController.Reset;
+                }
+                if (SelectButton != null)
+                {
+                    if (bind) SelectButton.Click += svController.Select;
+                    else SelectButton.Click -= svController.Select;
+                }
+
+                BindDataObject(CriteriaPanel, bind ? svController.Criteria : null);
+                BindDataObject(ResultsGrid, bind ? svController.List : null);
             }
+            base.BindTo(controller);
         }
 
         /// <summary>

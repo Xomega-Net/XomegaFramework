@@ -141,7 +141,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for convirming selected records and closing the view.
         /// </summary>
-        protected virtual void Select(object sender, EventArgs e)
+        public virtual void Select(object sender, EventArgs e)
         {
             if (Selected != null && List != null)
             {

@@ -1,8 +1,12 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using Xomega.Framework.Binding;
 
 namespace Xomega.Framework
@@ -60,6 +64,31 @@ namespace Xomega.Framework
         {
             return obj != null && Property.GetName(obj) != null;
         }
+
+        /// <summary>
+        /// Recursively removes and disposes property bindings from the specified element and its children
+        /// </summary>
+        /// <param name="el">Element to remove bindings from</param>
+        public static void RemoveBindings(DependencyObject el)
+        {
+            if (el == null) return;
+            IDisposable binding = el.GetValue(Property.BindingProperty) as IDisposable;
+            if (binding != null)
+            {
+                binding.Dispose();
+                el.SetValue(Property.BindingProperty, null);
+            }
+            if (el is Visual || el is Visual3D)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(el); i++)
+                    RemoveBindings(VisualTreeHelper.GetChild(el, i));
+            }
+            InlineCollection inlines = null;
+            if (el is TextBlock) inlines = ((TextBlock)el).Inlines;
+            else if (el is Span) inlines = ((Span)el).Inlines;
+            if (inlines != null)
+                foreach (Inline il in inlines) RemoveBindings(il);
+        }
         #endregion
 
         /// <summary>
@@ -75,20 +104,45 @@ namespace Xomega.Framework
         {
             element = fwkElement;
 
-            DataPropertyBinding oldBinding = element.GetValue(Property.BindingProperty) as DataPropertyBinding;
-            if (oldBinding != null) oldBinding.Dispose();
-            element.SetValue(Property.BindingProperty, this);
-
             OnDataContextChanged(element, new DependencyPropertyChangedEventArgs());
             FrameworkElement el = fwkElement as FrameworkElement;
             if (el != null)
             {
                 el.DataContextChanged += OnDataContextChanged;
+                el.LostFocus += OnLostFocus;
+
                 // Ideally we want to dispose the binding when the control is disposed,
                 // but we cannot rely on the Unloaded event, as it breaks for tab control, for example.
                 // Assuming lifecycle of the data objects is the same as that of the controls, it's not a big deal
-                //el.Unloaded += delegate { Dispose(); };
-                el.LostFocus += delegate { if (property != null) property.Editing = false; };
+                //el.Unloaded += delegate { Dispose(); }
+            }
+        }
+
+        /// <summary>
+        /// Binds the framework element to the given property.
+        /// </summary>
+        /// <param name="property">The data property to bind the framework element to.</param>
+        public override void BindTo(DataProperty property)
+        {
+            base.BindTo(property);
+            if (property == null)
+            {
+                element.SetValue(Property.ValidationProperty, null);
+                BindingOperations.ClearBinding(element, ValidationExpressionProperty);
+            }
+        }
+
+        /// <summary>
+        /// Remove any listeners when disposing
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            FrameworkElement el = element as FrameworkElement;
+            if (el != null)
+            {
+                el.DataContextChanged -= OnDataContextChanged;
+                el.LostFocus -= OnLostFocus;
             }
         }
 
@@ -96,9 +150,7 @@ namespace Xomega.Framework
         /// A handler of the data context change that finds the data property in the context data object
         /// and binds the framework element to it.
         /// </summary>
-        /// <param name="sender">Event sender.</param>
-        /// <param name="e">Event arguments.</param>
-        public static void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             DependencyObject element = sender as DependencyObject;
             if (element == null) return;
@@ -106,9 +158,15 @@ namespace Xomega.Framework
             string childPath = Property.GetChildObject(element);
             obj = FindChildObject(obj, childPath) as DataObject;
             string propertyName = Property.GetName(element);
-            DataPropertyBinding binding = element.GetValue(Property.BindingProperty) as DataPropertyBinding;
-            if (obj != null && propertyName != null && binding != null)
-                binding.BindTo(obj[propertyName]);
+            DataProperty dp = null;
+            if (obj != null && propertyName != null)
+                dp = obj[propertyName];
+            BindTo(dp);
+        }
+
+        private void OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (property != null) property.Editing = false;
         }
 
         /// <summary>
@@ -118,9 +176,7 @@ namespace Xomega.Framework
         /// </summary>
         protected override void UpdateEditability()
         {
-#if !SILVERLIGHT
             element.SetValue(FrameworkElement.IsEnabledProperty, property.Editable);
-#endif
         }
 
         /// <summary>
@@ -133,11 +189,8 @@ namespace Xomega.Framework
             Visibility vis = property.Visible ? Visibility.Visible : Visibility.Collapsed;
             element.SetValue(FrameworkElement.VisibilityProperty, vis);
             UIElement lbl = element.GetValue(Property.LabelProperty) as UIElement;
-            if (lbl != null
-#if !SILVERLIGHT
-                && BindingOperations.GetBinding(lbl, UIElement.VisibilityProperty) == null 
-#endif
-                ) lbl.Visibility = vis;
+            if (lbl != null && BindingOperations.GetBinding(lbl, UIElement.VisibilityProperty) == null)
+                lbl.Visibility = vis;
         }
 
         /// <summary>
@@ -161,18 +214,10 @@ namespace Xomega.Framework
         {
             ErrorList errors = property.ValidationErrors == null ? null : property.ValidationErrors;
             BindingExpression exp = (BindingExpression)GetValidationExpression();
-#if SILVERLIGHT
-            Property.ValidationResults vh = (Property.ValidationResults)exp.DataItem;
-            if (errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable)
-                vh.Errors = errors;
-            else vh.Errors = null;
-            exp.UpdateSource();
-#else
             element.SetValue(Property.ValidationProperty, new Property.ValidationResults() { Errors = errors });
             Validation.ClearInvalid(exp);
             if (errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable)
                 Validation.MarkInvalid(exp, new ValidationError(new DataErrorValidationRule(), exp.ParentBindingBase, errors.ErrorsText, null)); 
-#endif
         }
 
         /// <summary>
@@ -209,11 +254,9 @@ namespace Xomega.Framework
         {
             object lbl = element.GetValue(Property.LabelProperty);
             // if it is a label, set its target to this element unless it's already set
-#if !SILVERLIGHT
             Label elLbl = lbl as Label;
             if (elLbl != null && elLbl.Target == null && BindingOperations.GetBinding(elLbl, Label.TargetProperty) == null)
                 elLbl.Target = element as UIElement;
-#endif
 
             // set property label if it is not already set and if associated label is present
             string lblTxt = null;

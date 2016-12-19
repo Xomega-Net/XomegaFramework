@@ -36,6 +36,18 @@ namespace Xomega.Framework.Binding
         }
 
         /// <summary>
+        /// Remove any listeners when disposing
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            ToggleButton tglButton = (ToggleButton)element;
+            tglButton.Checked -= OnStateChanged;
+            tglButton.Unchecked -= OnStateChanged;
+            tglButton.Indeterminate -= OnStateChanged;
+        }
+
+        /// <summary>
         /// Updates the property when the state of the toggle button is changed.
         /// </summary>
         /// <param name="sender">Event sender.</param>

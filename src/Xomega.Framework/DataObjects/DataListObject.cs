@@ -143,7 +143,33 @@ namespace Xomega.Framework
         /// <summary>
         /// Current selection mode for data list rows. Null means selection is not supported
         /// </summary>
-        public string RowSelectionMode { get; set; }
+        public string RowSelectionMode
+        {
+            get { return rowSelectionMode; }
+            set
+            {
+                string oldValue = rowSelectionMode;
+                rowSelectionMode = value;
+                if (!String.Equals(oldValue, value))
+                    FireSelectionChanged();
+            }
+        }
+
+        // internal selection mode
+        private string rowSelectionMode;
+
+        /// <summary>
+        /// Occurs when selection has been changed
+        /// </summary>
+        public event EventHandler SelectionChanged;
+
+        /// <summary>
+        /// Fires SelectionChanged event
+        /// </summary>
+        public void FireSelectionChanged()
+        {
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         /// <summary>
         /// Selects data rows specified by the provided start and end indexes.
@@ -163,6 +189,7 @@ namespace Xomega.Framework
                 data.Take(startIdx).ToList().ForEach(r => r.Selected = false);
                 data.Skip(endIdx + 1).ToList().ForEach(r => r.Selected = false);
             }
+            FireSelectionChanged();
             return true;
         }
 
@@ -220,13 +247,20 @@ namespace Xomega.Framework
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
+        /// Indicator that collection change event is in progress
+        /// </summary>
+        public bool CollectionChangeFiring { get; private set; }
+
+        /// <summary>
         /// Tracks changes to the list of objects to update the modification state
         /// as well as the parent object on all objects that have been added or deleted.
         /// </summary>
         /// <param name="e">Collection change event arguments.</param>
         protected void FireCollectionChange(NotifyCollectionChangedEventArgs e)
         {
-            if (CollectionChanged != null) CollectionChanged(this, e);
+            CollectionChangeFiring = true;
+            CollectionChanged?.Invoke(this, e);
+            CollectionChangeFiring = false;
         }
 
         /// <summary>
@@ -303,6 +337,7 @@ namespace Xomega.Framework
                 r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
             FireCollectionChanged();
+            FireSelectionChanged();
         }
 
         /// <summary>

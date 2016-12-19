@@ -10,62 +10,9 @@ namespace Xomega.Framework
     /// A property binding is responsible for making sure that the state of the control
     /// is in sync with the state of the underlying data property. This class implement common functionality
     /// for binding both WPF elements and web controls.
-    /// Property bindings are created via a factory design pattern. A <c>PropertyBindingCreator</c>
-    /// callback can be registered for any particular type of controls.
     /// </summary>
-    public class BasePropertyBinding
+    public class BasePropertyBinding : BaseBinding
     {
-        #region BasePropertyBinding factory
-
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
-
-        /// <summary>
-        /// A function that creates a data property binding for a given framework element.
-        /// </summary>
-        /// <param name="obj">The framework element to create the data property binding for.</param>
-        /// <returns>A new data property binding for the given framework element.</returns>
-        public delegate BasePropertyBinding PropertyBindingCreator(object obj);
-
-        /// <summary>
-        ///  A static dictionary of registered data property binding creation callbacks
-        ///  by the type of the framework element.
-        /// </summary>
-        private static Dictionary<Type, PropertyBindingCreator> bindings = new Dictionary<Type, PropertyBindingCreator>();
-
-        /// <summary>
-        /// Registers a data property binding creation callback for the given type of the framework element
-        /// and all subtypes of that type unless a more specific data property binding is registered for that subtype.
-        /// </summary>
-        /// <param name="elementType">The type of the framework element to register the data property binding for.</param>
-        /// <param name="bindingCreator">The data property binding creation callback to register for the given type.</param>
-        public static void Register(Type elementType, PropertyBindingCreator bindingCreator)
-        {
-            if (bindingCreator == null) throw new ArgumentNullException("bindingCreator");
-            bindings[elementType] = bindingCreator;
-        }
-
-        /// <summary>
-        /// Creates a new data property binding for the given framework element
-        /// based on the data property binding creation callbacks that have been registered
-        /// for the type of the given framework element or any of its base types.
-        /// </summary>
-        /// <param name="obj">The framework element to create the data property binding for.</param>
-        /// <returns>A new data property binding for the given framework element.</returns>
-        public static BasePropertyBinding Create(object obj)
-        {
-            if (obj == null) return null;
-            PropertyBindingCreator creator;
-            for (Type t = obj.GetType(); t != null; t = t.BaseType)
-            {
-                if (bindings.TryGetValue(t, out creator)) return creator(obj);
-            }
-            return null;
-        }
-        #endregion
-
         /// <summary>
         /// The property that the framework element / control is bound to.
         /// Initialized after a data object is set as a data context for the framework element.
@@ -134,20 +81,6 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// A Boolean flag to prevent updates to the framework element while the data property
-        /// is being updated. It is set internally to prevent an infinite recursion,
-        /// but can also be set externally temporarily to control the synchronization behavior if needed.
-        /// </summary>
-        public bool PreventElementUpdate = false;
-
-        /// <summary>
-        /// A Boolean flag to prevent updates to the data property while the framework element
-        /// is being updated. It is set internally to prevent an infinite recursion,
-        /// but can also be set externally temporarily to control the synchronization behavior if needed.
-        /// </summary>
-        public bool PreventPropertyUpdate = false;
-
-        /// <summary>
         /// Listens to the property change events and updates the framework element accordingly.
         /// </summary>
         /// <param name="sender">Event sender.</param>
@@ -156,10 +89,10 @@ namespace Xomega.Framework
         {
             if (property == sender && !PreventElementUpdate)
             {
-                bool b = PreventPropertyUpdate;
-                PreventPropertyUpdate = true;
+                bool b = PreventModelUpdate;
+                PreventModelUpdate = true;
                 UpdateElement(e.Change);
-                PreventPropertyUpdate = b;
+                PreventModelUpdate = b;
             }
         }
 
@@ -225,7 +158,7 @@ namespace Xomega.Framework
         /// <param name="value">The value to set on the data property.</param>
         protected virtual void UpdateProperty(object value)
         {
-            if (property != null && !PreventPropertyUpdate)
+            if (property != null && !PreventModelUpdate)
             {
                 bool b = PreventElementUpdate;
                 PreventElementUpdate = true;
@@ -239,7 +172,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Disposes the data property binding by unbinding it from the underlying property.
         /// </summary>
-        public virtual void Dispose()
+        public override void Dispose()
         {
             BindTo(null); // unbind
         }

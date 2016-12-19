@@ -20,20 +20,25 @@ namespace Xomega.Framework.Views
         /// <summary>Binds the view to its controller</summary>
         public override void BindTo(ViewController controller)
         {
-            base.BindTo(controller);
-            DetailsViewController dtlController = Controller as DetailsViewController;
+            bool bind = controller != null;
+            DetailsViewController dtlController = (bind ? controller : Controller) as DetailsViewController;
             if (dtlController != null)
             {
-                DataContext = dtlController.DetailsObject;
                 if (SaveButton != null)
-                    SaveButton.Click += dtlController.Save;
+                {
+                    SaveButton.Command = bind ? new RelayCommand<object>(
+                        p => dtlController.Save(this, EventArgs.Empty),
+                        p => dtlController.CanSave()) : null;
+                }
                 if (DeleteButton != null)
                 {
-                    DeleteButton.Command = new RelayCommand<object>(
+                    DeleteButton.Command = bind ? new RelayCommand<object>(
                         p => dtlController.Delete(this, EventArgs.Empty),
-                        p => dtlController.CanDelete());
+                        p => dtlController.CanDelete()) : null;
                 }
+                BindDataObject(this, bind ? dtlController.DetailsObject : null);
             }
+            base.BindTo(controller);
         }
 
         /// <summary>

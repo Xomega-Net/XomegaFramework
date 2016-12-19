@@ -5,13 +5,103 @@ using System.Windows;
 namespace Xomega.Framework
 {
     /// <summary>
-    /// A static collection of dependency properties that are used by Xomega framework.
-    /// Most of these properties must be set manually in XAML and are related to data properties
-    /// and since they have to be prefixed by the containing class name the latter has been made
-    /// a short most relevant word.
+    /// A static collection of dependency properties for Xomega Framework data object binding.
     /// </summary>
-    public class Property
+    public static class Data
     {
+        #region Binding setup
+
+        /// <summary>
+        /// A callback that is triggered when a data object
+        /// is set on a framework element. It sets up a new data object binding on the element.
+        /// </summary>
+        /// <param name="d">The framework element.</param>
+        /// <param name="e">Event arguments.</param>
+        public static void SetupBinding(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            BaseBinding oldBinding = d.GetValue(BindingProperty) as BaseBinding;
+            if (oldBinding != null) oldBinding.Dispose();
+            // calling a static method IsBindable ensures that
+            // the static constructor is called and all WPF bindings get registered
+            if (DataObjectBinding.IsBindable(d))
+                d.SetValue(BindingProperty, BaseBinding.Create(d));
+        }
+
+        /// <summary>
+        /// Internal dependency property that stores the data binding on the element.
+        /// </summary>
+        public static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(
+            "Binding", typeof(BaseBinding), typeof(Data), new FrameworkPropertyMetadata(null));
+
+        #endregion
+
+        #region DataObjectProperty
+
+        /// <summary>
+        ///  Gets the data object binding dependency property for the given framework element if any.
+        /// </summary>
+        /// <param name="obj">The framework element to get the dependency property of.</param>
+        /// <returns>The data object binding dependency property for the given framework element if set.</returns>
+        public static string GetObjectBinding(DependencyObject obj)
+        {
+            return (string)obj.GetValue(ObjectBindingProperty);
+        }
+
+        /// <summary>
+        ///  Sets a data object binding dependency property on a framework element.
+        /// </summary>
+        /// <param name="obj">The framework element to set the dependency property on.</param>
+        /// <param name="value">The data object binding to set. Empty string for default binding</param>
+        public static void SetObjectBinding(DependencyObject obj, string value)
+        {
+            obj.SetValue(ObjectBindingProperty, value);
+        }
+
+        /// <summary>
+        /// A dependency property that sets a data object on a framework element.
+        /// </summary>
+        public static readonly DependencyProperty ObjectBindingProperty = DependencyProperty.RegisterAttached(
+            "ObjectBinding", typeof(string), typeof(Data), new PropertyMetadata(SetupBinding));
+
+        #endregion
+    }
+
+    /// <summary>
+    /// A static collection of dependency properties related to data property binding.
+    /// </summary>
+    public static class Property
+    {
+        #region Binding setup
+
+        /// <summary>
+        /// A callback that is triggered when a data property name or a child object path
+        /// are set on a framework element. It sets up a new data property binding on the element.
+        /// </summary>
+        /// <param name="d">The framework element.</param>
+        /// <param name="e">Event arguments.</param>
+        public static void SetupBinding(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // calling a static method IsBindable ensures that
+            // the static constructor is called and all WPF bindings get registered
+            if (DataPropertyBinding.IsBindable(d))
+            {
+                BaseBinding oldBinding = d.GetValue(BindingProperty) as BaseBinding;
+                if (oldBinding != null) oldBinding.Dispose();
+                d.SetValue(BindingProperty, BaseBinding.Create(d));
+            }
+        }
+
+        /// <summary>
+        /// Internal dependency property that stores the data binding on the element.
+        /// </summary>
+        public static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(
+            "Binding", typeof(BaseBinding), typeof(Property),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        #endregion
+
+        #region NameProperty
+
         /// <summary>
         ///  Gets the data property name dependency property for the given framework element if any.
         /// </summary>
@@ -42,6 +132,10 @@ namespace Xomega.Framework
         /// </summary>
         public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterAttached(
             "Name", typeof(string), typeof(Property), new PropertyMetadata(SetupBinding));
+
+        #endregion
+
+        #region ChildObjectProperty
 
         /// <summary>
         ///  Gets the child object dependency property for the given framework element if any.
@@ -75,36 +169,11 @@ namespace Xomega.Framework
         /// </summary>
         public static readonly DependencyProperty ChildObjectProperty = DependencyProperty.RegisterAttached(
             "ChildObject", typeof(string), typeof(Property),
-#if SILVERLIGHT
-            new PropertyMetadata(SetupBinding));
-#else
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, SetupBinding));
-#endif
 
-        /// <summary>
-        /// A callback that is triggered when a data property name or a child object path
-        /// are set on a framework element. It sets up a new data property binding on the element.
-        /// </summary>
-        /// <param name="d">The framework element.</param>
-        /// <param name="e">Event arguments.</param>
-        public static void SetupBinding(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            // calling a static method DataPropertyBinding.IsBindable ensures that
-            // the static constructor is called and all WPF bindings get registered
-            if (DataPropertyBinding.IsBindable(d))
-                DataPropertyBinding.Create(d);
-        }
+        #endregion
 
-        /// <summary>
-        /// Internal dependency property that stores the data property binding on the element.
-        /// </summary>
-        public static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(
-            "Binding", typeof(DataPropertyBinding), typeof(Property),
-#if SILVERLIGHT
-            new PropertyMetadata(null));
-#else
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
-#endif
+        #region RequiredProperty
 
         /// <summary>
         ///  Gets the Required dependency property for the given framework element if any.
@@ -134,6 +203,10 @@ namespace Xomega.Framework
         public static readonly DependencyProperty RequiredProperty = DependencyProperty.RegisterAttached(
             "Required", typeof(bool), typeof(Property), new PropertyMetadata(null));
 
+        #endregion
+
+        #region LabelProperty
+
         /// <summary>
         ///  Gets the label associated with the given framework element if any.
         /// </summary>
@@ -160,6 +233,10 @@ namespace Xomega.Framework
         /// <remarks>Recreates the property binding when a label is being set since the the former uses the label.</remarks>
         public static readonly DependencyProperty LabelProperty = DependencyProperty.RegisterAttached(
             "Label", typeof(FrameworkElement), typeof(Property), new PropertyMetadata(SetupBinding));
+
+        #endregion
+
+        #region ValidationProperty
 
         /// <summary>
         /// Additional dependency property that stores data property's validation errors as an ErrorList,
@@ -196,5 +273,7 @@ namespace Xomega.Framework
             /// </summary>
             public ErrorList Errors { get; set; }
         }
+
+        #endregion
     }
 }

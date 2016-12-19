@@ -185,17 +185,13 @@ namespace Xomega.Framework.Properties
                 if (SortField != null) res = res.OrderBy(SortField);
                 foreach (Header h in res)
                 {
-#if SILVERLIGHT
-                    // use display format as default for Silverlight, since DataPropertyItemBinding is not supported
-                    h.DefaultFormat = DisplayFormat;
-#else
                     // use key format as default for WPF for editable combo boxes, since there seems to be
                     // no other way to control it on the framework level
                     h.DefaultFormat = KeyFormat;
-#endif
-                    yield return h;
                 }
+                return res;
             }
+            else return Enumerable.Empty<Header>();
         }
 
         /// <summary>
