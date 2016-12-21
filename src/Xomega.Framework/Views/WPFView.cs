@@ -11,7 +11,7 @@ namespace Xomega.Framework.Views
     /// Base class for WPF views.
     /// A view can contain other child views that can be shown or hidden dynamically.
     /// </summary>
-    public class WPFView : UserControl, IView, INotifyPropertyChanged
+    public class WPFView : UserControl, IView, INotifyPropertyChanged, IDisposable
     {
         /// <summary> Title of the view </summary>
         public string ViewTitle { get; set; }
@@ -28,11 +28,18 @@ namespace Xomega.Framework.Views
         /// <summary> Button to close the view </summary>
         public virtual Button CloseButton { get; }
 
+        /// <summary> Panel for displaying inline child views </summary>
+        public virtual ContentControl ChildPanel { get; }
+
         /// <summary>
         /// Checks if the view can be closed
         /// </summary>
         /// <returns>True if the view can be closed, False otherwise</returns>
-        public virtual bool CanClose() { return true; }
+        public virtual bool CanClose()
+        {
+            WPFView childView = ChildPanel == null ? null : ChildPanel.Content as WPFView;
+            return childView == null || childView.Controller == null || childView.Controller.CanClose();
+        }
 
         /// <summary>
         /// Binds the view to its controller, or unbinds the current controller if null is passed.
@@ -97,44 +104,143 @@ namespace Xomega.Framework.Views
         /// Shows the view using the mode it was activated with
         /// </summary>
         /// <param name="owner">View owner</param>
-        public void Show(object owner)
+        public virtual bool Show(object owner)
         {
-            DependencyObject ownerView = owner as DependencyObject;
-            Window w = new Window();
-            if (ownerView != null) w.Owner = Window.GetWindow(ownerView);
-            w.Title = ViewTitle;
-            w.Content = this;
-            if (ViewWidth != null) w.Width = ViewWidth.Value;
-            if (ViewHeight != null) w.Height = ViewHeight.Value;
-            w.Closing += delegate(object sender, CancelEventArgs e)
+            WPFView ownerView = owner as WPFView;
+            ContentControl ownerPanel = ownerView != null ? ownerView.ChildPanel : null;
+            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
-                if (Controller != null && !Controller.CanClose())
-                    e.Cancel = true;
-            };
-            w.Closed += OnClosed;
-            w.Show();
+                WPFView currentView = ownerPanel.Content as WPFView;
+                if (currentView != null)
+                {
+                    if (currentView.Controller != null && !currentView.Controller.CanClose())
+                        return false;
+                    currentView.Dispose();
+                }
+                ownerPanel.Content = this;
+                if (ViewWidth != null) MinWidth = ViewWidth.Value;
+                if (ViewHeight != null) MinHeight = ViewHeight.Value;
+                CollapseParentSplitter(false);
+            }
+            else
+            {
+                Window w = CreateWindow();
+                if (owner is DependencyObject)
+                    w.Owner = Window.GetWindow((DependencyObject)owner);
+                w.Title = ViewTitle;
+                w.Content = this;
+                if (ViewWidth != null) w.Width = ViewWidth.Value;
+                if (ViewHeight != null) w.Height = ViewHeight.Value;
+                w.Closing += OnWindowClosing;
+                w.Closed += OnWindowClosed;
+                w.Show();
+            }
+            return true;
         }
 
-        protected virtual void OnClosed(object sender, EventArgs e)
+        /// <summary>
+        /// Creates a window for the view. Can be overridden in subclasses.
+        /// </summary>
+        /// <returns>A window for the view</returns>
+        protected virtual Window CreateWindow()
         {
-            if (!isClosed && Controller != null)
+            return new Window();
+        }
+
+        /// <summary>
+        /// Collapses or expands the parent view's splitter for current view
+        /// </summary>
+        /// <param name="collapsed">True to collapse, false to expand</param>
+        protected virtual void CollapseParentSplitter(bool collapsed)
+        {
+            FrameworkElement panel = Parent as FrameworkElement;
+            Grid grid = panel == null ? null : panel.Parent as Grid;
+            if (panel == null) return; // no grid or parent
+            int? col = panel.GetValue(Grid.ColumnProperty) as int?;
+            if (col == null || grid.ColumnDefinitions.Count < col) return; // invalid column
+            if (collapsed) grid.ColumnDefinitions[col.Value].Width = new GridLength(0);
+            else if (grid.ColumnDefinitions[col.Value].Width.Value == 0)
+                grid.ColumnDefinitions[col.Value].Width = GridLength.Auto;
+
+            // find the splitter for the parent panel
+            GridSplitter splitter = null;
+            foreach (DependencyObject child in grid.Children)
+            {
+                GridSplitter sp = child as GridSplitter;
+                if (sp == null) continue;
+                else if (splitter == null)
+                {
+                    splitter = sp;
+                    continue;
+                }
+                // more than one splitter in the parent grid -> get the closest one
+                int? spCol = sp.GetValue(Grid.ColumnProperty) as int?;
+                int? splitterCol = splitter.GetValue(Grid.ColumnProperty) as int?;
+                if (spCol == null) continue;
+                if (splitterCol == null || Math.Abs(col.Value - spCol.Value) < Math.Abs(col.Value - splitterCol.Value))
+                    splitter = sp;
+            }
+            if (splitter != null)
+                splitter.Visibility = collapsed ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Event handler for the view's parent window closing, which allows cancelling the event.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            if (!wasClosed && Controller != null && !Controller.CanClose())
+                e.Cancel = true;
+        }
+
+        /// <summary>
+        /// Event handler after the view's parent window has closed.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnWindowClosed(object sender, EventArgs e)
+        {
+            if (!wasClosed && Controller != null)
                 Controller.FireClosed();
-            BindTo(null); // unbind controller to get it garbage collected in case of weak refs on this view
+            Dispose();
             Window w = sender as Window;
             if (w != null && w.Owner != null) w.Owner.Activate();
         }
 
-        // prevents firing Controller.Closed event twice when closing through the Hide method
-        private bool isClosed = false;
+        /// <summary>
+        /// Disposes the view and any child views
+        /// </summary>
+        public virtual void Dispose()
+        {
+            BindTo(null); // unbind controller to get it garbage collected in case of weak refs on this view
+            IDisposable childView = ChildPanel == null ? null : ChildPanel.Content as IDisposable;
+            if (childView != null) childView.Dispose();
+        }
+
+        /// indicates if the view was closed through the Hide method
+        /// to suppress any checks/actions that were performed there
+        protected bool wasClosed = false;
 
         /// <summary>
         /// Hides the view
         /// </summary>
         public void Hide()
         {
-            isClosed = true;
-            Window w = Window.GetWindow(this);
-            if (w != null) w.Close();
+            wasClosed = true;
+            ContentControl ownerPanel = Parent as ContentControl;
+            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            {
+                CollapseParentSplitter(true);
+                Dispose();
+                ownerPanel.Content = null;
+            }
+            else
+            {
+                Window w = Window.GetWindow(this);
+                if (w != null) w.Close();
+            }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Xomega.Framework.Views
             DetailsViewController dtlController = Controller as DetailsViewController;
             DataObject dtlObj = (dtlController != null) ? dtlController.DetailsObject : null;
             bool? modified = dtlObj != null ? dtlObj.IsModified() : null;
-            if (modified.HasValue && modified.Value && MessageBox.Show(
+            if (modified != null && modified.Value && MessageBox.Show(
                     "You have unsaved changes. Do you want to discard them and close the window?",
                     "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning,
                     MessageBoxResult.No) == MessageBoxResult.No)

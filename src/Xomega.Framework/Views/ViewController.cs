@@ -28,7 +28,13 @@ namespace Xomega.Framework.Views
         public ViewController(IServiceProvider svcProvider, IView view)
         {
             if (view == null) throw new ArgumentNullException("view");
-            this.serviceProvider = svcProvider.CreateScope().ServiceProvider;
+            if (svcProvider != null)
+            {
+                // create a separate scope for each view to avoid memore leaks
+                var scope = svcProvider.CreateScope();
+                if (scope != null)
+                    this.serviceProvider = scope.ServiceProvider;
+            }
             this.view = view;
             Initialize();
         }
@@ -70,10 +76,12 @@ namespace Xomega.Framework.Views
         /// </summary>
         /// <param name="ownerView">View owner</param>
         /// <param name="parameters">Activation parameters to use</param>
-        public void Show(object ownerView, NameValueCollection parameters)
+        /// <returns>Whether or not the view was shown successfully</returns>
+        public bool Show(object ownerView, NameValueCollection parameters)
         {
             if (Activate(parameters))
-                view.Show(ownerView);
+                return view.Show(ownerView);
+            else return false;
         }
 
         /// <summary> Occurs when the view is closed </summary>
@@ -97,8 +105,11 @@ namespace Xomega.Framework.Views
         /// <summary>Hides the view.</summary>
         public virtual void Hide()
         {
-            view.Hide();
-            FireClosed();
+            if (CanClose())
+            {
+                view.Hide();
+                FireClosed();
+            }
         }
 
         /// <summary>

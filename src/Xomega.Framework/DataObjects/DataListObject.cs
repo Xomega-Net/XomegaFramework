@@ -156,7 +156,7 @@ namespace Xomega.Framework
         }
 
         // internal selection mode
-        private string rowSelectionMode;
+        private string rowSelectionMode = SelectionModeSingle;
 
         /// <summary>
         /// Occurs when selection has been changed

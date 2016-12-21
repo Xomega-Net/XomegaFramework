@@ -30,7 +30,8 @@ namespace Xomega.Framework.Views
         /// Shows the view using the mode it was activated with
         /// </summary>
         /// <param name="owner">View owner</param>
-        void Show(object owner);
+        /// <returns>Whether or not the view was shown successfully</returns>
+        bool Show(object owner);
 
         /// <summary>
         /// Checks if the view can be closed
