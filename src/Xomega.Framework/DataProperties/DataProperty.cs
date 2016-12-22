@@ -284,8 +284,12 @@ namespace Xomega.Framework
             if (value == null) return true;
             IList lst = value as IList;
             if (lst != null && lst.Count == 0) return true;
-            string str = value.ToString().Trim();
-            return string.IsNullOrEmpty(str) || str == NullString;
+            if (value is string)
+            {
+                string str = ((string)value).Trim();
+                return string.IsNullOrEmpty(str) || str == NullString;
+            }
+            return false; // non-null non-string
         }
 
         /// <summary>

@@ -56,8 +56,8 @@ namespace Xomega.Framework.Views
         /// Wrapper around the corresponding IDetailsView.IsNew
         /// </summary>
         protected bool IsNew {
-            get { return ((IDetailsView)view).IsNew; }
-            set { ((IDetailsView)view).IsNew = value;  }
+            get { return ((IDetailsView)View).IsNew; }
+            set { ((IDetailsView)View).IsNew = value;  }
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Xomega.Framework.Views
         /// <returns></returns>
         public virtual bool CanDelete()
         {
-            IDetailsView dtlView = view as IDetailsView;
+            IDetailsView dtlView = View as IDetailsView;
             return dtlView != null && !dtlView.IsNew;
         }
 

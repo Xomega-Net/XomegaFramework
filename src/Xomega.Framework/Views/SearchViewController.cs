@@ -83,7 +83,7 @@ namespace Xomega.Framework.Views
         public virtual void Search(object sender, EventArgs e)
         {
             if (Search(true) && AutoCollapseCriteria)
-                ((ISearchView)view).CriteriaCollapsed = true;
+                ((ISearchView)View).CriteriaCollapsed = true;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Xomega.Framework.Views
             if (Criteria != null) Criteria.ResetData();
             if (List != null) List.ResetData();
             if (AutoCollapseCriteria)
-                ((ISearchView)view).CriteriaCollapsed = false;
+                ((ISearchView)View).CriteriaCollapsed = false;
         }
 
         /// <summary>
@@ -126,9 +126,9 @@ namespace Xomega.Framework.Views
         {
             if (List == null || Criteria != null && !Criteria.HasCriteria() || !Search(false)) return false;
             if (List.RowCount > 1 && AutoCollapseCriteria)
-                ((ISearchView)view).CriteriaCollapsed = true;
+                ((ISearchView)View).CriteriaCollapsed = true;
             else if (List.RowCount == 0)
-                ((ISearchView)view).CriteriaCollapsed = false;
+                ((ISearchView)View).CriteriaCollapsed = false;
             else if (List.RowCount == 1 && Selected != null)
             {
                 List.SelectRow(0);

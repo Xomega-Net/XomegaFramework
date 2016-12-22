@@ -14,8 +14,18 @@ namespace Xomega.Framework.Views
     {
         #region Initialization/Activation
 
+        private IView view;
+
         /// <summary> The view for the controller </summary>
-        protected IView view;
+        public IView View
+        {
+            get { return view; }
+            internal set
+            {
+                if (value == null) throw new ArgumentNullException("View");
+                view = value;
+            }
+        }
 
         /// <summary> The service provider for the controller </summary>
         protected IServiceProvider serviceProvider;
@@ -27,7 +37,6 @@ namespace Xomega.Framework.Views
         /// <param name="view">View associated with the controller</param>
         public ViewController(IServiceProvider svcProvider, IView view)
         {
-            if (view == null) throw new ArgumentNullException("view");
             if (svcProvider != null)
             {
                 // create a separate scope for each view to avoid memore leaks
@@ -35,7 +44,7 @@ namespace Xomega.Framework.Views
                 if (scope != null)
                     this.serviceProvider = scope.ServiceProvider;
             }
-            this.view = view;
+            this.View = view;
             Initialize();
         }
 
@@ -48,7 +57,7 @@ namespace Xomega.Framework.Views
         public virtual void Initialize()
         {
             InitObjects();
-            view.BindTo(this);
+            View.BindTo(this);
         }
 
         /// <summary>
@@ -64,7 +73,7 @@ namespace Xomega.Framework.Views
         public virtual bool Activate(NameValueCollection parameters)
         {
             Params = parameters;
-            return view.Activate();
+            return View.Activate();
         }
 
         #endregion
@@ -80,7 +89,7 @@ namespace Xomega.Framework.Views
         public bool Show(object ownerView, NameValueCollection parameters)
         {
             if (Activate(parameters))
-                return view.Show(ownerView);
+                return View.Show(ownerView);
             else return false;
         }
 
@@ -99,7 +108,7 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public virtual bool CanClose()
         {
-            return view.CanClose();
+            return View.CanClose();
         }
 
         /// <summary>Hides the view.</summary>
@@ -107,7 +116,7 @@ namespace Xomega.Framework.Views
         {
             if (CanClose())
             {
-                view.Hide();
+                View.Hide();
                 FireClosed();
             }
         }
@@ -167,7 +176,7 @@ namespace Xomega.Framework.Views
         protected virtual void OnChildSaved(object detailsController, EventArgs e)
         {
             OnChildChanged(detailsController, e);
-            view.Update();
+            View.Update();
         }
 
         /// <summary>
@@ -178,7 +187,7 @@ namespace Xomega.Framework.Views
         protected virtual void OnChildDeleted(object detailsController, EventArgs e)
         {
             OnChildChanged(detailsController, e);
-            view.Update();
+            View.Update();
         }
 
         /// <summary>
@@ -188,7 +197,7 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnChildClosed(object childViewController, EventArgs e)
         {
-            view.Update();
+            View.Update();
         }
 
         #endregion

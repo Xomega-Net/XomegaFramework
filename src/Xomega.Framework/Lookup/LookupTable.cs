@@ -124,7 +124,7 @@ namespace Xomega.Framework.Lookup
                 if (!indexedData.TryGetValue(format, out tbl))
                     tbl = BuildIndexedTable(format);
                 Header res = null;
-                if (tbl.TryGetValue(value, out res)) return res.Clone();
+                if (tbl.TryGetValue(value, out res)) return res;
                 return res;
             }
             finally

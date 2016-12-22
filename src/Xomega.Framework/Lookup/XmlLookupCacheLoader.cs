@@ -104,13 +104,14 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="asm">Assembly with the resource</param>
         /// <param name="enumResource">Resource name</param>
-        public static void RegisterFromResource(Assembly asm, string enumResource)
+        /// <param name="caseSensitive">True to build case-sensitive cache, which improves performance. False otherwise.</param>
+        public static void RegisterFromResource(Assembly asm, string enumResource, bool caseSensitive)
         {
             foreach (string resource in asm.GetManifestResourceNames())
             {
                 if (resource.EndsWith(enumResource))
                 {
-                    LookupCache.AddCacheLoader(new XmlLookupCacheLoader(asm.GetManifestResourceStream(resource)));
+                    LookupCache.AddCacheLoader(new XmlLookupCacheLoader(asm.GetManifestResourceStream(resource), caseSensitive));
                     break;
                 }
             }

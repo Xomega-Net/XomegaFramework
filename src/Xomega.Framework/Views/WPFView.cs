@@ -117,10 +117,20 @@ namespace Xomega.Framework.Views
                         return false;
                     currentView.Dispose();
                 }
-                ownerPanel.Content = this;
-                if (ViewWidth != null) MinWidth = ViewWidth.Value;
-                if (ViewHeight != null) MinHeight = ViewHeight.Value;
-                CollapseParentSplitter(false);
+                if (currentView != null && currentView.GetType().Equals(GetType()))
+                {   // if existing view is of the same type then reuse it to preserve state
+                    // by binding the it to the current controller
+                    currentView.BindTo(Controller);
+                    Controller.View = currentView;
+                    BindTo(null); // unbind new view
+                }
+                else
+                {
+                    ownerPanel.Content = this;
+                    if (ViewWidth != null) MinWidth = ViewWidth.Value;
+                    if (ViewHeight != null) MinHeight = ViewHeight.Value;
+                    CollapseParentSplitter(false);
+                }
             }
             else
             {
