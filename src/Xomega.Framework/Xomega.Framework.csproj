@@ -154,9 +154,9 @@
     <Compile Include="Services\IServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataProperties\DataProperty.cs" />
-    <Compile Include="Views\IDetailsView.cs" />
-    <Compile Include="Views\ISearchView.cs" />
     <Compile Include="Views\DetailsViewController.cs" />
+    <Compile Include="Views\ViewSelectionEvent.cs" />
+    <Compile Include="Views\ViewEvent.cs" />
     <Compile Include="Views\RelayCommand.cs" />
     <Compile Include="Views\SearchViewController.cs" />
     <Compile Include="Views\WPFDetailsView.cs" />

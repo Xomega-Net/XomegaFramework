@@ -9,13 +9,13 @@ namespace Xomega.Framework.Views
     /// <summary>
     /// Base class for WPF search views that may contain a results grid and a criteria panel
     /// </summary>
-    public class WPFDetailsView : WPFView, IDetailsView
+    public class WPFDetailsView : WPFView
     {
         /// <summary>Button to delete the current object</summary>
-        public virtual Button DeleteButton { get; }
+        protected virtual Button DeleteButton { get; }
 
         /// <summary>Button to save the view</summary>
-        public virtual Button SaveButton { get; }
+        protected virtual Button SaveButton { get; }
 
         /// <summary>Binds the view to its controller</summary>
         public override void BindTo(ViewController controller)
@@ -58,10 +58,5 @@ namespace Xomega.Framework.Views
 
             return base.CanClose();
         }
-
-        /// <summary>
-        /// An indicator if the object is new and not yet saved
-        /// </summary>
-        public bool IsNew { get; set; }
     }
 }

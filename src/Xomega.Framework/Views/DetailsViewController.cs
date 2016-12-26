@@ -1,8 +1,8 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Xomega.Framework.Views
 {
@@ -14,11 +14,10 @@ namespace Xomega.Framework.Views
         #region Initialization/Activation
 
         /// <summary>
-        /// Constructs a new controller for the given search view
+        /// Constructs a new details view controller
         /// </summary>
         /// <param name="svcProvider">Service provider for the controller</param>
-        /// <param name="view">Details view associated with the controller</param>
-        public DetailsViewController(IServiceProvider svcProvider, IDetailsView view) : base(svcProvider, view)
+        public DetailsViewController(IServiceProvider svcProvider) : base(svcProvider)
         {
         }
 
@@ -53,11 +52,22 @@ namespace Xomega.Framework.Views
         #region Data loading
 
         /// <summary>
-        /// Wrapper around the corresponding IDetailsView.IsNew
+        /// The name of the IsNew observable property
         /// </summary>
-        protected bool IsNew {
-            get { return ((IDetailsView)View).IsNew; }
-            set { ((IDetailsView)View).IsNew = value;  }
+        public const string IsNewProperty = "IsNew";
+
+        private bool isNew;
+
+        /// <summary>
+        /// An indicator if the object is new and not yet saved
+        /// </summary>
+        public bool IsNew {
+            get { return isNew; }
+            set
+            {
+                isNew = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(IsNewProperty));
+            }
         }
 
         /// <summary>
@@ -68,44 +78,17 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for saving or deleting of a child details view.
         /// </summary>
-        /// <param name="obj">View being saved or deleted</param>
-        /// <param name="e">Event arguments</param>
-        protected override void OnChildChanged(object obj, EventArgs e)
+        /// <param name="childController">Child view controller that fired the original event</param>
+        /// <param name="e">Event object</param>
+        protected override void OnChildEvent(object childController, ViewEvent e)
         {
-            LoadData();
+            if (e.IsSaved() || e.IsDeleted())
+                LoadData(); // reload child lists
         }
 
         #endregion
 
         #region Event handling
-
-        /// <summary>
-        /// Occurs when the details object is successfully saved
-        /// </summary>
-        public event EventHandler Saved;
-
-        /// <summary>
-        /// Occurs when the details object is successfully deleted
-        /// </summary>
-        public event EventHandler Deleted;
-
-        /// <summary>
-        /// Raises the Saved event
-        /// </summary>
-        /// <param name="e">An System.EventArgs that contains the event data.</param>
-        protected void OnSaved(EventArgs e)
-        {
-            Saved?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Raises the Deleted event
-        /// </summary>
-        /// <param name="e">An System.EventArgs that contains the event data.</param>
-        protected void OnDeleted(EventArgs e)
-        {
-            Deleted?.Invoke(this, e);
-        }
 
         /// <summary>
         /// Handler for saving the current view
@@ -142,8 +125,7 @@ namespace Xomega.Framework.Views
         /// <returns></returns>
         public virtual bool CanDelete()
         {
-            IDetailsView dtlView = View as IDetailsView;
-            return dtlView != null && !dtlView.IsNew;
+            return !IsNew;
         }
 
         #endregion

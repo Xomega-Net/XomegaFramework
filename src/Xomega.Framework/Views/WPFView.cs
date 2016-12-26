@@ -11,8 +11,10 @@ namespace Xomega.Framework.Views
     /// Base class for WPF views.
     /// A view can contain other child views that can be shown or hidden dynamically.
     /// </summary>
-    public class WPFView : UserControl, IView, INotifyPropertyChanged, IDisposable
+    public class WPFView : UserControl, IView, INotifyPropertyChanged
     {
+        #region View properties
+
         /// <summary> Title of the view </summary>
         public string ViewTitle { get; set; }
 
@@ -22,24 +24,12 @@ namespace Xomega.Framework.Views
         /// <summary>Default view height</summary>
         public double? ViewHeight { get; set; }
 
+        #endregion
+
+        #region Binding
+
         /// <summary>Controller the view is bound to</summary>
         public ViewController Controller { get; private set; }
-
-        /// <summary> Button to close the view </summary>
-        public virtual Button CloseButton { get; }
-
-        /// <summary> Panel for displaying inline child views </summary>
-        public virtual ContentControl ChildPanel { get; }
-
-        /// <summary>
-        /// Checks if the view can be closed
-        /// </summary>
-        /// <returns>True if the view can be closed, False otherwise</returns>
-        public virtual bool CanClose()
-        {
-            WPFView childView = ChildPanel == null ? null : ChildPanel.Content as WPFView;
-            return childView == null || childView.Controller == null || childView.Controller.CanClose();
-        }
 
         /// <summary>
         /// Binds the view to its controller, or unbinds the current controller if null is passed.
@@ -52,9 +42,14 @@ namespace Xomega.Framework.Views
             {
                 if (CloseButton != null)
                 {
-                    if (bind) CloseButton.Click += vc.Close;
-                    else CloseButton.Click -= vc.Close;
+                    if (bind && vc.Params != null)
+                        CloseButton.Visibility = (vc.Params[ViewParams.Mode.Param] == null) ?  Visibility.Hidden : Visibility.Visible;
+
+                    if (bind) CloseButton.Click += Close;
+                    else CloseButton.Click -= Close;
                 }
+                if (bind) vc.View = this;
+                else vc.View = null;
             }
             this.Controller = controller;
         }
@@ -69,6 +64,10 @@ namespace Xomega.Framework.Views
             if (el != null) el.DataContext = obj;
         }
 
+        #endregion
+
+        #region INotifyPropertyChanged support
+
         /// <summary> Event for INotifyPropertyChanged to facilitate clean binding in XAML </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -81,24 +80,9 @@ namespace Xomega.Framework.Views
             PropertyChanged?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Activates the view
-        /// </summary>
-        /// <returns>True if the view was successfully activated, False otherwise</returns>
-        public virtual bool Activate()
-        {
-            if (Controller != null && Controller.Params != null && CloseButton != null)
-                CloseButton.Visibility = (Controller.Params[ViewParams.Mode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
-            return true;
-        }
+        #endregion
 
-        /// <summary>
-        /// Updates the view based on other views' changes
-        /// </summary>
-        public void Update()
-        {
-            // nothing to do, WPF views will update automatically
-        }
+        #region Showing the view
 
         /// <summary>
         /// Shows the view using the mode it was activated with
@@ -110,27 +94,10 @@ namespace Xomega.Framework.Views
             ContentControl ownerPanel = ownerView != null ? ownerView.ChildPanel : null;
             if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
-                WPFView currentView = ownerPanel.Content as WPFView;
-                if (currentView != null)
-                {
-                    if (currentView.Controller != null && !currentView.Controller.CanClose())
-                        return false;
-                    currentView.Dispose();
-                }
-                if (currentView != null && currentView.GetType().Equals(GetType()))
-                {   // if existing view is of the same type then reuse it to preserve state
-                    // by binding the it to the current controller
-                    currentView.BindTo(Controller);
-                    Controller.View = currentView;
-                    BindTo(null); // unbind new view
-                }
-                else
-                {
-                    ownerPanel.Content = this;
-                    if (ViewWidth != null) MinWidth = ViewWidth.Value;
-                    if (ViewHeight != null) MinHeight = ViewHeight.Value;
-                    CollapseParentSplitter(false);
-                }
+                if (ViewWidth != null) MinWidth = ViewWidth.Value;
+                if (ViewHeight != null) MinHeight = ViewHeight.Value;
+                ownerPanel.Content = this;
+                CollapseParentSplitter(false);
             }
             else
             {
@@ -155,6 +122,22 @@ namespace Xomega.Framework.Views
         protected virtual Window CreateWindow()
         {
             return new Window();
+        }
+
+        #endregion
+
+        #region View composition support
+
+        /// <summary> Panel for displaying inline child views </summary>
+        protected virtual ContentControl ChildPanel { get; }
+
+        /// <summary>
+        /// Gets the child view for the current view
+        /// </summary>
+        /// <returns>Current child view if any</returns>
+        public IView GetChildView()
+        {
+            return ChildPanel == null ? null : ChildPanel.Content as IView;
         }
 
         /// <summary>
@@ -194,6 +177,26 @@ namespace Xomega.Framework.Views
                 splitter.Visibility = collapsed ? Visibility.Collapsed : Visibility.Visible;
         }
 
+        #endregion
+
+        #region Closing the view
+
+        /// <summary>
+        /// Checks if the view can be closed
+        /// </summary>
+        /// <returns>True if the view can be closed, False otherwise</returns>
+        public virtual bool CanClose()
+        {
+            // ask own controller first
+            if (Controller != null && !Controller.CanClose()) return false;
+
+            // ask any child views next
+            IView childView = GetChildView();
+            if (childView != null && !childView.CanClose()) return false;
+
+            return true; // all good
+        }
+
         /// <summary>
         /// Event handler for the view's parent window closing, which allows cancelling the event.
         /// </summary>
@@ -201,8 +204,47 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (!wasClosed && Controller != null && !Controller.CanClose())
+            if (!canCloseChecked && !CanClose())
                 e.Cancel = true;
+        }
+
+        /// flag to prevent multiple CanClose checks
+        protected bool canCloseChecked = false;
+
+        /// <summary>
+        /// Closes the view without checking first, which should be done separately by the caller.
+        /// </summary>
+        public virtual void Close()
+        {
+            ContentControl ownerPanel = Parent as ContentControl;
+            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            {
+                CollapseParentSplitter(true);
+                Controller.FireEvent(ViewEvent.Closed);
+                Dispose(); // unsets the controller, so do after firing
+                ownerPanel.Content = null;
+            }
+            else
+            {
+                Window w = Window.GetWindow(this);
+                if (w != null) w.Close();
+                // disposal and controller event firing happens in the subsequent OnWindowClosed
+            }
+        }
+
+        /// <summary> Button to close the view </summary>
+        protected virtual Button CloseButton { get; }
+
+        /// <summary>
+        /// Checks if the view can be closed and closes the view. Default handler for the Close button.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        public void Close(object sender, EventArgs e)
+        {
+            if (!CanClose() || Controller == null) return;
+            canCloseChecked = true;
+            Close();
         }
 
         /// <summary>
@@ -212,8 +254,8 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnWindowClosed(object sender, EventArgs e)
         {
-            if (!wasClosed && Controller != null)
-                Controller.FireClosed();
+            if (Controller != null)
+                Controller.FireEvent(ViewEvent.Closed);
             Dispose();
             Window w = sender as Window;
             if (w != null && w.Owner != null) w.Owner.Activate();
@@ -229,28 +271,6 @@ namespace Xomega.Framework.Views
             if (childView != null) childView.Dispose();
         }
 
-        /// indicates if the view was closed through the Hide method
-        /// to suppress any checks/actions that were performed there
-        protected bool wasClosed = false;
-
-        /// <summary>
-        /// Hides the view
-        /// </summary>
-        public void Hide()
-        {
-            wasClosed = true;
-            ContentControl ownerPanel = Parent as ContentControl;
-            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
-            {
-                CollapseParentSplitter(true);
-                Dispose();
-                ownerPanel.Content = null;
-            }
-            else
-            {
-                Window w = Window.GetWindow(this);
-                if (w != null) w.Close();
-            }
-        }
+        #endregion
     }
 }

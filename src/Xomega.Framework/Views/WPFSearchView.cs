@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,22 +10,22 @@ namespace Xomega.Framework.Views
     /// <summary>
     /// Base class for WPF search views that may contain a results grid and a criteria panel
     /// </summary>
-    public class WPFSearchView : WPFView, ISearchView
+    public class WPFSearchView : WPFView
     {
         /// <summary>Collapsible criteria panel</summary>
-        public virtual Expander CriteriaPanel { get; }
+        protected virtual Expander CriteriaPanel { get; }
 
         /// <summary>Button to run the search</summary>
-        public virtual Button SearchButton { get; }
+        protected virtual Button SearchButton { get; }
 
         /// <summary>Button to reset the view</summary>
-        public virtual Button ResetButton { get; }
+        protected virtual Button ResetButton { get; }
 
         /// <summary>Grid with search results</summary>
-        public virtual ItemsControl ResultsGrid { get; }
+        protected virtual ItemsControl ResultsGrid { get; }
 
         /// <summary>Button to reset the view</summary>
-        public virtual Button SelectButton { get; }
+        protected virtual Button SelectButton { get; }
 
         /// <summary>Binds the view to its controller</summary>
         public override void BindTo(ViewController controller)
@@ -47,7 +48,16 @@ namespace Xomega.Framework.Views
                 {
                     if (bind) SelectButton.Click += svController.Select;
                     else SelectButton.Click -= svController.Select;
+
+                    if (bind && controller.Params != null)
+                        SelectButton.Visibility = (controller.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
                 }
+                if (bind)
+                {
+                    OnControllerPropertyChanged(svController, new PropertyChangedEventArgs(SearchViewController.CriteriaCollapsedProperty));
+                    svController.PropertyChanged += OnControllerPropertyChanged;
+                }
+                else svController.PropertyChanged -= OnControllerPropertyChanged;
 
                 BindDataObject(CriteriaPanel, bind ? svController.Criteria : null);
                 BindDataObject(ResultsGrid, bind ? svController.List : null);
@@ -56,23 +66,18 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Activates the view
+        /// Handles CriteriaCollapsed property change to update the state of Criteria panel
         /// </summary>
-        /// <returns>True if the view was successfully activated, False otherwise</returns>
-        public override bool Activate()
+        /// <param name="sender">Controller that sent the event</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Controller != null && Controller.Params != null && SelectButton != null)
-                SelectButton.Visibility = (Controller.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
-            return true;
-        }
-
-        /// <summary>
-        /// Shows whether criteria panel is collapsed. Null if there is no criteria panel
-        /// </summary>
-        public bool? CriteriaCollapsed
-        {
-            get { return (CriteriaPanel != null) ? (bool?)!CriteriaPanel.IsExpanded : null; }
-            set { if (CriteriaPanel != null) CriteriaPanel.IsExpanded = value == null || !value.Value; }
+            SearchViewController svController = sender as SearchViewController;
+            if (CriteriaPanel != null && svController != null &&
+                SearchViewController.CriteriaCollapsedProperty.Equals(e.PropertyName))
+            {
+                CriteriaPanel.IsExpanded = !svController.CriteriaCollapsed;
+            }
         }
     }
 }

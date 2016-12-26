@@ -8,23 +8,12 @@ namespace Xomega.Framework.Views
     /// <summary>
     /// Base view interface
     /// </summary>
-    public interface IView
+    public interface IView : IDisposable
     {
         /// <summary>
         /// Binds the view to its controller
         /// </summary>
         void BindTo(ViewController controller);
-
-        /// <summary>
-        /// Activates the view
-        /// </summary>
-        /// <returns>True if the view was successfully activated, False otherwise</returns>
-        bool Activate();
-
-        /// <summary>
-        /// Updates the view based on other views' changes
-        /// </summary>
-        void Update();
 
         /// <summary>
         /// Shows the view using the mode it was activated with
@@ -40,8 +29,14 @@ namespace Xomega.Framework.Views
         bool CanClose();
 
         /// <summary>
-        /// Hides the view
+        /// Closes the view
         /// </summary>
-        void Hide();
+        void Close();
+
+        /// <summary>
+        /// Gets the child view for the current view
+        /// </summary>
+        /// <returns>Current child view if any</returns>
+        IView GetChildView();
     }
 }

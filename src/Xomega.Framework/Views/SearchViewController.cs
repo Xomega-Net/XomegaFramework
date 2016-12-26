@@ -1,8 +1,8 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Xomega.Framework.Views
 {
@@ -14,11 +14,10 @@ namespace Xomega.Framework.Views
         #region Initialization/Activation
 
         /// <summary>
-        /// Constructs a new controller for the given search view
+        /// Constructs a new search view controller
         /// </summary>
         /// <param name="svcProvider">Service provider for the controller</param>
-        /// <param name="view">Search view associated with the controller</param>
-        public SearchViewController(IServiceProvider svcProvider, ISearchView view) : base(svcProvider, view)
+        public SearchViewController(IServiceProvider svcProvider) : base(svcProvider)
         {
 
         }
@@ -32,9 +31,14 @@ namespace Xomega.Framework.Views
         {
             if (!base.Activate(parameters)) return false;
 
+            // set criteria from the parameters
             if (Criteria != null) Criteria.SetValues(parameters);
-            if (List != null) List.RowSelectionMode = parameters[ViewParams.SelectionMode.Param];
 
+            // set list selection mode from the parameters if passed
+            if (List != null && parameters[ViewParams.SelectionMode.Param] != null)
+                List.RowSelectionMode = parameters[ViewParams.SelectionMode.Param];
+
+            // auto-run search if specified so in parameters, or if there are no criteria to set
             if (parameters[ViewParams.Action.Param] == ViewParams.Action.Search || Criteria == null)
                 Search(false);
 
@@ -69,6 +73,26 @@ namespace Xomega.Framework.Views
         protected virtual bool AutoCollapseCriteria { get { return true; } }
 
         /// <summary>
+        /// Name for the CriteriaCollapsed observable property
+        /// </summary>
+        public const string CriteriaCollapsedProperty = "CriteriaCollapsed";
+
+        private bool criteriaCollapsed;
+
+        /// <summary>
+        /// An indicator if the search criteria panel is collapsed
+        /// </summary>
+        public bool CriteriaCollapsed
+        {
+            get { return criteriaCollapsed; }
+            set
+            {
+                criteriaCollapsed = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(CriteriaCollapsedProperty));
+            }
+        }
+
+        /// <summary>
         /// Perfroms the search with the current criteria and populates the list
         /// </summary>
         /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
@@ -83,7 +107,7 @@ namespace Xomega.Framework.Views
         public virtual void Search(object sender, EventArgs e)
         {
             if (Search(true) && AutoCollapseCriteria)
-                ((ISearchView)View).CriteriaCollapsed = true;
+                CriteriaCollapsed = true;
         }
 
         /// <summary>
@@ -96,27 +120,12 @@ namespace Xomega.Framework.Views
             if (Criteria != null) Criteria.ResetData();
             if (List != null) List.ResetData();
             if (AutoCollapseCriteria)
-                ((ISearchView)View).CriteriaCollapsed = false;
-        }
-
-        /// <summary>
-        /// Default handler for saving or deleting of a child details view.
-        /// </summary>
-        /// <param name="obj">View being saved or deleted</param>
-        /// <param name="e">Event arguments</param>
-        protected override void OnChildChanged(object obj, EventArgs e)
-        {
-            Search(true);
+                CriteriaCollapsed = false;
         }
 
         #endregion
 
         #region Selection
-
-        /// <summary>
-        /// Occurs when the user confirms selection of currently selected rows
-        /// </summary>
-        public EventHandler<List<DataRow>> Selected;
 
         /// <summary>
         /// Automates row selection process
@@ -126,13 +135,13 @@ namespace Xomega.Framework.Views
         {
             if (List == null || Criteria != null && !Criteria.HasCriteria() || !Search(false)) return false;
             if (List.RowCount > 1 && AutoCollapseCriteria)
-                ((ISearchView)View).CriteriaCollapsed = true;
+                CriteriaCollapsed = true;
             else if (List.RowCount == 0)
-                ((ISearchView)View).CriteriaCollapsed = false;
-            else if (List.RowCount == 1 && Selected != null)
+                CriteriaCollapsed = false;
+            else if (List.RowCount == 1)
             {
                 List.SelectRow(0);
-                Selected(this, List.SelectedRows);
+                FireEvent(new ViewSelectionEvent(List.SelectedRows));
                 return true;
             }
             return false;
@@ -143,26 +152,33 @@ namespace Xomega.Framework.Views
         /// </summary>
         public virtual void Select(object sender, EventArgs e)
         {
-            if (Selected != null && List != null)
+            if (List != null)
             {
-                Selected(this, List.SelectedRows);
-                Hide();
+                FireEvent(new ViewSelectionEvent(List.SelectedRows));
+                Close();
             }
         }
 
+        #endregion
+
+        #region Child updates
+
         /// <summary>
-        /// Default handler for closing of a child view.
+        /// Handles child closing or change to refresh the list.
         /// </summary>
-        /// <param name="obj">View being closed</param>
-        /// <param name="e">Event arguments</param>
-        protected override void OnChildClosed(object obj, EventArgs e)
+        /// <param name="childController">Child view controller that fired the original event</param>
+        /// <param name="e">Event object</param>
+        protected override void OnChildEvent(object childController, ViewEvent e)
         {
-            if (List != null)
+            if (e.IsClosed() && List != null)
             {
                 List.ClearSelectedRows();
                 List.FireCollectionChanged();
             }
-            base.OnChildClosed(obj, e);
+            if (e.IsSaved() || e.IsDeleted())
+                Search(true);
+
+            base.OnChildEvent(childController, e);
         }
 
         #endregion
