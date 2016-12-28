@@ -105,6 +105,7 @@
     <Compile Include="Binding\ListViewBinding.cs" />
     <Compile Include="Binding\SelectorPropertyBinding.cs" />
     <Compile Include="Binding\LinkPropertyBinding.cs" />
+    <Compile Include="Binding\DatePickerPropertyBinding.cs" />
     <Compile Include="Binding\ToggleButtonPropertyBinding.cs" />
     <Compile Include="Binding\TextBlockPropertyBinding.cs" />
     <Compile Include="Binding\TextBoxPropertyBinding.cs" />

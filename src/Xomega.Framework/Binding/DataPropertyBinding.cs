@@ -40,6 +40,7 @@ namespace Xomega.Framework
             ToggleButtonPropertyBinding.Register();
             SelectorPropertyBinding.Register();
             LinkPropertyBinding.Register();
+            DatePickerPropertyBinding.Register();
         }
 
         /// <summary>
