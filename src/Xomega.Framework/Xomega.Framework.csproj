@@ -115,10 +115,8 @@
     <Compile Include="DataObjects\FieldCriteriaSetting.cs" />
     <Compile Include="DataObjects\ListSortCriteria.cs" />
     <Compile Include="DataObjects\IValidatable.cs" />
-    <Compile Include="DataObjects\IDataObject.cs" />
     <Compile Include="DataObjects\DataObject.cs" />
     <Compile Include="Binding\DataPropertyBinding.cs" />
-    <Compile Include="DataObjects\DataObjectList.cs" />
     <Compile Include="DataProperties\BaseProperty.cs" />
     <Compile Include="DataProperties\BooleanProperty.cs" />
     <Compile Include="DataProperties\ComboProperty.cs" />

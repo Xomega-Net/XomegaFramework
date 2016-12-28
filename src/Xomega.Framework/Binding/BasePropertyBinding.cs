@@ -184,7 +184,7 @@ namespace Xomega.Framework
         /// <param name="obj">The parent object to find the child object in.</param>
         /// <param name="childPath">A dot-delimited path to the child object.</param>
         /// <returns></returns>
-        public static IDataObject FindChildObject(DataObject obj, string childPath)
+        public static DataObject FindChildObject(DataObject obj, string childPath)
         {
             if (string.IsNullOrEmpty(childPath) || obj == null) return obj;
             int idx = childPath.IndexOf(".");

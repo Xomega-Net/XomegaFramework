@@ -21,6 +21,9 @@ namespace Xomega.Framework.Views
         /// <summary>Button to reset the view</summary>
         protected virtual Button ResetButton { get; }
 
+        /// <summary>A panel that shows applied criteria</summary>
+        protected virtual FrameworkElement AppliedCriteriaPanel { get; }
+
         /// <summary>Grid with search results</summary>
         protected virtual ItemsControl ResultsGrid { get; }
 
@@ -52,12 +55,22 @@ namespace Xomega.Framework.Views
                     if (bind && controller.Params != null)
                         SelectButton.Visibility = (controller.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
                 }
+
+                // subscribe to property change events on the controller and the data list object
                 if (bind)
                 {
-                    OnControllerPropertyChanged(svController, new PropertyChangedEventArgs(SearchViewController.CriteriaCollapsedProperty));
                     svController.PropertyChanged += OnControllerPropertyChanged;
+                    if (svController.List != null)
+                        svController.List.PropertyChanged += OnListPropertyChanged;
                 }
-                else svController.PropertyChanged -= OnControllerPropertyChanged;
+                else
+                {
+                    svController.PropertyChanged -= OnControllerPropertyChanged;
+                    if (svController.List != null)
+                        svController.List.PropertyChanged += OnListPropertyChanged;
+                }
+                OnControllerPropertyChanged(svController, new PropertyChangedEventArgs(SearchViewController.CriteriaCollapsedProperty));
+                OnListPropertyChanged(bind ? svController.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
 
                 BindDataObject(CriteriaPanel, bind ? svController.Criteria : null);
                 BindDataObject(ResultsGrid, bind ? svController.List : null);
@@ -72,11 +85,24 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            SearchViewController svController = sender as SearchViewController;
-            if (CriteriaPanel != null && svController != null &&
-                SearchViewController.CriteriaCollapsedProperty.Equals(e.PropertyName))
+            if (CriteriaPanel != null && SearchViewController.CriteriaCollapsedProperty.Equals(e.PropertyName))
             {
-                CriteriaPanel.IsExpanded = !svController.CriteriaCollapsed;
+                SearchViewController svController = sender as SearchViewController;
+                CriteriaPanel.IsExpanded = svController != null ? !svController.CriteriaCollapsed : true;
+            }
+        }
+
+        /// <summary>
+        /// Handles AppliedCriteria property change on the list object to update the content of AppliedCriteria panel
+        /// </summary>
+        /// <param name="sender">Data list object that sent the event</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnListPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (AppliedCriteriaPanel != null && DataListObject.AppliedCriteriaProperty.Equals(e.PropertyName))
+            {
+                DataListObject list = sender as DataListObject;
+                AppliedCriteriaPanel.DataContext = (list != null) ? list.AppliedCriteria : null;
             }
         }
     }

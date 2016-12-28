@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Xomega.Framework
@@ -14,6 +15,8 @@ namespace Xomega.Framework
     /// </summary>
     public abstract class DataListObject : DataObject, INotifyCollectionChanged, IEnumerator<DataObject>, IEnumerable<DataObject>
     {
+        #region List data and edit data
+
         /// <summary>
         /// The data table for the list stored as an array of arrays
         /// </summary>
@@ -28,7 +31,7 @@ namespace Xomega.Framework
         /// <summary>
         /// The number of columns in the data list.
         /// </summary>
-        public int ColumnCount { get; protected set; }
+        public int ColumnCount { get; private set; }
 
         /// <summary>
         /// The number of rows in the data list.
@@ -36,24 +39,11 @@ namespace Xomega.Framework
         public int RowCount { get { return data.Count; } }
 
         /// <summary>
-        /// The current row index if set.
-        /// </summary>
-        private int currentRow = -1;
-
-        /// <summary>
-        /// Accessor for the current row index.
-        /// </summary>
-        public int CurrentRow { get { return currentRow; } set { currentRow = value < 0 ? -1 : value; } }
-
-        /// <summary>
         /// A temporary variable to store a copy of a row before editing to allow cancelling edits.
         /// </summary>
         public DataRow EditRow { get; set; }
 
-        /// <summary>
-        /// List of applied criteria settings associated with the data.
-        /// </summary>
-        public List<FieldCriteriaSetting> AppliedCriteria { get; set; }
+        #endregion
 
         #region Construction and initialization
 
@@ -239,6 +229,30 @@ namespace Xomega.Framework
         }
         #endregion
 
+        #region Applied criteria
+
+        /// <summary>
+        /// The name of the property that stores applied criteria
+        /// </summary>
+        public const string AppliedCriteriaProperty = "AppliedCriteria";
+
+        private List<FieldCriteriaSetting> appliedCriteria;
+
+        /// <summary>
+        /// List of applied criteria settings associated with the data.
+        /// </summary>
+        public List<FieldCriteriaSetting> AppliedCriteria
+        {
+            get { return appliedCriteria; }
+            set
+            {
+                appliedCriteria = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(AppliedCriteriaProperty));
+            }
+        }
+
+        #endregion
+
         #region Collection modification
 
         /// <summary>
@@ -357,7 +371,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="obj">The list of data contract objects to export the data to.
         /// The list should be generic with a single type parameter.</param>
-        public override void ToDataContract(Object obj)
+        public override void ToDataContract(object obj)
         {
             IList list = obj as IList;
             if (list == null) return;
@@ -376,6 +390,16 @@ namespace Xomega.Framework
         #endregion
 
         #region IEnumerable interfaces
+
+        /// <summary>
+        /// The current row index if set.
+        /// </summary>
+        private int currentRow = -1;
+
+        /// <summary>
+        /// Accessor for the current row index.
+        /// </summary>
+        public int CurrentRow { get { return currentRow; } set { currentRow = value < 0 ? -1 : value; } }
 
         /// <summary>
         /// Resets the current enumerator and returns this object as an enumerator that iterates through the collection of data objects.

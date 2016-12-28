@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Xomega.Framework.Properties;
 
 namespace Xomega.Framework
 {
@@ -15,7 +15,7 @@ namespace Xomega.Framework
     /// and possibly a number of child objects or object lists.
     /// </summary>
     [DataContract]
-    public abstract class DataObject : IDataObject
+    public abstract class DataObject : INotifyPropertyChanged
     {
         #region Construction
 
@@ -62,7 +62,7 @@ namespace Xomega.Framework
         private void Init()
         {
             properties = new Dictionary<string, DataProperty>();
-            childObjects = new Dictionary<string, IDataObject>();
+            childObjects = new Dictionary<string, DataObject>();
 
             // call subclass initialization in a separate method
             // to make sure base initialization is always called
@@ -95,7 +95,7 @@ namespace Xomega.Framework
         /// Perform a deep copy of the state from another data object (presumably of the same type).
         /// </summary>
         /// <param name="obj">The object to copy the state from.</param>
-        public virtual void CopyFrom(IDataObject obj)
+        public virtual void CopyFrom(DataObject obj)
         {
             DataObject dObj = obj as DataObject;
             if (dObj == null) return;
@@ -155,65 +155,6 @@ namespace Xomega.Framework
             properties[property.Name] = property;
         }
 
-        #endregion
-
-        #region Object hierarchy
-
-        /// <summary>
-        /// The parent data object for the current object if any.
-        /// </summary>
-        private IDataObject parent;
-
-        /// <summary>
-        /// Gets or sets the parent data object for the current object if any.
-        /// </summary>
-        public virtual IDataObject Parent
-        {
-            get { return parent; }
-            set { parent = value; }
-        }
-
-        /// <summary>
-        /// A dictionary of the current data object's child objects or object lists by their name.
-        /// </summary>
-        private Dictionary<string, IDataObject> childObjects;
-
-        /// <summary>
-        /// Adds the specified child object or object list to the current data object
-        /// under the given name.
-        /// </summary>
-        /// <param name="name">The name, under which the child object will be added to the current data object.</param>
-        /// <param name="obj">The child object to add to the current object.</param>
-        protected void AddChildObject(string name, IDataObject obj)
-        {
-            childObjects[name] = obj;
-            obj.Parent = this;
-        }
-
-        /// <summary>
-        /// Gets the child object or object list for the given name or null
-        /// if no child is found under this name.
-        /// </summary>
-        /// <param name="name">The name of the child object to return.</param>
-        /// <returns>The child object or object list for the given name or null
-        /// if no child is found under this name.</returns>
-        public IDataObject GetChildObject(string name)
-        {
-            return childObjects.ContainsKey(name) ? childObjects[name] : null;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Fires a property change event recursively through all properties and child objects.
-        /// </summary>
-        /// <param name="args">Property change event arguments.</param>
-        public void FirePropertyChange(PropertyChangeEventArgs args)
-        {
-            foreach (DataProperty p in properties.Values) p.FirePropertyChange(args);
-            foreach (IDataObject obj in childObjects.Values) obj.FirePropertyChange(args);
-        }
-
         /// <summary>
         /// Allows controlling if the property is required on the data object level.
         /// </summary>
@@ -233,7 +174,85 @@ namespace Xomega.Framework
         {
             return parent == null || parent.IsPropertyVisible(p);
         }
-        
+
+        #endregion
+
+        #region Object hierarchy
+
+        /// <summary>
+        /// The parent data object for the current object if any.
+        /// </summary>
+        private DataObject parent;
+
+        /// <summary>
+        /// Gets or sets the parent data object for the current object if any.
+        /// </summary>
+        public virtual DataObject Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
+
+        /// <summary>
+        /// A dictionary of the current data object's child objects or object lists by their name.
+        /// </summary>
+        private Dictionary<string, DataObject> childObjects;
+
+        /// <summary>
+        /// Adds the specified child object or object list to the current data object
+        /// under the given name.
+        /// </summary>
+        /// <param name="name">The name, under which the child object will be added to the current data object.</param>
+        /// <param name="obj">The child object to add to the current object.</param>
+        protected void AddChildObject(string name, DataObject obj)
+        {
+            childObjects[name] = obj;
+            obj.Parent = this;
+        }
+
+        /// <summary>
+        /// Gets the child object or object list for the given name or null
+        /// if no child is found under this name.
+        /// </summary>
+        /// <param name="name">The name of the child object to return.</param>
+        /// <returns>The child object or object list for the given name or null
+        /// if no child is found under this name.</returns>
+        public DataObject GetChildObject(string name)
+        {
+            return childObjects.ContainsKey(name) ? childObjects[name] : null;
+        }
+
+        #endregion
+
+        #region Property change events
+
+        /// <summary>
+        /// Fires a property change event recursively through all properties and child objects.
+        /// </summary>
+        /// <param name="args">Property change event arguments.</param>
+        protected void FireDataPropertyChange(PropertyChangeEventArgs args)
+        {
+            foreach (DataProperty p in properties.Values) p.FirePropertyChange(args);
+            foreach (DataObject obj in childObjects.Values) obj.FireDataPropertyChange(args);
+        }
+
+        /// <summary>
+        /// Implements INotifyPropertyChanged to notify listeners
+        /// about changes in data object's plain properties (not data properties)
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raises property changed event
+        /// </summary>
+        /// <param name="e">Event arguments with property name</param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
+        #endregion
+
         #region Editability support
 
         /// <summary>
@@ -261,7 +280,7 @@ namespace Xomega.Framework
             {
                 bool oldValue = Editable;
                 this.editable = value;
-                if (Editable != oldValue) FirePropertyChange(
+                if (Editable != oldValue) FireDataPropertyChange(
                     new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable));
             }
         }
@@ -302,7 +321,7 @@ namespace Xomega.Framework
             {
                 AccessLevel oldValue = accessLevel;
                 accessLevel = value;
-                FirePropertyChange(new PropertyChangeEventArgs(
+                FireDataPropertyChange(new PropertyChangeEventArgs(
                     PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel));
             }
         }
@@ -327,7 +346,7 @@ namespace Xomega.Framework
             {
                 object val = pi.GetValue(dataContract, null);
                 DataProperty dp = this[pi.Name];
-                IDataObject child;
+                DataObject child;
                 if (dp != null)
                 {
                     dp.Modified = null;
@@ -336,19 +355,10 @@ namespace Xomega.Framework
                 else if ((child = this.GetChildObject(pi.Name)) != null)
                 {
                     IList vallist = val as IList;
-                    
-                    if (child is IDataObjectList && vallist != null)
-                    {
-                        ((IDataObjectList)child).FromDataContract(vallist);
-                    }
-                    else if (child is DataListObject && vallist != null)
-                    {
+                    if (child is DataListObject && vallist != null)
                         ((DataListObject)child).FromDataContract(vallist);
-                    }
-                    else if (child is DataObject && vallist == null)
-                    {
-                        ((DataObject)child).FromDataContract(val);
-                    }
+                    else if (vallist == null)
+                        child.FromDataContract(val);
                 }
                 else if (val != null)
                 {
@@ -399,7 +409,6 @@ namespace Xomega.Framework
             foreach (PropertyInfo pi in props)
             {
                 DataProperty dp = this[pi.Name];
-                IDataObject child;
                 if (dp != null)
                 {
                     if (dp.IsValid(true))
@@ -423,16 +432,9 @@ namespace Xomega.Framework
                 object obj = null;
                 try { obj = CreateInstance(pi.PropertyType); }
                 catch { continue; }
-                if ((child = this.GetChildObject(pi.Name)) != null)
-                {
-                    bool isList = obj is IList;
-                    DataObject childObj;
-                    IDataObjectList childList;
-                    if (isList && (childList = child as IDataObjectList) != null)
-                        childList.ToDataContract(obj as IList);
-                    else if (!isList && (childObj = child as DataObject) != null)
-                        childObj.ToDataContract(obj);
-                }
+
+                DataObject child = GetChildObject(pi.Name);
+                if (child != null) child.ToDataContract(obj);
                 else
                 {
                     foreach (PropertyInfo cpi in pi.PropertyType.GetProperties())
@@ -467,7 +469,6 @@ namespace Xomega.Framework
 
         #endregion
 
-#if !SILVERLIGHT
         #region NameValueCollection support
 
         /// <summary>
@@ -496,7 +497,6 @@ namespace Xomega.Framework
             return nvc;
         }
         #endregion
-#endif
 
         #region Validation
 
@@ -516,7 +516,7 @@ namespace Xomega.Framework
             ErrorList errLst = new ErrorList();
             if (validationErrorList != null) errLst.MergeWith(validationErrorList);
             foreach (DataProperty p in properties.Values) errLst.MergeWith(p.ValidationErrors);
-            foreach (IDataObject obj in childObjects.Values) errLst.MergeWith(obj.GetValidationErrors());
+            foreach (DataObject obj in childObjects.Values) errLst.MergeWith(obj.GetValidationErrors());
             return errLst;
         }
 
@@ -537,7 +537,7 @@ namespace Xomega.Framework
         {
             ResetValidation();
             foreach (DataProperty p in properties.Values) p.ResetValidation();
-            foreach (IDataObject obj in childObjects.Values) obj.ResetAllValidation();
+            foreach (DataObject obj in childObjects.Values) obj.ResetAllValidation();
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace Xomega.Framework
         public virtual void Validate(bool force)
         {
             foreach (DataProperty p in properties.Values) p.Validate(force);
-            foreach (IDataObject obj in childObjects.Values) obj.Validate(force);
+            foreach (DataObject obj in childObjects.Values) obj.Validate(force);
 
             if (force) ResetValidation();
             if (validationErrorList != null) return;
@@ -556,7 +556,7 @@ namespace Xomega.Framework
             validationErrorList = new ErrorList();
         }
 
-#endregion
+        #endregion
 
         #region Modification support
 
@@ -580,7 +580,7 @@ namespace Xomega.Framework
             bool? res = modified;
             foreach (DataProperty prop in properties.Values)
                 if (prop.Modified.HasValue) res |= prop.Modified;
-            foreach (IDataObject child in childObjects.Values)
+            foreach (DataObject child in childObjects.Values)
             {
                 bool? childModified = child.IsModified();
                 if (childModified.HasValue) res |= childModified;
@@ -603,7 +603,7 @@ namespace Xomega.Framework
             if (recursive)
             {
                 foreach (DataProperty prop in properties.Values) prop.Modified = modified;
-                foreach (IDataObject child in childObjects.Values) child.SetModified(modified, true);
+                foreach (DataObject child in childObjects.Values) child.SetModified(modified, true);
             }
         }
 

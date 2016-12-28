@@ -206,6 +206,7 @@ namespace Xomega.Framework.Views
         {
             if (!canCloseChecked && !CanClose())
                 e.Cancel = true;
+            else Dispose(); // dispose before window is closed and possibly garbage collected
         }
 
         /// flag to prevent multiple CanClose checks
@@ -228,7 +229,8 @@ namespace Xomega.Framework.Views
             {
                 Window w = Window.GetWindow(this);
                 if (w != null) w.Close();
-                // disposal and controller event firing happens in the subsequent OnWindowClosed
+                // disposal and controller event firing happens 
+                // in the subsequent OnWindowClosing and OnWindowClosed respectively
             }
         }
 
@@ -256,7 +258,6 @@ namespace Xomega.Framework.Views
         {
             if (Controller != null)
                 Controller.FireEvent(ViewEvent.Closed);
-            Dispose();
             Window w = sender as Window;
             if (w != null && w.Owner != null) w.Owner.Activate();
         }

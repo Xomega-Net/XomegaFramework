@@ -79,7 +79,7 @@ namespace Xomega.Framework.Web
 
             AttributeCollection attr = WebPropertyBinding.GetControlAttributes(ctl);
             string childPath = attr != null ? attr[WebPropertyBinding.AttrChildObject] : null;
-            IDataObject cObj = WebPropertyBinding.FindChildObject(obj, childPath);
+            DataObject cObj = WebPropertyBinding.FindChildObject(obj, childPath);
             obj = cObj as DataObject;
             string propertyName = attr != null ? attr[WebPropertyBinding.AttrProperty] : null;
             if (obj != null && propertyName != null)
