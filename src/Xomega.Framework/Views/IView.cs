@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
 using System;
-using System.Collections.Specialized;
 
 namespace Xomega.Framework.Views
 {
@@ -11,16 +10,15 @@ namespace Xomega.Framework.Views
     public interface IView : IDisposable
     {
         /// <summary>
-        /// Binds the view to its controller
+        /// Binds the view to its model, or unbinds the current model if null is passed.
         /// </summary>
-        void BindTo(ViewController controller);
+        void BindTo(ViewModel viewModel);
 
         /// <summary>
         /// Shows the view using the mode it was activated with
         /// </summary>
-        /// <param name="owner">View owner</param>
         /// <returns>Whether or not the view was shown successfully</returns>
-        bool Show(object owner);
+        bool Show();
 
         /// <summary>
         /// Checks if the view can be closed
@@ -34,9 +32,9 @@ namespace Xomega.Framework.Views
         void Close();
 
         /// <summary>
-        /// Gets the child view for the current view
+        /// Checks if the view can be deleted
         /// </summary>
-        /// <returns>Current child view if any</returns>
-        IView GetChildView();
+        /// <returns>True if the view can be deleted, False otherwise</returns>
+        bool CanDelete();
     }
 }

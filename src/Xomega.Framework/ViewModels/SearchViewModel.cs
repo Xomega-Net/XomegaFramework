@@ -7,23 +7,23 @@ using System.ComponentModel;
 namespace Xomega.Framework.Views
 {
     /// <summary>
-    /// Base class for controllers of search views with a results grid and a criteria panel
+    /// Base class for models of search views with a results grid and a criteria panel
     /// </summary>
-    public abstract class SearchViewController : ViewController
+    public abstract class SearchViewModel : ViewModel
     {
         #region Initialization/Activation
 
         /// <summary>
-        /// Constructs a new search view controller
+        /// Constructs a new search view model
         /// </summary>
-        /// <param name="svcProvider">Service provider for the controller</param>
-        public SearchViewController(IServiceProvider svcProvider) : base(svcProvider)
+        /// <param name="svcProvider">Service provider for the model</param>
+        public SearchViewModel(IServiceProvider svcProvider) : base(svcProvider)
         {
 
         }
 
         /// <summary>
-        /// Activates the view controller and the view
+        /// Activates the view model and the view
         /// </summary>
         /// <param name="parameters">Parameters to activate the view with</param>
         /// <returns>True if the view was successfully activated, False otherwise</returns>
@@ -166,9 +166,9 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Handles child closing or change to refresh the list.
         /// </summary>
-        /// <param name="childController">Child view controller that fired the original event</param>
+        /// <param name="childViewModel">Child view model that fired the original event</param>
         /// <param name="e">Event object</param>
-        protected override void OnChildEvent(object childController, ViewEvent e)
+        protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
             if (e.IsClosed() && List != null)
             {
@@ -178,7 +178,7 @@ namespace Xomega.Framework.Views
             if (e.IsSaved() || e.IsDeleted())
                 Search(true);
 
-            base.OnChildEvent(childController, e);
+            base.OnChildEvent(childViewModel, e);
         }
 
         #endregion

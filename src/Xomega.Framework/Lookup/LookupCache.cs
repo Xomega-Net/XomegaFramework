@@ -49,9 +49,6 @@ namespace Xomega.Framework.Lookup
         {
             if (cacheProvider == null)
             {
-#if SILVERLIGHT
-                cacheProvider = new SingletonLookupCacheProvider();
-#else
                 Type t = typeof(ILookupCacheProvider);
                 string cacheProviderClass = ConfigurationManager.AppSettings[t.FullName];
                 if (string.IsNullOrEmpty(cacheProviderClass))
@@ -63,7 +60,6 @@ namespace Xomega.Framework.Lookup
                 cacheProvider = Activator.CreateInstance(t) as ILookupCacheProvider;
                 if (cacheProvider == null) throw new Exception(
                     "Invalid type supplied in the application configuration for the lookup cache provider: " + cacheProviderClass);
-#endif
             }
             LookupCache res = cacheProvider.GetLookupCache(cacheType);
             if (res != null) res.CacheType = cacheType;
@@ -101,12 +97,11 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         private Dictionary<string, LookupTableReady> notifyQueues = new Dictionary<string, LookupTableReady>();
 
-#if !SILVERLIGHT
         /// <summary>
         /// An internal reader/writer lock to synchronize access to the data.
         /// </summary>
         private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
-#endif
+
         /// <summary>
         /// A delegate for notifying the caller that requested a lookup table that this table
         /// has been loaded when the latter happened asynchronously (e.g. a WCF service call in Silverlight).
@@ -133,10 +128,6 @@ namespace Xomega.Framework.Lookup
         public virtual LookupTable GetLookupTable(string type, LookupTableReady onReadyCallback)
         {
             if (type == null) return null;
-#if SILVERLIGHT
-            if (!cache.ContainsKey(type)) LoadLookupTable(type, onReadyCallback);
-            return cache.ContainsKey(type) ? cache[type] : null;
-#else
             rwLock.EnterUpgradeableReadLock();
             try
             {
@@ -147,7 +138,6 @@ namespace Xomega.Framework.Lookup
             {
                 rwLock.ExitUpgradeableReadLock();
             }
-#endif
         }
 
         /// <summary>
@@ -197,9 +187,6 @@ namespace Xomega.Framework.Lookup
         public virtual void CacheLookupTable(LookupTable table)
         {
             if (table == null || table.Type == null) return;
-#if SILVERLIGHT
-            cache[table.Type] = table;
-#else
             rwLock.EnterWriteLock();
             try
             {
@@ -209,7 +196,6 @@ namespace Xomega.Framework.Lookup
             {
                 rwLock.ExitWriteLock();
             }
-#endif
             LookupTableReady notify;
             if (notifyQueues.TryGetValue(table.Type, out notify) && notify != null) notify(table.Type);
             notifyQueues.Remove(table.Type);

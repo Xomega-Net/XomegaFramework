@@ -48,6 +48,8 @@ namespace Xomega.Framework.Properties
                 if (BooleanProperty.TrueStrings.Contains(h.Id)) return true;
                 if (BooleanProperty.FalseStrings.Contains(h.Id)) return false;
             }
+            else if (format == ValueFormat.Internal && value is bool)
+                return base.ConvertValue(value.ToString().ToLower(), format);
             return base.ConvertValue(value, format);
         }
     }

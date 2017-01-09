@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
-using System.Collections;
-
 namespace Xomega.Framework
 {
     /// <summary>
@@ -91,17 +89,7 @@ namespace Xomega.Framework
         protected static void StartUp()
         {
             startedUp = true;
-#if SILVERLIGHT
-            Silverlight();
         }
-
-        /// <summary>
-        /// A feature hook that Dotfuscator can use to track Silverlight usage.
-        /// </summary>
-        protected static void Silverlight() { }
-#else
-        }
-#endif
 
         /// <summary>
         /// A flag to track the shutdown status.

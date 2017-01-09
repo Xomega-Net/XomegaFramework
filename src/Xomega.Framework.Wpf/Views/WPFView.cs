@@ -1,7 +1,10 @@
 ﻿// Copyright (c) 2016 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,7 +16,7 @@ namespace Xomega.Framework.Views
     /// </summary>
     public class WPFView : UserControl, IView, INotifyPropertyChanged
     {
-        #region View properties
+        #region View properties and constructor
 
         /// <summary> Title of the view </summary>
         public string ViewTitle { get; set; }
@@ -24,20 +27,34 @@ namespace Xomega.Framework.Views
         /// <summary>Default view height</summary>
         public double? ViewHeight { get; set; }
 
+        /// <summary>
+        /// Constructs a new WPF view
+        /// </summary>
+        public WPFView()
+        {
+            ChildViews = new List<IView>();
+        }
+
+        /// <summary>
+        /// Checks if the view can be deleted
+        /// </summary>
+        /// <returns>True if the view can be deleted, False otherwise</returns>
+        public virtual bool CanDelete() { return false; }
+
         #endregion
 
         #region Binding
 
-        /// <summary>Controller the view is bound to</summary>
-        public ViewController Controller { get; private set; }
+        /// <summary>View model the view is bound to</summary>
+        public ViewModel Model { get; private set; }
 
         /// <summary>
-        /// Binds the view to its controller, or unbinds the current controller if null is passed.
+        /// Binds the view to its model, or unbinds the current model if null is passed.
         /// </summary>
-        public virtual void BindTo(ViewController controller)
+        public virtual void BindTo(ViewModel viewModel)
         {
-            bool bind = controller != null;
-            ViewController vc = bind ? controller : this.Controller;
+            bool bind = viewModel != null;
+            ViewModel vc = bind ? viewModel : this.Model;
             if (vc != null)
             {
                 if (CloseButton != null)
@@ -48,10 +65,19 @@ namespace Xomega.Framework.Views
                     if (bind) CloseButton.Click += Close;
                     else CloseButton.Click -= Close;
                 }
-                if (bind) vc.View = this;
-                else vc.View = null;
+                if (bind)
+                {
+                    vc.PropertyChanged += OnModelPropertyChanged;
+                    vc.View = this;
+                }
+                else
+                {
+                    vc.PropertyChanged -= OnModelPropertyChanged;
+                    vc.View = null;
+                }
+                OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
             }
-            this.Controller = controller;
+            this.Model = viewModel;
         }
 
         /// <summary>
@@ -62,6 +88,32 @@ namespace Xomega.Framework.Views
         protected void BindDataObject(FrameworkElement el, DataObject obj)
         {
             if (el != null) el.DataContext = obj;
+        }
+
+        /// <summary>
+        /// Error presenter for the view
+        /// </summary>
+        protected virtual IErrorPresenter ErrorPresenter
+        {
+            get
+            {
+                IErrorPresenter ep = Model == null ? null : Model.ServiceProvider.GetService<IErrorPresenter>();
+                if (ep is Window) ((Window)ep).Owner = Window.GetWindow(this);
+                return ep;
+            }
+        }
+
+        /// <summary>
+        /// Handles property change for errors to update the Errors panel
+        /// </summary>
+        /// <param name="sender">Model that sent the event</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            IErrorPresenter ep = ErrorPresenter;
+            ViewModel vc = sender as ViewModel;
+            if (ep != null && ViewModel.ErrorsProperty.Equals(e.PropertyName))
+                ep.Show(vc != null ? vc.Errors : null);
         }
 
         #endregion
@@ -87,25 +139,23 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Shows the view using the mode it was activated with
         /// </summary>
-        /// <param name="owner">View owner</param>
-        public virtual bool Show(object owner)
+        public virtual bool Show()
         {
-            WPFView ownerView = owner as WPFView;
+            WPFView ownerView = Owner as WPFView;
             ContentControl ownerPanel = ownerView != null ? ownerView.ChildPanel : null;
-            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            if (Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
                 if (ViewWidth != null) MinWidth = ViewWidth.Value;
                 if (ViewHeight != null) MinHeight = ViewHeight.Value;
-                ownerPanel.Content = this;
+                if (ownerPanel != null) ownerPanel.Content = this;
                 CollapseParentSplitter(false);
             }
             else
             {
                 Window w = CreateWindow();
-                if (owner is DependencyObject)
-                    w.Owner = Window.GetWindow((DependencyObject)owner);
                 w.Title = ViewTitle;
                 w.Content = this;
+                if (Owner != null) w.Owner = Window.GetWindow(Owner);
                 if (ViewWidth != null) w.Width = ViewWidth.Value;
                 if (ViewHeight != null) w.Height = ViewHeight.Value;
                 w.Closing += OnWindowClosing;
@@ -128,17 +178,30 @@ namespace Xomega.Framework.Views
 
         #region View composition support
 
+        private DependencyObject owner;
+
+        /// <summary>Owner for the view</summary>
+        public DependencyObject Owner
+        {
+            get { return owner; }
+            set {
+                if (value == this)
+                    throw new InvalidOperationException("Cannot set the owner to itself");
+                WPFView ownerView = owner as WPFView;
+                if (ownerView != null && !ownerView.ChildViews.Contains(this))
+                    ownerView.ChildViews.Remove(this);
+                owner = value;
+                ownerView = owner as WPFView;
+                if (ownerView != null && !ownerView.ChildViews.Contains(this))
+                    ownerView.ChildViews.Add(this);
+            }
+        }
+
+        /// <summary> A list of child views owned by this view </summary>
+        private List<IView> ChildViews { get; set; }
+
         /// <summary> Panel for displaying inline child views </summary>
         protected virtual ContentControl ChildPanel { get; }
-
-        /// <summary>
-        /// Gets the child view for the current view
-        /// </summary>
-        /// <returns>Current child view if any</returns>
-        public IView GetChildView()
-        {
-            return ChildPanel == null ? null : ChildPanel.Content as IView;
-        }
 
         /// <summary>
         /// Collapses or expands the parent view's splitter for current view
@@ -187,12 +250,11 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public virtual bool CanClose()
         {
-            // ask own controller first
-            if (Controller != null && !Controller.CanClose()) return false;
+            // ask own model first
+            if (Model != null && !Model.CanClose()) return false;
 
             // ask any child views next
-            IView childView = GetChildView();
-            if (childView != null && !childView.CanClose()) return false;
+            if (ChildViews.Any(v => !v.CanClose())) return false;
 
             return true; // all good
         }
@@ -218,18 +280,18 @@ namespace Xomega.Framework.Views
         public virtual void Close()
         {
             ContentControl ownerPanel = Parent as ContentControl;
-            if (ownerPanel != null && Controller.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            if (ownerPanel != null && Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
                 CollapseParentSplitter(true);
-                Controller.FireEvent(ViewEvent.Closed);
-                Dispose(); // unsets the controller, so do after firing
+                Model.FireEvent(ViewEvent.Closed);
+                Dispose(); // unsets the model, so do after firing
                 ownerPanel.Content = null;
             }
             else
             {
                 Window w = Window.GetWindow(this);
                 if (w != null) w.Close();
-                // disposal and controller event firing happens 
+                // disposal and model event firing happens 
                 // in the subsequent OnWindowClosing and OnWindowClosed respectively
             }
         }
@@ -244,7 +306,7 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         public void Close(object sender, EventArgs e)
         {
-            if (!CanClose() || Controller == null) return;
+            if (!CanClose() || Model == null) return;
             canCloseChecked = true;
             Close();
         }
@@ -256,8 +318,8 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnWindowClosed(object sender, EventArgs e)
         {
-            if (Controller != null)
-                Controller.FireEvent(ViewEvent.Closed);
+            if (Model != null)
+                Model.FireEvent(ViewEvent.Closed);
             Window w = sender as Window;
             if (w != null && w.Owner != null) w.Owner.Activate();
         }
@@ -267,9 +329,12 @@ namespace Xomega.Framework.Views
         /// </summary>
         public virtual void Dispose()
         {
-            BindTo(null); // unbind controller to get it garbage collected in case of weak refs on this view
-            IDisposable childView = ChildPanel == null ? null : ChildPanel.Content as IDisposable;
-            if (childView != null) childView.Dispose();
+            BindTo(null); // unbind model to get it garbage collected in case of weak refs on this view
+            foreach (IView v in new List<IView>(ChildViews)) // use a new list
+            { // since the child view will try to remove itself from ChildViews here
+                v.Dispose();
+            }
+            Owner = null; // remove from parent
         }
 
         #endregion

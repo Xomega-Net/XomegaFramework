@@ -7,22 +7,22 @@ using System.ComponentModel;
 namespace Xomega.Framework.Views
 {
     /// <summary>
-    /// Base class for controllers of details views
+    /// Base class for models of details views
     /// </summary>
-    public abstract class DetailsViewController : ViewController
+    public abstract class DetailsViewModel : ViewModel
     {
         #region Initialization/Activation
 
         /// <summary>
-        /// Constructs a new details view controller
+        /// Constructs a new details view model
         /// </summary>
-        /// <param name="svcProvider">Service provider for the controller</param>
-        public DetailsViewController(IServiceProvider svcProvider) : base(svcProvider)
+        /// <param name="svcProvider">Service provider for the model</param>
+        public DetailsViewModel(IServiceProvider svcProvider) : base(svcProvider)
         {
         }
 
         /// <summary>
-        /// Activates the view controller and the view
+        /// Activates the view model and the view
         /// </summary>
         /// <param name="parameters">Parameters to activate the view with</param>
         /// <returns>True if the view was successfully activated, False otherwise</returns>
@@ -56,7 +56,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         public const string IsNewProperty = "IsNew";
 
-        private bool isNew;
+        private bool isNew = true;
 
         /// <summary>
         /// An indicator if the object is new and not yet saved
@@ -78,9 +78,9 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for saving or deleting of a child details view.
         /// </summary>
-        /// <param name="childController">Child view controller that fired the original event</param>
+        /// <param name="childViewModel">Child view model that fired the original event</param>
         /// <param name="e">Event object</param>
-        protected override void OnChildEvent(object childController, ViewEvent e)
+        protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
             if (e.IsSaved() || e.IsDeleted())
                 LoadData(); // reload child lists
@@ -104,7 +104,7 @@ namespace Xomega.Framework.Views
         /// A function that determines if the current object can be saved
         /// </summary>
         /// <returns></returns>
-        public virtual bool CanSave()
+        public virtual bool SaveEnabled()
         {
             return true;
         }
@@ -123,7 +123,7 @@ namespace Xomega.Framework.Views
         /// A function that determines if the current object can be deleted
         /// </summary>
         /// <returns></returns>
-        public virtual bool CanDelete()
+        public virtual bool DeleteEnabled()
         {
             return !IsNew;
         }

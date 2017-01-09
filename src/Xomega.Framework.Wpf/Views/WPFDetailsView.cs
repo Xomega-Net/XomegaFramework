@@ -17,28 +17,30 @@ namespace Xomega.Framework.Views
         /// <summary>Button to save the view</summary>
         protected virtual Button SaveButton { get; }
 
-        /// <summary>Binds the view to its controller</summary>
-        public override void BindTo(ViewController controller)
+        /// <summary>
+        /// Binds the view to its model, or unbinds the current model if null is passed.
+        /// </summary>
+        public override void BindTo(ViewModel viewModel)
         {
-            bool bind = controller != null;
-            DetailsViewController dtlController = (bind ? controller : Controller) as DetailsViewController;
-            if (dtlController != null)
+            bool bind = viewModel != null;
+            DetailsViewModel dvm = (bind ? viewModel : Model) as DetailsViewModel;
+            if (dvm != null)
             {
                 if (SaveButton != null)
                 {
                     SaveButton.Command = bind ? new RelayCommand<object>(
-                        p => dtlController.Save(this, EventArgs.Empty),
-                        p => dtlController.CanSave()) : null;
+                        p => dvm.Save(this, EventArgs.Empty),
+                        p => dvm.SaveEnabled()) : null;
                 }
                 if (DeleteButton != null)
                 {
                     DeleteButton.Command = bind ? new RelayCommand<object>(
-                        p => dtlController.Delete(this, EventArgs.Empty),
-                        p => dtlController.CanDelete()) : null;
+                        p => dvm.Delete(this, EventArgs.Empty),
+                        p => dvm.DeleteEnabled()) : null;
                 }
-                BindDataObject(this, bind ? dtlController.DetailsObject : null);
+                BindDataObject(this, bind ? dvm.DetailsObject : null);
             }
-            base.BindTo(controller);
+            base.BindTo(viewModel);
         }
 
         /// <summary>
@@ -47,8 +49,8 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public override bool CanClose()
         {
-            DetailsViewController dtlController = Controller as DetailsViewController;
-            DataObject dtlObj = (dtlController != null) ? dtlController.DetailsObject : null;
+            DetailsViewModel dvm = Model as DetailsViewModel;
+            DataObject dtlObj = (dvm != null) ? dvm.DetailsObject : null;
             bool? modified = dtlObj != null ? dtlObj.IsModified() : null;
             if (modified != null && modified.Value && MessageBox.Show(
                     "You have unsaved changes. Do you want to discard them and close the window?",
@@ -57,6 +59,18 @@ namespace Xomega.Framework.Views
                 return false;
 
             return base.CanClose();
+        }
+
+        /// <summary>
+        /// Checks if the view can be deleted
+        /// </summary>
+        /// <returns>True if the view can be deleted, False otherwise</returns>
+        public override bool CanDelete()
+        {
+            return MessageBox.Show(
+                "Are you sure you want to delete this object?\nThis action cannot be undone.",
+                "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning,
+                MessageBoxResult.No) == MessageBoxResult.Yes;
         }
     }
 }

@@ -247,27 +247,9 @@ namespace Xomega.Framework
 
         /// <summary>
         /// A helper class that allows storing the validation results as an error list.
-        /// It is needed as a workaround to manually trigger Silverlight validation.
         /// </summary>
         public class ValidationResults
         {
-            /// <summary>
-            /// A property that throws a validation exception when being set if there are validation errors.
-            /// This is a workaround to manually trigger Silverlight validation by binding to this property
-            /// so that the binding will be in error.
-            /// </summary>
-            public object Show
-            {
-                get { return null; }
-                set
-                {
-#if SILVERLIGHT
-                    if (Errors != null && Errors.HasErrors())
-                        throw new System.ComponentModel.DataAnnotations.ValidationException(Errors.ErrorsText);
-#endif
-                }
-            }
-
             /// <summary>
             /// A list of validation errors.
             /// </summary>

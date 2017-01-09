@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
-using System;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -12,7 +11,7 @@ namespace Xomega.Framework.Web
     /// A data property binding is responsible for making sure that the state of the web control
     /// is in sync with the state of the underlying data property.
     /// Web property bindings are created when a control is bound to a specific data object using
-    /// <see cref="WebUtil.BindToObject(Control, DataObject)"/> method, which uses attribute <see cref="AttrProperty"/>
+    /// <see cref="BindToObject(Control, DataObject)"/> method, which uses attribute <see cref="AttrProperty"/>
     /// to get the name of the data object property to bind the control to, and also possibly
     /// a path to a child object from the attribute <see cref="AttrChildObject"/> to locate that property.
     /// Web property bindings are created via a factory design pattern. A <c>PropertyBindingCreator</c>
@@ -21,7 +20,7 @@ namespace Xomega.Framework.Web
     /// </summary>
     public class WebPropertyBinding : BasePropertyBinding
     {
-        #region Static registration and binding support properties
+        #region Static registration
 
         /// <summary>
         /// A static constructor that registers Xomega framework web property bindings.
@@ -50,6 +49,20 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
+        /// Checks if a control is property bindable.
+        /// </summary>
+        /// <param name="ctl">Control to check.</param>
+        /// <returns>Whether or not the control is property bindable.</returns>
+        public static bool IsBindable(Control ctl)
+        {
+            return ctl != null;
+        }
+
+        #endregion
+
+        #region Binding to data objects
+
+        /// <summary>
         /// An attribute set on the web control to indicate the property name that it should be bound to.
         /// It can be either hardcoded or databound to a static string for validation by ASP.NET compiler.
         /// </summary>
@@ -67,13 +80,58 @@ namespace Xomega.Framework.Web
         public static string AttrLabelId = "LabelID";
 
         /// <summary>
-        /// Checks if a control is property bindable.
+        /// Binds a control or all of its child controls (e.g. for a containing panel)
+        /// to the given data object (or its child object)
+        /// as specified by the controls' Property and ChildObject attributes.
         /// </summary>
-        /// <param name="ctl">Control to check.</param>
-        /// <returns>Whether or not the control is property bindable.</returns>
-        public static bool IsBindable(Control ctl)
+        /// <param name="ctl">Web control to bind to the given data object.</param>
+        /// <param name="obj">Data object to bind the web control to.</param>
+        public static void BindToObject(Control ctl, DataObject obj)
         {
-            return ctl != null;
+            BindToObject(ctl, obj, false);
+        }
+
+        /// <summary>
+        /// Binds a control or all of its child controls (e.g. for a containing panel)
+        /// to the given data object (or its child object)
+        /// as specified by the controls' Property and ChildObject attributes.
+        /// </summary>
+        /// <param name="ctl">Control to bind to the given data object.</param>
+        /// <param name="obj">Data object to bind the control to.</param>
+        /// <param name="bindCurrentRow">For list objects specifies whether to bind the whole list or just the current row.</param>
+        public static void BindToObject(Control ctl, DataObject obj, bool bindCurrentRow)
+        {
+            if (obj == null || ctl == null) return;
+
+            AttributeCollection attr = GetControlAttributes(ctl);
+            string childPath = attr != null ? attr[AttrChildObject] : null;
+            DataObject cObj = FindChildObject(obj, childPath);
+            obj = cObj as DataObject;
+            string propertyName = attr != null ? attr[AttrProperty] : null;
+            if (obj != null && propertyName != null)
+            {
+                WebPropertyBinding binding = Create(ctl) as WebPropertyBinding;
+                if (binding != null) binding.BindTo(obj[propertyName]);
+                // remove attributes that are no longer needed to minimize HTML
+                attr.Remove(AttrChildObject);
+                attr.Remove(AttrProperty);
+            }
+            else if (cObj is DataListObject && !bindCurrentRow) BindToList(ctl, (DataListObject)cObj);
+            else foreach (Control c in ctl.Controls)
+                    BindToObject(c, obj, bindCurrentRow);
+        }
+
+        /// <summary>
+        /// Binds the specified control to the given data object list.
+        /// </summary>
+        /// <param name="ctl">Control to bind to the given data object list.</param>
+        /// <param name="list">Data object list to bind the control to.</param>
+        public static void BindToList(Control ctl, DataListObject list)
+        {
+            if (list == null || ctl == null) return;
+
+            IListBindable listBinding = Create(ctl) as IListBindable;
+            if (listBinding != null) listBinding.BindTo(list);
         }
 
         #endregion
@@ -212,7 +270,6 @@ namespace Xomega.Framework.Web
         /// (Un)sets a 'required' CssClass of the control and the label (if any)
         /// based on the Required flag of the data property. Subclasses can handle it in a different way.
         /// </summary>
-        /// <seealso cref="Property.RequiredProperty"/>
         protected override void UpdateRequired()
         {
             var ctl = control as WebControl;

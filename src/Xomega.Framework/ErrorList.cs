@@ -6,10 +6,9 @@ using System.Net;
 using System.Resources;
 using System.Runtime.Serialization;
 using System.ServiceModel;
-#if ! SILVERLIGHT && ! CLIENT_PROFILE
 using System.ServiceModel.Web;
 using System.Web;
-#endif
+
 namespace Xomega.Framework
 {
     /// <summary>
@@ -45,13 +44,11 @@ namespace Xomega.Framework
                     if (!OperationContext.Current.OutgoingMessageProperties.TryGetValue(ErrorsKey, out errors))
                         OperationContext.Current.OutgoingMessageProperties.Add(ErrorsKey, errors = new ErrorList());
                 }
-#if ! SILVERLIGHT && ! CLIENT_PROFILE
                 else if (HttpContext.Current != null)
                 {
                     errors = HttpContext.Current.Items[ErrorsKey];
                     if (errors == null) HttpContext.Current.Items.Add(ErrorsKey, errors = new ErrorList());
                 }
-#endif
                 else errors = current ?? (current = new ErrorList());
                 return errors as ErrorList;
             }
@@ -192,11 +189,7 @@ namespace Xomega.Framework
         /// <param name="status">The HTTP (error) status for aborted operation.</param>
         public void Abort(HttpStatusCode status)
         {
-#if SILVERLIGHT || CLIENT_PROFILE
-            Abort(status.ToString());
-#else
             throw new WebFaultException<ErrorList>(this, status);
-#endif
         }
 
         /// <summary>

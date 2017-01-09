@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
-using System;
-using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,10 +21,10 @@ namespace Xomega.Framework
     /// in XAML to provide a more sophisticated template for list items.
     /// <DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
     /// xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-    /// xmlns:xom='clr-namespace:Xomega.Framework;assembly=Xomega.Framework'>
-    /// <TextBlock xom:DataPropertyItemBinding.ValueFormat='{x:Static xom:ValueFormat.DisplayString}'/></DataTemplate>
+    /// xmlns:xfk='clr-namespace:Xomega.Framework;assembly=Xomega.Framework'
+    /// xmlns:xom='clr-namespace:Xomega.Framework;assembly=Xomega.Framework.Wpf'>
+    /// <TextBlock xom:DataPropertyItemBinding.ValueFormat='{x:Static xfk:ValueFormat.DisplayString}'/></DataTemplate>
     /// </example>
-    /// <remarks>Note: This code doesn't work in Silverlight 3 due to its limitations to obtain combo box from the item.</remarks>
     public class DataPropertyItemBinding
     {
         /// <summary>
@@ -67,9 +65,7 @@ namespace Xomega.Framework
             if (el == null) return;
 
             OnDataContextChanged(el, new DependencyPropertyChangedEventArgs());
-#if !SILVERLIGHT
             el.DataContextChanged += OnDataContextChanged;
-#endif
         }
 
         /// <summary>

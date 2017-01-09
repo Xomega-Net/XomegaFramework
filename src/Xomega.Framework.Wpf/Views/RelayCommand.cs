@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace Xomega.Framework.Views
 {
     /// <summary>
-    /// Generic command for relaying actions to controllers
+    /// Generic command for relaying actions to view models
     /// </summary>
     public class RelayCommand<T> : ICommand
     {

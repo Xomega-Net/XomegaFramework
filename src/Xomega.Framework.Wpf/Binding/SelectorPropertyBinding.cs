@@ -77,8 +77,9 @@ namespace Xomega.Framework.Binding
         protected string defaultTemplate = @"<DataTemplate
             xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
             xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-            xmlns:xom='clr-namespace:Xomega.Framework;assembly=Xomega.Framework'>
-            <TextBlock xom:DataPropertyItemBinding.ValueFormat='{x:Static xom:ValueFormat.DisplayString}'/></DataTemplate>";
+            xmlns:xfk='clr-namespace:Xomega.Framework;assembly=Xomega.Framework'
+            xmlns:xom='clr-namespace:Xomega.Framework;assembly=Xomega.Framework.Wpf'>
+            <TextBlock xom:DataPropertyItemBinding.ValueFormat='{x:Static xfk:ValueFormat.DisplayString}'/></DataTemplate>";
 
         /// <summary>
         /// Binds the selector to the given property. Sets the selection mode based on

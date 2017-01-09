@@ -94,11 +94,6 @@ namespace Xomega.Framework.Properties
             if (LocalLookupTable != null) return LocalLookupTable;
             LookupCache cache = LookupCache.Get(CacheType);
             LookupCache.LookupTableReady onReady = null;
-#if SILVERLIGHT
-            onReady = delegate(string type) {
-                FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null));
-            };
-#endif
             return cache == null ? null : cache.GetLookupTable(EnumType, onReady);
         }
 

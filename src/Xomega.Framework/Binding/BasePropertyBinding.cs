@@ -134,10 +134,9 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Updates a Required dependency property of the element and the label (if any)
+        /// Updates a Required property of the bound element and the label (if any)
         /// based on the Required flag of the data property. Subclasses can handle it in a different way.
         /// </summary>
-        /// <seealso cref="Property.RequiredProperty"/>
         protected virtual void UpdateRequired()
         {
         }

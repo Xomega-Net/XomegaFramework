@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework", "Xomega.Framework\Xomega.Framework.csproj", "{22CCC22D-05FA-4230-ADC6-076DCB39A53A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework.Wpf", "Xomega.Framework.Wpf\Xomega.Framework.Wpf.csproj", "{8F18B833-E157-4B31-85FF-22668A5CFA88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework.Web", "Xomega.Framework.Web\Xomega.Framework.Web.csproj", "{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug-Net40|Any CPU = Debug-Net40|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Debug-Net40|Any CPU.ActiveCfg = Debug-Net40|Any CPU
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Debug-Net40|Any CPU.Build.0 = Debug-Net40|Any CPU
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CCC22D-05FA-4230-ADC6-076DCB39A53A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Debug-Net40|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Debug-Net40|Any CPU.Build.0 = Debug|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F18B833-E157-4B31-85FF-22668A5CFA88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Debug-Net40|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Debug-Net40|Any CPU.Build.0 = Debug|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -3,7 +3,6 @@
 using System.Collections.Specialized;
 using System.Web.UI.WebControls;
 using System;
-using System.Collections.Generic;
 
 namespace Xomega.Framework.Web
 {
@@ -57,7 +56,7 @@ namespace Xomega.Framework.Web
                 if (dataRow == null) return;
                 dataRow.List.CurrentRow = e.Row.DataItemIndex;
                 if (dataRow.Selected) e.Row.ApplyStyle(grid.SelectedRowStyle);
-                WebUtil.BindToObject(e.Row, dataRow.List, true);
+                BindToObject(e.Row, dataRow.List, true);
             };
             grid.PageIndexChanging += delegate(object sender, GridViewPageEventArgs e)
             {
@@ -163,6 +162,7 @@ namespace Xomega.Framework.Web
         {
             INotifyCollectionChanged observableList = this.list as INotifyCollectionChanged;
             if (observableList != null) observableList.CollectionChanged -= OnListChanged;
+            if (this.list != null) this.list.SelectionChanged -= OnListSelectionChanged;
             this.list = list;
             observableList = list as INotifyCollectionChanged;
             if (observableList != null)
@@ -170,12 +170,19 @@ namespace Xomega.Framework.Web
                 OnListChanged(null, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 observableList.CollectionChanged += OnListChanged;
             }
-            // set up grid selection
+            if (list != null) list.SelectionChanged += OnListSelectionChanged;
+        }
+
+        /// <summary>
+        /// Handles the selection change event of the data list object to update the grid control.
+        /// </summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event arguments.</param>
+        protected void OnListSelectionChanged(object sender, EventArgs e)
+        {
             GridView grid = (GridView)control;
-            if (grid != null && list != null)
-            {
-                grid.AutoGenerateSelectButton = (list.RowSelectionMode == DataListObject.SelectionModeSingle);
-            }
+            grid.DataSource = list != null ? list.GetData() : null;
+            grid.DataBind();
         }
 
         /// <summary>
@@ -185,9 +192,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments.</param>
         protected void OnListChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            GridView grid = (GridView)control;
-            grid.DataSource = list != null ? list.GetData() : null;
-            grid.DataBind();
+            OnListSelectionChanged(sender, e);
         }
     }
 }

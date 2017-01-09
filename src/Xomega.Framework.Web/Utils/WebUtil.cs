@@ -1,6 +1,5 @@
 ﻿// Copyright (c) 2010-2016 Xomega.Net. All rights reserved.
 
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Xomega.Framework.Services;
 
 namespace Xomega.Framework.Web
 {
@@ -18,100 +16,6 @@ namespace Xomega.Framework.Web
     /// </summary>
     public class WebUtil
     {
-        #region Service provider
-
-        /// <summary>
-        /// The service scope for the current request
-        /// </summary>
-        public static IServiceScope CurrentServiceScope
-        {
-            get { return HttpContext.Current == null ? null : HttpContext.Current.Items["IServiceScope"] as IServiceScope; }
-            set { if (HttpContext.Current != null) HttpContext.Current.Items["IServiceScope"] = value; }
-        }
-
-        /// <summary>
-        /// A templated method to retrieve Xomega data objects from the session scope.
-        /// If the object is not yet cached or if <paramref name="createNew"/> flag is specified,
-        /// the object will be constructed and stored in the session scope with the given key.
-        /// </summary>
-        /// <typeparam name="T">The data object type.</typeparam>
-        /// <param name="cacheKey">A string key for storing and accessing the object.</param>
-        /// <param name="createNew">True to create and store the object even if it already exists in the session.</param>
-        /// <returns>The data object that has been created or retrieved from the session.</returns>
-        public static T GetCachedObject<T>(string cacheKey, bool createNew) where T : class
-        {
-            if (CurrentServiceScope == null || HttpContext.Current.Session == null)
-                return null;
-
-            T obj = HttpContext.Current.Session[cacheKey] as T;
-            if (obj == null || createNew)
-                HttpContext.Current.Session.Add(cacheKey, obj = CurrentServiceScope.ServiceProvider.GetService<T>());
-            return obj;
-        }
-
-        #endregion
-
-        #region Data object binding
-
-        /// <summary>
-        /// Binds a control or all of its child controls (e.g. for a containing panel)
-        /// to the given data object (or its child object)
-        /// as specified by the controls' Property and ChildObject attributes.
-        /// </summary>
-        /// <param name="ctl">Web control to bind to the given data object.</param>
-        /// <param name="obj">Data object to bind the web control to.</param>
-        public static void BindToObject(Control ctl, DataObject obj)
-        {
-            BindToObject(ctl, obj, false);
-        }
-
-        /// <summary>
-        /// Binds a control or all of its child controls (e.g. for a containing panel)
-        /// to the given data object (or its child object)
-        /// as specified by the controls' Property and ChildObject attributes.
-        /// </summary>
-        /// <param name="ctl">Control to bind to the given data object.</param>
-        /// <param name="obj">Data object to bind the control to.</param>
-        /// <param name="bindCurrentRow">For list objects specifies whether to bind the whole list or just the current row.</param>
-        public static void BindToObject(Control ctl, DataObject obj, bool bindCurrentRow)
-        {
-            if (obj == null || ctl == null) return;
-
-            AttributeCollection attr = WebPropertyBinding.GetControlAttributes(ctl);
-            string childPath = attr != null ? attr[WebPropertyBinding.AttrChildObject] : null;
-            DataObject cObj = WebPropertyBinding.FindChildObject(obj, childPath);
-            obj = cObj as DataObject;
-            string propertyName = attr != null ? attr[WebPropertyBinding.AttrProperty] : null;
-            if (obj != null && propertyName != null)
-            {
-                WebPropertyBinding binding = WebPropertyBinding.Create(ctl) as WebPropertyBinding;
-                if (binding != null) binding.BindTo(obj[propertyName]);
-                // remove attributes that are no longer needed to minimize HTML
-                attr.Remove(WebPropertyBinding.AttrChildObject);
-                attr.Remove(WebPropertyBinding.AttrProperty);
-            }
-            else if (cObj is DataListObject && !bindCurrentRow) BindToList(ctl, (DataListObject)cObj);
-            else foreach (Control c in ctl.Controls)
-                BindToObject(c, obj, bindCurrentRow);
-        }
-
-        /// <summary>
-        /// Binds the specified control to the given data object list.
-        /// </summary>
-        /// <param name="ctl">Control to bind to the given data object list.</param>
-        /// <param name="list">Data object list to bind the control to.</param>
-        public static void BindToList(Control ctl, DataListObject list)
-        {
-            if (list == null || ctl == null) return;
-
-            IListBindable listBinding = WebPropertyBinding.Create(ctl) as IListBindable;
-            if (listBinding != null) listBinding.BindTo(list);
-        }
-
-        #endregion
-
-        #region Web utilities
-
         /// <summary>
         /// Determines if the current request uses a POST method. This is different
         /// than IsPostBack flag, which is false when you do Server.Transfer().
@@ -208,7 +112,5 @@ namespace Xomega.Framework.Web
                     true);
             }
         }
-
-        #endregion
     }
 }
