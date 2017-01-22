@@ -7,7 +7,6 @@ using System.Data;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
 using System.Linq;
-using System.ServiceModel;
 
 namespace Xomega.Framework.Services
 {
@@ -16,31 +15,19 @@ namespace Xomega.Framework.Services
     /// It implements the base interface for all Xomega interfaces and provides common functionality
     /// for entity-based services.
     /// </summary>
-    /// <typeparam name="T">The type of the object context class to use.</typeparam>
-    public class EntityServiceBase<T> : IServiceBase, IDisposable where T : ObjectContext, new()
+    public class EntityService : BaseService
     {
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
-
-        /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        static EntityServiceBase() {}
-
         /// <summary>
         /// The object context of the specified type that is accessible to the subclasses.
         /// </summary>
-        protected T objCtx = new T();
+        protected ObjectContext objCtx;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public EntityServiceBase()
+        public EntityService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
 
         #region Entity Keys
 
@@ -125,29 +112,6 @@ namespace Xomega.Framework.Services
 
         #endregion
 
-        #region Disposing
-
-        /// <summary>
-        /// Disposes of the entity service and the underlying object context.
-        /// </summary>
-        public void Dispose()
-        {
-            if (objCtx != null) objCtx.Dispose();
-        }
-
-        /// <summary>
-        /// An explicit call to end the service session to support custom session mechanism for http bindings
-        /// in Silverlight 3. This will allow releasing the instance of the service object on the server.
-        /// </summary>
-        [OperationBehavior(ReleaseInstanceMode=ReleaseInstanceMode.AfterCall)]
-        public virtual void EndSession()
-        {
-            if (OperationContext.Current != null)
-                OperationContext.Current.OutgoingMessageProperties["ReleaseInstance"] = true;
-        }
-
-        #endregion
-
         #region Saving Changes
 
         /// <summary>
@@ -160,7 +124,10 @@ namespace Xomega.Framework.Services
                 EntityState.Added | EntityState.Deleted | EntityState.Modified)
                 where obj.Entity is IValidatable
                 select obj.Entity;
-            foreach (IValidatable obj in objects) obj.Validate(true);
+            foreach (IValidatable obj in objects)
+            {
+                obj.Validate(currentErrors, true);
+            }
         }
 
         /// <summary>
@@ -197,10 +164,9 @@ namespace Xomega.Framework.Services
             try
             {
                 Validate();
-                ErrorList errList = ErrorList.Current;
-                errList.AbortIfHasErrors();
-                if (!suppressWarnings && errList.Errors.Count > 0)
-                    throw new FaultException<ErrorList>(errList, "Warnings have been posted.");
+                currentErrors.AbortIfHasErrors();
+                if (!suppressWarnings && currentErrors.Errors.Count > 0)
+                    currentErrors.Abort("Warnings have been posted.");
                 return objCtx.SaveChanges();
             }
             catch (Exception e)

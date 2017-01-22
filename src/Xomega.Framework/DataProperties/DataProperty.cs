@@ -506,7 +506,7 @@ namespace Xomega.Framework
         public static void ValidateRequired(DataProperty dp, object value)
         {
             if (dp != null && dp.Required && dp.IsValueNull(value, ValueFormat.Internal))
-                dp.ValidationErrors.AddError("{0} is required.", dp);
+                dp.ValidationErrors.AddValidationError("{0} is required.", dp);
         }
 
         #endregion

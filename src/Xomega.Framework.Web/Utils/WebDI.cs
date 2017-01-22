@@ -2,13 +2,14 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using System.Web;
+using Xomega.Framework.Lookup;
 
 namespace Xomega.Framework.Web
 {
     /// <summary>
     /// Dependency injection utilities for web projects
     /// </summary>
-    public class WebDI
+    public static class WebDI
     {
         /// <summary>
         /// The service scope for the current request
@@ -19,5 +20,13 @@ namespace Xomega.Framework.Web
             set { if (HttpContext.Current != null) HttpContext.Current.Items["IServiceScope"] = value; }
         }
 
+        /// <summary>
+        /// Registers WebLookupCacheProvider with the container
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddWebLookupCacheProvider(this IServiceCollection services)
+        {
+            services.AddSingleton<ILookupCacheProvider, WebLookupCacheProvider>();
+        }
     }
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework.Wpf", "Xom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework.Web", "Xomega.Framework.Web\Xomega.Framework.Web.csproj", "{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xomega.Framework.Wcf", "Xomega.Framework.Wcf\Xomega.Framework.Wcf.csproj", "{2367EDFB-1057-4C13-B908-B928B71A2CE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Debug-Net40|Any CPU.Build.0 = Debug|Any CPU
 		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50E0794D-1F04-48AF-BBE2-D67E4C87EE69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Debug-Net40|Any CPU.ActiveCfg = Debug|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Debug-Net40|Any CPU.Build.0 = Debug|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2367EDFB-1057-4C13-B908-B928B71A2CE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

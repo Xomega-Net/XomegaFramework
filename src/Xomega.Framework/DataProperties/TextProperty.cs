@@ -45,7 +45,7 @@ namespace Xomega.Framework.Properties
         public static void ValidateSize(DataProperty dp, object value)
         {
             if (dp != null && dp.Size > 0 && Convert.ToString(value).Length > dp.Size)
-                dp.ValidationErrors.AddError("{0} cannot be longer than {1} characters. Invalid value: {2}.", dp, dp.Size, value);
+                dp.ValidationErrors.AddValidationError("{0} cannot be longer than {1} characters. Invalid value: {2}.", dp, dp.Size, value);
         }
     }
 }

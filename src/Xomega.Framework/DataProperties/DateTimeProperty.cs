@@ -86,7 +86,7 @@ namespace Xomega.Framework.Properties
         {
             DateTimeProperty dtp = dp as DateTimeProperty;
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is DateTime))
-                dp.ValidationErrors.AddError("{0} has an invalid date/time: {1}. Please use the following format: {2}.",
+                dp.ValidationErrors.AddValidationError("{0} has an invalid date/time: {1}. Please use the following format: {2}.",
                     dp, value, dtp != null ? dtp.Format : "N/A");
         }
     }

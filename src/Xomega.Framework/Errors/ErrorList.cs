@@ -1,13 +1,10 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Resources;
 using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Web;
 
 namespace Xomega.Framework
 {
@@ -18,71 +15,24 @@ namespace Xomega.Framework
     public class ErrorList
     {
         /// <summary>
-        /// A static resource manager, which can be used to translate the error messages
-        /// to the current language.
+        /// A resource manager, which can be used to translate the error messages to the current language.
         /// </summary>
-        public static ResourceManager ResourceManager;
+        private ResourceManager resources;
 
         /// <summary>
-        /// A singleton current error list to return in the absence of the current operation context.
+        /// Constructs a new error list
         /// </summary>
-        private static ErrorList current;
-
-        private static string ErrorsKey = "Errors";
-
-        /// <summary>
-        /// Returns the error list associated with the current operation context.
-        /// Service operations should use this error list to report the errors back to the caller.
-        /// </summary>
-        public static ErrorList Current
+        public ErrorList() : this(null)
         {
-            get
-            {
-                object errors;
-                if (OperationContext.Current != null)
-                {
-                    if (!OperationContext.Current.OutgoingMessageProperties.TryGetValue(ErrorsKey, out errors))
-                        OperationContext.Current.OutgoingMessageProperties.Add(ErrorsKey, errors = new ErrorList());
-                }
-                else if (HttpContext.Current != null)
-                {
-                    errors = HttpContext.Current.Items[ErrorsKey];
-                    if (errors == null) HttpContext.Current.Items.Add(ErrorsKey, errors = new ErrorList());
-                }
-                else errors = current ?? (current = new ErrorList());
-                return errors as ErrorList;
-            }
         }
 
         /// <summary>
-        /// Retrieves the error list from the specified exception if possible,
-        /// otherwise constructs a new error list with the exception as the error message.
+        /// Constructs a new error list with specified resource manager
         /// </summary>
-        /// <param name="ex">Exception to retrieve the error list from.</param>
-        /// <returns>An error list retrieved from the exception.</returns>
-        public static ErrorList FromException(Exception ex)
+        /// <param name="resources">Resource manager to use for error messages</param>
+        public ErrorList(ResourceManager resources)
         {
-            FaultException<ErrorList> fex = ex as FaultException<ErrorList>;
-            if (fex != null) return fex.Detail;
-
-            WebException webEx = ex as WebException;
-            webEx = webEx ?? ex.InnerException as WebException;
-            if (webEx != null && webEx.Response != null && webEx.Response.GetResponseStream() != null)
-            {
-                try
-                {
-                    return (ErrorList)new DataContractSerializer(typeof(ErrorList)).ReadObject(
-                        webEx.Response.GetResponseStream());
-                }
-                catch (Exception) {}
-            }
-
-            // use the server side exception if applicable
-            FaultException<ExceptionDetail> fexd = ex as FaultException<ExceptionDetail>;
-
-            ErrorList err = new ErrorList();
-            err.Add(new ErrorMessage("EXCEPTION", fexd != null ? fexd.Detail.ToString() : ex.ToString()));
-            return err;
+            this.resources = resources;
         }
 
         /// <summary>
@@ -97,10 +47,10 @@ namespace Xomega.Framework
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
         /// <returns>Localized message  for the given error code with substituted parameters.</returns>
-        private string GetMessage(string code, object[] parameters)
+        public string GetMessage(string code, object[] parameters)
         {
             string message = null;
-            if (ResourceManager != null) message = ResourceManager.GetString(code);
+            if (resources != null) message = resources.GetString(code);
             if (message == null) message = code;
             return string.Format(message, parameters);
         }
@@ -110,9 +60,20 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void AddError(string code, params object[] parameters)
+        public void AddValidationError(string code, params object[] parameters)
         {
-            Add(new ErrorMessage(code, GetMessage(code, parameters), ErrorSeverity.Error));
+            Add(new ErrorMessage(ErrorType.Validation, code, GetMessage(code, parameters), ErrorSeverity.Error));
+        }
+
+        /// <summary>
+        /// Adds an error to the list with the given error code and additional parameters to substitute.
+        /// </summary>
+        /// <param name="code">The error code.</param>
+        /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
+        /// <param name="type">The type of error.</param>
+        public void AddError(ErrorType type, string code, params object[] parameters)
+        {
+            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Error));
         }
 
         /// <summary>
@@ -121,7 +82,8 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void CriticalError(string code, params object[] parameters) { CriticalError(code, true, parameters); }
+        /// <param name="type">The type of error.</param>
+        public void CriticalError(ErrorType type, string code, params object[] parameters) { CriticalError(type, code, true, parameters); }
 
         /// <summary>
         /// Adds a critical error to the list with the given error code and additional parameters to substitute
@@ -130,37 +92,12 @@ namespace Xomega.Framework
         /// <param name="code">The error code.</param>
         /// <param name="abort">True to abort the current operation.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void CriticalError(string code, bool abort, params object[] parameters)
+        /// <param name="type">The type of error.</param>
+        public void CriticalError(ErrorType type, string code, bool abort, params object[] parameters)
         {
-            ErrorMessage err = new ErrorMessage(code, GetMessage(code, parameters), ErrorSeverity.Critical);
+            ErrorMessage err = new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Critical);
             Add(err);
             if (abort) Abort(err.Message);
-        }
-
-        /// <summary>
-        /// Adds a critical error to the list with the given error code and additional parameters to substitute
-        /// and aborts the current operation.
-        /// </summary>
-        /// <param name="status">HTTP status of the operation to report.</param>
-        /// <param name="code">The error code.</param>
-        /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void CriticalError(HttpStatusCode status,  string code, params object[] parameters)
-        {
-            CriticalError(status, code, true, parameters);
-        }
-
-        /// <summary>
-        /// Adds a critical error to the list with the given error code and additional parameters to substitute
-        /// and aborts the current operation with the reason being this message if required.
-        /// </summary>
-        /// <param name="status">HTTP status of the operation to report.</param>
-        /// <param name="code">The error code.</param>
-        /// <param name="abort">True to abort the current operation.</param>
-        /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void CriticalError(HttpStatusCode status, string code, bool abort, params object[] parameters)
-        {
-            Add(new ErrorMessage(code, GetMessage(code, parameters), ErrorSeverity.Critical));
-            if (abort) Abort(status);
         }
 
         /// <summary>
@@ -168,9 +105,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void AddWarning(string code, params object[] parameters)
+        /// <param name="type">The type of warning.</param>
+        public void AddWarning(ErrorType type, string code, params object[] parameters)
         {
-            Add(new ErrorMessage(code, GetMessage(code, parameters), ErrorSeverity.Warning));
+            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Warning));
         }
 
         /// <summary>
@@ -178,28 +116,19 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The message code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void AddInfo(string code, params object[] parameters)
+        /// <param name="type">The type of info message.</param>
+        public void AddInfo(ErrorType type, string code, params object[] parameters)
         {
-            Add(new ErrorMessage(code, GetMessage(code, parameters), ErrorSeverity.Info));
+            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Info));
         }
 
         /// <summary>
-        /// Aborts the current operation with the specified HTTP error status by throwing a WebFaultException.
-        /// </summary>
-        /// <param name="status">The HTTP (error) status for aborted operation.</param>
-        public void Abort(HttpStatusCode status)
-        {
-            throw new WebFaultException<ErrorList>(this, status);
-        }
-
-        /// <summary>
-        /// Aborts the current operation with the specified reason by throwing a FaultException.
+        /// Aborts the current operation with the specified reason by throwing an ErrorAbortException.
         /// </summary>
         /// <param name="reason">The reason for aborting the operation.</param>
         public void Abort(string reason)
         {
-            FaultCode cd = new FaultCode("Sender");
-            throw new FaultException<ErrorList>(this, new FaultReason(reason), cd, null);
+            throw new ErrorAbortException(reason, this);
         }
 
         /// <summary>
@@ -208,15 +137,6 @@ namespace Xomega.Framework
         public void AbortIfHasErrors()
         {
             if (HasErrors()) Abort(ErrorsText);
-        }
-
-        /// <summary>
-        /// Aborts the current operation in the current list has any errors.
-        /// </summary>
-        /// <param name="status">The HTTP (error) status for aborted operation.</param>
-        public void AbortIfHasErrors(HttpStatusCode status)
-        {
-            if (HasErrors()) Abort(status);
         }
 
         /// <summary>
@@ -281,6 +201,23 @@ namespace Xomega.Framework
                 }
                 return errText;
             }
+        }
+
+        // explicitly set HTTP status code
+        private HttpStatusCode? httpStatus;
+
+        /// <summary>
+        /// HTTP status code associated with the current error list for REST services
+        /// </summary>
+        public HttpStatusCode HttpStatus
+        {
+            get
+            {
+                if (httpStatus != null) return httpStatus.Value;
+                if (errors.Count == 0) return HttpStatusCode.OK;
+                return errors.Max(e => e.HttpStatus);
+            }
+            set { httpStatus = value; }
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -47,19 +46,12 @@ namespace Xomega.Framework.Lookup
         /// <returns>An instance of a lookup cache of the specified type or <c>null</c> if no cache can be found.</returns>
         public static LookupCache Get(string cacheType)
         {
+            if (cacheProvider == null && DI.DefaultServiceProvider != null)
+                cacheProvider = DI.DefaultServiceProvider.GetService<ILookupCacheProvider>();
             if (cacheProvider == null)
             {
-                Type t = typeof(ILookupCacheProvider);
-                string cacheProviderClass = ConfigurationManager.AppSettings[t.FullName];
-                if (string.IsNullOrEmpty(cacheProviderClass))
-                {
-                    Trace.TraceWarning("No lookup cache provider is supplied in the configuration. Using default SingletonLookupCacheProvider.");
-                    t = typeof(SingletonLookupCacheProvider);
-                }
-                else t = Type.GetType(cacheProviderClass);
-                cacheProvider = Activator.CreateInstance(t) as ILookupCacheProvider;
-                if (cacheProvider == null) throw new Exception(
-                    "Invalid type supplied in the application configuration for the lookup cache provider: " + cacheProviderClass);
+                Trace.TraceWarning("No ILookupCacheProvider service is configured. Using default SingletonLookupCacheProvider.");
+                cacheProvider = new SingletonLookupCacheProvider();
             }
             LookupCache res = cacheProvider.GetLookupCache(cacheType);
             if (res != null) res.CacheType = cacheType;

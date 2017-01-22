@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
 
+using System.Net;
 using System.Runtime.Serialization;
 
 namespace Xomega.Framework
@@ -23,21 +24,23 @@ namespace Xomega.Framework
         /// <param name="code">The error code.</param>
         /// <param name="message">The error message.</param>
         public ErrorMessage(string code, string message)
-            : this(code, message, ErrorSeverity.Error)
+            : this(ErrorType.System, code, message, ErrorSeverity.Error)
         {
         }
 
         /// <summary>
         /// Constructs an error message with a given code, message and severity.
         /// </summary>
+        /// <param name="type">The type of error.</param>
         /// <param name="code">The error message code.</param>
         /// <param name="message">The text message.</param>
         /// <param name="sev">The error message severity.</param>
-        public ErrorMessage(string code, string message, ErrorSeverity sev)
+        public ErrorMessage(ErrorType type, string code, string message, ErrorSeverity sev)
         {
             this.Code = code;
             this.Message = message;
             this.Severity = sev;
+            this.Type = type;
         }
 
         /// <summary>
@@ -57,33 +60,43 @@ namespace Xomega.Framework
         /// </summary>
         [DataMember]
         public ErrorSeverity Severity { get; set; }
-    }
-
-    /// <summary>
-    /// Error severity possible values.
-    /// </summary>
-    public enum ErrorSeverity
-    {
-        /// <summary>
-        /// Information message that can be displayed to the user.
-        /// </summary>
-        Info,
 
         /// <summary>
-        /// A warning that may be displayed to the user for the confirmation before proceeding,
-        /// if supported by the current execution context.
+        /// Error type indicating the origin of the error.
         /// </summary>
-        Warning,
+        [DataMember]
+        public ErrorType Type { get; set; }
+
+        // explicitly set HTTP status code
+        private HttpStatusCode? httpStatus;
 
         /// <summary>
-        /// An error, that will be displayed to the user with the other errors. It doesn't stop
-        /// the execution flow, but prevents the operation from successfully completing.
+        /// HTTP status code associated with the current error for REST services
         /// </summary>
-        Error,
-
-        /// <summary>
-        /// A critical error, which stops the execution immediately and returns a fault to the user.
-        /// </summary>
-        Critical
+        public HttpStatusCode HttpStatus
+        {
+            get
+            {
+                if (httpStatus != null) return httpStatus.Value;
+                switch (Type)
+                {
+                    case ErrorType.Validation:
+                        return HttpStatusCode.BadRequest;
+                    case ErrorType.Security:
+                        return HttpStatusCode.Unauthorized;
+                    case ErrorType.Concurrency:
+                        return HttpStatusCode.Conflict;
+                    case ErrorType.External:
+                        return HttpStatusCode.BadGateway;
+                    case ErrorType.Data:
+                        return HttpStatusCode.NotFound;
+                    case ErrorType.System:
+                    default:
+                        return Severity > ErrorSeverity.Warning ? 
+                            HttpStatusCode.InternalServerError : HttpStatusCode.SeeOther;
+                }
+            }
+            set { httpStatus = value; }
+        }
     }
 }

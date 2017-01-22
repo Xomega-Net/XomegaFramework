@@ -31,6 +31,9 @@ namespace Xomega.Framework.Views
 
             Params = new NameValueCollection();
 
+            errorParser = svcProvider.GetService<ErrorParser>();
+            if (errorParser == null) errorParser = new ErrorParser();
+
             Initialize();
         }
 
@@ -127,6 +130,11 @@ namespace Xomega.Framework.Views
                 OnPropertyChanged(new PropertyChangedEventArgs(ErrorsProperty));
             }
         }
+
+        /// <summary>
+        /// The error parser for handling service exceptions
+        /// </summary>
+        protected ErrorParser errorParser;
 
         #endregion
 

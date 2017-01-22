@@ -94,7 +94,7 @@ namespace Xomega.Framework.Properties
         public static void ValidateDecimal(DataProperty dp, object value)
         {
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is decimal))
-                dp.ValidationErrors.AddError("{0} must be a decimal number.", dp);
+                dp.ValidationErrors.AddValidationError("{0} must be a decimal number.", dp);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Xomega.Framework.Properties
         {
             DecimalProperty ddp = dp as DecimalProperty;
             if (ddp != null && (value is decimal?) && ((decimal?)value).Value < ddp.MinimumValue)
-                dp.ValidationErrors.AddError("{0} cannot be less than {1}.", dp, ddp.MinimumValue);
+                dp.ValidationErrors.AddValidationError("{0} cannot be less than {1}.", dp, ddp.MinimumValue);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Xomega.Framework.Properties
         {
             DecimalProperty ddp = dp as DecimalProperty;
             if (ddp != null && (value is decimal?) && ((decimal?)value).Value > ddp.MaximumValue)
-                dp.ValidationErrors.AddError("{0} cannot be greater than {1}.", dp, ddp.MaximumValue);
+                dp.ValidationErrors.AddValidationError("{0} cannot be greater than {1}.", dp, ddp.MaximumValue);
         }
     }
 
