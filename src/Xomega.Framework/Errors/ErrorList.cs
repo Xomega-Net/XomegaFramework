@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2010-2013 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
