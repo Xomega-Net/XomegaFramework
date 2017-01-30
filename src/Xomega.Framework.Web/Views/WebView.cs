@@ -43,6 +43,9 @@ namespace Xomega.Framework.Web
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if (btn_Close != null)
+                btn_Close.Click += Close;
+
             if (Model == null) return;
             // restore model data from view state
             Model.Params[ViewParams.Mode.Param] = Mode;
@@ -126,12 +129,9 @@ namespace Xomega.Framework.Web
             if (vc != null)
             {
                 // display Close button only if the view is activated as a child (popup or inline)
-                if (btn_Close != null)
-                {
+                if (btn_Close != null && bind && vc.Params != null)
                     btn_Close.Visible = (vc.Params[ViewParams.Mode.Param] != null);
-                    if (bind) btn_Close.Click += Close;
-                    else btn_Close.Click -= Close;
-                }
+
                 if (bind)
                 {
                     Mode = vc.Params[ViewParams.Mode.Param];

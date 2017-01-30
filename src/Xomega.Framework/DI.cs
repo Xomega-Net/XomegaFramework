@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Xomega.Framework

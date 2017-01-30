@@ -88,6 +88,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Standard event arguments</param>
         protected override void OnLoad(EventArgs e)
         {
+            // restore view model state
             SearchViewModel svm = Model as SearchViewModel;
             if (svm != null)
             {
@@ -99,6 +100,17 @@ namespace Xomega.Framework.Web
                 if (collapsible != null)
                     svm.CriteriaCollapsed = collapsible.Collapsed;
             }
+
+            // wire up event handlers for buttons
+            if (btn_Search != null)
+                btn_Search.Click += Search;
+            if (btn_Refresh != null)
+                btn_Refresh.Click += Refresh;
+            if (btn_Reset != null)
+                btn_Reset.Click += Reset;
+            if (btn_Select != null)
+                btn_Select.Click += Select;
+
             base.OnLoad(e);
         }
 
@@ -116,29 +128,8 @@ namespace Xomega.Framework.Web
             SearchViewModel svm = (bind ? viewModel : this.Model) as SearchViewModel;
             if (svm != null)
             {
-                if (btn_Search != null)
-                {
-                    if (bind) btn_Search.Click += svm.Search;
-                    else btn_Search.Click -= svm.Search;
-                }
-                if (btn_Refresh != null)
-                {
-                    if (bind) btn_Refresh.Click += svm.Search;
-                    else btn_Refresh.Click -= svm.Search;
-                }
-                if (btn_Reset != null)
-                {
-                    if (bind) btn_Reset.Click += svm.Reset;
-                    else btn_Reset.Click -= svm.Reset;
-                }
-                if (btn_Select != null)
-                {
-                    if (bind) btn_Select.Click += svm.Select;
-                    else btn_Select.Click -= svm.Select;
-
-                    if (bind && viewModel.Params != null)
-                        btn_Select.Visible = (viewModel.Params[ViewParams.SelectionMode.Param] != null);
-                }
+                if (btn_Select != null && bind && svm.Params != null)
+                    btn_Select.Visible = (svm.Params[ViewParams.SelectionMode.Param] != null);
 
                 // subscribe to property change events on the data list object
                 if (bind)
@@ -152,7 +143,7 @@ namespace Xomega.Framework.Web
                 else
                 {
                     if (svm.List != null)
-                        svm.List.PropertyChanged += OnListPropertyChanged;
+                        svm.List.PropertyChanged -= OnListPropertyChanged;
                 }
                 OnModelPropertyChanged(svm, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
                 OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
@@ -199,6 +190,45 @@ namespace Xomega.Framework.Web
                 DataListObject list = sender as DataListObject;
                 ucl_AppliedCriteria.BindTo((list != null) ? list.AppliedCriteria : null);
             }
+        }
+
+        #endregion
+
+        #region Event handlers
+
+        /// <summary>
+        /// Default handler for searching that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Search(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Search(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for refreshing that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Refresh(object sender, EventArgs e)
+        {
+            Search(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for resetting that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Reset(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Reset(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for selectinging that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Select(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Select(sender, e);
         }
 
         #endregion

@@ -69,6 +69,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Standard event arguments</param>
         protected override void OnLoad(EventArgs e)
         {
+            // restore view model state
             DetailsViewModel dvm = Model as DetailsViewModel;
             if (dvm != null)
             {
@@ -76,6 +77,13 @@ namespace Xomega.Framework.Web
                 if (obj != null) dvm.DetailsObject = obj;
                 if (IsNew != null) dvm.IsNew = IsNew.Value;
             }
+
+            // wire up event handlers for buttons
+            if (btn_Save != null)
+                btn_Save.Click += Save;
+            if (btn_Delete != null)
+                btn_Delete.Click += Delete;
+
             base.OnLoad(e);
         }
 
@@ -93,16 +101,6 @@ namespace Xomega.Framework.Web
             DetailsViewModel dvm = (bind ? viewModel : this.Model) as DetailsViewModel;
             if (dvm != null)
             {
-                if (btn_Save != null)
-                {
-                    if (bind) btn_Save.Click += dvm.Save;
-                    else btn_Save.Click -= dvm.Save;
-                }
-                if (btn_Delete != null)
-                {
-                    if (bind) btn_Delete.Click += dvm.Delete;
-                    else btn_Delete.Click -= dvm.Delete;
-                }
 
                 OnModelPropertyChanged(dvm, new PropertyChangedEventArgs(DetailsViewModel.IsNewProperty));
 
@@ -129,6 +127,28 @@ namespace Xomega.Framework.Web
             {
                 IsNew = dvm.IsNew;
             }
+        }
+
+        #endregion
+
+        #region Event handlers
+
+        /// <summary>
+        /// Default handler for saving the view delegating the action to the view model.
+        /// </summary>
+        protected virtual void Save(object sender, EventArgs e)
+        {
+            DetailsViewModel dvm = Model as DetailsViewModel;
+            if (dvm != null) dvm.Save(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for deleting the view delegating the action to the view model.
+        /// </summary>
+        protected virtual void Delete(object sender, EventArgs e)
+        {
+            DetailsViewModel dvm = Model as DetailsViewModel;
+            if (dvm != null) dvm.Delete(sender, e);
         }
 
         #endregion

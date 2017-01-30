@@ -73,7 +73,10 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Main function to load details data
         /// </summary>
-        public abstract void LoadData();
+        public virtual void LoadData()
+        {
+            // subclasses can implement it to load the data as needed
+        }
 
         /// <summary>
         /// Default handler for saving or deleting of a child details view.

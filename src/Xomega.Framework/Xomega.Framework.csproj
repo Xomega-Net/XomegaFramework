@@ -81,6 +81,7 @@
     <Compile Include="DataObjects\CriteriaObject.cs" />
     <Compile Include="DataObjects\FieldCriteriaSetting.cs" />
     <Compile Include="DataObjects\ListSortCriteria.cs" />
+    <Compile Include="DataProperties\AccessLevel.cs" />
     <Compile Include="Errors\ErrorParser.cs" />
     <Compile Include="Errors\ErrorAbortException.cs" />
     <Compile Include="Errors\ErrorType.cs" />

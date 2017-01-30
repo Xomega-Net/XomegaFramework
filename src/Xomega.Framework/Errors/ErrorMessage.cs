@@ -83,7 +83,7 @@ namespace Xomega.Framework
                     case ErrorType.Validation:
                         return HttpStatusCode.BadRequest;
                     case ErrorType.Security:
-                        return HttpStatusCode.Unauthorized;
+                        return HttpStatusCode.Forbidden;
                     case ErrorType.Concurrency:
                         return HttpStatusCode.Conflict;
                     case ErrorType.External:
