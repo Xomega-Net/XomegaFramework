@@ -56,7 +56,7 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public virtual bool Activate(NameValueCollection parameters)
         {
-            Params = new NameValueCollection(parameters);
+            Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
             return true;
         }
 

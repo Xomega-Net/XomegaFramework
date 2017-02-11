@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -47,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultServiceProviderHostFactory.cs" />
+    <Compile Include="FaultErrorList.cs" />
     <Compile Include="FaultErrorParser.cs" />
     <Compile Include="InstanceContextServiceScope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

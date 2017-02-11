@@ -68,11 +68,13 @@ namespace Xomega.Framework.Views
                 if (bind)
                 {
                     vc.PropertyChanged += OnModelPropertyChanged;
+                    vc.ViewEvents += OnViewEvents;
                     vc.View = this;
                 }
                 else
                 {
                     vc.PropertyChanged -= OnModelPropertyChanged;
+                    vc.ViewEvents -= OnViewEvents;
                     vc.View = null;
                 }
                 OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
@@ -89,6 +91,10 @@ namespace Xomega.Framework.Views
         {
             if (el != null) el.DataContext = obj;
         }
+
+        #endregion
+
+        #region View model event handling
 
         /// <summary>
         /// Error presenter for the view
@@ -114,6 +120,16 @@ namespace Xomega.Framework.Views
             ViewModel vc = sender as ViewModel;
             if (ep != null && ViewModel.ErrorsProperty.Equals(e.PropertyName))
                 ep.Show(vc != null ? vc.Errors : null);
+        }
+
+        /// <summary>
+        /// Listens for view events allowing subclasses to handle them
+        /// </summary>
+        /// <param name="sender">View model that sent the event</param>
+        /// <param name="e">View event</param>
+        protected virtual void OnViewEvents(object sender, ViewEvent e)
+        {
+            // subclasses can override
         }
 
         #endregion

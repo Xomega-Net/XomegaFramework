@@ -126,7 +126,7 @@ namespace Xomega.Framework
         /// Aborts the current operation with the specified reason by throwing an ErrorAbortException.
         /// </summary>
         /// <param name="reason">The reason for aborting the operation.</param>
-        public void Abort(string reason)
+        public virtual void Abort(string reason)
         {
             throw new ErrorAbortException(reason, this);
         }

@@ -25,10 +25,5 @@ namespace Xomega.Framework.Wcf
                 contract.ContractBehaviors.Add(new ServiceInstanceProvider(serviceProvider, contract.ContractType));
             }
         }
-
-        public class Factory 
-        {
-
-        }
     }
 }

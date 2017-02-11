@@ -34,11 +34,6 @@ namespace Xomega.Framework.Services
         protected ErrorList currentErrors;
 
         /// <summary>
-        /// The principal for the current operation
-        /// </summary>
-        protected IPrincipal currentPrincipal = Thread.CurrentPrincipal;
-
-        /// <summary>
         /// Default constructor.
         /// </summary>
         public BaseService(IServiceProvider serviceProvider)

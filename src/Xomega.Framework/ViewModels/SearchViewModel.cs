@@ -32,18 +32,18 @@ namespace Xomega.Framework.Views
             if (!base.Activate(parameters)) return false;
 
             // set criteria from the parameters
-            if (Criteria != null) Criteria.SetValues(parameters);
+            if (Criteria != null) Criteria.SetValues(Params);
 
             // set list selection mode from the parameters if passed
-            if (List != null && parameters[ViewParams.SelectionMode.Param] != null)
-                List.RowSelectionMode = parameters[ViewParams.SelectionMode.Param];
+            if (List != null && Params[ViewParams.SelectionMode.Param] != null)
+                List.RowSelectionMode = Params[ViewParams.SelectionMode.Param];
 
             // auto-run search if specified so in parameters, or if there are no criteria to set
-            if (parameters[ViewParams.Action.Param] == ViewParams.Action.Search || Criteria == null)
+            if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || Criteria == null)
                 Search(false);
 
             // try to auto-select as appropriate and don't show the view if succeeded
-            if (parameters[ViewParams.Action.Param] == ViewParams.Action.Select && AutoSelect())
+            if (Params[ViewParams.Action.Param] == ViewParams.Action.Select && AutoSelect())
                 return false;
 
             return true;

@@ -41,6 +41,7 @@ namespace Xomega.Framework
             SelectorPropertyBinding.Register();
             LinkPropertyBinding.Register();
             DatePickerPropertyBinding.Register();
+            PasswordBoxPropertyBinding.Register();
         }
 
         /// <summary>

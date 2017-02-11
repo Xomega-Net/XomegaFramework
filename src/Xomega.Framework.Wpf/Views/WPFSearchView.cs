@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,22 @@ namespace Xomega.Framework.Views
         protected virtual Button SelectButton { get; }
 
         /// <summary>
+        /// Configures button commands after initialization
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            if (SearchButton != null)
+                SearchButton.Click += Search;
+            if (ResetButton != null)
+                ResetButton.Click += Reset;
+            if (SelectButton != null)
+                SelectButton.Click += Select;
+        }
+
+        /// <summary>
         /// Binds the view to its model, or unbinds the current model if null is passed.
         /// </summary>
         public override void BindTo(ViewModel viewModel)
@@ -40,35 +57,14 @@ namespace Xomega.Framework.Views
             SearchViewModel svm = (bind ? viewModel : this.Model) as SearchViewModel;
             if (svm != null)
             {
-                if (SearchButton != null)
-                {
-                    if (bind) SearchButton.Click += svm.Search;
-                    else SearchButton.Click -= svm.Search;
-                }
-                if (ResetButton != null)
-                {
-                    if (bind) ResetButton.Click += svm.Reset;
-                    else ResetButton.Click -= svm.Reset;
-                }
-                if (SelectButton != null)
-                {
-                    if (bind) SelectButton.Click += svm.Select;
-                    else SelectButton.Click -= svm.Select;
-
-                    if (bind && viewModel.Params != null)
-                        SelectButton.Visibility = (viewModel.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
-                }
+                if (SelectButton != null && bind && viewModel.Params != null)
+                    SelectButton.Visibility = (viewModel.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
 
                 // subscribe to property change events on the data list object
-                if (bind)
+                if (svm.List != null)
                 {
-                    if (svm.List != null)
-                        svm.List.PropertyChanged += OnListPropertyChanged;
-                }
-                else
-                {
-                    if (svm.List != null)
-                        svm.List.PropertyChanged += OnListPropertyChanged;
+                    if (bind) svm.List.PropertyChanged += OnListPropertyChanged;
+                    else svm.List.PropertyChanged -= OnListPropertyChanged;
                 }
                 OnModelPropertyChanged(bind ? svm : null, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
                 OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
@@ -107,5 +103,36 @@ namespace Xomega.Framework.Views
                 AppliedCriteriaPanel.BindTo(list != null ? list.AppliedCriteria : null);
             }
         }
+
+        #region Event handlers
+
+        /// <summary>
+        /// Default handler for searching that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Search(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Search(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for resetting that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Reset(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Reset(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for selectinging that delegates the action to the view model.
+        /// </summary>
+        protected virtual void Select(object sender, EventArgs e)
+        {
+            SearchViewModel svm = Model as SearchViewModel;
+            if (svm != null) svm.Select(sender, e);
+        }
+
+        #endregion
     }
 }

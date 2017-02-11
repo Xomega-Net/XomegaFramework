@@ -13,7 +13,7 @@ namespace Xomega.Framework
         /// <summary>
         /// The default (root) service provider for the application
         /// </summary>
-        public static IServiceProvider DefaultServiceProvider { get; set; }
+        public static IServiceProvider DefaultServiceProvider { get; internal set; }
 
         /// <summary>
         /// Configures specified service container with implementation of an error list and a default error parser

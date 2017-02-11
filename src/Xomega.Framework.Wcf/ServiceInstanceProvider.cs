@@ -11,10 +11,9 @@ using System.ServiceModel.Description;
 namespace Xomega.Framework.Wcf
 {
     /// <summary>
-    /// WCF service instance provider for a given contract type using specified service provider.
-    /// It can be registered as a contract behavior, and it also provides handling of ErrorAbortException.
+    /// WCF service instance provider for a given contract type using specified service provider, which can be registered as a contract behavior.
     /// </summary>
-    public class ServiceInstanceProvider : IInstanceProvider, IContractBehavior, IErrorHandler
+    public class ServiceInstanceProvider : IInstanceProvider, IContractBehavior
     {
         private readonly IServiceProvider serviceProvider;
         private readonly Type contractType;
@@ -96,7 +95,6 @@ namespace Xomega.Framework.Wcf
         {
             dispatchRuntime.InstanceProvider = this;
             dispatchRuntime.InstanceContextInitializers.Add(new InstanceContextServiceScope());
-            dispatchRuntime.ChannelDispatcher.ErrorHandlers.Add(this);
         }
 
         /// <summary>
@@ -117,38 +115,6 @@ namespace Xomega.Framework.Wcf
         /// <param name="bindingParameters">The objects that binding elements require to support the behavior.</param>
         public void AddBindingParameters(ContractDescription contractDescription, ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
         {
-        }
-
-        #endregion
-
-        #region IErrorHandler implementation
-
-        /// <summary>
-        /// Handles ErrorAbortException to provide a fault with ErrorList to the client.
-        /// </summary>
-        /// <param name="error">The System.Exception object thrown in the course of the service operation.</param>
-        /// <param name="version">The SOAP version of the message.</param>
-        /// <param name="fault">The System.ServiceModel.Channels.Message object that is returned to the client,
-        /// or service, in the duplex case.</param>
-        public void ProvideFault(Exception error, MessageVersion version, ref Message fault)
-        {
-            ErrorAbortException ea = error as ErrorAbortException;
-            if (ea == null) return;
-            FaultException fe = new FaultException<ErrorList>(ea.Errors, new FaultReason(ea.Message), new FaultCode("Sender"), null);
-            fault = Message.CreateMessage(version, fe.CreateMessageFault(), "ErrorList");
-        }
-
-        /// <summary>
-        /// Enables error-related processing and returns a value that indicates whether the
-        /// dispatcher aborts the session and the instance context in certain cases.
-        /// </summary>
-        /// <param name="error">The exception thrown during processing.</param>
-        /// <returns>true if WCF should not abort the session (if there is one)
-        /// and instance context if the instance context is not System.ServiceModel.InstanceContextMode.Single;
-        /// otherwise, false. The default is false.</returns>
-        public bool HandleError(Exception error)
-        {
-            return error is ErrorAbortException;
         }
 
         #endregion

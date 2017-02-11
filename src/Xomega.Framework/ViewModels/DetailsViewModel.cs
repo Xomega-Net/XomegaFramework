@@ -30,9 +30,9 @@ namespace Xomega.Framework.Views
         {
             if (!base.Activate(parameters)) return false;
 
-            IsNew = ViewParams.Action.Create == parameters[ViewParams.Action.Param];
+            IsNew = ViewParams.Action.Create == Params[ViewParams.Action.Param];
 
-            if (DetailsObject != null) DetailsObject.SetValues(parameters);
+            if (DetailsObject != null) DetailsObject.SetValues(Params);
 
             if (!IsNew) LoadData();
             return true;
