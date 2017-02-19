@@ -88,6 +88,7 @@
     <Compile Include="Errors\ErrorAbortException.cs" />
     <Compile Include="Errors\ErrorType.cs" />
     <Compile Include="Errors\ErrorSeverity.cs" />
+    <Compile Include="Services\IPrincipalProvider.cs" />
     <Compile Include="Services\IValidatable.cs" />
     <Compile Include="DataObjects\DataObject.cs" />
     <Compile Include="DataProperties\BaseProperty.cs" />

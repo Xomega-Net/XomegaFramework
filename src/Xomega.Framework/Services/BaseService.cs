@@ -11,7 +11,7 @@ namespace Xomega.Framework.Services
     /// <summary>
     /// A base class for service implementation classes that use Xomega Framework.
     /// </summary>
-    public class BaseService
+    public class BaseService : IPrincipalProvider
     {
         /// <summary>
         /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
@@ -34,6 +34,11 @@ namespace Xomega.Framework.Services
         protected ErrorList currentErrors;
 
         /// <summary>
+        /// The principal for the current operation
+        /// </summary>
+        private IPrincipal currentPrincipal;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public BaseService(IServiceProvider serviceProvider)
@@ -43,5 +48,15 @@ namespace Xomega.Framework.Services
             currentErrors = serviceProvider.GetService<ErrorList>();
             if (currentErrors == null) currentErrors = new ErrorList(serviceProvider.GetService<ResourceManager>());
         }
+
+        /// <summary>
+        /// The principal for the current operation
+        /// </summary>
+        public IPrincipal CurrentPrincipal
+        {
+            get { return currentPrincipal ?? Thread.CurrentPrincipal; }
+            set { currentPrincipal = value; }
+        }
+
     }
 }
