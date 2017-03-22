@@ -28,7 +28,7 @@ namespace Xomega.Framework.Views
             public const string Search = "search";
 
             /// <summary>
-            /// Action to initiate search on activation
+            /// Action to activate for selection
             /// </summary>
             public const string Select = "select";
         }

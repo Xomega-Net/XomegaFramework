@@ -10,7 +10,7 @@ namespace Xomega.Framework
     public class ViewSelectionEvent : ViewEvent
     {
         /// <summary>
-        /// Internal bitmask integer representing the view event(s).
+        /// Selected data rows.
         /// </summary>
         public List<DataRow> SelectedRows { get; private set; }
 

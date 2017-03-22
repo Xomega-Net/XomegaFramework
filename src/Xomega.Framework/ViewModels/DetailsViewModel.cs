@@ -85,8 +85,11 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event object</param>
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
-            if (e.IsSaved() || e.IsDeleted())
-                LoadData(); // reload child lists
+            // ignore events from grandchildren
+            if (!e.IsChild() && (e.IsSaved() || e.IsDeleted()))
+                LoadData(); // reload child lists if a child was updated
+
+            base.OnChildEvent(childViewModel, e);
         }
 
         #endregion

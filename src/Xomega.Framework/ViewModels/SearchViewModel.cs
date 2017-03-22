@@ -170,14 +170,16 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event object</param>
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
-            if (e.IsClosed() && List != null)
+            if (!e.IsChild()) // we don't care about grandchildren here
             {
-                List.ClearSelectedRows();
-                List.FireCollectionChanged();
+                if (e.IsClosed() && List != null)
+                {
+                    List.ClearSelectedRows();
+                    List.FireCollectionChanged();
+                }
+                if (e.IsSaved() || e.IsDeleted())
+                    Search(true);
             }
-            if (e.IsSaved() || e.IsDeleted())
-                Search(true);
-
             base.OnChildEvent(childViewModel, e);
         }
 
