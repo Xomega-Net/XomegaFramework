@@ -82,7 +82,17 @@ namespace Xomega.Framework.Properties
         /// An instance of local lookup table when the possible values are not globally cached,
         /// but depend on the current state of the data object.
         /// </summary>
-        public LookupTable LocalLookupTable { get; set; }
+        protected LookupTable LocalLookupTable;
+
+        /// <summary>
+        /// Sets an instance of local lookup table that depends on the current state of the data object.
+        /// </summary>
+        public void SetLookupTable(LookupTable table)
+        {
+            SetValue(null);
+            LocalLookupTable = table;
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null));
+        }
 
         /// <summary>
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
@@ -92,7 +102,7 @@ namespace Xomega.Framework.Properties
         protected virtual LookupTable GetLookupTable()
         {
             if (LocalLookupTable != null) return LocalLookupTable;
-            LookupCache cache = LookupCache.Get(CacheType);
+            LookupCache cache = LookupCache.Get(parent != null ? parent.ServiceProvider : DI.DefaultServiceProvider, CacheType);
             LookupCache.LookupTableReady onReady = null;
             return cache == null ? null : cache.GetLookupTable(EnumType, onReady);
         }

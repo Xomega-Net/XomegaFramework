@@ -23,7 +23,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Registers WebLookupCacheProvider with the container
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">Service container</param>
         public static void AddWebLookupCacheProvider(this IServiceCollection services)
         {
             services.AddSingleton<ILookupCacheProvider, WebLookupCacheProvider>();

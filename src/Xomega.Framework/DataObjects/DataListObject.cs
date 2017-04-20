@@ -232,6 +232,11 @@ namespace Xomega.Framework
         #region Applied criteria
 
         /// <summary>
+        /// Criteria object assoicated with the current list object
+        /// </summary>
+        public CriteriaObject CriteriaObject { get; set; }
+
+        /// <summary>
         /// The name of the property that stores applied criteria
         /// </summary>
         public const string AppliedCriteriaProperty = "AppliedCriteria";
@@ -244,11 +249,50 @@ namespace Xomega.Framework
         public List<FieldCriteriaSetting> AppliedCriteria
         {
             get { return appliedCriteria; }
-            set
+            protected set
             {
                 appliedCriteria = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(AppliedCriteriaProperty));
             }
+        }
+
+        #endregion
+
+        #region Validation
+
+        /// <summary>
+        /// Gets all validation errors from the data list object and the criteria object, if any.
+        /// </summary>
+        /// <returns>Validation errors from the data list object and the criteria object.</returns>
+        public override ErrorList GetValidationErrors()
+        {
+            ErrorList errLst = new ErrorList();
+            if (validationErrorList != null) errLst.MergeWith(validationErrorList);
+            if (CriteriaObject != null) errLst.MergeWith(CriteriaObject.GetValidationErrors());
+            return errLst;
+        }
+
+        /// <summary>
+        /// Resets validation status to not validated on the object and the criteria object, if any.
+        /// </summary>
+        public override void ResetAllValidation()
+        {
+            ResetValidation();
+            if (CriteriaObject != null) CriteriaObject.ResetAllValidation();
+        }
+
+        /// <summary>
+        /// Validates the data list object and the criteria object, if any.
+        /// </summary>
+        /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
+        public override void Validate(bool force)
+        {
+            if (CriteriaObject != null) CriteriaObject.Validate(force);
+
+            if (force) ResetValidation();
+            if (validationErrorList != null) return;
+
+            validationErrorList = new ErrorList();
         }
 
         #endregion
@@ -315,26 +359,29 @@ namespace Xomega.Framework
         #region Data Contract support
 
         /// <summary>
-        /// Populates the data object list and imports the data from the given data contract list.
+        /// Options for populating data list object from a list of data contracts
         /// </summary>
-        /// <param name="list">A list of data contract objects to populate the list from.</param>
-        public virtual void FromDataContract(IEnumerable list)
-        {
-            FromDataContract(list, false);
+        public class PopulateListOptions {
+            /// <summary>
+            /// A flag indicating whether or not to preserve selection.
+            /// </summary>
+            public bool PreserveSelection = false;
         }
 
         /// <summary>
         /// Populates the data object list and imports the data from the given data contract list
         /// with ability to preserve currently selected entities.
         /// </summary>
-        /// <param name="list">A list of data contract objects to populate the list from.</param>
-        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
-        public virtual void FromDataContract(IEnumerable list, bool preserveSelection)
+        /// <param name="dataContract">Enumeration of data contract objects to populate the list from.</param>
+        /// <param name="options">Additional options for the operation.</param>
+        public override void FromDataContract(object dataContract, object options)
         {
+            IEnumerable list = dataContract as IEnumerable;
             if (list == null) return;
             List<DataRow> sel = new List<DataRow>();
             ListSortCriteria keys = new ListSortCriteria();
-            if (preserveSelection)
+            PopulateListOptions opts = options as PopulateListOptions;
+            if (opts != null && opts.PreserveSelection)
             {
                 sel = SelectedRows;
                 keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));
@@ -347,9 +394,10 @@ namespace Xomega.Framework
                 DataRow r = new DataRow(this);
                 data.Add(r);
                 MoveNext();
-                FromDataContract(contractItem);
+                base.FromDataContract(contractItem, options);
                 r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
+            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
             FireCollectionChanged();
             FireSelectionChanged();
         }
@@ -371,7 +419,8 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="obj">The list of data contract objects to export the data to.
         /// The list should be generic with a single type parameter.</param>
-        public override void ToDataContract(object obj)
+        /// <param name="options">Additional options for the operation.</param>
+        public override void ToDataContract(object obj, object options)
         {
             IList list = obj as IList;
             if (list == null) return;
@@ -382,7 +431,7 @@ namespace Xomega.Framework
             foreach (DataObject objectItem in this)
             {
                 object item = Activator.CreateInstance(contractItemType);
-                objectItem.ToDataContract(item);
+                objectItem.ToDataContract(item, options);
                 list.Add(item);
             }
         }

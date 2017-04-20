@@ -69,7 +69,7 @@ namespace Xomega.Framework.Views
                 OnModelPropertyChanged(bind ? svm : null, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
                 OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
 
-                BindDataObject(CriteriaPanel, bind ? svm.Criteria : null);
+                BindDataObject(CriteriaPanel, bind && svm.List != null? svm.List.CriteriaObject : null);
                 BindDataObject(ResultsGrid, bind ? svm.List : null);
             }
             base.BindTo(viewModel);

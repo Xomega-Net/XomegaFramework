@@ -30,12 +30,6 @@ namespace Xomega.Framework.Web
         /// </summary>
         public ViewModel Model { get; protected set; }
 
-        /// <summary>Default view width</summary>
-        public string Width { get; set; }
-
-        /// <summary>Default view height</summary>
-        public string Height { get; set; }
-
         /// <summary>
         /// Initializes the already constructed view model for each request
         /// </summary>
@@ -125,31 +119,31 @@ namespace Xomega.Framework.Web
         public virtual void BindTo(ViewModel model)
         {
             bool bind = model != null;
-            ViewModel vc = bind ? model : this.Model;
-            if (vc != null)
+            ViewModel vm = bind ? model : this.Model;
+            if (vm != null)
             {
                 // display Close button only if the view is activated as a child (popup or inline)
-                if (btn_Close != null && bind && vc.Params != null)
-                    btn_Close.Visible = (vc.Params[ViewParams.Mode.Param] != null);
+                if (btn_Close != null && bind && vm.Params != null)
+                    btn_Close.Visible = (vm.Params[ViewParams.Mode.Param] != null);
 
                 if (bind)
                 {
-                    Mode = vc.Params[ViewParams.Mode.Param];
-                    ParentSource = vc.Params[ViewParams.QuerySource];
-                    SelectionMode = vc.Params[ViewParams.SelectionMode.Param];
-                    vc.ViewEvents += OnViewEvents;
-                    vc.PropertyChanged += OnModelPropertyChanged;
-                    vc.View = this;
+                    Mode = vm.Params[ViewParams.Mode.Param];
+                    ParentSource = vm.Params[ViewParams.QuerySource];
+                    SelectionMode = vm.Params[ViewParams.SelectionMode.Param];
+                    vm.ViewEvents += OnViewEvents;
+                    vm.PropertyChanged += OnModelPropertyChanged;
+                    vm.View = this;
                 }
                 else
                 {
-                    vc.ViewEvents -= OnViewEvents;
-                    vc.PropertyChanged -= OnModelPropertyChanged;
-                    vc.View = null;
+                    vm.ViewEvents -= OnViewEvents;
+                    vm.PropertyChanged -= OnModelPropertyChanged;
+                    vm.View = null;
                     Mode = null;
                     ParentSource = null;
                 }
-                OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
+                OnModelPropertyChanged(bind ? vm : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
             }
             this.Model = model;
         }
@@ -198,11 +192,6 @@ namespace Xomega.Framework.Web
             Visible = true;
             UpdatePanel upl = WebUtil.FindParentUpdatePanel(this);
             if (upl != null) upl.Update();
-            if (pnl_View != null)
-            {
-                if (Width != null) pnl_View.Style.Add("min-width", Width);
-                if (Height != null) pnl_View.Style.Add("min-height", Height);
-            }
 
             switch (Mode)
             {

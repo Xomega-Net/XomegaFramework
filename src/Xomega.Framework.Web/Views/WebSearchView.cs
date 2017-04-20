@@ -15,19 +15,7 @@ namespace Xomega.Framework.Web
     {
         #region Data objects
 
-        private string criteriaKey { get { return "criteria:" + UniqueID + Request.CurrentExecutionFilePath; } }
-
-        private CriteriaObject criteriaObj
-        {
-            get { return Session[criteriaKey] as CriteriaObject; }
-            set
-            {
-                if (value == null) Session.Remove(criteriaKey);
-                Session[criteriaKey] = value;
-            }
-        }
-
-        private string listKey { get { return "criteria:" + UniqueID + Request.CurrentExecutionFilePath; } }
+        private string listKey { get { return UniqueID + Request.CurrentExecutionFilePath; } }
 
         private DataListObject listObj
         {
@@ -92,8 +80,6 @@ namespace Xomega.Framework.Web
             SearchViewModel svm = Model as SearchViewModel;
             if (svm != null)
             {
-                CriteriaObject crit = criteriaObj;
-                if (crit != null) svm.Criteria = crit;
                 DataListObject list = listObj;
                 if (list != null) svm.List = list;
                 ICollapsiblePanel collapsible = ucl_Criteria as ICollapsiblePanel;
@@ -136,8 +122,7 @@ namespace Xomega.Framework.Web
                 {
                     if (svm.List != null)
                         svm.List.PropertyChanged += OnListPropertyChanged;
-                    // persist the objects in session
-                    criteriaObj = svm.Criteria;
+                    // persist the object in session
                     listObj = svm.List;
                 }
                 else
@@ -148,15 +133,18 @@ namespace Xomega.Framework.Web
                 OnModelPropertyChanged(svm, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
                 OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
 
-                if (svm.Criteria != null && ucl_Criteria != null)
-                {
-                    ucl_Criteria.DataBind();
-                    WebPropertyBinding.BindToObject(ucl_Criteria, bind ? svm.Criteria : null);
-                }
                 if (svm.List != null && grd_Results != null)
                 {
-                    grd_Results.AutoGenerateSelectButton = ViewParams.SelectionMode.Single.Equals(svm.Params[ViewParams.SelectionMode.Param]);
-                    WebPropertyBinding.BindToList(grd_Results, bind ? svm.List : null);
+                    if (svm.List.CriteriaObject != null && ucl_Criteria != null)
+                    {
+                        ucl_Criteria.DataBind();
+                        WebPropertyBinding.BindToObject(ucl_Criteria, bind ? svm.List.CriteriaObject : null);
+                    }
+                    if (grd_Results != null)
+                    {
+                        grd_Results.AutoGenerateSelectButton = ViewParams.SelectionMode.Single.Equals(svm.Params[ViewParams.SelectionMode.Param]);
+                        WebPropertyBinding.BindToList(grd_Results, bind ? svm.List : null);
+                    }
                 }
             }
             base.BindTo(viewModel);

@@ -51,19 +51,19 @@ namespace Xomega.Framework
         /// Returns if the view was closed.
         /// </summary>
         /// <returns>True if the view was closed, false otherwise.</returns>
-        public bool IsClosed() { return (events & Closed.events) > 0; }
+        public bool IsClosed(bool self = true) { return (self && !IsChild() || !self) && (events & Closed.events) > 0; }
 
         /// <summary>
         /// Returns if the view was saved.
         /// </summary>
         /// <returns>True if the view was saved, false otherwise.</returns>
-        public bool IsSaved() { return (events & Saved.events) > 0; }
+        public bool IsSaved(bool self = true) { return (self && !IsChild() || !self) && (events & Saved.events) > 0; }
 
         /// <summary>
         /// Returns if the view was deleted.
         /// </summary>
         /// <returns>True if the view was deleted, false otherwise.</returns>
-        public bool IsDeleted() { return (events & Deleted.events) > 0; }
+        public bool IsDeleted(bool self = true) { return (self && !IsChild() || !self) && (events & Deleted.events) > 0; }
 
         /// <summary>
         /// Returns if a child view event occured.

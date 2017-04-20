@@ -2,14 +2,13 @@
 
 using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace Xomega.Framework.Views
 {
     /// <summary>
     /// Base class for models of details views
     /// </summary>
-    public abstract class DetailsViewModel : ViewModel
+    public class DetailsViewModel : ViewModel
     {
         #region Initialization/Activation
 
@@ -28,13 +27,11 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public override bool Activate(NameValueCollection parameters)
         {
-            if (!base.Activate(parameters)) return false;
+            if (!base.Activate(parameters) || DetailsObject == null) return false;
 
-            IsNew = ViewParams.Action.Create == Params[ViewParams.Action.Param];
+            DetailsObject.SetValues(Params);
 
-            if (DetailsObject != null) DetailsObject.SetValues(Params);
-
-            if (!IsNew) LoadData();
+            if (ViewParams.Action.Create != Params[ViewParams.Action.Param]) LoadData();
             return true;
         }
 
@@ -52,30 +49,19 @@ namespace Xomega.Framework.Views
         #region Data loading
 
         /// <summary>
-        /// The name of the IsNew observable property
-        /// </summary>
-        public const string IsNewProperty = "IsNew";
-
-        private bool isNew = true;
-
-        /// <summary>
-        /// An indicator if the object is new and not yet saved
-        /// </summary>
-        public bool IsNew {
-            get { return isNew; }
-            set
-            {
-                isNew = value;
-                OnPropertyChanged(new PropertyChangedEventArgs(IsNewProperty));
-            }
-        }
-
-        /// <summary>
         /// Main function to load details data
         /// </summary>
         public virtual void LoadData()
         {
-            // subclasses can implement it to load the data as needed
+            if (DetailsObject == null) return;
+            try
+            {
+                DetailsObject.Read(null);
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -86,7 +72,7 @@ namespace Xomega.Framework.Views
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
             // ignore events from grandchildren
-            if (!e.IsChild() && (e.IsSaved() || e.IsDeleted()))
+            if (e.IsSaved() || e.IsDeleted())
                 LoadData(); // reload child lists if a child was updated
 
             base.OnChildEvent(childViewModel, e);
@@ -103,7 +89,18 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         public virtual void Save(object sender, EventArgs e)
         {
-            // implemented in subclasses
+            if (DetailsObject == null) return;
+            try
+            {
+                DetailsObject.Validate(true);
+                DetailsObject.GetValidationErrors().AbortIfHasErrors();
+                DetailsObject.Save(null);
+                FireEvent(ViewEvent.Saved);
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -116,13 +113,24 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Handler for deleting the objejct displayed in the current view
+        /// Handler for deleting the object displayed in the current view
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         public virtual void Delete(object sender, EventArgs e)
         {
-            // implemented in subclasses
+            if (DetailsObject == null || View != null && !View.CanDelete()) return;
+            try
+            {
+                DetailsObject.Delete(null);
+                FireEvent(ViewEvent.Deleted);
+                DetailsObject.SetModified(false, true); // so that we could close without asking
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -131,7 +139,7 @@ namespace Xomega.Framework.Views
         /// <returns></returns>
         public virtual bool DeleteEnabled()
         {
-            return !IsNew;
+            return DetailsObject != null && !DetailsObject.IsNew;
         }
 
         #endregion

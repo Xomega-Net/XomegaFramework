@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
+using Xomega.Framework.Lookup;
 
 namespace Xomega.Framework
 {
@@ -23,6 +25,34 @@ namespace Xomega.Framework
         {
             container.AddScoped<ErrorList>();
             container.AddSingleton<ErrorParser>();
+        }
+
+        /// <summary>
+        /// Registers WebLookupCacheProvider with the container
+        /// </summary>
+        /// <param name="container">Service container to configure</param>
+        public static void AddSingletonLookupCacheProvider(this IServiceCollection container)
+        {
+            container.AddSingleton<ILookupCacheProvider, SingletonLookupCacheProvider>();
+        }
+
+        /// <summary>
+        /// Registers an XmlLookupCacheLoader constructed from an XML resource embedded in the specified assembly.
+        /// </summary>
+        /// <param name="container">Service container to configure</param>
+        /// <param name="asm">Assembly with the resource</param>
+        /// <param name="enumResource">Resource name</param>
+        /// <param name="caseSensitive">True to build case-sensitive cache, which improves performance. False otherwise.</param>
+        public static void AddXmlResourceCacheLoader(this IServiceCollection container, Assembly asm, string enumResource, bool caseSensitive)
+        {
+            foreach (string resource in asm.GetManifestResourceNames())
+            {
+                if (resource.EndsWith(enumResource))
+                {
+                    container.AddSingleton<ILookupCacheLoader>(new XmlLookupCacheLoader(asm.GetManifestResourceStream(resource), caseSensitive));
+                    break;
+                }
+            }
         }
     }
 }

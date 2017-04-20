@@ -9,7 +9,7 @@ namespace Xomega.Framework.Views
     /// <summary>
     /// Base class for models of search views with a results grid and a criteria panel
     /// </summary>
-    public abstract class SearchViewModel : ViewModel
+    public class SearchViewModel : ViewModel
     {
         #region Initialization/Activation
 
@@ -29,17 +29,17 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public override bool Activate(NameValueCollection parameters)
         {
-            if (!base.Activate(parameters)) return false;
-
-            // set criteria from the parameters
-            if (Criteria != null) Criteria.SetValues(Params);
+            if (!base.Activate(parameters) || List == null) return false;
 
             // set list selection mode from the parameters if passed
-            if (List != null && Params[ViewParams.SelectionMode.Param] != null)
+            if (Params[ViewParams.SelectionMode.Param] != null)
                 List.RowSelectionMode = Params[ViewParams.SelectionMode.Param];
 
+            // set criteria from the parameters
+            if (List.CriteriaObject != null) List.CriteriaObject.SetValues(Params);
+
             // auto-run search if specified so in parameters, or if there are no criteria to set
-            if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || Criteria == null)
+            if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || List.CriteriaObject == null)
                 Search(false);
 
             // try to auto-select as appropriate and don't show the view if succeeded
@@ -51,12 +51,7 @@ namespace Xomega.Framework.Views
 
         #endregion
 
-        #region Data objects
-
-        /// <summary>
-        /// Criteria data object for the view
-        /// </summary>
-        public CriteriaObject Criteria { get; set; }
+        #region Data object
 
         /// <summary>
         /// List data object for the view
@@ -97,7 +92,22 @@ namespace Xomega.Framework.Views
         /// </summary>
         /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
         /// <returns>True on success, false in case of errors.</returns>
-        public abstract bool Search(bool preserveSelection);
+        public virtual bool Search(bool preserveSelection)
+        {
+            if (List == null) return false;
+            try
+            {
+                List.Validate(true);
+                List.GetValidationErrors().AbortIfHasErrors();
+                List.Read(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+                return false;
+            }
+        }
 
         /// <summary>
         /// Search function exposed as an event handler for the Search button
@@ -117,8 +127,12 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         public virtual void Reset(object sender, EventArgs e)
         {
-            if (Criteria != null) Criteria.ResetData();
-            if (List != null) List.ResetData();
+            if (List != null)
+            {
+                List.ResetData();
+                if (List.CriteriaObject != null)
+                    List.CriteriaObject.ResetData();
+            }
             if (AutoCollapseCriteria)
                 CriteriaCollapsed = false;
         }
@@ -133,7 +147,7 @@ namespace Xomega.Framework.Views
         /// <returns>True if automatic selection succeeded, false otherwise.</returns>
         public virtual bool AutoSelect()
         {
-            if (List == null || Criteria != null && !Criteria.HasCriteria() || !Search(false)) return false;
+            if (List == null || List.CriteriaObject != null && !List.CriteriaObject.HasCriteria() || !Search(false)) return false;
             if (List.RowCount > 1 && AutoCollapseCriteria)
                 CriteriaCollapsed = true;
             else if (List.RowCount == 0)
@@ -170,16 +184,14 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event object</param>
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
-            if (!e.IsChild()) // we don't care about grandchildren here
+            if (e.IsClosed() && List != null)
             {
-                if (e.IsClosed() && List != null)
-                {
-                    List.ClearSelectedRows();
-                    List.FireCollectionChanged();
-                }
-                if (e.IsSaved() || e.IsDeleted())
-                    Search(true);
+                List.ClearSelectedRows();
+                List.FireCollectionChanged();
             }
+            if (e.IsSaved() || e.IsDeleted())
+                Search(true);
+
             base.OnChildEvent(childViewModel, e);
         }
 

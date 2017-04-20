@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -34,49 +35,33 @@ namespace Xomega.Framework.Lookup
         public const string User = "UserLookupCache";
 
         /// <summary>
-        /// An instance of the cache provider constructed for the application from the current configuration.
-        /// </summary>
-        private static ILookupCacheProvider cacheProvider { get; set; }
-
-        /// <summary>
         /// Gets an instance of a lookup cache of the specified type.
         /// Typically either <see cref="LookupCache.Global"/> or <see cref="LookupCache.User"/> constants are used as a cache type.
         /// </summary>
+        /// <param name="serviceProvider">Service provider to use</param>
         /// <param name="cacheType">Cache type.</param>
         /// <returns>An instance of a lookup cache of the specified type or <c>null</c> if no cache can be found.</returns>
-        public static LookupCache Get(string cacheType)
+        public static LookupCache Get(IServiceProvider serviceProvider, string cacheType)
         {
-            if (cacheProvider == null && DI.DefaultServiceProvider != null)
-                cacheProvider = DI.DefaultServiceProvider.GetService<ILookupCacheProvider>();
+            ILookupCacheProvider cacheProvider = serviceProvider.GetService<ILookupCacheProvider>();
             if (cacheProvider == null)
             {
                 Trace.TraceWarning("No ILookupCacheProvider service is configured. Using default SingletonLookupCacheProvider.");
-                cacheProvider = new SingletonLookupCacheProvider();
+                cacheProvider = new SingletonLookupCacheProvider(serviceProvider);
             }
-            LookupCache res = cacheProvider.GetLookupCache(cacheType);
-            if (res != null) res.CacheType = cacheType;
-            return res;
-        }
-
-        /// <summary>
-        /// Static list of registered lookup cache loaders.
-        /// </summary>
-        private static List<ILookupCacheLoader> cacheLoaders = new List<ILookupCacheLoader>();
-
-        /// <summary>
-        /// Statically registers the given lookup cache loader.
-        /// </summary>
-        /// <param name="loader">The lookup cache loader to register.</param>
-        public static void AddCacheLoader(ILookupCacheLoader loader)
-        {
-            if (!cacheLoaders.Contains(loader)) cacheLoaders.Add(loader);
+            return cacheProvider.GetLookupCache(cacheType);
         }
         #endregion
 
         /// <summary>
         /// Cache type of the current cache.
         /// </summary>
-        public string CacheType { get; internal set; }
+        public string CacheType { get; private set; }
+
+        /// <summary>
+        /// Static list of registered lookup cache loaders.
+        /// </summary>
+        private IEnumerable<ILookupCacheLoader> cacheLoaders = new List<ILookupCacheLoader>();
 
         /// <summary>
         /// A cache of lookup tables by type.
@@ -93,6 +78,18 @@ namespace Xomega.Framework.Lookup
         /// An internal reader/writer lock to synchronize access to the data.
         /// </summary>
         private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+
+        /// <summary>
+        /// Constructs a new lookup cache of the specified type.
+        /// </summary>
+        /// <param name="serviceProvider">Service provider for the cache</param>
+        /// <param name="type">Cache type</param>
+        public LookupCache(IServiceProvider serviceProvider, string type)
+        {
+            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
+            cacheLoaders = serviceProvider.GetServices<ILookupCacheLoader>();
+            CacheType = type;
+        }
 
         /// <summary>
         /// A delegate for notifying the caller that requested a lookup table that this table

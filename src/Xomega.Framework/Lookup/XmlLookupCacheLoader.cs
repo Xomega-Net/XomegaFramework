@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -96,24 +95,6 @@ namespace Xomega.Framework.Lookup
                     data.Add(item);
                 }
                 updateCache(new LookupTable(type, data, caseSensitive));
-            }
-        }
-
-        /// <summary>
-        /// Registers an XmlLookupCacheLoader constructed from an XML resource embedded in the specified assembly.
-        /// </summary>
-        /// <param name="asm">Assembly with the resource</param>
-        /// <param name="enumResource">Resource name</param>
-        /// <param name="caseSensitive">True to build case-sensitive cache, which improves performance. False otherwise.</param>
-        public static void RegisterFromResource(Assembly asm, string enumResource, bool caseSensitive)
-        {
-            foreach (string resource in asm.GetManifestResourceNames())
-            {
-                if (resource.EndsWith(enumResource))
-                {
-                    LookupCache.AddCacheLoader(new XmlLookupCacheLoader(asm.GetManifestResourceStream(resource), caseSensitive));
-                    break;
-                }
             }
         }
     }

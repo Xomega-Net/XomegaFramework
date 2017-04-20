@@ -75,7 +75,6 @@ namespace Xomega.Framework.Web
             {
                 DataObject obj = dataObj;
                 if (obj != null) dvm.DetailsObject = obj;
-                if (IsNew != null) dvm.IsNew = IsNew.Value;
             }
 
             // wire up event handlers for buttons
@@ -101,9 +100,6 @@ namespace Xomega.Framework.Web
             DetailsViewModel dvm = (bind ? viewModel : this.Model) as DetailsViewModel;
             if (dvm != null)
             {
-
-                OnModelPropertyChanged(dvm, new PropertyChangedEventArgs(DetailsViewModel.IsNewProperty));
-
                 if (dvm.DetailsObject != null && pnl_Object != null)
                 {
                     pnl_Object.DataBind();
@@ -112,21 +108,6 @@ namespace Xomega.Framework.Web
                 if (bind) dataObj = dvm.DetailsObject; // persist the object in session
             }
             base.BindTo(viewModel);
-        }
-
-        /// <summary>
-        /// Handles IsNew property change to update the corresponding view state field
-        /// </summary>
-        /// <param name="sender">Model that sent the event</param>
-        /// <param name="e">Event arguments</param>
-        protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.OnModelPropertyChanged(sender, e);
-            DetailsViewModel dvm = sender as DetailsViewModel;
-            if (dvm != null && DetailsViewModel.IsNewProperty.Equals(e.PropertyName))
-            {
-                IsNew = dvm.IsNew;
-            }
         }
 
         #endregion
@@ -149,19 +130,6 @@ namespace Xomega.Framework.Web
         {
             DetailsViewModel dvm = Model as DetailsViewModel;
             if (dvm != null) dvm.Delete(sender, e);
-        }
-
-        #endregion
-
-        #region State
-
-        /// <summary>
-        /// An indicator if the object is new and not yet saved
-        /// </summary>
-        protected bool? IsNew
-        {
-            get { return (bool?)ViewState["IsNew"]; }
-            set { ViewState["IsNew"] = value; }
         }
 
         #endregion

@@ -39,7 +39,7 @@ namespace Xomega.Framework.Wcf
         public static IServiceCollection AddWcfClientServices(this IServiceCollection container, Func<SecurityToken> tokenProvider,
             ContextInformation ctx, Func<ChannelEndpointElement, bool> exclEndpoints)
         {
-            String clientPath = "system.serviceModel/client";
+            string clientPath = "system.serviceModel/client";
             ClientSection client = (ClientSection)(ctx != null ? ctx.GetSection(clientPath) : ConfigurationManager.GetSection(clientPath));
             foreach (ChannelEndpointElement endpoint in client.Endpoints)
             {
@@ -62,7 +62,7 @@ namespace Xomega.Framework.Wcf
         /// </summary>
         public static IServiceCollection AddWcfServices(this IServiceCollection container, ContextInformation ctx, Func<ServiceEndpointElement, bool> exclEndpoints)
         {
-            String servicesPath = "system.serviceModel/services";
+            string servicesPath = "system.serviceModel/services";
             ServicesSection services = (ServicesSection)(ctx != null ? ctx.GetSection(servicesPath) : ConfigurationManager.GetSection(servicesPath));
             foreach (ServiceElement service in services.Services)
             {

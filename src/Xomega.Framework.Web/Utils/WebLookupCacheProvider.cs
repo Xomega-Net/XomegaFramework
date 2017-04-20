@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
+using System;
 using System.Web;
 
 namespace Xomega.Framework.Lookup
@@ -14,6 +15,14 @@ namespace Xomega.Framework.Lookup
         private const string SessionKey = "ILookupCacheProvider";
 
         /// <summary>
+        /// Constructs a web lookup cache provider
+        /// </summary>
+        /// <param name="serviceProvider">Service provider to use</param>
+        public WebLookupCacheProvider(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        /// <summary>
         /// For a user cache type returns an instance of the lookup cache from the user session.
         /// Otherwise it returns a global instance for the application.
         /// </summary>
@@ -26,7 +35,7 @@ namespace Xomega.Framework.Lookup
                 LookupCache userCache = HttpContext.Current.Session[SessionKey] as LookupCache;
                 if (userCache == null)
                 {
-                    userCache = new LookupCache();
+                    userCache = new LookupCache(serviceProvider, LookupCache.User);
                     HttpContext.Current.Session[SessionKey] = userCache;
                 }
                 return userCache;

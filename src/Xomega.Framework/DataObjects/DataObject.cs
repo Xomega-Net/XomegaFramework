@@ -338,7 +338,8 @@ namespace Xomega.Framework
         /// in the subclass to address each such case.
         /// </summary>
         /// <param name="dataContract">The data contract object to copy the values from.</param>
-        public virtual void FromDataContract(object dataContract)
+        /// <param name="options">Additional options for the operation.</param>
+        public virtual void FromDataContract(object dataContract, object options)
         {
             if (dataContract == null) return;
             SetModified(false, false);
@@ -354,11 +355,7 @@ namespace Xomega.Framework
                 }
                 else if ((child = this.GetChildObject(pi.Name)) != null)
                 {
-                    IList vallist = val as IList;
-                    if (child is DataListObject && vallist != null)
-                        ((DataListObject)child).FromDataContract(vallist);
-                    else if (vallist == null)
-                        child.FromDataContract(val);
+                    child.FromDataContract(val, options);
                 }
                 else if (val != null)
                 {
@@ -386,10 +383,29 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="dataContract">The data contract object to export
         /// the current data object values to.</param>
-        public virtual void ToDataContract(object dataContract)
+        /// <param name="options">Additional options for the operation.</param>
+        public virtual void ToDataContract(object dataContract, object options)
         {
             if (dataContract == null) return;
-            ToDataContractProperties(dataContract, dataContract.GetType().GetProperties());
+            ToDataContractProperties(dataContract, dataContract.GetType().GetProperties(), options);
+        }
+
+        /// <summary>
+        /// Exports the data object property values and child object values
+        /// to the given data contract type by setting all its properties
+        /// to the values of the corresponding properties or child objects
+        /// with the same names.
+        /// If there is no exact match between some data contract property names
+        /// and the data object property names, this method can be overridden
+        /// in the subclass to address each such case.
+        /// </summary>
+        /// <param name="options">Additional options for the operation.</param>
+        /// <returns>The data contract object populated with the current data object values.</returns>
+        public virtual T ToDataContract<T>(object options)
+        {
+            T dataContract = (T)CreateInstance(typeof(T));
+            ToDataContract(dataContract, options);
+            return dataContract;
         }
 
         /// <summary>
@@ -403,7 +419,8 @@ namespace Xomega.Framework
         /// <param name="dataContract">The data contract object to export
         /// the current data object values to.</param>
         /// <param name="props">The data contract object fields to set.</param>
-        protected void ToDataContractProperties(object dataContract, PropertyInfo[] props)
+        /// <param name="options">Additional options for the operation.</param>
+        protected void ToDataContractProperties(object dataContract, PropertyInfo[] props, object options)
         {
             if (dataContract == null) return;
             foreach (PropertyInfo pi in props)
@@ -434,7 +451,7 @@ namespace Xomega.Framework
                 catch { continue; }
 
                 DataObject child = GetChildObject(pi.Name);
-                if (child != null) child.ToDataContract(obj);
+                if (child != null) child.ToDataContract(obj, options);
                 else
                 {
                     foreach (PropertyInfo cpi in pi.PropertyType.GetProperties())
@@ -453,7 +470,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="type">The type to create an instance of.</param>
         /// <returns>An instance of the corresponding type.</returns>
-        protected object CreateInstance(Type type)
+        protected virtual object CreateInstance(Type type)
         {
             Type t = type;
             if (t.IsInterface && typeof(IEnumerable).IsAssignableFrom(t))
@@ -511,7 +528,7 @@ namespace Xomega.Framework
         /// Gets all validation errors from the data object, all its properties and child objects recursively.
         /// </summary>
         /// <returns>Validation errors from the data object, all its properties and child objects.</returns>
-        public ErrorList GetValidationErrors()
+        public virtual ErrorList GetValidationErrors()
         {
             ErrorList errLst = new ErrorList();
             if (validationErrorList != null) errLst.MergeWith(validationErrorList);
@@ -533,7 +550,7 @@ namespace Xomega.Framework
         /// Resets validation status to not validated on the object,
         /// all its properties and child objects recursively.
         /// </summary>
-        public void ResetAllValidation()
+        public virtual void ResetAllValidation()
         {
             ResetValidation();
             foreach (DataProperty p in properties.Values) p.ResetValidation();
@@ -543,8 +560,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Validates the data object and all its properties and child objects recursively.
         /// </summary>
-        /// <param name="force">True to validate regardless of
-        /// whether or not it has been already validated.</param>
+        /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
         public virtual void Validate(bool force)
         {
             foreach (DataProperty p in properties.Values) p.Validate(force);
@@ -606,6 +622,91 @@ namespace Xomega.Framework
                 foreach (DataObject child in childObjects.Values) child.SetModified(modified, true);
             }
         }
+
+        #endregion
+
+        #region CRUD support
+
+        /// <summary>
+        /// Options for calling CRUD operations
+        /// </summary>
+        public class CrudOpions
+        {
+            /// <summary>
+            /// Indicates if the operation should call child objects recursively
+            /// </summary>
+            public bool Recursive = true;
+        }
+
+        /// <summary>
+        /// The name of the IsNew observable property
+        /// </summary>
+        public const string IsNewProperty = "IsNew";
+
+        private bool isNew = true;
+
+        /// <summary>
+        /// An indicator if the object is new and not yet saved
+        /// </summary>
+        public bool IsNew
+        {
+            get { return isNew; }
+            set
+            {
+                isNew = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(IsNewProperty));
+            }
+        }
+
+        /// <summary>
+        /// Reads data for the data object
+        /// </summary>
+        public virtual void Read(object options)
+        {
+            DoRead(options);
+            CrudOpions crudOpts = options as CrudOpions;
+            if (crudOpts == null || crudOpts.Recursive)
+                foreach (DataObject child in childObjects.Values) child.Read(options);
+            IsNew = false;
+        }
+
+        /// <summary>
+        /// Actual implementation of reading object data provided by subclasses
+        /// </summary>
+        protected virtual void DoRead(object options) {}
+
+        /// <summary>
+        /// Saves the data object
+        /// </summary>
+        public virtual void Save(object options)
+        {
+            Validate(true);
+            GetValidationErrors().AbortIfHasErrors();
+            DoSave(options);
+            CrudOpions crudOpts = options as CrudOpions;
+            if (crudOpts == null || crudOpts.Recursive)
+                foreach (DataObject child in childObjects.Values) child.Save(options);
+            IsNew = false;
+            SetModified(false, true);
+        }
+
+        /// <summary>
+        /// Actual implementation of saving the data object provided by subclasses
+        /// </summary>
+        protected virtual void DoSave(object options) { }
+
+        /// <summary>
+        /// Deletes the data object
+        /// </summary>
+        public virtual void Delete(object options)
+        {
+            DoDelete(options);
+        }
+
+        /// <summary>
+        /// Actual implementation of deleting the data object provided by subclasses
+        /// </summary>
+        protected virtual void DoDelete(object options) { }
 
         #endregion
     }

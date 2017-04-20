@@ -42,7 +42,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="name">type name</param>
         /// <returns>Type object for the given type name</returns>
-        public static Type GetType(String name)
+        public static Type GetType(string name)
         {
             if (name == null) return null;
             Type type = Type.GetType(name);
