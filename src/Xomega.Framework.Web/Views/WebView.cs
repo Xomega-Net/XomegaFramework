@@ -175,13 +175,16 @@ namespace Xomega.Framework.Web
         public virtual bool CanDelete() { return false; }
 
         /// <summary>Script to popup a modal dialog for a view.</summary>
-        protected string Script_ModalDialog = "if (typeof modalViewPopup === 'function') modalViewPopup('{0}', '{1}', '{2}', {3});";
+        protected string Script_ModalDialog = @"if (xomegaControls && typeof xomegaControls._modalViewPopup === 'function')
+            xomegaControls._modalViewPopup('{0}', '{1}', '{2}', {3});";
 
         /// <summary>Script to udpate view visibility in a split panel.</summary>
-        protected string Script_Splitter_OnViewVisibilityChange = "if (typeof vSplitterPanel_OnViewVisibilityChange === 'function') vSplitterPanel_OnViewVisibilityChange('{0}');";
+        protected string Script_Splitter_OnViewVisibilityChange = @"if (xomegaControls && typeof xomegaControls._vSplitViewVisibilityChange === 'function')
+            xomegaControls._vSplitViewVisibilityChange('{0}');";
 
         /// <summary>Script to split a panel vertically.</summary>
-        protected string Script_Splitter = "if (typeof vSplitterPanel === 'function') vSplitterPanel('{0}');";
+        protected string Script_Splitter = @"if (xomegaControls && typeof xomegaControls._vSplitViewPanel === 'function')
+            xomegaControls._vSplitViewPanel('{0}');";
 
         /// <summary>Shortcut to get the main view panel</summary>
         protected virtual Control ViewPanel { get { return Controls[0]; } }

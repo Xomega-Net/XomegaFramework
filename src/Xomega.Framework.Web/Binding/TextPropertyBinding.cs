@@ -36,7 +36,8 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>Script to invoke autocomplete functionality on a control.</summary>
-        protected string Script_AutoComplete = "if (typeof autocomplete === 'function') autocomplete({{controlID:{0},items:{1},multivalue:{2}}});";
+        protected string Script_AutoComplete = @"if (xomegaControls && typeof xomegaControls._autoComplete === 'function')
+            xomegaControls._autoComplete({{controlId:'{0}',items:[{1}],multivalue:{2},delimiter:'{3}'}});";
 
         /// <summary>
         /// Sets the maximum text length to the property size if available.
@@ -49,17 +50,21 @@ namespace Xomega.Framework.Web
             // use jQuery UI autocomplete widget for enum properties
             if (property is EnumProperty && property.ItemsProvider != null)
             {
-                List<string> values = new List<string>();
+                string values = "";
                 IEnumerable items = property.ItemsProvider(null);
                 foreach (object i in items)
                 {
-                    values.Add(property.ValueToString(i, ValueFormat.EditString));
+                    if (values.Length > 0) values += ",";
+                    values += string.Format("{{value:'{0}',editValue:'{1}'}}",
+                        property.ValueToString(i, ValueFormat.DisplayString),
+                        property.ValueToString(i, ValueFormat.EditString));
                 }
 
                 WebUtil.RegisterStartupScript(control, "AutoComplete", Script_AutoComplete,
-                    "'" + control.ClientID + "'",
-                    "['" + string.Join("','", values) + "']",
-                    property.IsMultiValued ? "true" : "false");
+                    control.ClientID,
+                    values,
+                    property.IsMultiValued ? "true" : "false",
+                    property.DisplayListSeparator);
             }
         }
     }

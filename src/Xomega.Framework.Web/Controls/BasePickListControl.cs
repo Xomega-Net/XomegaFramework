@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Xomega.Framework.Properties;
 
 namespace Xomega.Framework.Web
 {
@@ -41,64 +40,52 @@ namespace Xomega.Framework.Web
                 ctl.btn_AddAll.Click += delegate (object sender, EventArgs e)
                 {
                     if (property == null || property.ItemsProvider == null) return;
-                    List<string> values = new List<string>();
-                    foreach (object i in property.ItemsProvider(null))
-                    {
-                        string value = property.ValueToString(i, ValueFormat.EditString);
-                        values.Add(value);
-                    }
-                    property.SetValue(values.Count == 0 ? property.NullString : string.Join(",", values.ToArray()));
+                    List<object> values = new List<object>();
+                    foreach (object val in property.ItemsProvider(null)) values.Add(val);
+                    property.SetValue(values);
                 };
 
                 ctl.btn_Add.Click += delegate (object sender, EventArgs e)
                 {
-                    ListBox lbxSelection = (control as BasePickListControl).lbx_Selection;
-                    if (property == null ||
-                        property.ItemsProvider == null ||
-                        lbxSelection.Items.Count > 0 && !property.IsMultiValued)
-                        return;
+                    ListBox lbxSelection = (control as BasePickListControl).lbx_Items;
+                    string selection = lbxSelection.Page.Request.Form[lbxSelection.UniqueID];
+                    if (property == null || string.IsNullOrEmpty(selection)) return;
 
-                    List<string> values = new List<string>();
-                    ListBox lbxItems = (control as BasePickListControl).lbx_Items;
-                    foreach (object i in property.ItemsProvider(null))
+                    if (!property.IsMultiValued && property.IsNull())
+                        property.SetValue(selection.Split(',')[0]);
+                    else if (property.IsMultiValued)
                     {
-                        string value = property.ValueToString(i, ValueFormat.EditString);
-
-                        ListItem li = lbxSelection.Items.FindByValue(value);
-                        if (li == null)
-                        {
-                            li = lbxItems.Items.FindByValue(value);
-                            if (li != null && !li.Selected)
-                                li = null;
-                        }
-                        if (li != null)
-                        {
-                            values.Add(value);
-                            if (!property.IsMultiValued)
-                                break;
-                        }
+                        IList sel = property.ResolveValue(selection, ValueFormat.Internal) as IList;
+                        IList val = property.InternalValue as IList;
+                        if (val != null && sel != null)
+                            foreach (object v in val)
+                                if (!sel.Contains(v)) sel.Add(v);
+                        property.SetValue(sel);
                     }
-                    property.SetValue(values.Count == 0 ? property.NullString : string.Join(",", values.ToArray()));
                 };
 
                 ctl.btn_Remove.Click += delegate (object sender, EventArgs e)
                 {
-                    if (property == null) return;
-
-                    List<string> values = new List<string>();
                     ListBox lbxSelection = (control as BasePickListControl).lbx_Selection;
-                    foreach (ListItem i in lbxSelection.Items)
+                    string selection = lbxSelection.Page.Request.Form[lbxSelection.UniqueID];
+                    if (property == null || string.IsNullOrEmpty(selection)) return;
+
+                    if (!property.IsMultiValued && !property.IsNull())
+                        property.SetValue(null);
+                    else if (property.IsMultiValued)
                     {
-                        if (i.Selected) continue;
-                        values.Add(i.Value);
+                        IList sel = property.ResolveValue(selection, ValueFormat.Internal) as IList;
+                        IList val = property.InternalValue as IList;
+                        if (val != null && sel != null)
+                            foreach (object v in sel) val.Remove(v);
+                        property.SetValue(val);
                     }
-                    property.SetValue(values.Count == 0 ? property.NullString : string.Join(",", values.ToArray()));
                 };
 
                 ctl.btn_RemoveAll.Click += delegate (object sender, EventArgs e)
                 {
                     if (property != null)
-                        property.SetValue(property.NullString);
+                        property.SetValue(null);
                 };
             }
 
