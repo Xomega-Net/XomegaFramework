@@ -58,6 +58,9 @@ namespace Xomega.Framework.Web
             return ctl != null;
         }
 
+        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
+        static void InstrumentationShutDown() { }
+
         #endregion
 
         #region Binding to data objects

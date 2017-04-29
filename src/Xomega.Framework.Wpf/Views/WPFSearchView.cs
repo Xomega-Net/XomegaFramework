@@ -12,9 +12,10 @@ namespace Xomega.Framework.Views
     /// </summary>
     public class WPFSearchView : WPFView
     {
-        /// <summary>Collapsible criteria panel</summary>
+        /// <summary>Criteria panel bound to the criteria object</summary>
         protected virtual FrameworkElement CriteriaPanel { get; }
 
+        /// <summary>Collapsible criteria panel</summary>
         protected virtual ICollapsiblePanel CriteriaExpander { get; }
 
         /// <summary>Button to run the search</summary>

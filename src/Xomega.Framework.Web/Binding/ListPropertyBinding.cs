@@ -76,7 +76,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Updates the property with the given value from the element.
         /// Overrides the base property to prevent setting values that are not in the list
-        /// similar to the <see cref="EnumProperty.CascadingPropertyChange"/>
+        /// similar to the EnumProperty.CascadingPropertyChange
         /// </summary>
         /// <param name="value">The value to set on the data property.</param>
         protected override void UpdateProperty(object value)

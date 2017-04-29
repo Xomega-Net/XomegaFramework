@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>Xomega.Framework</id>
+        <id>Xomega.Framework.Web</id>
         <version>{version}</version>
         <authors>Xomega Team</authors>
         <owners>Xomega.Net</owners>
@@ -9,10 +9,11 @@
         <projectUrl>https://github.com/Xomega-Net/XomegaFramework</projectUrl>
         <iconUrl>https://avatars2.githubusercontent.com/u/17077373</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>A powerful .NET framework for building multi-tier web or desktop applications using MVVM pattern.</description>
-        <tags>WPF ASP.NET MVC MVVM WCF EntityFramework</tags>
+        <description>Xomega framework for building ASP.NET Web Forms.</description>
+        <tags>ASP.NET WebForms Xomega</tags>
         <dependencies>
             <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="1.1.0" />
+            <dependency id="Xomega.Framework" version="{version}" />
         </dependencies>
     </metadata>
 </package>

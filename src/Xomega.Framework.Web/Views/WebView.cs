@@ -208,12 +208,18 @@ namespace Xomega.Framework.Web
             return true;
         }
 
-
+        /// <summary>
+        /// Checks if the view can be closed
+        /// </summary>
+        /// <returns>True if the view can be closed, False otherwise</returns>
         public bool CanClose()
         {
             return true;
         }
 
+        /// <summary>
+        /// Closes the view
+        /// </summary>
         public void Close()
         {
             Visible = false;
@@ -247,6 +253,9 @@ namespace Xomega.Framework.Web
             Close();
         }
 
+        /// <summary>
+        /// Disposes the view by unbinding it from the model
+        /// </summary>
         public override void Dispose()
         {
             BindTo(null);
@@ -286,6 +295,11 @@ namespace Xomega.Framework.Web
                 if (child != null) Model.SubscribeToChildEvents(child.Model);
         }
 
+        /// <summary>
+        /// Provides the base method for handling view events
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">View event</param>
         protected virtual void OnViewEvents(object sender, ViewEvent e)
         {
             if (upl_Main != null) upl_Main.Update();

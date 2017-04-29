@@ -55,52 +55,11 @@ namespace Xomega.Framework
             return this == Internal || this == Transport;
         }
 
-        #region Construction / Shutdown
-
         /// <summary>
         /// Protected constructor to allow defining additional value formats through subclasses.
         /// </summary>
         protected ValueFormat()
         {
-            if (!startedUp) StartUp();
         }
-
-        /// <summary>
-        /// Finalizer that calls application shutdown hook.
-        /// </summary>
-        ~ValueFormat()
-        {
-            // The following is commented out since it seems to be unsafe
-            // to shut down instrumentation in a garbage collection thread.
-            // Need to come up with a way of calling ShutDown from a non-daemon thread.
-
-            // make sure shutdown is called just once
-            //if (!shutDown) ShutDown();
-        }
-
-        /// <summary>
-        /// A flag to track the startup status.
-        /// </summary>
-        protected static bool startedUp = false;
-
-        /// <summary>
-        /// A startup hook that Dotfuscator can set the Setup attribute for.
-        /// </summary>
-        protected static void StartUp()
-        {
-            startedUp = true;
-        }
-
-        /// <summary>
-        /// A flag to track the shutdown status.
-        /// </summary>
-        protected static bool shutDown = false;
-
-        /// <summary>
-        /// A shutdown hook that Dotfuscator can set the Teardown attribute for.
-        /// </summary>
-        protected static void ShutDown() { shutDown = true; }
-
-        #endregion
     }
 }

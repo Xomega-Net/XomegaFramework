@@ -29,32 +29,19 @@
     <option>dontsendtamper</option>
   </sos>
   <extattributes>
-    <extattribute name="PreEmptive.Attributes.TeardownAttribute">
-      <codetransformlist>
-        <codetransform name="analytics" />
-      </codetransformlist>
-      <type name="Xomega.Framework.ValueFormat">
-        <method name="ShutDown" signature="void()" />
-      </type>
-      <propertylist>
-        <property name="ExtendedKeySourceName" value="" />
-        <property name="ExtendedKeySourceOwner" value="" />
-        <property name="ExtendedKeySourceElement" value="None" />
-      </propertylist>
-    </extattribute>
     <extattribute name="PreEmptive.Attributes.SetupAttribute">
       <codetransformlist>
         <codetransform name="analytics" />
       </codetransformlist>
-      <type name="Xomega.Framework.ValueFormat">
-        <method name="StartUp" signature="void()" />
+      <type name="Xomega.Framework.BaseProperty">
+        <method name=".cctor" signature="void()" />
       </type>
       <propertylist>
         <property name="OptInSourceElement" value="None" />
         <property name="ExtendedKeySourceOwner" value="" />
         <property name="UseSSL" value="False" />
         <property name="InstanceIdSourceOwner" value="" />
-        <property name="CustomEndpoint" value="xomega.net:8080/MessagingService.svc" />
+        <property name="CustomEndpoint" value="{endpoint}" />
         <property name="OptInSourceName" value="" />
         <property name="ExtendedKeySourceName" value="" />
         <property name="ExtendedKeySourceElement" value="None" />
@@ -63,33 +50,16 @@
         <property name="InstanceIdSourceElement" value="None" />
       </propertylist>
     </extattribute>
-    <extattribute name="PreEmptive.Attributes.FeatureAttribute">
+    <extattribute name="PreEmptive.Attributes.TeardownAttribute">
       <codetransformlist>
         <codetransform name="analytics" />
       </codetransformlist>
-      <type name="Xomega.Framework.DataPropertyBinding">
-        <method name=".cctor" signature="void()" />
+      <type name="Xomega.Framework.BaseProperty">
+        <method name="InstrumentationShutDown" signature="void()" />
       </type>
       <propertylist>
         <property name="ExtendedKeySourceName" value="" />
         <property name="ExtendedKeySourceOwner" value="" />
-        <property name="FeatureEventType" value="Tick" />
-        <property name="Name" value="WPFBinding" />
-        <property name="ExtendedKeySourceElement" value="None" />
-      </propertylist>
-    </extattribute>
-    <extattribute name="PreEmptive.Attributes.FeatureAttribute">
-      <codetransformlist>
-        <codetransform name="analytics" />
-      </codetransformlist>
-      <type name="Xomega.Framework.Web.WebPropertyBinding">
-        <method name=".cctor" signature="void()" />
-      </type>
-      <propertylist>
-        <property name="ExtendedKeySourceName" value="" />
-        <property name="ExtendedKeySourceOwner" value="" />
-        <property name="FeatureEventType" value="Tick" />
-        <property name="Name" value="WebBinding" />
         <property name="ExtendedKeySourceElement" value="None" />
       </propertylist>
     </extattribute>
@@ -151,21 +121,6 @@
         <property name="FeatureEventType" value="Tick" />
         <property name="Name" value="EntityService" />
         <property name="ExtendedKeySourceElement" value="None" />
-      </propertylist>
-    </extattribute>
-    <extattribute name="PreEmptive.Attributes.FeatureAttribute">
-      <codetransformlist>
-        <codetransform name="analytics" />
-      </codetransformlist>
-      <type name="Xomega.Framework.ValueFormat">
-        <method name="Silverlight" signature="void()" />
-      </type>
-      <propertylist>
-        <property name="ExtendedKeySourceElement" value="None" />
-        <property name="ExtendedKeySourceName" value="" />
-        <property name="FeatureEventType" value="Tick" />
-        <property name="Name" value="Silverlight" />
-        <property name="ExtendedKeySourceOwner" value="" />
       </propertylist>
     </extattribute>
     <extattribute name="PreEmptive.Attributes.FeatureAttribute">

@@ -15,10 +15,11 @@ namespace Xomega.Framework
     /// </summary>
     public partial class BaseProperty
     {
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
+        /// <summary>Instrumentation hook for the Setup attribute</summary>
+        static BaseProperty() { }
+
+        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
+        static void InstrumentationShutDown() { }
 
         /// <summary>
         /// The parent data object of the property if any. In rare cases the parent can be set to null

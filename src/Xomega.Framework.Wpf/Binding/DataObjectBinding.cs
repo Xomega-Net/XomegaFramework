@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
 
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using Xomega.Framework.Binding;
 
 namespace Xomega.Framework
@@ -49,6 +47,9 @@ namespace Xomega.Framework
         {
             return obj != null && Data.GetObjectBinding(obj) != null;
         }
+
+        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
+        static void InstrumentationShutDown() { }
 
         #endregion
 

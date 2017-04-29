@@ -284,3 +284,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/src/release_all.bat
