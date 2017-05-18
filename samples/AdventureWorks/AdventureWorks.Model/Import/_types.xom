@@ -11,6 +11,7 @@
   <types>
     <type name="char string10" base="char string" size="10"/>
     <type name="char string128" base="char string" size="128"/>
+    <type name="char string15" base="char string" size="15"/>
     <type name="code1" base="code" size="1"/>
     <type name="code2" base="code" size="2"/>
     <type name="code5" base="code" size="5"/>

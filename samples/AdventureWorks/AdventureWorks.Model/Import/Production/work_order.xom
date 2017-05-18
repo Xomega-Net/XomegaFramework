@@ -37,7 +37,7 @@
         </field>
         <field name="stocked qty" type="integer" required="true">
           <config>
-            <sql:column name="StockedQty"/>
+            <sql:column name="StockedQty" computed="(isnull([OrderQty]-[ScrappedQty],(0)))"/>
           </config>
           <doc>
             <summary>Quantity built and put in inventory.</summary>

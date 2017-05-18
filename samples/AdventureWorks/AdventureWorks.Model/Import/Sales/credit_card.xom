@@ -10,20 +10,9 @@
         name="sales">
   <types>
     <type name="credit card" base="integer enumeration"/>
-    <type name="credit card type" base="name"/>
-    <type name="credit card number" base="string25"/>
+    <type name="credit card type" base="string" size="50"/>
+    <type name="credit card number" base="string" size="25"/>
   </types>
-  <structs>
-    <struct name="credit card info" object="credit card">
-      <param name="credit card id"/>
-      <param name="card number"/>
-      <param name="expiration" type="string"/>
-      <config>
-        <xfk:add-to-object class="CreditCardPaymentObject"/>
-      </config>
-      <usage generic="true"/>
-    </struct>
-  </structs>
   <objects>
     <object name="credit card">
       <fields>
@@ -81,13 +70,4 @@
       </doc>
     </object>
   </objects>
-  <xfk:data-objects>
-    <xfk:data-object class="CreditCardPaymentObject" customize="true">
-      <ui:display>
-        <ui:field param="credit card id" label="Credit Card"/>
-        <ui:field param="card number" editable="false"/>
-        <ui:field param="expiration" editable="false"/>
-      </ui:display>
-    </xfk:data-object>
-  </xfk:data-objects>
 </module>

@@ -22,8 +22,8 @@
     expandcontrolid="Header"
     collapsed="false"
     textlabelid="lblIcon"
-    collapsedtext="&#xf077;"
-    expandedtext="&#xf078;"
+    collapsedtext="&#xf078;"
+    expandedtext="&#xf077;"
     collapsedsize="0"
     runat="server" />
 </div>

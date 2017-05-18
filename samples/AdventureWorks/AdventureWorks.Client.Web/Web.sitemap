@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0">
-  <siteMapNode>
-    <siteMapNode url="~/Default.aspx" title="Home"/>
-    <siteMapNode title="Sales">
-      <siteMapNode url="~/Pages/Sales/SalesOrderListViewPage.aspx" title="Sales Order List"/>
-      <siteMapNode url="~/Pages/Sales/SalesOrderViewPage.aspx?_action=create" title="Sales Order"/>
-      <siteMapNode url="~/Pages/Sales/CustomerListViewPage.aspx" title="Customer List"/>
+  <siteMapNode roles="*">
+    <siteMapNode url="~/Views/Default.aspx" title="Home"/>
+    <siteMapNode title="Sales" roles="*">
+      <siteMapNode url="~/Views/Sales/SalesOrderViewPage.aspx?_action=create"
+                   title="New Sales Order"/>
+      <siteMapNode url="~/Views/Sales/SalesOrderListViewPage.aspx" title="Sales Order List"/>
+      <siteMapNode url="~/Views/Sales/CustomerListViewPage.aspx" title="Customer List"/>
     </siteMapNode>
   </siteMapNode>
 </siteMap>

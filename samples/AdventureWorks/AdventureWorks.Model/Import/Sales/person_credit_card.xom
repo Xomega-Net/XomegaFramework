@@ -58,9 +58,10 @@
           <config>
             <xfk:enum-cache enum-name="person credit card" skip-registration="true"
                             id-param="credit card id" desc-param="credit card name"/>
+            <rest:method verb="GET" uri-template="person/{business entity id}/credit-card"/>
           </config>
           <doc>
-            <summary>Reads a list of Person Credit Card objects based on the specified criteria.</summary>
+            <summary>Reads a list of Person Credit Card objects based on the person ID.</summary>
           </doc>
         </operation>
         <doc>
@@ -75,6 +76,4 @@
       </doc>
     </object>
   </objects>
-  <xfk:data-objects/>
-  <ui:views/>
 </module>

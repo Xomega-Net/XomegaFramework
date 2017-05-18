@@ -59,8 +59,7 @@
             <param name="name"/>
           </output>
           <config>
-            <xfk:enum-cache enum-name="sales reason" id-param="sales reason id"
-                            desc-param="name"/>
+            <xfk:enum-cache enum-name="sales reason" id-param="sales reason id" desc-param="name"/>
           </config>
           <doc>
             <summary>Reads a list of Sales Reason objects based on the specified criteria.</summary>

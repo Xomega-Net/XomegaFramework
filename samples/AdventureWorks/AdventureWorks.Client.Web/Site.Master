@@ -4,18 +4,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head runat="server">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title></title>
+  <title> AdventureWorks </title>
   <asp:PlaceHolder runat="server">
     <link href='<%= Page.ResolveUrl("~/Content/css/normalize.css") %>' rel="stylesheet" type="text/css" />
     <link href='<%= Page.ResolveUrl("~/Content/css/page.css") %>' rel="stylesheet" type="text/css" />
     <link href='<%= Page.ResolveUrl("~/Content/css/xomega.css") %>' rel="stylesheet" type="text/css" />
+    <link href='<%= Page.ResolveUrl("~/Content/css/xomega-controls.css") %>' rel="stylesheet" type="text/css" />
     <link href='<%= Page.ResolveUrl("~/Content/css/widgets.css") %>' rel="stylesheet" type="text/css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
-    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <script src='<%= Page.ResolveUrl("~/Scripts/Client/autocomplete.js") %>' type="text/javascript"></script>
-    <script src='<%= Page.ResolveUrl("~/Scripts/Client/dialog.js") %>' type="text/javascript"></script>
-    <script src='<%= Page.ResolveUrl("~/Scripts/Client/splitter.js") %>' type="text/javascript"></script>
+    <link href='<%= Page.ResolveUrl("~/Content/themes/base/jquery-ui.css") %>' rel="stylesheet" type="text/css" />
+    <script src='<%= Page.ResolveUrl("~/Scripts/jquery-3.1.1.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/Scripts/jquery-ui-1.12.1.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/Scripts/xomega-controls-2.0.0.js") %>' type="text/javascript"></script>
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   </asp:PlaceHolder>
   <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
@@ -29,6 +28,18 @@
           <h1 class="site-title">
              AdventureWorks 
           </h1>
+            <div class="login-display">
+                <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                    <AnonymousTemplate>
+                        [ <a href="~/Login" ID="HeadLoginStatus" runat="server">Log In</a> ]
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        Welcome <span class="login-name"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
+                        [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutText="Log Out" 
+                            onloggedout="HeadLoginStatus_LoggedOut"/> ]
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
         </div>
         <div class="site-nav">
           <asp:Menu ID="SiteMap" ClientIDMode="Static" CssClass="menu"
@@ -41,7 +52,10 @@
       <div class="page-body">
         <asp:ContentPlaceHolder ID="MainContent" runat="server" />
       </div>
-      <div class="page-footer"></div>
+      <div class="page-footer">
+        <div class="copyright">Copyright © <%= DateTime.Today.Year %> . All rights reserved.</div>
+        <div class="attribution">Powered by <a href="http://xomega.net">Xomega.Net</a></div>
+      </div>
     </div>
   </form>
 </body>

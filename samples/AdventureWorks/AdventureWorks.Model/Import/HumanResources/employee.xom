@@ -45,7 +45,7 @@
         </field>
         <field name="organization level" type="small int">
           <config>
-            <sql:column name="OrganizationLevel"/>
+            <sql:column name="OrganizationLevel" computed="([OrganizationNode].[GetLevel]())"/>
           </config>
           <doc>
             <summary>The depth of the employee in the corporate hierarchy.</summary>

@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace AdventureWorks.Client.Web
 {
     public partial class SiteMaster : MasterPage
     {
+        protected void HeadLoginStatus_LoggedOut(object sender, EventArgs e)
+        {
+            HttpContext.Current.GetOwinContext().Authentication.SignOut();
+            if (Session != null) Session.Clear();
+        }
     }
 }

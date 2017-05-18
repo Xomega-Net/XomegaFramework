@@ -28,7 +28,7 @@
     <struct name="address info" object="address">
       <param name="address line1"/>
       <param name="address line2"/>
-      <param name="city state" type="city name"/>
+      <param name="city state" type="string"/>
       <param name="postal code"/>
       <param name="country" type="country region"/>
       <config>
@@ -124,7 +124,7 @@
   <xfk:data-objects>
     <xfk:data-object class="AddressObject" customize="true">
       <ui:display>
-        <ui:field param="address id" label="Address Type"/>
+        <ui:field param="address id" label="Address Type" is-trigger="true"/>
         <ui:field param="address line1" editable="false"/>
         <ui:field param="address line2" editable="false"/>
         <ui:field param="city state" editable="false" label="City/State"/>

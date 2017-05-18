@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0"
+         DefaultTargets="Build">
+   <PropertyGroup>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+      <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+      <ProductVersion>8.0.50727</ProductVersion>
+      <SchemaVersion>2.0</SchemaVersion>
+      <ProjectGuid>{4D902CA4-C557-4A24-9856-6302420AF029}</ProjectGuid>
+      <OutputType>Library</OutputType>
+      <AppDesignerFolder>Properties</AppDesignerFolder>
+      <RootNamespace>AdventureWorks.Services.Common</RootNamespace>
+      <AssemblyName>AdventureWorks.Services.Common</AssemblyName>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <XomegaProjectType>services</XomegaProjectType>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <DebugSymbols>true</DebugSymbols>
+      <DebugType>full</DebugType>
+      <Optimize>false</Optimize>
+      <OutputPath>bin\Debug\</OutputPath>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <OutputPath>bin\Release\</OutputPath>
+      <DefineConstants>TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <ItemGroup>
+      <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="System"/>
+      <Reference Include="System.Runtime.Serialization"/>
+      <Reference Include="System.ServiceModel"/>
+      <Reference Include="Xomega.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Xomega.Framework.2.0.0\lib\net45\Xomega.Framework.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+   </ItemGroup>
+   <ItemGroup>
+      <Compile Include="Properties\AssemblyInfo.cs"/>
+      <Compile Include="Sales\ISalesOrderService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\LookupCacheLoaders.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Enumerations\Enumerations.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\ISalesPersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\ISalesTerritoryService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Sales\SalesPersonReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Sales\SalesTerritoryReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Production\IProductService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Production\ProductReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\ISpecialOfferService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Sales\SpecialOfferReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\SalesStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Purchasing\IShipMethodService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Purchasing\ShipMethodReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\ISalesReasonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Sales\SalesReasonReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\ICustomerService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Person\IBusinessEntityAddressService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Person\BusinessEntityAddressReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Person\PersonStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Sales\IPersonCreditCardService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="CacheLoaders\Sales\PersonCreditCardReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+   </ItemGroup>
+   <ItemGroup>
+      <None Include="packages.config"/>
+   </ItemGroup>
+   <ItemGroup>
+      <EmbeddedResource Include="Enumerations\enumerations.xml">
+         <AutoGen>True</AutoGen>
+      </EmbeddedResource>
+   </ItemGroup>
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+</Project>

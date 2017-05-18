@@ -66,7 +66,7 @@
         </field>
         <field name="line total" type="money" required="true">
           <config>
-            <sql:column name="LineTotal"/>
+            <sql:column name="LineTotal" computed="(isnull([OrderQty]*[UnitPrice],(0.00)))"/>
           </config>
           <doc>
             <summary>Per product subtotal. Computed as OrderQty * UnitPrice.</summary>
@@ -90,7 +90,7 @@
         </field>
         <field name="stocked qty" type="decimal_9_2" required="true">
           <config>
-            <sql:column name="StockedQty"/>
+            <sql:column name="StockedQty" computed="(isnull([ReceivedQty]-[RejectedQty],(0.00)))"/>
           </config>
           <doc>
             <summary>Quantity accepted into inventory. Computed as ReceivedQty - RejectedQty.</summary>

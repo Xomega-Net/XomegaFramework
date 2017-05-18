@@ -69,8 +69,7 @@
             <param name="name"/>
           </output>
           <config>
-            <xfk:enum-cache enum-name="ship method" id-param="ship method id"
-                            desc-param="name"/>
+            <xfk:enum-cache enum-name="ship method" id-param="ship method id" desc-param="name"/>
           </config>
           <doc>
             <summary>Reads a list of Ship Method objects based on the specified criteria.</summary>

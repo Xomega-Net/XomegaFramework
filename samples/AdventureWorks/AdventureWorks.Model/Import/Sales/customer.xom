@@ -45,7 +45,8 @@
         </field>
         <field name="account number" type="char string10" required="true">
           <config>
-            <sql:column name="AccountNumber"/>
+            <sql:column name="AccountNumber"
+                        computed="(isnull('AW'+[dbo].[ufnLeadingZeros]([CustomerID]),''))"/>
           </config>
           <doc>
             <summary>Unique number identifying the customer assigned by the accounting system.</summary>
@@ -87,9 +88,9 @@
           <output list="true">
             <param name="customer id"/>
             <param name="store id"/>
-            <param name="store name" type="string" required="false"/>
+            <param name="store name" type="string"/>
             <param name="person id"/>
-            <param name="person name" type="string" required="false"/>
+            <param name="person name" type="string"/>
             <param name="account number"/>
             <param name="territory id"/>
             <config>

@@ -99,9 +99,9 @@
         <operation name="read list" type="readlist">
           <output list="true">
             <param name="business entity id"/>
+            <param name="territory id"/>
             <param name="name" type="string"/>
             <param name="is current" type="boolean" required="true"/>
-            <param name="territory id"/>
           </output>
           <config>
             <xfk:enum-cache enum-name="sales person" id-param="business entity id"

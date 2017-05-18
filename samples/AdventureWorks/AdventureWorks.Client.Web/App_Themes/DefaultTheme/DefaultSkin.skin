@@ -15,8 +15,7 @@ Default skin template. The following skins are provided as examples only.
 --%>
 
 <asp:GridView runat="server" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False"
-    AllowPaging="True" PageSize="20" Width="100%" CellPadding="4" GridLines="None"
-    ForeColor="#333333">
+    Width="100%" CellPadding="4" GridLines="None" ForeColor="#333333">
     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <EditRowStyle BackColor="#999999" />
     <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True"></FooterStyle>

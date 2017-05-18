@@ -102,7 +102,7 @@
         </field>
         <field name="total due" type="money" required="true">
           <config>
-            <sql:column name="TotalDue"/>
+            <sql:column name="TotalDue" computed="(isnull(([SubTotal]+[TaxAmt])+[Freight],(0)))"/>
           </config>
           <doc>
             <summary>Total due to vendor. Computed as Subtotal + TaxAmt + Freight.</summary>

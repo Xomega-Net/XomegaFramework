@@ -117,7 +117,7 @@
       <config>
         <sql:type name="datetime" db="sqlsrv"/>
         <edm:type Type="DateTime"/>
-        <clr:type name="DateTime" valuetype="true"/>
+        <clr:type name="DateTime" valuetype="true" namespace="System"/>
         <xfk:property class="DateTimeProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
         <ui:control>
           <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
@@ -138,9 +138,15 @@
       <config>
         <sql:type name="date" db="sqlsrv" minver="10"/>
         <xfk:property class="DateProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:control>
+          <DatePicker Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
         <ui:web-control>
           <uc:DateTimeControl TextCssClass="date" runat="server"/>
         </ui:web-control>
+        <ui:html-control>
+          <input class="date" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
       </config>
       <usage generic="true"/>
       <doc>
@@ -312,7 +318,8 @@
           <ComboBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
         </ui:control>
         <ui:control multi-value="true">
-          <ListBox Style="{StaticResource ControlStyle}" MaxHeight="58" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+          <ListBox Style="{StaticResource ControlStyle}" MinHeight="21" MaxHeight="84"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
         </ui:control>
         <ui:web-control>
           <asp:DropDownList runat="server"/>
@@ -400,10 +407,16 @@
     </type>
     <type name="suggest string" base="enumeration">
       <config>
-        <ui:html-control xmlns="http://www.w3.org/1999/xhtml">
-          <span class="autosuggest"></span>
+        <ui:html-control>
+          <input xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+        <ui:html-control multi-value="true">
+          <input xmlns="http://www.w3.org/1999/xhtml"/>
         </ui:html-control>
         <ui:web-control>
+          <asp:TextBox runat="server"/>
+        </ui:web-control>
+        <ui:web-control multi-value="true">
           <asp:TextBox runat="server"/>
         </ui:web-control>
       </config>
@@ -461,7 +474,7 @@
       <config>
         <sql:type name="uniqueidentifier" db="sqlsrv"/>
         <edm:type Type="Guid"/>
-        <clr:type name="Guid" valuetype="true"/>
+        <clr:type name="Guid" valuetype="true" namespace="System"/>
         <xfk:property class="GuidProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
         <ui:control>
           <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
@@ -562,6 +575,20 @@
     </type>
     <type name="yesno" base="boolean enumeration">
       <enum ref="yesno"/>
+      <usage generic="true"/>
+    </type>
+    <type name="plain password" base="string">
+      <config>
+        <ui:control>
+          <PasswordBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:web-control>
+          <asp:TextBox TextMode="Password" runat="server"/>
+        </ui:web-control>
+        <ui:html-control>
+          <input type="password" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+      </config>
       <usage generic="true"/>
     </type>
   </types>

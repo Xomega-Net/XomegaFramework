@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web.UI;
-using Xomega.Framework.Web;
+using Xomega.Framework.Views;
 
 namespace AdventureWorks.Client.Web
 {
-    public partial class CollapsiblePanel : BaseCollapsiblePanel
+    public partial class CollapsiblePanel : UserControl, ICollapsiblePanel
     {
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TemplateInstance(TemplateInstance.Single)]
@@ -18,7 +18,7 @@ namespace AdventureWorks.Client.Web
                 ContentTemplate.InstantiateIn(Content);
         }
 
-        public override bool Collapsed
+        public bool Collapsed
         {
             get { return cpe.ClientState == null ? cpe.Collapsed : cpe.ClientState.ToLower() == "true"; }
             set

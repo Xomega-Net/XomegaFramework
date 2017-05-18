@@ -32,6 +32,15 @@
   padding: 0 0.2rem;
 }
 
+.borderless fieldset {
+  border: 0;
+}
+
+.btn-close {
+  position: absolute;
+  right: 0px;
+}
+
 /* Xomega generated classes
    ===================================================== */
 
@@ -91,6 +100,10 @@ label.required {
 }
 
 /* Messages */
+
+.Critical {
+  color: Red;
+}
 
 .Error {
   color: Red;

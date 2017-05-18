@@ -7,18 +7,21 @@
         xmlns:wcf="http://www.xomega.net/wcf"
         xmlns:ui="http://www.xomega.net/ui">
 
-  <wcf:services-config namespace="AdventureWorks.Services" implNamespace="AdventureWorks.Entities.Services">
+  <wcf:services-config namespace="AdventureWorks.Services"
+                       implNamespace="AdventureWorks.Services.Entities"
+                       tsOutputPath="../AdventureWorks.Client.Spa/ServiceContracts/{Module/}{File}">
 
-    <!-- TODO: add WCF endpoint configurations such as this one -->
-    <wcf:endpoint-config binding="netTcpBinding" bindingConfiguration="maxNetTcp" baseLocalAddress="net.tcp://localhost:8002/"/>
+    <wcf:endpoint-config binding="ws2007FederationHttpBinding" bindingConfiguration="message" baseLocalAddress=""
+                         baseRemoteAddress="http://localhost:61436/{Module/}{File}.svc"/>
 
   </wcf:services-config>
 
   <!-- configuration for generation of UI data objects -->
-  <xfk:data-objects-config namespace="AdventureWorks.Client.Objects"/>
+  <xfk:data-objects-config namespace="AdventureWorks.Client.Objects" assembly="AdventureWorks.Client.Common"
+                           tsOutputPath="../AdventureWorks.Client.Spa/DataObjects/{Module/}{File}"/>
 
   <!-- configuration for generation of UI views -->
-  <ui:views-config aspOutputPath="../AdventureWorks.Client.Web/Pages/{Module/}{File}"/>
+  <ui:views-config modelsNamespace="AdventureWorks.Client.ViewModels"/>
 
   <!-- view layout configurations -->
   <ui:layout-config>
@@ -46,8 +49,9 @@
       <ui:user-control name="AppliedCriteria" path="Controls/AppliedCriteria"/>
       <ui:user-control name="CollapsiblePanel" path="Controls/CollapsiblePanel"/>
       <ui:user-control name="DateTimeControl" path="Controls/Editors/DateTimeControl"/>
-      <ui:user-control name="Errors" path="Controls/Errors"/>
       <ui:user-control name="PickListControl" path="Controls/Editors/PickListControl"/>
+      <ui:user-control name="Errors" path="Controls/Errors"/>
+      <ui:user-control name="ViewTemplate" path="Site.Master"/>
     </ui:user-controls>
   </ui:controls-config>
 

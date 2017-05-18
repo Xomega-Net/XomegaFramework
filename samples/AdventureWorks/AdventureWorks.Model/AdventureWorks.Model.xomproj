@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="2.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{54aff7c5-86ab-4c83-bf07-82890279030f}</ProjectGuid>
+    <ProjectGuid>
+    </ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Model</Configuration>
     <Database>sqlsrv</Database>
     <DbVersion>11.0</DbVersion>
-    <DbConnection>Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=AdventureWorks;Data Source=(local)</DbConnection>
+    <DbConnection>Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=AdventureWorks2012;Data Source=ZETA\SQLSVR2012</DbConnection>
     <DbExcludeTables>
     </DbExcludeTables>
     <DbCase>camel</DbCase>
@@ -48,7 +49,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\db_schema.xsl">
       <Name>Database Schema</Name>
-      <Folder>Database Layer</Folder>
+      <Folder>Data Layer</Folder>
       <OutputPath-param>db_schema.sql</OutputPath-param>
       <OutputPath-desc>Path where to output generated database script.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
@@ -59,7 +60,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\db_diff.xsl">
       <Name>Database Change Script</Name>
-      <Folder>Database Layer</Folder>
+      <Folder>Data Layer</Folder>
       <IncludeInBuild>false</IncludeInBuild>
       <OutputPath-param>db_update.sql</OutputPath-param>
       <OutputPath-desc>Path where to output generated database script.</OutputPath-desc>
@@ -162,11 +163,11 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\edm.xsl">
       <Name>Entity Data Model</Name>
-      <Folder>Business Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Entities/Model/EntityModel.edmx</OutputPath-param>
+      <Folder>Data Layer</Folder>
+      <OutputPath-param>../AdventureWorks.Services.Entities/Entities/EntityModel.edmx</OutputPath-param>
       <OutputPath-desc>Path where to output generated Entity Data Model file.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Entities/AdventureWorks.Entities.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Entities/AdventureWorks.Services.Entities.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
       <ConfigFile-param>../AdventureWorks.Client.Web/Web.config</ConfigFile-param>
@@ -263,14 +264,17 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_svcimpl.xsl">
       <Name>Service Implementations</Name>
-      <Folder>Business Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Entities/{Module/}Services/{File}.cs</OutputPath-param>
+      <Folder>Service Layer</Folder>
+      <OutputPath-param>../AdventureWorks.Services.Entities/Services/{Module/}{File}.cs</OutputPath-param>
       <OutputPath-desc>Path where to output generated files for service implementations.
 The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Entities/AdventureWorks.Entities.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Entities/AdventureWorks.Services.Entities.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
+      <RegistryFile-param>../AdventureWorks.Services.Entities/Services/Services.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for service implementations resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
       <CustomPath-param>
       </CustomPath-param>
       <CustomPath-desc>Path where to output override classes for the generated Service Implementations. 
@@ -280,9 +284,6 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
       <NestCustomFile-type>System.Boolean</NestCustomFile-type>
       <NestCustomFile-category>Output</NestCustomFile-category>
-      <ServiceRegistryFile-param>../AdventureWorks.Entities/ServiceRegistry.cs</ServiceRegistryFile-param>
-      <ServiceRegistryFile-desc>A path to the file with DI configuration for service implementations.</ServiceRegistryFile-desc>
-      <ServiceRegistryFile-category>Output</ServiceRegistryFile-category>
       <UseObjectContext-param>False</UseObjectContext-param>
       <UseObjectContext-type>System.Boolean</UseObjectContext-type>
       <UseObjectContext-desc>Whether to use Entity Framework's ObjectContext or DbContext.</UseObjectContext-desc>
@@ -358,7 +359,6 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       </DetailsViewLayout-param>
       <DetailsViewLayout-desc>Named layout from the global config to use for the details view.</DetailsViewLayout-desc>
       <DetailsViewLayout-category>Views</DetailsViewLayout-category>
-      <ViewNamePostfix-param>View</ViewNamePostfix-param>
       <ViewNamePostfix-param>View</ViewNamePostfix-param>
       <ViewNamePostfix-desc>Postfix to use for view names.</ViewNamePostfix-desc>
       <ViewNamePostfix-category>Views</ViewNamePostfix-category>
@@ -442,7 +442,6 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <DetailsViewLayout-desc>Named layout from the global config to use for the details view.</DetailsViewLayout-desc>
       <DetailsViewLayout-category>Views</DetailsViewLayout-category>
       <ViewNamePostfix-param>View</ViewNamePostfix-param>
-      <ViewNamePostfix-param>View</ViewNamePostfix-param>
       <ViewNamePostfix-desc>Postfix to use for view names.</ViewNamePostfix-desc>
       <ViewNamePostfix-category>Views</ViewNamePostfix-category>
       <AddReadListEnumeration-param>True</AddReadListEnumeration-param>
@@ -476,11 +475,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     <XomGenerator Include="$(XomegaHome14)Xsl\ts_services.xsl">
       <Name>TS Service Contracts</Name>
       <Folder>Presentation Layer\SPA</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Web/Spa/ServiceContracts/{Module/}_{File}</OutputPath-param>
-      <OutputPath-desc>Path where to output generated files for Typescript Service Contracts.
-The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
       <IncludeInBuild>false</IncludeInBuild>
@@ -488,25 +483,29 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_services.xsl">
-      <Name>WCF Service Contracts</Name>
+      <Name>Service Contracts</Name>
       <Folder>Service Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Services/{Module/}_{File}.cs</OutputPath-param>
-      <OutputPath-desc>Path where to output generated files for WCF Service Contracts.
+      <OutputPath-param>../AdventureWorks.Services.Common/{Module/}{File}.cs</OutputPath-param>
+      <OutputPath-desc>Path where to output generated files for service and data contracts.
 The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Services/AdventureWorks.Services.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Common/AdventureWorks.Services.Common.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
       <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>true</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
+      <Wcf-param>False</Wcf-param>
+      <Wcf-desc>Specify whether or not to add WCF attributes to service and data contracts.</Wcf-desc>
+      <Wcf-type>System.Boolean</Wcf-type>
+      <WcfRest-param>False</WcfRest-param>
+      <WcfRest-desc>Specify whether or not to add WCF REST attributes to service operation contracts.</WcfRest-desc>
+      <WcfRest-type>System.Boolean</WcfRest-type>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_config.xsl">
       <Name>WCF Server Configuration</Name>
       <Folder>Service Layer</Folder>
-      <IncludeInBuild>false</IncludeInBuild>
-      <OutputPath-param>
-      </OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Wcf/serviceModel.services.config</OutputPath-param>
       <OutputPath-desc>Path to the .config file to update WCF service configuration for.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
       <EndpointBehavior-param>
@@ -515,28 +514,27 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <IsClient-param>False</IsClient-param>
       <IsClient-desc>Specify whether it is a client or a server configuration.</IsClient-desc>
       <IsClient-type>System.Boolean</IsClient-type>
-      <ServiceBehavior-param>Debug</ServiceBehavior-param>
+      <ServiceBehavior-param>
+      </ServiceBehavior-param>
       <ServiceBehavior-desc>Service behavior to set for all services.</ServiceBehavior-desc>
+      <IncludeInBuild>false</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_iis_svchost.xsl">
-      <Name>IIS Service Host Files</Name>
+      <Name>WCF Service Host Files</Name>
       <Folder>Service Layer</Folder>
-      <IncludeInBuild>false</IncludeInBuild>
-      <OutputPath-param>
-      </OutputPath-param>
-      <AddToProject-param>
-      </AddToProject-param>
+      <OutputPath-param>../AdventureWorks.Services.Wcf/{Module/}{File}.svc</OutputPath-param>
+      <AddToProject-param>../AdventureWorks.Services.Wcf/AdventureWorks.Services.Wcf.csproj</AddToProject-param>
       <OutputPath-desc>Path where to output generated IIS service host files. Path must contain {File} placeholder.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
+      <IncludeInBuild>false</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_config.xsl">
       <Name>WCF Client Configuration</Name>
-      <Folder>Service Layer</Folder>
-      <OutputPath-param>
-      </OutputPath-param>
-      <OutputPath-desc>Path to the .config to update WCF client configuration for.</OutputPath-desc>
+      <Folder>Presentation Layer\WPF</Folder>
+      <OutputPath-param>../AdventureWorks.Client.Wpf/serviceModel.client.config</OutputPath-param>
+      <OutputPath-desc>Path to the .config file to update WCF client configuration for.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
       <IsClient-param>True</IsClient-param>
       <IsClient-desc>Specify whether it is a client or a server configuration.</IsClient-desc>
@@ -546,22 +544,34 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomGenerator Include="$(XomegaHome14)Xsl\webapi_controllers.xsl">
       <Name>Web API Controllers</Name>
       <Folder>Service Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Web/WebAPI/{Module/}_{File}.cs</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Rest/{Module/}{File}.cs</OutputPath-param>
       <OutputPath-desc>Path where to output generated Web API controllers.
 The path may contain {Module/} and {File} placeholders to output files by module and object respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <CustomPath-param>
+      </CustomPath-param>
+      <CustomPath-desc>Path where to output override classes for the generated controllers. 
+If not set then the OutputPath will be used. The path must contain {File} placeholder to output files by controller.</CustomPath-desc>
+      <CustomPath-category>Output</CustomPath-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
+      <AddToProject-param>../AdventureWorks.Services.Rest/AdventureWorks.Services.Rest.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
+      <RegistryFile-param>../AdventureWorks.Services.Rest/Controllers.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for controllers resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
       <IncludeInBuild>false</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\data_objects.xsl">
       <Name>Xomega Data Objects</Name>
-      <Folder>Presentation Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Objects/{Module/}{File}.cs</OutputPath-param>
-      <AddToProject-param>../AdventureWorks.Client.Objects/AdventureWorks.Client.Objects.csproj</AddToProject-param>
+      <Folder>Presentation Layer\View Models</Folder>
+      <OutputPath-param>../AdventureWorks.Client.Common/DataObjects/{Module/}{File}.cs</OutputPath-param>
+      <AddToProject-param>../AdventureWorks.Client.Common/AdventureWorks.Client.Common.csproj</AddToProject-param>
       <OutputPath-desc>Path where to output files with generated Xomega Data Objects.
 The path may contain {Module/} and {File} placeholders to output files by module and data object respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
@@ -576,51 +586,108 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <NestCustomFile-category>Output</NestCustomFile-category>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>DataObjects</LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
+      <RegistryFile-param>../AdventureWorks.Client.Common/DataObjects/DataObjects.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for data object resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
       <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>true</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\data_objects_ts.xsl">
+    <XomGenerator Include="$(XomegaHome14)Xsl\view_models.xsl">
+      <Name>View Models</Name>
+      <Folder>Presentation Layer\View Models</Folder>
+      <AddToProject-param>../AdventureWorks.Client.Common/AdventureWorks.Client.Common.csproj</AddToProject-param>
+      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
+      <AddToProject-category>Output</AddToProject-category>
+      <OutputPath-param>../AdventureWorks.Client.Common/ViewModels/{Module/}{File}.cs</OutputPath-param>
+      <OutputPath-desc>Path where to output files with generated views models.</OutputPath-desc>
+      <OutputPath-category>Output</OutputPath-category>
+      <CustomPath-param>
+      </CustomPath-param>
+      <CustomPath-desc>Path where to output override classes for the generated view models. 
+If not set then the OutputPath will be used. The path must contain {File} placeholder to output files by view.</CustomPath-desc>
+      <CustomPath-category>Output</CustomPath-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
+      <RegistryFile-param>../AdventureWorks.Client.Common/ViewModels/ViewModels.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for view model resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
+      <IncludeInBuild>true</IncludeInBuild>
+      <IndividualFiles>true</IndividualFiles>
+      <GeneratorGroup>presentation</GeneratorGroup>
+    </XomGenerator>
+    <XomGenerator Include="$(XomegaHome14)Xsl\ts_data_objects.xsl">
       <Name>XomegaJS Data Objects</Name>
       <Folder>Presentation Layer\SPA</Folder>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
       <IncludeInBuild>false</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\enum_const_ts.xsl">
+    <XomGenerator Include="$(XomegaHome14)Xsl\ts_enum_cache.xsl">
+      <Name>TS Lookup Cache Loaders</Name>
+      <Folder>Presentation Layer\SPA</Folder>
+      <OutputPath-param>../AdventureWorks.Client.Spa/CacheLoaders/{File}.ts</OutputPath-param>
+      <OutputPath-desc>Path where to output files with generated lookup cache loaders.
+The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
+      <OutputPath-category>Output</OutputPath-category>
+      <RegistryFile-param>
+      </RegistryFile-param>
+      <RegistryFile-desc>A path to the file for cache loaders resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
+      <Namespace-param>
+      </Namespace-param>
+      <Namespace-desc>Namespace for the generated classes.</Namespace-desc>
+      <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
+      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
+      <AddToProject-category>Output</AddToProject-category>
+      <IncludeInBuild>false</IncludeInBuild>
+      <IndividualFiles>false</IndividualFiles>
+      <GeneratorGroup>services</GeneratorGroup>
+    </XomGenerator>
+    <XomGenerator Include="$(XomegaHome14)Xsl\ts_enum_const.xsl">
       <Name>TS Enumeration Constants</Name>
       <Folder>Presentation Layer\SPA</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Web/Spa/DataObjects/Enumerations.ts</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Client.Spa/Enumerations/Enumerations.ts</OutputPath-param>
       <OutputPath-desc>Path where to output files with generated Typescript contstants for enumerations.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
       <IncludeInBuild>false</IncludeInBuild>
     </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\html_search.xsl">
-      <Name>SPA Search View</Name>
+    <XomGenerator Include="$(XomegaHome14)Xsl\ts_views.xsl">
+      <Name>SPA Views</Name>
       <Folder>Presentation Layer\SPA</Folder>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <NestViewModule-type>System.Boolean</NestViewModule-type>
-      <NestViewModule-param>False</NestViewModule-param>
-      <NestViewModule-desc>Specify if the generated module should be nested under the corresponding view.</NestViewModule-desc>
-      <NestViewModule-category>Output</NestViewModule-category>
-      <RouteConfigFile-param>../AdventureWorks.Client.Web/Spa/routes.ts</RouteConfigFile-param>
-      <RouteConfigFile-desc>A path to the file with SPA routes configuration.</RouteConfigFile-desc>
-      <RouteConfigFile-category>Output</RouteConfigFile-category>
+      <CustomPath-param>
+      </CustomPath-param>
+      <CustomPath-desc>Path where to output override classes for the generated Views.
+If not set then the OutputPath will be used. The path must contain {File} placeholder to output files by view.</CustomPath-desc>
+      <CustomPath-category>Output</CustomPath-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
+      <OutputPath-param>../AdventureWorks.Client.Spa/Views/{Module/}{File}</OutputPath-param>
+      <OutputPath-desc>Path where to output files with generated SPA views. Path must contain {File} placeholder.</OutputPath-desc>
+      <OutputPath-category>Output</OutputPath-category>
+      <RegistryFile-param>../AdventureWorks.Client.Spa/Views/ViewsConfig.ts</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for view paths resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
+      <MenuFile-param>../AdventureWorks.Client.Spa/Views/MainMenu.ts</MenuFile-param>
+      <MenuFile-desc>A path to the file for view routes resgistration.</MenuFile-desc>
+      <MenuFile-category>Output</MenuFile-category>
       <View-param>
       </View-param>
       <View-desc>The name of the view from the model to generate a search view for.</View-desc>
@@ -629,204 +696,66 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\html_details.xsl">
-      <Name>SPA Details View</Name>
-      <Folder>Presentation Layer\SPA</Folder>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+    <XomGenerator Include="$(XomegaHome14)Xsl\wpf_views.xsl">
+      <Name>WPF Views</Name>
+      <Folder>Presentation Layer\WPF</Folder>
+      <AddToProject-param>../AdventureWorks.Client.Wpf/AdventureWorks.Client.Wpf.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <NestViewModule-type>System.Boolean</NestViewModule-type>
-      <NestViewModule-param>False</NestViewModule-param>
-      <NestViewModule-desc>Specify if the generated module should be nested under the corresponding view.</NestViewModule-desc>
-      <NestViewModule-category>Output</NestViewModule-category>
-      <RouteConfigFile-param>../AdventureWorks.Client.Web/Spa/routes.ts</RouteConfigFile-param>
-      <RouteConfigFile-desc>A path to the file with SPA routes configuration.</RouteConfigFile-desc>
-      <RouteConfigFile-category>Output</RouteConfigFile-category>
-      <View-param>
-      </View-param>
-      <View-desc>The name of the view from the model to generate a details view for.</View-desc>
-      <View-category>Selector</View-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\wpf_search.xsl">
-      <Name>WPF Search Form</Name>
-      <Folder>Presentation Layer\WPF</Folder>
-      <OutputPath-param>../AdventureWorks.Client.WPF/Gen/_{File}.xaml</OutputPath-param>
+      <CustomPath-param>
+      </CustomPath-param>
+      <CustomPath-desc>Path where to output override classes for the generated Views. 
+If not set then the OutputPath will be used. The path must contain {File} placeholder to output files by view.</CustomPath-desc>
+      <CustomPath-category>Output</CustomPath-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
+      <OutputPath-param>../AdventureWorks.Client.Wpf/Views/{Module/}{File}</OutputPath-param>
       <OutputPath-desc>Path where to output files with generated WPF search forms. Path must contain {File} placeholder.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <FormNamespace-param>AdventureWorks.Client.WPF</FormNamespace-param>
-      <FormNamespace-desc>Namespace for the generated form.</FormNamespace-desc>
-      <FormNamespace-category>Form</FormNamespace-category>
-      <FormName-param>
-      </FormName-param>
-      <FormName-desc>Name of the generated form. May contain spaces.</FormName-desc>
-      <FormName-category>Form</FormName-category>
-      <ListObject-param>
-      </ListObject-param>
-      <ListObject-desc>Xomega list data object for the results grid.</ListObject-desc>
-      <ListObject-category>Data Object</ListObject-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\wpf_details.xsl">
-      <Name>WPF Details Form</Name>
-      <Folder>Presentation Layer\WPF</Folder>
-      <OutputPath-param>../AdventureWorks.Client.WPF/Gen/_{File}.xaml</OutputPath-param>
-      <OutputPath-desc>Path where to output files with generated WPF details forms. Path must contain {File} placeholder.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <FormNamespace-param>AdventureWorks.Client.WPF</FormNamespace-param>
-      <FormNamespace-desc>Namespace for the generated form.</FormNamespace-desc>
-      <FormNamespace-category>Form</FormNamespace-category>
-      <FormName-param>
-      </FormName-param>
-      <FormName-desc>Name of the generated form. May contain spaces.</FormName-desc>
-      <FormName-category>Form</FormName-category>
-      <DetailsObject-param>
-      </DetailsObject-param>
-      <DetailsObject-desc>Xomega data object for the form's data model.</DetailsObject-desc>
-      <DetailsObject-category>Data Object</DetailsObject-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\enum_cache.xsl">
-      <Name>WPF Lookup Cache Loaders</Name>
-      <Folder>Presentation Layer\WPF</Folder>
-      <ServiceInvocation-param>WCF</ServiceInvocation-param>
-      <ServiceInvocation-desc>A method of service invocation: Direct, WCF or Async.</ServiceInvocation-desc>
-      <Namespace-param>AdventureWorks.Client.WPF</Namespace-param>
-      <Namespace-desc>Namespace for the generated classes.</Namespace-desc>
-      <OutputPath-param>../AdventureWorks.Client.WPF/CacheLoaders/_{File}.cs</OutputPath-param>
-      <OutputPath-desc>Path where to output files with generated WPF lookup cache loaders.
-The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Client.WPF/AdventureWorks.Client.WPF.csproj</AddToProject-param>
-      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
-      <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>CacheLoaders</LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\silverlight_search.xsl">
-      <Name>Silverlight Search Page</Name>
-      <Folder>Presentation Layer\Silverlight</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Silverlight/Gen/_{File}.xaml</OutputPath-param>
-      <OutputPath-desc>Path where to output files with generated Silverlight search pages. Path must contain {File} placeholder.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <PageNamespace-param>AdventureWorks.Client.Silverlight</PageNamespace-param>
-      <PageNamespace-desc>Namespace for the generated page.</PageNamespace-desc>
-      <PageNamespace-category>Page</PageNamespace-category>
-      <PageName-param>
-      </PageName-param>
-      <PageName-desc>Name of the generated page. May contain spaces.</PageName-desc>
-      <PageName-category>Page</PageName-category>
-      <ListObject-param>
-      </ListObject-param>
-      <ListObject-desc>Xomega list data object for the results grid.</ListObject-desc>
-      <ListObject-category>Data Object</ListObject-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\silverlight_details.xsl">
-      <Name>Silverlight Details Page</Name>
-      <Folder>Presentation Layer\Silverlight</Folder>
-      <OutputPath-param>../AdventureWorks.Client.Silverlight/Gen/_{File}.xaml</OutputPath-param>
-      <OutputPath-desc>Path where to output files with generated Silverlight details pages. Path must contain {File} placeholder.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <PageNamespace-param>AdventureWorks.Client.Silverlight</PageNamespace-param>
-      <PageNamespace-desc>Namespace for the generated page.</PageNamespace-desc>
-      <PageNamespace-category>Page</PageNamespace-category>
-      <PageName-param>
-      </PageName-param>
-      <PageName-desc>Name of the generated page. May contain spaces.</PageName-desc>
-      <PageName-category>Page</PageName-category>
-      <DetailsObject-param>
-      </DetailsObject-param>
-      <DetailsObject-desc>Xomega data object for the page's data model.</DetailsObject-desc>
-      <DetailsObject-category>Data Object</DetailsObject-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\enum_cache.xsl">
-      <Name>Silverlight Lookup Cache Loaders</Name>
-      <Folder>Presentation Layer\Silverlight</Folder>
-      <ServiceInvocation-param>Async</ServiceInvocation-param>
-      <ServiceInvocation-desc>A method of service invocation: Direct, WCF or Async.</ServiceInvocation-desc>
-      <Namespace-param>AdventureWorks.Client.Silverlight</Namespace-param>
-      <Namespace-desc>Namespace for the generated classes.</Namespace-desc>
-      <OutputPath-param>../AdventureWorks.Client.Silverlight/CacheLoaders/_{File}.cs</OutputPath-param>
-      <OutputPath-desc>Path where to output files with generated Silverlight lookup cache loaders.
-The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
-      <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Client.Silverlight/AdventureWorks.Client.Silverlight.csproj</AddToProject-param>
-      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
-      <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>CacheLoaders</LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
-      <IncludeInBuild>false</IncludeInBuild>
-      <IndividualFiles>false</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\aspnet_search.xsl">
-      <Name>ASP.NET Search Pages</Name>
-      <Folder>Presentation Layer\ASP.NET</Folder>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
-      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
-      <AddToProject-category>Output</AddToProject-category>
-      <NestCustomFile-param>True</NestCustomFile-param>
-      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
-      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
-      <NestCustomFile-category>Output</NestCustomFile-category>
-      <SitemapFile-param>../AdventureWorks.Client.Web/Web.sitemap</SitemapFile-param>
-      <SitemapFile-desc>Path to the Web.sitemap file to add the views to.</SitemapFile-desc>
-      <SitemapFile-category>Output</SitemapFile-category>
-      <PageNamespace-param>AdventureWorks.Client.Web</PageNamespace-param>
-      <PageNamespace-desc>Namespace for the generated page.</PageNamespace-desc>
-      <PageNamespace-category>Page</PageNamespace-category>
-      <View-param>
-      </View-param>
-      <View-desc>The name of the view from the model to generate a search view for.</View-desc>
-      <View-category>Selector</View-category>
-      <IncludeInBuild>true</IncludeInBuild>
-      <IndividualFiles>true</IndividualFiles>
-      <GeneratorGroup>presentation</GeneratorGroup>
-    </XomGenerator>
-    <XomGenerator Include="$(XomegaHome14)Xsl\aspnet_details.xsl">
-      <Name>ASP.NET Details Pages</Name>
-      <Folder>Presentation Layer\ASP.NET</Folder>
-      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
-      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
-      <AddToProject-category>Output</AddToProject-category>
-      <NestCustomFile-param>True</NestCustomFile-param>
-      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
-      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
-      <NestCustomFile-category>Output</NestCustomFile-category>
-      <SitemapFile-param>../AdventureWorks.Client.Web/Web.sitemap</SitemapFile-param>
-      <SitemapFile-desc>Path to the Web.sitemap file to add the views to.</SitemapFile-desc>
-      <SitemapFile-category>Output</SitemapFile-category>
-      <PageNamespace-param>AdventureWorks.Client.Web</PageNamespace-param>
-      <PageNamespace-desc>Namespace for the generated page.</PageNamespace-desc>
-      <PageNamespace-category>Page</PageNamespace-category>
+      <RegistryFile-param>../AdventureWorks.Client.Wpf/Views/Views.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for views resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
+      <MenuFile-param>../AdventureWorks.Client.Wpf/Controls/MainMenu</MenuFile-param>
+      <MenuFile-desc>Path where to output generated menu resources without extension.</MenuFile-desc>
+      <MenuFile-category>Output</MenuFile-category>
+      <Namespace-param>AdventureWorks.Client.Wpf</Namespace-param>
+      <Namespace-desc>Namespace for the generated views.</Namespace-desc>
       <View-param>
       </View-param>
       <View-desc>The name of the view from the model to generate a details view for.</View-desc>
+      <View-category>Selector</View-category>
+      <IncludeInBuild>false</IncludeInBuild>
+      <IndividualFiles>false</IndividualFiles>
+      <GeneratorGroup>presentation</GeneratorGroup>
+    </XomGenerator>
+    <XomGenerator Include="$(XomegaHome14)Xsl\asp_views.xsl">
+      <Name>ASP.NET Views</Name>
+      <Folder>Presentation Layer\ASP.NET</Folder>
+      <AddToProject-param>../AdventureWorks.Client.Web/AdventureWorks.Client.Web.csproj</AddToProject-param>
+      <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
+      <AddToProject-category>Output</AddToProject-category>
+      <CustomPath-param>
+      </CustomPath-param>
+      <CustomPath-desc>Path where to output override classes for the generated Views.
+If not set then the OutputPath will be used. The path must contain {File} placeholder to output files by view.</CustomPath-desc>
+      <CustomPath-category>Output</CustomPath-category>
+      <NestCustomFile-param>True</NestCustomFile-param>
+      <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
+      <NestCustomFile-type>System.Boolean</NestCustomFile-type>
+      <NestCustomFile-category>Output</NestCustomFile-category>
+      <OutputPath-param>../AdventureWorks.Client.Web/Views/{Module/}{File}</OutputPath-param>
+      <OutputPath-desc>Path where to output files with generated views. Path must contain {File} placeholder.</OutputPath-desc>
+      <OutputPath-category>Output</OutputPath-category>
+      <MenuFile-param>../AdventureWorks.Client.Web/Web.sitemap</MenuFile-param>
+      <MenuFile-desc>Path to the sitemap file to add the views to.</MenuFile-desc>
+      <MenuFile-category>Output</MenuFile-category>
+      <Namespace-param>AdventureWorks.Client.Web</Namespace-param>
+      <Namespace-desc>Namespace for the generated pages and views.</Namespace-desc>
+      <View-param>
+      </View-param>
+      <View-desc>The name of the view from the model to generate a search view for.</View-desc>
       <View-category>Selector</View-category>
       <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>true</IndividualFiles>
@@ -835,24 +764,19 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomGenerator Include="$(XomegaHome14)Xsl\enum_cache.xsl">
       <Name>Lookup Cache Loaders</Name>
       <Folder>Static Data</Folder>
-      <ServiceInvocation-param>Direct</ServiceInvocation-param>
-      <ServiceInvocation-desc>A method of service invocation: Direct, WCF or Async.</ServiceInvocation-desc>
-      <OutputPath-param>../AdventureWorks.Services/CacheLoaders/{File}.cs</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Common/CacheLoaders/{Module/}{File}.cs</OutputPath-param>
       <OutputPath-desc>Path where to output files with generated lookup cache loaders.
 The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <Namespace-param>AdventureWorks.Services</Namespace-param>
+      <RegistryFile-param>../AdventureWorks.Services.Common/CacheLoaders/LookupCacheLoaders.cs</RegistryFile-param>
+      <RegistryFile-desc>A path to the file for cache loaders resgistration.</RegistryFile-desc>
+      <RegistryFile-category>Output</RegistryFile-category>
+      <Namespace-param>
+      </Namespace-param>
       <Namespace-desc>Namespace for the generated classes.</Namespace-desc>
-      <AddToProject-param>../AdventureWorks.Services/AdventureWorks.Services.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Common/AdventureWorks.Services.Common.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>CacheLoaders</LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
       <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>true</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
@@ -860,20 +784,12 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomGenerator Include="$(XomegaHome14)Xsl\enum_xml.xsl">
       <Name>Enumeration Data XML</Name>
       <Folder>Static Data</Folder>
-      <OutputPath-param>../AdventureWorks.Services/enumerations.xml</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Common/Enumerations/enumerations.xml</OutputPath-param>
       <OutputPath-desc>Path where to output generated XML file with enumerations.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Services/AdventureWorks.Services.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Common/AdventureWorks.Services.Common.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>
-      </LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
       <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\enum_sql.xsl">
@@ -888,20 +804,12 @@ The path may contain {Module/} and {File} placeholders to output files by module
     <XomGenerator Include="$(XomegaHome14)Xsl\enum_const.xsl">
       <Name>Enumeration Constants</Name>
       <Folder>Static Data</Folder>
-      <OutputPath-param>../AdventureWorks.Services/Enumerations.cs</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Common/Enumerations/Enumerations.cs</OutputPath-param>
       <OutputPath-desc>Path where to output generated file with enumeration constants.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>
-      <AddToProject-param>../AdventureWorks.Services/AdventureWorks.Services.csproj</AddToProject-param>
+      <AddToProject-param>../AdventureWorks.Services.Common/AdventureWorks.Services.Common.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <LinkIntoProject-param>
-      </LinkIntoProject-param>
-      <LinkIntoProject-desc>A project file to add links to the generated files to.</LinkIntoProject-desc>
-      <LinkIntoProject-category>Output</LinkIntoProject-category>
-      <LinkPath-param>
-      </LinkPath-param>
-      <LinkPath-desc>A path indicating where to insert the linked file in the project specified by the LinkIntoProject parameter.</LinkPath-desc>
-      <LinkPath-category>Output</LinkPath-category>
       <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
   </ItemGroup>

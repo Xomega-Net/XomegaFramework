@@ -21,7 +21,7 @@
         </field>
         <field name="document level" type="small int">
           <config>
-            <sql:column name="DocumentLevel"/>
+            <sql:column name="DocumentLevel" computed="([DocumentNode].[GetLevel]())"/>
           </config>
           <doc>
             <summary>Depth in the document hierarchy.</summary>

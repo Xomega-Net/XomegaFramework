@@ -9,16 +9,20 @@
         xmlns:edm="http://www.xomega.net/edm"
         name="sales">
   <types>
-    <type name="credit card approval code" base="char string" size="15"/>
     <type name="line total" base="money">
       <config>
         <sql:type name="numeric(38,6)" db="sqlsrv"/>
       </config>
     </type>
-    <type name="sales order" base="integer key"/>
     <type name="sales order detail" base="integer key"/>
+    <type name="sales order" base="integer key"/>
     <type name="sales order reason" base="sales reason"/>
     <type name="sales order status" base="tiny int enumeration">
+      <config>
+        <ui:web-control multi-value="true">
+          <asp:TextBox runat="server"/>
+        </ui:web-control>
+      </config>
       <enum ref="sales order status"/>
     </type>
   </types>
@@ -33,6 +37,23 @@
     </enum>
   </enums>
   <structs>
+    <struct name="credit card info" object="credit card">
+      <param name="credit card id"/>
+      <param name="card number"/>
+      <param name="expiration" type="string"/>
+      <config>
+        <xfk:add-to-object class="CreditCardPaymentObject"/>
+      </config>
+      <usage generic="true"/>
+    </struct>
+    <struct name="customer lookup">
+      <param name="store name" type="string"/>
+      <param name="person name" type="string"/>
+      <config>
+        <xfk:add-to-object class="SalesCustomerLookupObject"/>
+      </config>
+      <usage generic="true"/>
+    </struct>
     <struct name="customer info" object="customer">
       <param name="customer id"/>
       <param name="store id"/>
@@ -55,14 +76,6 @@
         <xfk:add-to-object class="SalesOrderCustomerObject"/>
       </config>
     </struct>
-    <struct name="customer lookup">
-      <param name="store name" type="string"/>
-      <param name="person name" type="string"/>
-      <config>
-        <xfk:add-to-object class="SalesCustomerLookupObject"/>
-      </config>
-      <usage generic="true"/>
-    </struct>
     <struct name="payment info" object="sales order">
       <param name="sub total"/>
       <param name="ship method id"/>
@@ -72,7 +85,7 @@
       <param name="due date" type="date"/>
       <param name="currency rate" type="string"/>
       <struct name="credit card">
-        <param name="credit card id"/>
+        <param name="credit card id" required="true"/>
         <param name="credit card approval code"/>
         <config>
           <xfk:add-to-object class="CreditCardPaymentObject"/>
@@ -163,7 +176,8 @@
         </field>
         <field name="sales order number" type="string25" required="true">
           <config>
-            <sql:column name="SalesOrderNumber"/>
+            <sql:column name="SalesOrderNumber"
+                        computed="(isnull(N'SO'+CONVERT([nvarchar](23),[SalesOrderID]),N'*** ERROR ***'))"/>
           </config>
           <doc>
             <summary>Unique sales order identification number.</summary>
@@ -241,7 +255,7 @@
             <summary>Credit card identification number. Foreign key to CreditCard.CreditCardID.</summary>
           </doc>
         </field>
-        <field name="credit card approval code" type="credit card approval code">
+        <field name="credit card approval code" type="char string15">
           <config>
             <sql:column name="CreditCardApprovalCode"/>
           </config>
@@ -283,7 +297,7 @@
         </field>
         <field name="total due" type="money" required="true">
           <config>
-            <sql:column name="TotalDue"/>
+            <sql:column name="TotalDue" computed="(isnull(([SubTotal]+[TaxAmt])+[Freight],(0)))"/>
           </config>
           <doc>
             <summary>Total due from customer. Computed as Subtotal + TaxAmt + Freight.</summary>
@@ -361,6 +375,10 @@
           </input>
           <output>
             <param name="sales order id"/>
+            <param name="sales order number"/>
+            <param name="order date" type="date"/>
+            <param name="revision number"/>
+            <param name="modified date"/>
             <config>
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
@@ -390,6 +408,13 @@
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
           </input>
+          <output>
+            <param name="revision number"/>
+            <param name="modified date"/>
+            <config>
+              <xfk:add-to-object class="SalesOrderObject"/>
+            </config>
+          </output>
           <doc>
             <summary>Updates existing Sales Order object using the specified data.</summary>
           </doc>
@@ -419,7 +444,7 @@
                   <summary>Comparison operator for the corresponding Status criteria.</summary>
                 </doc>
               </param>
-              <param name="status" required="false"/>
+              <param name="status" required="false" list="true"/>
               <param name="order date operator" type="operator">
                 <doc>
                   <summary>Comparison operator for the corresponding Order Date criteria.</summary>
@@ -458,21 +483,13 @@
                   <summary>Comparison operator for the corresponding Customer Store criteria.</summary>
                 </doc>
               </param>
-              <param name="customer store" type="string">
-                <doc>
-                  <summary>Allows filtering by a substring of the customer store name.</summary>
-                </doc>
-              </param>
+              <param name="customer store" type="string"/>
               <param name="customer name operator" type="operator">
                 <doc>
                   <summary>Comparison operator for the corresponding Customer Name criteria.</summary>
                 </doc>
               </param>
-              <param name="customer name" type="string">
-                <doc>
-                  <summary>Allows filtering by a substring of the individual customer name or a customer store contact name.</summary>
-                </doc>
-              </param>
+              <param name="customer name" type="string"/>
               <param name="global region" type="sales territory group" required="false"/>
               <param name="territory id operator" type="operator">
                 <doc>
@@ -568,7 +585,8 @@
             </field>
             <field name="line total" type="line total" required="true">
               <config>
-                <sql:column name="LineTotal"/>
+                <sql:column name="LineTotal"
+                            computed="(isnull(([UnitPrice]*((1.0)-[UnitPriceDiscount]))*[OrderQty],(0.0)))"/>
               </config>
               <doc>
                 <summary>Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.</summary>
@@ -619,17 +637,22 @@
               </doc>
             </operation>
             <operation name="create" type="create">
-              <input arg="data">
+              <input>
                 <param name="sales order id" type="sales order" required="true"/>
-                <param name="carrier tracking number"/>
-                <param name="order qty"/>
-                <param name="special offer id" type="special offer" required="true"/>
-                <param name="product id" type="product" required="true"/>
-                <param name="unit price"/>
-                <param name="unit price discount"/>
-                <param name="line total"/>
-                <param name="rowguid"/>
-                <param name="modified date"/>
+                <struct name="data">
+                  <param name="carrier tracking number"/>
+                  <param name="order qty"/>
+                  <param name="special offer id" type="special offer" required="true"/>
+                  <param name="product id" type="product" required="true"/>
+                  <param name="unit price"/>
+                  <param name="unit price discount"/>
+                  <param name="line total"/>
+                  <param name="rowguid"/>
+                  <param name="modified date"/>
+                  <config>
+                    <xfk:add-to-object class="SalesOrderDetailObject"/>
+                  </config>
+                </struct>
                 <config>
                   <xfk:add-to-object class="SalesOrderDetailObject"/>
                 </config>
@@ -683,6 +706,9 @@
             <operation name="read list" type="readlist">
               <input>
                 <param name="sales order id" type="sales order" required="true"/>
+                <config>
+                  <xfk:add-to-object class="SalesOrderObject"/>
+                </config>
               </input>
               <output list="true">
                 <param name="sales order detail id"/>
@@ -740,6 +766,13 @@
     </object>
   </objects>
   <xfk:data-objects>
+    <xfk:data-object class="CreditCardPaymentObject" customize="true">
+      <ui:display>
+        <ui:field param="credit card id" label="Credit Card" is-trigger="true"/>
+        <ui:field param="card number" editable="false"/>
+        <ui:field param="expiration" editable="false"/>
+      </ui:display>
+    </xfk:data-object>
     <xfk:data-object class="SalesOrderObject" customize="true">
       <xfk:add-child name="customer" class="SalesOrderCustomerObject"/>
       <xfk:add-child name="detail" class="SalesOrderDetailList"/>
@@ -747,6 +780,13 @@
       <xfk:add-child name="sales" class="SalesOrderSalesObject"/>
       <ui:display>
         <ui:field param="sales order id" hidden="true"/>
+      </ui:display>
+    </xfk:data-object>
+    <xfk:data-object class="SalesOrderCriteria" customize="true">
+      <ui:display>
+        <ui:field param="sales person id" label="Sales Person"/>
+        <ui:field param="territory id" label="Sales Territory" is-trigger="true"/>
+        <ui:field param="global region" is-trigger="true"/>
       </ui:display>
     </xfk:data-object>
     <xfk:data-object class="SalesOrderCustomerObject" customize="true">
@@ -772,28 +812,14 @@
         </ui:params>
         <ui:result data-object="..">
           <ui:param name="customer id" field="customer id"/>
-          <ui:param name="person id" field="person id"/>
-          <ui:param name="person name" field="person name"/>
           <ui:param name="store id" field="store id"/>
           <ui:param name="store name" field="store name"/>
-          <ui:param name="territory id" field="territory id"/>
-          <ui:param name="account number" field="account number"/>
+          <ui:param name="person id" field="person id"/>
+          <ui:param name="person name" field="person name"/>
         </ui:result>
       </ui:link>
     </xfk:data-object>
-    <xfk:data-object class="SalesOrderPaymentObject">
-      <xfk:add-child name="credit card" class="CreditCardPaymentObject"/>
-      <ui:display>
-        <ui:field param="ship method id" label="Shipment Method"/>
-      </ui:display>
-    </xfk:data-object>
-    <xfk:data-object class="SalesOrderCriteria" customize="true">
-      <ui:display>
-        <ui:field param="sales person id" label="Sales Person"/>
-        <ui:field param="territory id" label="Sales Territory"/>
-      </ui:display>
-    </xfk:data-object>
-    <xfk:data-object class="SalesOrderList" list="true">
+    <xfk:data-object class="SalesOrderList" list="true" customize="true">
       <ui:display>
         <ui:field param="sales order id" hidden="true"/>
         <ui:field param="online order flag" label="Online"/>
@@ -839,22 +865,31 @@
         </ui:params>
       </ui:link>
     </xfk:data-object>
+    <xfk:data-object class="SalesOrderPaymentObject">
+      <xfk:add-child name="credit card" class="CreditCardPaymentObject"/>
+      <ui:display>
+        <ui:field param="ship method id" label="Shipment Method"/>
+      </ui:display>
+    </xfk:data-object>
     <xfk:data-object class="SalesOrderSalesObject" customize="true">
       <ui:display>
-        <ui:field param="territory id" label="Territory"/>
+        <ui:field param="territory id" label="Territory" is-trigger="true"/>
         <ui:field param="sales person id" label="Sales Person"/>
       </ui:display>
     </xfk:data-object>
   </xfk:data-objects>
   <ui:views>
     <ui:view name="SalesOrderView" title="Sales Order">
-      <ui:view-model data-object="SalesOrderObject" customize="true"/>
+      <ui:view-model data-object="SalesOrderObject"/>
       <ui:layout base="standard">
-        <ui:size width="840" height="600"/>
+        <ui:details>
+          <ui:fields columns="2" flow="vertical"/>
+        </ui:details>
+        <ui:size width="840" height="640"/>
       </ui:layout>
     </ui:view>
     <ui:view name="SalesOrderListView" title="Sales Order List">
-      <ui:view-model data-object="SalesOrderList" customize="true"/>
+      <ui:view-model data-object="SalesOrderList"/>
       <ui:layout base="master-details"/>
     </ui:view>
     <ui:view name="SalesOrderDetailView" title="Detail" child="true">

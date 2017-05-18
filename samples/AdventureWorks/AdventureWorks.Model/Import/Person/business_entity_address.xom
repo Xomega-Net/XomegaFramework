@@ -65,8 +65,8 @@
           <output list="true">
             <param name="address id" type="address" required="true"/>
             <param name="address type" type="name" required="true"/>
-            <param name="address line1" type="address line"/>
-            <param name="address line2" type="address line"/>
+            <param name="address line 1" type="address line"/>
+            <param name="address line 2" type="address line"/>
             <param name="city" type="city name"/>
             <param name="state" type="state province code"/>
             <param name="postal code" type="postal code"/>
@@ -76,13 +76,7 @@
             <xfk:enum-cache enum-name="business entity address" skip-registration="true"
                             id-param="address id" desc-param="address type"/>
           </config>
-          <doc>
-            <summary>Reads a list of Business Entity Address objects based on the specified criteria.</summary>
-          </doc>
         </operation>
-        <doc>
-          <summary>A service for quering and managing Business Entity Address objects.</summary>
-        </doc>
       </operations>
       <config>
         <sql:table name="Person.BusinessEntityAddress"/>
