@@ -56,6 +56,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
+                Errors = null;
                 DetailsObject.Read(null);
             }
             catch (Exception ex)
@@ -92,6 +93,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
+                Errors = null;
                 DetailsObject.Validate(true);
                 DetailsObject.GetValidationErrors().AbortIfHasErrors();
                 DetailsObject.Save(null);
@@ -122,6 +124,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null || View != null && !View.CanDelete()) return;
             try
             {
+                Errors = null;
                 DetailsObject.Delete(null);
                 FireEvent(ViewEvent.Deleted);
                 DetailsObject.SetModified(false, true); // so that we could close without asking

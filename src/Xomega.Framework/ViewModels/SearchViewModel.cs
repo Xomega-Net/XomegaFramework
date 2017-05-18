@@ -97,6 +97,7 @@ namespace Xomega.Framework.Views
             if (List == null) return false;
             try
             {
+                Errors = null;
                 List.Validate(true);
                 List.GetValidationErrors().AbortIfHasErrors();
                 List.Read(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection });

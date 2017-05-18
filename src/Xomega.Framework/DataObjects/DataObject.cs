@@ -577,6 +577,11 @@ namespace Xomega.Framework
         #region Modification support
 
         /// <summary>
+        /// A flag indicating if the object is tracking modifications
+        /// </summary>
+        public bool TrackModifications = true;
+
+        /// <summary>
         /// Tracks the modification state of the data object.
         /// Null means the date object has never been initialized with data.
         /// False means the data object has been initialized, but has not been changed since then.
@@ -601,7 +606,7 @@ namespace Xomega.Framework
                 bool? childModified = child.IsModified();
                 if (childModified.HasValue) res |= childModified;
             }
-            return res;
+            return !TrackModifications && res != null ? false : res;
         }
 
         /// <summary>

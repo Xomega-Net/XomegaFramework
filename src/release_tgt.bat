@@ -14,7 +14,6 @@ call release Xomega.Framework.Web %VER% %TGT% %EPT%
 call release Xomega.Framework.Wpf %VER% %TGT% %EPT%
 
 IF EXIST "pkg\lib\" rd /q /s "pkg\lib"
-cd pkg
-del Package.nuspec
+del pkg\Package.nuspec
 
 :end

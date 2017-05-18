@@ -33,7 +33,7 @@
       <codetransformlist>
         <codetransform name="analytics" />
       </codetransformlist>
-      <type name="Xomega.Framework.BaseProperty">
+      <type name="Xomega.Framework.ValueFormat">
         <method name=".cctor" signature="void()" />
       </type>
       <propertylist>
@@ -54,7 +54,7 @@
       <codetransformlist>
         <codetransform name="analytics" />
       </codetransformlist>
-      <type name="Xomega.Framework.BaseProperty">
+      <type name="Xomega.Framework.ValueFormat">
         <method name="InstrumentationShutDown" signature="void()" />
       </type>
       <propertylist>
@@ -68,7 +68,7 @@
         <codetransform name="analytics" />
       </codetransformlist>
       <type name="Xomega.Framework.Lookup.LookupCache">
-        <method name="set_cacheProvider" signature="void(Xomega.Framework.Lookup.ILookupCacheProvider)" />
+        <method name=".cctor" signature="void()" />
       </type>
       <propertylist>
         <property name="ExtendedKeySourceElement" value="None" />
@@ -98,7 +98,7 @@
         <codetransform name="analytics" />
       </codetransformlist>
       <type name="Xomega.Framework.Lookup.LookupCacheLoader">
-        <method name=".ctor" signature="void(string, bool, string[])" />
+        <method name=".cctor" signature="void()" />
       </type>
       <propertylist>
         <property name="ExtendedKeySourceElement" value="None" />
@@ -112,14 +112,14 @@
       <codetransformlist>
         <codetransform name="analytics" />
       </codetransformlist>
-      <type name="Xomega.Framework.Services.EntityServiceBase`1&lt;T&gt;">
+      <type name="Xomega.Framework.Services.BaseService">
         <method name=".cctor" signature="void()" />
       </type>
       <propertylist>
         <property name="ExtendedKeySourceName" value="" />
         <property name="ExtendedKeySourceOwner" value="" />
         <property name="FeatureEventType" value="Tick" />
-        <property name="Name" value="EntityService" />
+        <property name="Name" value="BaseService" />
         <property name="ExtendedKeySourceElement" value="None" />
       </propertylist>
     </extattribute>

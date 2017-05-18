@@ -18,9 +18,10 @@ namespace Xomega.Framework.Lookup
     {
         #region Static accessors
 
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
+        /// <summary>Instrumentation hook.</summary>
+        static LookupCache() { }
+
+        /// <summary>Triggers instrumentation setup method if called first.</summary>
         private static readonly ValueFormat fmt = ValueFormat.Internal;
 
         /// <summary>

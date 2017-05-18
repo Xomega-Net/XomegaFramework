@@ -13,9 +13,7 @@ namespace Xomega.Framework.Services
     /// </summary>
     public class BaseService : IPrincipalProvider
     {
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
+        /// <summary>Triggers instrumentation setup method if called first.</summary>
         private static readonly ValueFormat fmt = ValueFormat.Internal;
 
         /// <summary>

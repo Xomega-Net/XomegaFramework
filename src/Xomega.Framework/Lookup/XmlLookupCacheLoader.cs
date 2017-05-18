@@ -14,9 +14,7 @@ namespace Xomega.Framework.Lookup
     /// </summary>
     public class XmlLookupCacheLoader : LookupCacheLoader
     {
-        /// <summary>
-        /// Triggers <see cref="ValueFormat.StartUp"/> method if called first.
-        /// </summary>
+        /// <summary>Triggers instrumentation setup method if called first.</summary>
         private static readonly ValueFormat fmt = ValueFormat.Internal;
 
         /// <summary>

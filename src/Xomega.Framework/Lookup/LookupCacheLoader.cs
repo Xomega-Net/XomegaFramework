@@ -13,6 +13,9 @@ namespace Xomega.Framework.Lookup
     /// </summary>
     public abstract class LookupCacheLoader : ILookupCacheLoader
     {
+        /// <summary>Instrumentation hook.</summary>
+        static LookupCacheLoader() { }
+
         /// <summary>
         /// Service provider for the lookup cache loader
         /// </summary>
