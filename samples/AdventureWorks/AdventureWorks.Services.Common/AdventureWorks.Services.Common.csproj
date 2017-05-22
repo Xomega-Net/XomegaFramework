@@ -50,19 +50,10 @@
    </ItemGroup>
    <ItemGroup>
       <Compile Include="Properties\AssemblyInfo.cs"/>
-      <Compile Include="Sales\ISalesOrderService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="CacheLoaders\LookupCacheLoaders.cs">
          <AutoGen>True</AutoGen>
       </Compile>
       <Compile Include="Enumerations\Enumerations.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\ISalesPersonService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\ISalesTerritoryService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
       <Compile Include="CacheLoaders\Sales\SalesPersonReadListCacheLoader.cs">
@@ -71,49 +62,62 @@
       <Compile Include="CacheLoaders\Sales\SalesTerritoryReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Include="Production\IProductService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="CacheLoaders\Production\ProductReadListCacheLoader.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\ISpecialOfferService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
       <Compile Include="CacheLoaders\Sales\SpecialOfferReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Include="Sales\SalesStructures.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Purchasing\IShipMethodService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="CacheLoaders\Purchasing\ShipMethodReadListCacheLoader.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\ISalesReasonService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
       <Compile Include="CacheLoaders\Sales\SalesReasonReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Include="Sales\ICustomerService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Person\IBusinessEntityAddressService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="CacheLoaders\Person\BusinessEntityAddressReadListCacheLoader.cs">
          <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Include="Person\PersonStructures.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
-      <Compile Include="Sales\IPersonCreditCardService.cs">
-         <AutoGen>True</AutoGen>
-      </Compile>
       <Compile Include="CacheLoaders\Sales\PersonCreditCardReadListCacheLoader.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="SecurityManager.cs"/>
+      <Compile Include="ServiceContracts\Person\PersonStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\SalesStructures.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Person\IBusinessEntityAddressService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Person\IPersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Production\IProductService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Purchasing\IShipMethodService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ICustomerService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\IPersonCreditCardService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ISalesOrderService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ISalesPersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ISalesReasonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ISalesTerritoryService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ServiceContracts\Sales\ISpecialOfferService.cs">
          <AutoGen>True</AutoGen>
       </Compile>
    </ItemGroup>

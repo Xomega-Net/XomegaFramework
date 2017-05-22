@@ -170,6 +170,23 @@ namespace AdventureWorks.Enumerations
     }
     #endregion
 
+    #region PersonType
+    public class PersonType
+    {
+        ///<summary>
+        /// Enumeration name used for storing it in a lookup cache.
+        ///</summary>
+        public const string EnumName = "person type";
+
+        public const string StoreContact = "SC";
+        public const string IndividualCustomer = "IN";
+        public const string SalesPerson = "SP";
+        public const string Employee = "EM";
+        public const string VendorContact = "VC";
+        public const string GeneralContact = "GC";
+    }
+    #endregion
+
     #region Product
     ///<summary>
     /// Cached enumeration returned by the IProductService.ReadList operation.

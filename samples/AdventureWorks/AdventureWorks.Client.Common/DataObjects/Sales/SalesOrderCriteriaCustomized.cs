@@ -1,4 +1,6 @@
+using AdventureWorks.Services;
 using System;
+using System.Threading;
 using Xomega.Framework;
 
 namespace AdventureWorks.Client.Objects
@@ -27,6 +29,12 @@ namespace AdventureWorks.Client.Objects
             StatusProperty.DisplayFormat = Header.FieldId + " - " + Header.FieldText;
             TerritoryIdProperty.SetCascadingProperty(Enumerations.SalesTerritory.Attributes.Group, GlobalRegionProperty);
             SalesPersonIdProperty.SetCascadingProperty(Enumerations.SalesPerson.Attributes.TerritoryId, TerritoryIdProperty);
+
+            if (Thread.CurrentPrincipal.IsStoreContact() || Thread.CurrentPrincipal.IsIndividualCustomer())
+            {
+                CustomerStoreOperatorProperty.AccessLevel = AccessLevel.None;
+                CustomerNameOperatorProperty.AccessLevel = AccessLevel.None;
+            }
         }
 
         public override void Validate(bool force)

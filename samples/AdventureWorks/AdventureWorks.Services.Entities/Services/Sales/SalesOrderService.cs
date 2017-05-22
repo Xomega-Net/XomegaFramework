@@ -153,6 +153,11 @@ namespace AdventureWorks.Services.Entities
         public virtual IEnumerable<SalesOrder_ReadListOutput> ReadList(SalesOrder_ReadListInput_Criteria _criteria)
         {
             // CUSTOM_CODE_START: add custom security checks for ReadList operation below
+            if (!CurrentPrincipal.IsEmployee() && !CurrentPrincipal.IsIndividualCustomer() &&
+                !CurrentPrincipal.IsStoreContact())
+            {
+                currentErrors.CriticalError(ErrorType.Security, "Operation is not allowed");
+            }
             // CUSTOM_CODE_END
             IEnumerable<SalesOrder_ReadListOutput> res = null;
             try
@@ -169,7 +174,16 @@ namespace AdventureWorks.Services.Entities
                     } // CUSTOM_CODE_END
                 }
                 // CUSTOM_CODE_START: add custom filter criteria to the source query for ReadList operation below
-                // src = src.Where(o => o.FieldName == VALUE);
+                if (CurrentPrincipal.IsStoreContact())
+                {
+                    int? storeId = CurrentPrincipal.GetStoreId();
+                    src = src.Where(o => o.CustomerIdObject.StoreIdObject.BusinessEntityId == storeId);
+                }
+                if (CurrentPrincipal.IsIndividualCustomer())
+                {
+                    int? personId = CurrentPrincipal.GetPersonId();
+                    src = src.Where(o => o.CustomerIdObject.PersonIdObject.BusinessEntityId == personId);
+                }
                 // CUSTOM_CODE_END
                 #endregion
                 var qry = from obj in src

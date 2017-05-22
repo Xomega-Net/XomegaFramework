@@ -33,4 +33,27 @@ namespace AdventureWorks.Services
     }
     #endregion
 
+    #region Credentials structure
+
+    public class Credentials
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+    #endregion
+
+    #region PersonInfo structure
+
+    public class PersonInfo
+    {
+        public int BusinessEntityId { get; set; }
+        public string PersonType { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public int? Store { get; set; }
+        public int? Vendor { get; set; }
+    }
+    #endregion
+
 }

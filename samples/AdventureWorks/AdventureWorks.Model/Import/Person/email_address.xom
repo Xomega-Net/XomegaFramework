@@ -8,6 +8,15 @@
         xmlns:clr="http://www.xomega.net/clr"
         xmlns:edm="http://www.xomega.net/edm"
         name="person">
+  <types>
+    <type name="email" base="name">
+      <config>
+        <ui:web-control>
+          <asp:TextBox TextMode="Email" Width="200px" runat="server"/>
+        </ui:web-control>
+      </config>
+    </type>
+  </types>
   <fieldsets>
     <fieldset name="email address">
       <field name="business entity id" type="person" required="true">
@@ -32,7 +41,7 @@
     <object name="email address">
       <fields>
         <fieldset ref="email address" key="supplied" required="true"/>
-        <field name="email address" type="name">
+        <field name="email address" type="email">
           <config>
             <sql:column name="EmailAddress"/>
           </config>

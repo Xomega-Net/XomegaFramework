@@ -485,7 +485,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_services.xsl">
       <Name>Service Contracts</Name>
       <Folder>Service Layer</Folder>
-      <OutputPath-param>../AdventureWorks.Services.Common/{Module/}{File}.cs</OutputPath-param>
+      <OutputPath-param>../AdventureWorks.Services.Common/ServiceContracts/{Module/}{File}.cs</OutputPath-param>
       <OutputPath-desc>Path where to output generated files for service and data contracts.
 The path may contain {Module/} and {File} placeholders to output files by module and service respectively.</OutputPath-desc>
       <OutputPath-category>Output</OutputPath-category>

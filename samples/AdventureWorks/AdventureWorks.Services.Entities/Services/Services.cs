@@ -15,6 +15,7 @@ namespace AdventureWorks.Services.Entities
         {
             services.AddScoped<IBusinessEntityAddressService, BusinessEntityAddressService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IPersonService, PersonServiceCustomized>();
             services.AddScoped<IPersonCreditCardService, PersonCreditCardService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ISalesOrderService, SalesOrderService>();

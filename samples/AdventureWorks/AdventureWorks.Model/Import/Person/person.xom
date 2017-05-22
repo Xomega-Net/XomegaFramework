@@ -10,7 +10,38 @@
         name="person">
   <types>
     <type name="person" base="business entity"/>
+    <type name="person type" base="enumeration" size="2">
+      <enum ref="person type"/>
+    </type>
   </types>
+  <enums>
+    <enum name="person type">
+      <item name="Store contact" value="SC"/>
+      <item name="Individual customer" value="IN"/>
+      <item name="Sales person" value="SP"/>
+      <item name="Employee" value="EM"/>
+      <item name="Vendor contact" value="VC"/>
+      <item name="General contact" value="GC"/>
+    </enum>
+  </enums>
+  <structs>
+    <struct name="credentials">
+      <param name="email" type="email" required="true"/>
+      <param name="password" type="plain password" required="true"/>
+      <config>
+        <xfk:add-to-object class="AuthenticationObject"/>
+      </config>
+    </struct>
+    <struct name="person info" object="person">
+      <param name="business entity id"/>
+      <param name="person type"/>
+      <param name="first name"/>
+      <param name="last name"/>
+      <param name="email" type="email" required="true"/>
+      <param name="store" type="store"/>
+      <param name="vendor" type="vendor"/>
+    </struct>
+  </structs>
   <objects>
     <object name="person">
       <fields>
@@ -19,12 +50,13 @@
             <sql:column name="BusinessEntityID"/>
           </config>
         </field>
-        <field name="person type" type="code2" required="true">
+        <field name="person type" type="person type" required="true">
           <config>
             <sql:column name="PersonType"/>
           </config>
           <doc>
-            <summary>Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact</summary>
+            <summary>Primary type of person: SC = Store Contact, IN = Individual (retail) customer,
+            SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact</summary>
           </doc>
         </field>
         <field name="name style" type="boolean" required="true">
@@ -116,12 +148,44 @@
           </doc>
         </field>
       </fields>
+      <operations>
+        <operation name="authenticate" type="update">
+          <input arg="credentials" struct="credentials"/>
+          <doc>
+            <summary>Authenticates a Person using email and password.</summary>
+          </doc>
+        </operation>
+        <operation name="read" type="read">
+          <input>
+            <param name="email" type="email" required="true"/>
+          </input>
+          <output struct="person info"/>
+          <doc>
+            <summary>Reads person info by email as the key.</summary>
+          </doc>
+        </operation>
+      </operations>
       <config>
         <sql:table name="Person.Person"/>
+        <wcf:customize subclass="true"/>
       </config>
       <doc>
         <summary>Human beings involved with AdventureWorks: employees, customer contacts, and vendor contacts.</summary>
       </doc>
     </object>
   </objects>
+  <xfk:data-objects>
+    <xfk:data-object class="AuthenticationObject"/>
+  </xfk:data-objects>
+  <ui:views>
+    <ui:view name="LoginView" title="Login" customize="true" child="true">
+      <ui:view-model data-object="AuthenticationObject"/>
+      <ui:layout base="standard">
+        <ui:details>
+          <ui:fields columns="1"/>
+        </ui:details>
+        <ui:size width="300" height="180"/>
+      </ui:layout>
+    </ui:view>
+  </ui:views>
 </module>

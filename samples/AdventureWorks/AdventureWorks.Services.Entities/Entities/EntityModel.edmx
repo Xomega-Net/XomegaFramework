@@ -3933,7 +3933,8 @@
                <Property Name="BusinessEntityId" Type="Int32" Nullable="false"/>
                <Property Name="PersonType" Type="String" Nullable="false">
                   <Documentation>
-                     <Summary>Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact</Summary>
+                     <Summary>Primary type of person: SC = Store Contact, IN = Individual (retail) customer,
+            SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact</Summary>
                   </Documentation>
                </Property>
                <Property Name="NameStyle" Type="Boolean" Nullable="false">

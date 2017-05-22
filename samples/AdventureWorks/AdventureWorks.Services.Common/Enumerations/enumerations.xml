@@ -113,6 +113,14 @@
    <prop ref="exclude type" value="EnumProperty"/>
   </item>
  </enum>
+ <enum name="person type">
+  <item name="Store contact" value="SC"/>
+  <item name="Individual customer" value="IN"/>
+  <item name="Sales person" value="SP"/>
+  <item name="Employee" value="EM"/>
+  <item name="Vendor contact" value="VC"/>
+  <item name="General contact" value="GC"/>
+ </enum>
  <enum name="sales order status">
   <item name="In process" value="1"/>
   <item name="Approved" value="2"/>

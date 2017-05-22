@@ -1,363 +1,393 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0" DefaultTargets="Build">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion />
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4B784234-B032-4320-9FCD-650F02C42BF9}</ProjectGuid>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdventureWorks.Client.Web</RootNamespace>
-    <AssemblyName>AdventureWorks.Client.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
-    <UseGlobalApplicationHostFile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="AjaxControlToolkit, Version=17.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AjaxControlToolkit.17.1.0.0\lib\net40\AjaxControlToolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="Xomega.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xomega.Framework.2.0.0\lib\net45\Xomega.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xomega.Framework.Web, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xomega.Framework.Web.2.0.0\lib\net45\Xomega.Framework.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdventureWorks.Client.Common\AdventureWorks.Client.Common.csproj">
-      <Project>{D7A251D5-8779-4809-8AB8-1A5D25204EB6}</Project>
-      <Name>AdventureWorks.Client.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj">
-      <Project>{4D902CA4-C557-4A24-9856-6302420AF029}</Project>
-      <Name>AdventureWorks.Services.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AdventureWorks.Services.Entities\AdventureWorks.Services.Entities.csproj">
-      <Project>{19D256BC-F220-4DAA-8129-2C82B8F65142}</Project>
-      <Name>AdventureWorks.Services.Entities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
-    <Content Include="Content\css\xomega-controls.css" />
-    <Content Include="Content\images\splitter-left.gif" />
-    <Content Include="Content\images\splitter-right.gif" />
-    <Content Include="Content\themes\base\accordion.css" />
-    <Content Include="Content\themes\base\all.css" />
-    <Content Include="Content\themes\base\autocomplete.css" />
-    <Content Include="Content\themes\base\base.css" />
-    <Content Include="Content\themes\base\button.css" />
-    <Content Include="Content\themes\base\core.css" />
-    <Content Include="Content\themes\base\datepicker.css" />
-    <Content Include="Content\themes\base\dialog.css" />
-    <Content Include="Content\themes\base\draggable.css" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery-ui.min.css" />
-    <Content Include="Content\themes\base\menu.css" />
-    <Content Include="Content\themes\base\progressbar.css" />
-    <Content Include="Content\themes\base\resizable.css" />
-    <Content Include="Content\themes\base\selectable.css" />
-    <Content Include="Content\themes\base\selectmenu.css" />
-    <Content Include="Content\themes\base\slider.css" />
-    <Content Include="Content\themes\base\sortable.css" />
-    <Content Include="Content\themes\base\spinner.css" />
-    <Content Include="Content\themes\base\tabs.css" />
-    <Content Include="Content\themes\base\theme.css" />
-    <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="Scripts\jquery-ui-1.12.1.js" />
-    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
-    <Content Include="Scripts\xomega-controls-2.0.0.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.sitemap" />
-    <Compile Include="App_Start\DIMiddleware.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\Startup.cs" />
-    <Compile Include="App_Start\WebAppInit.cs" />
-    <Content Include="App_Themes\DefaultTheme\DefaultSkin.skin" />
-    <Content Include="Content\css\normalize.css" />
-    <Content Include="Content\css\page.css" />
-    <Content Include="Content\css\widgets.css" />
-    <Content Include="Content\css\xomega.css" />
-    <Content Include="Controls\Editors\DateTimeControl.ascx" />
-    <Compile Include="Controls\Editors\DateTimeControl.ascx.cs">
-      <DependentUpon>DateTimeControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\Editors\DateTimeControl.ascx.designer.cs">
-      <DependentUpon>DateTimeControl.ascx</DependentUpon>
-    </Compile>
-    <Content Include="Controls\Editors\PickListControl.ascx" />
-    <Compile Include="Controls\Editors\PickListControl.ascx.cs">
-      <DependentUpon>PickListControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\Editors\PickListControl.ascx.designer.cs">
-      <DependentUpon>PickListControl.ascx</DependentUpon>
-    </Compile>
-    <Content Include="Controls\AppliedCriteria.ascx" />
-    <Compile Include="Controls\AppliedCriteria.ascx.cs">
-      <DependentUpon>AppliedCriteria.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\AppliedCriteria.ascx.designer.cs">
-      <DependentUpon>AppliedCriteria.ascx</DependentUpon>
-    </Compile>
-    <Content Include="Controls\CollapsiblePanel.ascx" />
-    <Compile Include="Controls\CollapsiblePanel.ascx.cs">
-      <DependentUpon>CollapsiblePanel.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\CollapsiblePanel.ascx.designer.cs">
-      <DependentUpon>CollapsiblePanel.ascx</DependentUpon>
-    </Compile>
-    <Content Include="Controls\Errors.ascx" />
-    <Compile Include="Controls\Errors.ascx.cs">
-      <DependentUpon>Errors.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\Errors.ascx.designer.cs">
-      <DependentUpon>Errors.ascx</DependentUpon>
-    </Compile>
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\Default.aspx" />
-    <Compile Include="Views\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Content Include="Site.Master" />
-    <Compile Include="Site.Master.cs">
-      <DependentUpon>Site.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Site.Master.designer.cs">
-      <DependentUpon>Site.Master</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\Sales\SalesOrderViewPage.aspx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderViewPage.aspx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderViewPage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderViewPage.aspx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderViewPage.aspx</DependentUpon>
-    </Compile>
-    <Content Include="Views\Sales\SalesOrderView.ascx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderView.ascx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderView.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderView.ascx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Content Include="Views\Sales\SalesOrderListViewPage.aspx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderListViewPage.aspx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderListViewPage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderListViewPage.aspx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderListViewPage.aspx</DependentUpon>
-    </Compile>
-    <Content Include="Views\Sales\SalesOrderListView.ascx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderListView.ascx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderListView.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderListView.ascx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderListView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Content Include="Views\Sales\SalesOrderDetailViewPage.aspx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderDetailViewPage.aspx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderDetailViewPage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderDetailViewPage.aspx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderDetailViewPage.aspx</DependentUpon>
-    </Compile>
-    <Content Include="Views\Sales\SalesOrderDetailView.ascx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\SalesOrderDetailView.ascx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderDetailView.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Sales\SalesOrderDetailView.ascx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SalesOrderDetailView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Content Include="Views\Sales\CustomerListViewPage.aspx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\CustomerListViewPage.aspx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Sales\CustomerListViewPage.aspx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
-    </Compile>
-    <Content Include="Views\Sales\CustomerListView.ascx">
-      <AutoGen>True</AutoGen>
-    </Content>
-    <Compile Include="Views\Sales\CustomerListView.ascx.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CustomerListView.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Sales\CustomerListView.ascx.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CustomerListView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
-        <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>55099</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55099/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-        </WebProjectProperties>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0"
+         DefaultTargets="Build">
+   <PropertyGroup>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+      <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+      <ProductVersion/>
+      <SchemaVersion>2.0</SchemaVersion>
+      <ProjectGuid>{4B784234-B032-4320-9FCD-650F02C42BF9}</ProjectGuid>
+      <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+      <OutputType>Library</OutputType>
+      <AppDesignerFolder>Properties</AppDesignerFolder>
+      <RootNamespace>AdventureWorks.Client.Web</RootNamespace>
+      <AssemblyName>AdventureWorks.Client.Web</AssemblyName>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <UseIISExpress>true</UseIISExpress>
+      <IISExpressSSLPort/>
+      <IISExpressAnonymousAuthentication/>
+      <IISExpressWindowsAuthentication/>
+      <IISExpressUseClassicPipelineMode/>
+      <UseGlobalApplicationHostFile/>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <DebugSymbols>true</DebugSymbols>
+      <DebugType>full</DebugType>
+      <Optimize>false</Optimize>
+      <OutputPath>bin\</OutputPath>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <OutputPath>bin\</OutputPath>
+      <DefineConstants>TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <ItemGroup>
+      <Reference Include="AjaxControlToolkit, Version=17.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\AjaxControlToolkit.17.1.0.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="System"/>
+      <Reference Include="System.ComponentModel.DataAnnotations"/>
+      <Reference Include="System.Web"/>
+      <Reference Include="System.Web.Extensions"/>
+      <Reference Include="Xomega.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Xomega.Framework.2.0.0\lib\net45\Xomega.Framework.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Xomega.Framework.Web, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Xomega.Framework.Web.2.0.0\lib\net45\Xomega.Framework.Web.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+   </ItemGroup>
+   <ItemGroup>
+      <ProjectReference Include="..\AdventureWorks.Client.Common\AdventureWorks.Client.Common.csproj">
+         <Project>{D7A251D5-8779-4809-8AB8-1A5D25204EB6}</Project>
+         <Name>AdventureWorks.Client.Common</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj">
+         <Project>{4D902CA4-C557-4A24-9856-6302420AF029}</Project>
+         <Name>AdventureWorks.Services.Common</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\AdventureWorks.Services.Entities\AdventureWorks.Services.Entities.csproj">
+         <Project>{19D256BC-F220-4DAA-8129-2C82B8F65142}</Project>
+         <Name>AdventureWorks.Services.Entities</Name>
+      </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+      <Compile Include="Properties\AssemblyInfo.cs"/>
+      <None Include="Scripts\jquery-3.1.1.intellisense.js"/>
+      <Content Include="Content\css\xomega-controls.css"/>
+      <Content Include="Content\images\splitter-left.gif"/>
+      <Content Include="Content\images\splitter-right.gif"/>
+      <Content Include="Content\themes\base\accordion.css"/>
+      <Content Include="Content\themes\base\all.css"/>
+      <Content Include="Content\themes\base\autocomplete.css"/>
+      <Content Include="Content\themes\base\base.css"/>
+      <Content Include="Content\themes\base\button.css"/>
+      <Content Include="Content\themes\base\core.css"/>
+      <Content Include="Content\themes\base\datepicker.css"/>
+      <Content Include="Content\themes\base\dialog.css"/>
+      <Content Include="Content\themes\base\draggable.css"/>
+      <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png"/>
+      <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png"/>
+      <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png"/>
+      <Content Include="Content\themes\base\jquery-ui.css"/>
+      <Content Include="Content\themes\base\jquery-ui.min.css"/>
+      <Content Include="Content\themes\base\menu.css"/>
+      <Content Include="Content\themes\base\progressbar.css"/>
+      <Content Include="Content\themes\base\resizable.css"/>
+      <Content Include="Content\themes\base\selectable.css"/>
+      <Content Include="Content\themes\base\selectmenu.css"/>
+      <Content Include="Content\themes\base\slider.css"/>
+      <Content Include="Content\themes\base\sortable.css"/>
+      <Content Include="Content\themes\base\spinner.css"/>
+      <Content Include="Content\themes\base\tabs.css"/>
+      <Content Include="Content\themes\base\theme.css"/>
+      <Content Include="Content\themes\base\tooltip.css"/>
+      <Content Include="Scripts\jquery-3.1.1.js"/>
+      <Content Include="Scripts\jquery-3.1.1.min.js"/>
+      <Content Include="Scripts\jquery-3.1.1.slim.js"/>
+      <Content Include="Scripts\jquery-3.1.1.slim.min.js"/>
+      <Content Include="Scripts\jquery-ui-1.12.1.js"/>
+      <Content Include="Scripts\jquery-ui-1.12.1.min.js"/>
+      <Content Include="Scripts\xomega-controls-2.0.0.js"/>
+      <Content Include="Web.config">
+         <SubType>Designer</SubType>
+      </Content>
+      <Content Include="Web.Debug.config">
+         <DependentUpon>Web.config</DependentUpon>
+      </Content>
+      <Content Include="Web.Release.config">
+         <DependentUpon>Web.config</DependentUpon>
+      </Content>
+      <Content Include="Web.sitemap"/>
+      <Compile Include="App_Start\DIMiddleware.cs"/>
+      <Compile Include="App_Start\Startup.Auth.cs"/>
+      <Compile Include="App_Start\Startup.cs"/>
+      <Compile Include="App_Start\WebAppInit.cs"/>
+      <Content Include="App_Themes\DefaultTheme\DefaultSkin.skin"/>
+      <Content Include="Content\css\normalize.css"/>
+      <Content Include="Content\css\page.css"/>
+      <Content Include="Content\css\widgets.css"/>
+      <Content Include="Content\css\xomega.css"/>
+      <Content Include="Controls\Editors\DateTimeControl.ascx"/>
+      <Compile Include="Controls\Editors\DateTimeControl.ascx.cs">
+         <DependentUpon>DateTimeControl.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Controls\Editors\DateTimeControl.ascx.designer.cs">
+         <DependentUpon>DateTimeControl.ascx</DependentUpon>
+      </Compile>
+      <Content Include="Controls\Editors\PickListControl.ascx"/>
+      <Compile Include="Controls\Editors\PickListControl.ascx.cs">
+         <DependentUpon>PickListControl.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Controls\Editors\PickListControl.ascx.designer.cs">
+         <DependentUpon>PickListControl.ascx</DependentUpon>
+      </Compile>
+      <Content Include="Controls\AppliedCriteria.ascx"/>
+      <Compile Include="Controls\AppliedCriteria.ascx.cs">
+         <DependentUpon>AppliedCriteria.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Controls\AppliedCriteria.ascx.designer.cs">
+         <DependentUpon>AppliedCriteria.ascx</DependentUpon>
+      </Compile>
+      <Content Include="Controls\CollapsiblePanel.ascx"/>
+      <Compile Include="Controls\CollapsiblePanel.ascx.cs">
+         <DependentUpon>CollapsiblePanel.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Controls\CollapsiblePanel.ascx.designer.cs">
+         <DependentUpon>CollapsiblePanel.ascx</DependentUpon>
+      </Compile>
+      <Content Include="Controls\Errors.ascx"/>
+      <Compile Include="Controls\Errors.ascx.cs">
+         <DependentUpon>Errors.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Controls\Errors.ascx.designer.cs">
+         <DependentUpon>Errors.ascx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Web.config">
+         <SubType>Designer</SubType>
+      </Content>
+      <Content Include="Views\Default.aspx"/>
+      <Compile Include="Views\Default.aspx.cs">
+         <DependentUpon>Default.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Default.aspx.designer.cs">
+         <DependentUpon>Default.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Site.Master"/>
+      <Compile Include="Site.Master.cs">
+         <DependentUpon>Site.Master</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Site.Master.designer.cs">
+         <DependentUpon>Site.Master</DependentUpon>
+      </Compile>
+   </ItemGroup>
+   <ItemGroup>
+      <Content Include="packages.config"/>
+   </ItemGroup>
+   <ItemGroup>
+      <Content Include="Scripts\jquery-3.1.1.slim.min.map"/>
+   </ItemGroup>
+   <ItemGroup>
+      <Content Include="Scripts\jquery-3.1.1.min.map"/>
+      <Content Include="Views\Sales\SalesOrderViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Sales\SalesOrderView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderView.ascx</DependentUpon>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Content Include="Views\Sales\SalesOrderListViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderListViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderListViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderListViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderListViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Sales\SalesOrderListView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderListView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderListView.ascx</DependentUpon>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderListView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderListView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Content Include="Views\Sales\SalesOrderDetailViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderDetailViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderDetailViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderDetailViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderDetailViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Sales\SalesOrderDetailView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\SalesOrderDetailView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderDetailView.ascx</DependentUpon>
+      </Compile>
+      <Compile Include="Views\Sales\SalesOrderDetailView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>SalesOrderDetailView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Content Include="Views\Sales\CustomerListViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\CustomerListViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Sales\CustomerListViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Sales\CustomerListView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Sales\CustomerListView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListView.ascx</DependentUpon>
+      </Compile>
+      <Compile Include="Views\Sales\CustomerListView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>CustomerListView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Content Include="Views\Person\LoginViewPage.aspx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Person\LoginViewPage.aspx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>LoginViewPage.aspx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Person\LoginViewPage.aspx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>LoginViewPage.aspx</DependentUpon>
+      </Compile>
+      <Content Include="Views\Person\LoginView.ascx">
+         <AutoGen>True</AutoGen>
+      </Content>
+      <Compile Include="Views\Person\LoginView.ascx.designer.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>LoginView.ascx</DependentUpon>
+      </Compile>
+      <Compile Include="Views\Person\LoginView.ascx.cs">
+         <AutoGen>True</AutoGen>
+         <DependentUpon>LoginView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+      <Compile Include="Views\Person\LoginViewCustomized.ascx.cs">
+         <DependentUpon>LoginView.ascx</DependentUpon>
+         <SubType>ASPXCodeBehind</SubType>
+      </Compile>
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
+   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets"/>
+   <ProjectExtensions>
+      <VisualStudio>
+         <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+            <WebProjectProperties>
+               <UseIIS>True</UseIIS>
+               <AutoAssignPort>True</AutoAssignPort>
+               <DevelopmentServerPort>55099</DevelopmentServerPort>
+               <DevelopmentServerVPath>/</DevelopmentServerVPath>
+               <IISUrl>http://localhost:55099/</IISUrl>
+               <NTLMAuthentication>False</NTLMAuthentication>
+               <UseCustomServer>False</UseCustomServer>
+               <CustomServerUrl/>
+               <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+            </WebProjectProperties>
+         </FlavorProperties>
+      </VisualStudio>
+   </ProjectExtensions>
 </Project>

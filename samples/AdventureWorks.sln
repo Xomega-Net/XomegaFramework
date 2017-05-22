@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Services.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Services.Common", "AdventureWorks\AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj", "{4D902CA4-C557-4A24-9856-6302420AF029}"
 EndProject
-Project("{952B131A-83A3-49CE-ACAC-E4BEBC86F246}") = "AdventureWorks.Model", "AdventureWorks\AdventureWorks.Model\AdventureWorks.Model.xomproj", "{0874DAE4-2E94-4F0E-B925-1D2C5D6B6B0B}"
+Project("{952B131A-83A3-49CE-ACAC-E4BEBC86F246}") = "AdventureWorks.Model", "AdventureWorks\AdventureWorks.Model\AdventureWorks.Model.xomproj", "{208177EF-7199-4EC8-9151-F27CC77F9561}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +35,8 @@ Global
 		{4D902CA4-C557-4A24-9856-6302420AF029}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D902CA4-C557-4A24-9856-6302420AF029}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D902CA4-C557-4A24-9856-6302420AF029}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0874DAE4-2E94-4F0E-B925-1D2C5D6B6B0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0874DAE4-2E94-4F0E-B925-1D2C5D6B6B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{208177EF-7199-4EC8-9151-F27CC77F9561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{208177EF-7199-4EC8-9151-F27CC77F9561}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

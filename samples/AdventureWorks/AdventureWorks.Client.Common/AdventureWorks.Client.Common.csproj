@@ -127,6 +127,12 @@
       <Compile Include="DataObjects\Sales\SalesOrderListCustomized.cs">
          <DependentUpon>SalesOrderList.cs</DependentUpon>
       </Compile>
+      <Compile Include="DataObjects\Person\AuthenticationObject.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="ViewModels\Person\LoginViewModel.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <None Include="packages.config"/>
