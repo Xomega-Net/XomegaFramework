@@ -5,17 +5,26 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region IPersonCreditCardService interface
 
+    ///<summary>
+    /// Cross-reference table mapping people to their credit card information in the CreditCard table. 
+    ///</summary>
+    [ServiceContract]
     public interface IPersonCreditCardService
     {
 
         ///<summary>
         /// Reads a list of Person Credit Card objects based on the person ID.
         ///</summary>
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<PersonCreditCard_ReadListOutput> ReadList(int _businessEntityId);
 
     }
@@ -26,14 +35,22 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation IPersonCreditCardService.ReadList.
     ///</summary>
+    [DataContract]
     public class PersonCreditCard_ReadListOutput
     {
+        [DataMember]
         public int CreditCardId { get; set; }
+        [DataMember]
         public string CreditCardName { get; set; }
+        [DataMember]
         public string PersonName { get; set; }
+        [DataMember]
         public string CardType { get; set; }
+        [DataMember]
         public string CardNumber { get; set; }
+        [DataMember]
         public byte ExpMonth { get; set; }
+        [DataMember]
         public short ExpYear { get; set; }
     }
     #endregion

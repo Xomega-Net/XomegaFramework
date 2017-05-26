@@ -5,17 +5,26 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region ISalesPersonService interface
 
+    ///<summary>
+    /// Sales representative current information.
+    ///</summary>
+    [ServiceContract]
     public interface ISalesPersonService
     {
 
         ///<summary>
         /// Reads a list of Sales Person objects based on the specified criteria.
         ///</summary>
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<SalesPerson_ReadListOutput> ReadList();
 
     }
@@ -26,11 +35,16 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation ISalesPersonService.ReadList.
     ///</summary>
+    [DataContract]
     public class SalesPerson_ReadListOutput
     {
+        [DataMember]
         public int BusinessEntityId { get; set; }
+        [DataMember]
         public int? TerritoryId { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public bool IsCurrent { get; set; }
     }
     #endregion

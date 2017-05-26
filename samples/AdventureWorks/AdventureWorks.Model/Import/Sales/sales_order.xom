@@ -354,6 +354,9 @@
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
           </output>
+          <config>
+            <rest:method verb="GET" uri-template="sales-order/{sales order id}"/>
+          </config>
           <doc>
             <summary>Reads the values of a Sales Order object by its key.</summary>
           </doc>
@@ -383,6 +386,9 @@
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
           </output>
+          <config>
+            <rest:method verb="POST" uri-template="sales-order"/>
+          </config>
           <doc>
             <summary>Creates a new Sales Order object using the specified data.</summary>
           </doc>
@@ -415,6 +421,9 @@
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
           </output>
+          <config>
+            <rest:method verb="PUT" uri-template="sales-order/{sales order id}"/>
+          </config>
           <doc>
             <summary>Updates existing Sales Order object using the specified data.</summary>
           </doc>
@@ -426,6 +435,9 @@
               <xfk:add-to-object class="SalesOrderObject"/>
             </config>
           </input>
+          <config>
+            <rest:method verb="DELETE" uri-template="sales-order/{sales order id}"/>
+          </config>
           <doc>
             <summary>Deletes the specified Sales Order object.</summary>
           </doc>
@@ -525,7 +537,9 @@
               <xfk:add-to-object class="SalesOrderList"/>
             </config>
           </output>
-          <config/>
+          <config>
+            <rest:method verb="GET" uri-template="sales-order?{criteria}"/>
+          </config>
           <doc>
             <summary>Reads a list of Sales Order objects based on the specified criteria.</summary>
           </doc>
@@ -632,6 +646,9 @@
                   <xfk:add-to-object class="SalesOrderDetailObject"/>
                 </config>
               </output>
+              <config>
+                <rest:method verb="GET" uri-template="sales-order/detail/{sales order detail id}"/>
+              </config>
               <doc>
                 <summary>Reads the values of a Sales Order Detail object by its key.</summary>
               </doc>
@@ -663,6 +680,9 @@
                   <xfk:add-to-object class="SalesOrderDetailObject"/>
                 </config>
               </output>
+              <config>
+                <rest:method verb="POST" uri-template="sales-order/{sales order id}/detail"/>
+              </config>
               <doc>
                 <summary>Creates a new Sales Order Detail object using the specified data.</summary>
               </doc>
@@ -688,6 +708,9 @@
                   <xfk:add-to-object class="SalesOrderDetailObject"/>
                 </config>
               </input>
+              <config>
+                <rest:method verb="PUT" uri-template="sales-order/detail/{sales order detail id}"/>
+              </config>
               <doc>
                 <summary>Updates existing Sales Order Detail object using the specified data.</summary>
               </doc>
@@ -699,6 +722,9 @@
                   <xfk:add-to-object class="SalesOrderDetailObject"/>
                 </config>
               </input>
+              <config>
+                <rest:method verb="DELETE" uri-template="sales-order/detail/{sales order detail id}"/>
+              </config>
               <doc>
                 <summary>Deletes the specified Sales Order Detail object.</summary>
               </doc>
@@ -723,7 +749,9 @@
                   <xfk:add-to-object class="SalesOrderDetailList"/>
                 </config>
               </output>
-              <config/>
+              <config>
+                <rest:method verb="GET" uri-template="sales-order/{sales order id}/detail"/>
+              </config>
               <doc>
                 <summary>Reads a list of Sales Order Detail objects based on the specified criteria.</summary>
               </doc>

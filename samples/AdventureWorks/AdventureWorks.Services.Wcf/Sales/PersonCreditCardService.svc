@@ -1,0 +1,2 @@
+<%@ ServiceHost Service="AdventureWorks.Services.Entities.PersonCreditCardService" Language="C#"
+                Factory="Xomega.Framework.Wcf.DefaultServiceProviderHostFactory" %>

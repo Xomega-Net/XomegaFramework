@@ -1,0 +1,2 @@
+<%@ ServiceHost Service="AdventureWorks.Services.Entities.SalesReasonService" Language="C#"
+                Factory="Xomega.Framework.Wcf.DefaultServiceProviderHostFactory" %>

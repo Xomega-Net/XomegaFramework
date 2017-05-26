@@ -5,17 +5,26 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region ISalesReasonService interface
 
+    ///<summary>
+    /// Lookup table of customer purchase reasons.
+    ///</summary>
+    [ServiceContract]
     public interface ISalesReasonService
     {
 
         ///<summary>
         /// Reads a list of Sales Reason objects based on the specified criteria.
         ///</summary>
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<SalesReason_ReadListOutput> ReadList();
 
     }
@@ -26,9 +35,12 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation ISalesReasonService.ReadList.
     ///</summary>
+    [DataContract]
     public class SalesReason_ReadListOutput
     {
+        [DataMember]
         public int SalesReasonId { get; set; }
+        [DataMember]
         public string Name { get; set; }
     }
     #endregion

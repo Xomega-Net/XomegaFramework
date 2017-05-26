@@ -104,8 +104,9 @@
             <param name="is current" type="boolean" required="true"/>
           </output>
           <config>
-            <xfk:enum-cache enum-name="sales person" id-param="business entity id"
-                            desc-param="name" is-active-param="is current"/>
+            <xfk:enum-cache enum-name="sales person" id-param="business entity id" desc-param="name"
+                            is-active-param="is current"/>
+            <rest:method verb="GET" uri-template="sales-person"/>
           </config>
           <doc>
             <summary>Reads a list of Sales Person objects based on the specified criteria.</summary>

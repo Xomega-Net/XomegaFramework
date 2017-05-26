@@ -5,17 +5,26 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region ISalesTerritoryService interface
 
+    ///<summary>
+    /// Sales territory lookup table.
+    ///</summary>
+    [ServiceContract]
     public interface ISalesTerritoryService
     {
 
         ///<summary>
         /// Reads a list of Sales Territory objects based on the specified criteria.
         ///</summary>
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<SalesTerritory_ReadListOutput> ReadList();
 
     }
@@ -26,11 +35,16 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation ISalesTerritoryService.ReadList.
     ///</summary>
+    [DataContract]
     public class SalesTerritory_ReadListOutput
     {
+        [DataMember]
         public int TerritoryId { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public string CountryRegionCode { get; set; }
+        [DataMember]
         public string Group { get; set; }
     }
     #endregion

@@ -210,7 +210,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
       <GenerateSubobjectReadList-type>System.Boolean</GenerateSubobjectReadList-type>
       <GenerateSubobjectReadList-desc>Whether to generate Read List operation on sub-objects.</GenerateSubobjectReadList-desc>
       <GenerateSubobjectReadList-category>Operations</GenerateSubobjectReadList-category>
-      <GenerateRestMethods-param>False</GenerateRestMethods-param>
+      <GenerateRestMethods-param>True</GenerateRestMethods-param>
       <GenerateRestMethods-type>System.Boolean</GenerateRestMethods-type>
       <GenerateRestMethods-desc>Whether to generate REST API methods on operations.</GenerateRestMethods-desc>
       <GenerateRestMethods-category>Operations</GenerateRestMethods-category>
@@ -323,7 +323,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <GenerateSubobjectReadList-type>System.Boolean</GenerateSubobjectReadList-type>
       <GenerateSubobjectReadList-desc>Whether to generate Read List operation on sub-objects.</GenerateSubobjectReadList-desc>
       <GenerateSubobjectReadList-category>Operations</GenerateSubobjectReadList-category>
-      <GenerateRestMethods-param>False</GenerateRestMethods-param>
+      <GenerateRestMethods-param>True</GenerateRestMethods-param>
       <GenerateRestMethods-type>System.Boolean</GenerateRestMethods-type>
       <GenerateRestMethods-desc>Whether to generate REST API methods on operations.</GenerateRestMethods-desc>
       <GenerateRestMethods-category>Operations</GenerateRestMethods-category>
@@ -405,7 +405,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <GenerateSubobjectReadList-type>System.Boolean</GenerateSubobjectReadList-type>
       <GenerateSubobjectReadList-desc>Whether to generate Read List operation on sub-objects.</GenerateSubobjectReadList-desc>
       <GenerateSubobjectReadList-category>Operations</GenerateSubobjectReadList-category>
-      <GenerateRestMethods-param>False</GenerateRestMethods-param>
+      <GenerateRestMethods-param>True</GenerateRestMethods-param>
       <GenerateRestMethods-type>System.Boolean</GenerateRestMethods-type>
       <GenerateRestMethods-desc>Whether to generate REST API methods on operations.</GenerateRestMethods-desc>
       <GenerateRestMethods-category>Operations</GenerateRestMethods-category>
@@ -495,7 +495,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>true</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
-      <Wcf-param>False</Wcf-param>
+      <Wcf-param>True</Wcf-param>
       <Wcf-desc>Specify whether or not to add WCF attributes to service and data contracts.</Wcf-desc>
       <Wcf-type>System.Boolean</Wcf-type>
       <WcfRest-param>False</WcfRest-param>
@@ -517,7 +517,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <ServiceBehavior-param>
       </ServiceBehavior-param>
       <ServiceBehavior-desc>Service behavior to set for all services.</ServiceBehavior-desc>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_iis_svchost.xsl">
       <Name>WCF Service Host Files</Name>
@@ -528,7 +528,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <OutputPath-category>Output</OutputPath-category>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\wcf_config.xsl">
       <Name>WCF Client Configuration</Name>
@@ -539,7 +539,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <IsClient-param>True</IsClient-param>
       <IsClient-desc>Specify whether it is a client or a server configuration.</IsClient-desc>
       <IsClient-type>System.Boolean</IsClient-type>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\webapi_controllers.xsl">
       <Name>Web API Controllers</Name>
@@ -563,7 +563,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <RegistryFile-param>../AdventureWorks.Services.Rest/Controllers.cs</RegistryFile-param>
       <RegistryFile-desc>A path to the file for controllers resgistration.</RegistryFile-desc>
       <RegistryFile-category>Output</RegistryFile-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
     </XomGenerator>
@@ -726,7 +726,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       </View-param>
       <View-desc>The name of the view from the model to generate a details view for.</View-desc>
       <View-category>Selector</View-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>

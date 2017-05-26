@@ -224,8 +224,9 @@
             <param name="product model id"/>
           </output>
           <config>
-            <xfk:enum-cache enum-name="product" id-param="product id"
-                            desc-param="name" is-active-param="is active"/>
+            <xfk:enum-cache enum-name="product" id-param="product id" desc-param="name"
+                            is-active-param="is active"/>
+            <rest:method verb="GET" uri-template="product"/>
           </config>
           <doc>
             <summary>Reads a list of Product objects based on the specified criteria.</summary>

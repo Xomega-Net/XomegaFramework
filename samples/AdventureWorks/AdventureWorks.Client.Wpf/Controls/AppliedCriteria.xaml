@@ -1,0 +1,96 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:v="clr-namespace:AdventureWorks.Client.Wpf"
+             xmlns:xom="clr-namespace:Xomega.Framework;assembly=Xomega.Framework.Wpf"
+             x:Class="AdventureWorks.Client.Wpf.AppliedCriteria"
+             Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+             ToolTip="{Binding Mode=OneWay, Converter={v:AppliedCriteriaConverter}}"
+             BorderThickness="1,1,1,0" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+             Padding="2">
+  <UserControl.Resources>
+    <x:Array Type="sys:String" x:Key="testVal">
+      <sys:String>Val1</sys:String>
+    </x:Array>
+    <x:Array Type="sys:String" x:Key="testVal2">
+      <sys:String>Val1</sys:String>
+      <sys:String>Val2</sys:String>
+    </x:Array>
+  </UserControl.Resources>
+  <WrapPanel>
+    <TextBlock Text="Search Criteria - " VerticalAlignment="Center" FontWeight="Medium" Margin="3,0,0,0"/>
+    <ListView x:Name="listView" Background="{DynamicResource {x:Static SystemColors.ControlLightLightColor}}" BorderThickness="0" ItemsSource="{Binding Mode=OneWay}">
+      <!--<ListView.DataContext>
+        <x:Array Type="xom:FieldCriteriaSetting">
+          <xom:FieldCriteriaSetting Label="Test" Operator="Equals" Value="{StaticResource ResourceKey=testVal}"/>
+          <xom:FieldCriteriaSetting Label="Tost" Operator="Between" Value="{StaticResource ResourceKey=testVal2}"/>
+          <xom:FieldCriteriaSetting Label="Taste" Operator="Less Than" Value="{StaticResource ResourceKey=testVal}"/>
+        </x:Array>
+      </ListView.DataContext>-->
+      <!--No data template-->
+      <ListView.Style>
+        <Style TargetType="ListView">
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" Value="0">
+              <Setter Property="Template">
+                <Setter.Value>
+                  <ControlTemplate>
+                    <TextBlock Text="None"/>
+                  </ControlTemplate>
+                </Setter.Value>
+              </Setter>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </ListView.Style>
+      <!--Items separator and selection removal-->
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="Focusable" Value="False"/>
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="ListBoxItem">
+                <WrapPanel>
+                  <TextBlock x:Name="Separator" Text=";" Margin="0,0,5,0"/>
+                  <ContentPresenter/>
+                </WrapPanel>
+                <ControlTemplate.Triggers>
+                  <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                    <Setter Property="Visibility" TargetName="Separator" Value="Collapsed"/>
+                  </DataTrigger>
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </ListView.ItemContainerStyle>
+      <!--Horizontal layout override-->
+      <ListView.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel>
+          </WrapPanel>
+        </ItemsPanelTemplate>
+      </ListView.ItemsPanel>
+      <!--Actual item template-->
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <WrapPanel>
+            <TextBlock Text="{Binding Label}"/>
+            <TextBlock Text=":" Margin="0,0,3,0"/>
+            <TextBlock Text="{Binding Operator}" Margin="0,0,3,0" FontStyle="Italic"/>
+            <TextBlock Text="{Binding Value[0]}" FontWeight="Medium"/>
+            <TextBlock x:Name="and" Text=" and "/>
+            <TextBlock Text="{Binding Value[1]}" FontWeight="Medium"/>
+          </WrapPanel>
+          <!--Hiding the 'and'-->
+          <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Value.Length}" Value="1">
+              <Setter Property="Visibility" TargetName="and" Value="Collapsed"/>
+            </DataTrigger>
+          </DataTemplate.Triggers>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </WrapPanel>
+</UserControl>

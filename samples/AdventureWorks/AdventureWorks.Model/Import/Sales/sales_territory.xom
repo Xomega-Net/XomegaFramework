@@ -117,6 +117,7 @@
           </output>
           <config>
             <xfk:enum-cache enum-name="sales territory" id-param="territory id" desc-param="name"/>
+            <rest:method verb="GET" uri-template="sales-territory"/>
           </config>
           <doc>
             <summary>Reads a list of Sales Territory objects based on the specified criteria.</summary>

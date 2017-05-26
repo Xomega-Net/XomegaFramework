@@ -5,14 +5,23 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region IBusinessEntityAddressService interface
 
+    ///<summary>
+    /// Cross-reference table mapping customers, vendors, and employees to their addresses.
+    ///</summary>
+    [ServiceContract]
     public interface IBusinessEntityAddressService
     {
 
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<BusinessEntityAddress_ReadListOutput> ReadList(int _businessEntityId);
 
     }
@@ -23,15 +32,24 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation IBusinessEntityAddressService.ReadList.
     ///</summary>
+    [DataContract]
     public class BusinessEntityAddress_ReadListOutput
     {
+        [DataMember]
         public int AddressId { get; set; }
+        [DataMember]
         public string AddressType { get; set; }
+        [DataMember]
         public string AddressLine1 { get; set; }
+        [DataMember]
         public string AddressLine2 { get; set; }
+        [DataMember]
         public string City { get; set; }
+        [DataMember]
         public string State { get; set; }
+        [DataMember]
         public string PostalCode { get; set; }
+        [DataMember]
         public string Country { get; set; }
     }
     #endregion

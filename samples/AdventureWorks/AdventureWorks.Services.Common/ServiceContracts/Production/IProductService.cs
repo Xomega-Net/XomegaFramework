@@ -5,17 +5,26 @@
 //---------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using Xomega.Framework;
 
 namespace AdventureWorks.Services
 {
     #region IProductService interface
 
+    ///<summary>
+    /// Products sold or used in the manfacturing of sold products.
+    ///</summary>
+    [ServiceContract]
     public interface IProductService
     {
 
         ///<summary>
         /// Reads a list of Product objects based on the specified criteria.
         ///</summary>
+        [OperationContract]
+        [FaultContract(typeof(ErrorList))]
         IEnumerable<Product_ReadListOutput> ReadList();
 
     }
@@ -26,12 +35,18 @@ namespace AdventureWorks.Services
     ///<summary>
     /// The output structure of operation IProductService.ReadList.
     ///</summary>
+    [DataContract]
     public class Product_ReadListOutput
     {
+        [DataMember]
         public int ProductId { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public bool IsActive { get; set; }
+        [DataMember]
         public int? ProductSubcategoryId { get; set; }
+        [DataMember]
         public int? ProductModelId { get; set; }
     }
     #endregion

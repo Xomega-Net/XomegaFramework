@@ -97,7 +97,9 @@
               <xfk:add-to-object class="CustomerList"/>
             </config>
           </output>
-          <config/>
+          <config>
+            <rest:method verb="GET" uri-template="customer?{criteria}"/>
+          </config>
           <doc>
             <summary>Reads a list of Customer objects based on the specified criteria.</summary>
           </doc>

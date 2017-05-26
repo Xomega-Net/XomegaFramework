@@ -6,65 +6,96 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace AdventureWorks.Services
 {
     #region CreditCardInfo structure
 
+    [DataContract]
     public class CreditCardInfo
     {
+        [DataMember]
         public int CreditCardId { get; set; }
+        [DataMember]
         public string CardNumber { get; set; }
+        [DataMember]
         public string Expiration { get; set; }
     }
     #endregion
 
     #region CustomerLookup structure
 
+    [DataContract]
     public class CustomerLookup
     {
+        [DataMember]
         public string StoreName { get; set; }
+        [DataMember]
         public string PersonName { get; set; }
     }
     #endregion
 
     #region CustomerInfo structure
 
+    [DataContract]
     public class CustomerInfo
     {
+        [DataMember]
         public int CustomerId { get; set; }
+        [DataMember]
         public int? StoreId { get; set; }
+        [DataMember]
         public string StoreName { get; set; }
+        [DataMember]
         public int? PersonId { get; set; }
+        [DataMember]
         public string PersonName { get; set; }
+        [DataMember]
         public string AccountNumber { get; set; }
+        [DataMember]
         public int? TerritoryId { get; set; }
+        [DataMember]
         public AddressKey BillingAddress { get; set; }
+        [DataMember]
         public AddressKey ShippingAddress { get; set; }
     }
     #endregion
 
     #region CustomerUpdate structure
 
+    [DataContract]
     public class CustomerUpdate
     {
+        [DataMember]
         public int CustomerId { get; set; }
+        [DataMember]
         public AddressKey BillingAddress { get; set; }
+        [DataMember]
         public AddressKey ShippingAddress { get; set; }
     }
     #endregion
 
     #region PaymentInfo structure
 
+    [DataContract]
     public class PaymentInfo
     {
+        [DataMember]
         public decimal SubTotal { get; set; }
+        [DataMember]
         public int ShipMethodId { get; set; }
+        [DataMember]
         public decimal TaxAmt { get; set; }
+        [DataMember]
         public decimal Freight { get; set; }
+        [DataMember]
         public decimal TotalDue { get; set; }
+        [DataMember]
         public DateTime DueDate { get; set; }
+        [DataMember]
         public string CurrencyRate { get; set; }
+        [DataMember]
         public PaymentInfo_CreditCard CreditCard { get; set; }
     }
     #endregion
@@ -74,19 +105,26 @@ namespace AdventureWorks.Services
     ///<summary>
     /// Structure of parameter CreditCard of structure PaymentInfo.
     ///</summary>
+    [DataContract]
     public class PaymentInfo_CreditCard
     {
+        [DataMember]
         public int CreditCardId { get; set; }
+        [DataMember]
         public string CreditCardApprovalCode { get; set; }
     }
     #endregion
 
     #region PaymentUpdate structure
 
+    [DataContract]
     public class PaymentUpdate
     {
+        [DataMember]
         public int ShipMethodId { get; set; }
+        [DataMember]
         public DateTime DueDate { get; set; }
+        [DataMember]
         public PaymentUpdate_CreditCard CreditCard { get; set; }
     }
     #endregion
@@ -96,19 +134,26 @@ namespace AdventureWorks.Services
     ///<summary>
     /// Structure of parameter CreditCard of structure PaymentUpdate.
     ///</summary>
+    [DataContract]
     public class PaymentUpdate_CreditCard
     {
+        [DataMember]
         public int CreditCardId { get; set; }
+        [DataMember]
         public string CreditCardApprovalCode { get; set; }
     }
     #endregion
 
     #region SalesInfo structure
 
+    [DataContract]
     public class SalesInfo
     {
+        [DataMember]
         public int? TerritoryId { get; set; }
+        [DataMember]
         public int? SalesPersonId { get; set; }
+        [DataMember]
         public IEnumerable<int> SalesReason { get; set; }
     }
     #endregion
