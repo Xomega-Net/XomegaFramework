@@ -478,7 +478,7 @@ The path may contain {Module/} and {File} placeholders to output files by databa
       <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
@@ -628,7 +628,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       <NestCustomFile-desc>Whether or not to nest custom file under the auto-generated base file in the project. Applies only if both files are output to the same directory.</NestCustomFile-desc>
       <NestCustomFile-type>System.Boolean</NestCustomFile-type>
       <NestCustomFile-category>Output</NestCustomFile-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>
@@ -649,7 +649,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>services</GeneratorGroup>
     </XomGenerator>
@@ -662,7 +662,7 @@ The path may contain {Module/} and {File} placeholders to output files by module
       <AddToProject-param>../AdventureWorks.Client.Spa/AdventureWorks.Client.Spa.csproj</AddToProject-param>
       <AddToProject-desc>A project file to add the generated files to.</AddToProject-desc>
       <AddToProject-category>Output</AddToProject-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
     </XomGenerator>
     <XomGenerator Include="$(XomegaHome14)Xsl\ts_views.xsl">
       <Name>SPA Views</Name>
@@ -692,7 +692,7 @@ If not set then the OutputPath will be used. The path must contain {File} placeh
       </View-param>
       <View-desc>The name of the view from the model to generate a search view for.</View-desc>
       <View-category>Selector</View-category>
-      <IncludeInBuild>false</IncludeInBuild>
+      <IncludeInBuild>true</IncludeInBuild>
       <IndividualFiles>false</IndividualFiles>
       <GeneratorGroup>presentation</GeneratorGroup>
     </XomGenerator>

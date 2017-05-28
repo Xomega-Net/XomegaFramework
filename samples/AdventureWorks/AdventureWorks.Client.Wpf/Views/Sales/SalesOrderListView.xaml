@@ -152,9 +152,11 @@
                   x:Name="ctlSalesPersonIdOperator"
                   xom:Property.Name="{x:Static o:SalesOrderCriteria.SalesPersonIdOperator}"
                   Style="{StaticResource OperatorStyle}"/>
-        <TextBox Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="2" x:Name="ctlSalesPersonId"
+        <ListBox Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="2" x:Name="ctlSalesPersonId"
                  xom:Property.Name="{x:Static o:SalesOrderCriteria.SalesPersonId}"
-                 Style="{StaticResource ControlStyle}"/>
+                 Style="{StaticResource ControlStyle}"
+                 MinHeight="21"
+                 MaxHeight="84"/>
       </Grid>
     </Expander>
     <v:AppliedCriteria x:Name="pnlAppliedCriteria" Grid.Row="2" Margin="10,0"/>

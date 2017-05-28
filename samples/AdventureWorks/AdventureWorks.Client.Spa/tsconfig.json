@@ -1,0 +1,15 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "amd",
+    "declaration": true,
+    "sourceMap": true,
+    "traceResolution": true,
+    "typeRoots": [ "Scripts/typings" ],
+    "types": [ ],
+    "baseUrl": ".",
+    "paths": { }
+  },
+  "exclude": [ "**/durandal-1*" ]
+}

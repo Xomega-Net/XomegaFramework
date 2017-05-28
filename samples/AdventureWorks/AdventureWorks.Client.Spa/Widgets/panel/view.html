@@ -1,0 +1,17 @@
+<div class="cpanel widget">
+  <div data-part="header" data-bind="click: function() { collapsed(!collapsed()) }" class="widget-header">
+    <div data-part="toolbar" class="widget-toolbar">
+      <div data-part="ctlToggle" class="widget-toolbar-icon">
+        <span class="fa" data-bind="css: collapsed() ? 'fa-chevron-down' : 'fa-chevron-up'"></span>
+      </div>
+    </div>
+    <div data-part="title" class="widget-caption">
+      <span class="widget-title" data-bind="text: settings.title"></span>
+    </div>
+  </div>
+  <div data-bind="visible: !collapsed()">
+    <div data-part="body" class="widget-body">
+      <div data-part="content"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="applied-criteria" data-bind="if: settings.AppliedCriteria != null, attr: { title: settings.AppliedCriteriaText}">
+  <h4 data-part="title" data-bind="text: settings.title"></h4>
+  <span data-bind="foreach: settings.AppliedCriteria">
+    <span class="field-criteria">
+      <span class="fc-label" data-bind="text: $data.Label"></span>
+      <span class="fc-operator" data-bind="text: $data.Operator"></span>
+      <span class="fc-data" data-bind="foreach: $data.Data">
+        <span class="fc-datum" data-bind="text: $data"></span>
+      </span>
+    </span>
+  </span>
+  <span data-bind="if: !settings.AppliedCriteria() || settings.AppliedCriteria().length === 0">None</span>
+</div>

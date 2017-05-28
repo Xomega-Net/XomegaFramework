@@ -1,0 +1,177 @@
+﻿@import 'normalize.css';
+
+/* Pager */
+
+.pager {
+  margin-top: 0em;
+}
+
+.pager > * {
+  margin-bottom: 0.5em;
+}
+
+.pagination {
+  display: table;
+  width: 100%;
+  white-space: nowrap;
+  color: #5d7b9d;
+}
+
+.pagination > * {
+  display: table-cell;
+  overflow: hidden;
+}
+
+.pgn-summary {
+  width: 30%;
+  text-align: left;
+}
+
+.pgn-pages {
+  width: 40%;
+  padding: 0 7px;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.pgn-pages ul {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pgn-pages ul li {
+  display: inline-block;
+  margin: 0;
+  padding: 0 1px;
+}
+
+.pgn-pages a {
+  text-decoration: none;
+}
+
+.pgn-pages a.disabled {
+  color: grey;
+  cursor: default;
+}
+
+.pgn-pages a.active {
+  color: grey;
+  cursor: default;
+}
+
+.pgn-page-size {
+  width: 30%;
+  text-align: right;
+}
+
+.pgn-page-size select {
+  margin-left: 0.5em;
+}
+
+.pager .grid {
+  margin: 0;
+}
+
+/* Message list */
+
+.msglist ul {
+  margin-top: 0;
+}
+
+
+/* Grid */
+
+.grid {
+  width: 100%;
+  margin: 1em 0 0.5em;
+  border-collapse: collapse;
+  color: #333333;
+}
+
+.grid caption {
+  line-height: 1.8em;
+  background-color: aliceblue;
+  color: #5d7b9d;
+}
+
+.grid td, .grid th {
+  padding: 4px;
+}
+
+.grid thead tr {
+  font-weight: bold;
+  background-color: #5d7b9d;
+  color: #fff;
+}
+
+.grid tbody tr:nth-child(odd) {
+  background-color: #f7f6f3;
+  color: #333;
+}
+
+.grid tbody tr:nth-child(even) {
+  background-color: #fff;
+  color: #284775;
+}
+
+.grid.selectable tbody tr:hover {
+  background-color: #E2DED6;
+  color: #333333;
+}
+
+.grid tbody tr.selected {
+  background-color: #E2DED6;
+  color: #333333;
+  font-weight: bold;
+}
+
+.grid th.sortable {
+  cursor: pointer;
+}
+
+.grid th i.sort-glyph {
+  margin-left: 5px;
+  font-size: xx-small;
+}
+
+.grid th i.sort-1 {
+  font-size: small;
+}
+
+.grid th i.sort-2 {
+  font-size: smaller;
+}
+
+.grid th i.sort-3 {
+  font-size: x-small;
+}
+
+
+/* MASTER-DETAIL */
+
+.master-detail .widget-body > div {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.master-detail .widget-body > div > section {
+  display: table-cell;
+  width: 50%;
+  vertical-align: top;
+}
+.master-detail .widget-body > div > section:first-child {
+  padding-right: 6px;
+}
+.master-detail .widget-body > div > section:last-child {
+  padding-left: 6px;
+}
+
+/* Query form */
+
+.query .label { width: 40%; margin: 0; }
+.query input:not([type]), .query input[type="text"] {
+  width: calc(60% - 10px);
+}

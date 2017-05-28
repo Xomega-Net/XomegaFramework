@@ -11,13 +11,28 @@
   <types>
     <type name="sales person" base="employee">
       <config>
-        <xfk:property class="EnumIntProperty" namespace="Xomega.Framework.Properties"/>
+        <xfk:property class="EnumIntProperty" namespace="Xomega.Framework.Properties"
+                      tsClass="EnumProperty" tsModule="xomega"/>
+        <ui:control>
+          <ComboBox Style="{StaticResource ControlStyle}"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
+        <ui:control multi-value="true">
+          <ListBox Style="{StaticResource ControlStyle}" MinHeight="21" MaxHeight="84"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+        </ui:control>
         <ui:web-control>
           <asp:DropDownList runat="server"/>
         </ui:web-control>
         <ui:web-control multi-value="true">
           <asp:ListBox runat="server"/>
         </ui:web-control>
+        <ui:html-control>
+          <select xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
+        <ui:html-control multi-value="true">
+          <select multiple="multiple" xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
       </config>
       <enum ref="sales person"/>
     </type>

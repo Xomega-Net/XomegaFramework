@@ -1,0 +1,139 @@
+/**
+ * Covers
+ * > Popup view
+ * > Vertical splitter panel
+ */
+
+/* Popup view (jQuery UI Dialog)
+   ===================================================== */
+
+.popup-view.ui-dialog {
+  max-width: calc(100% - 6px);
+  max-height: calc(100% - 3px);
+  border: 3px solid #465c71;
+  border-top: none;
+  box-shadow: 0 0 20px 5px #aaa;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  overflow: visible;
+}
+
+.popup-view.ui-corner-all, .popup-view .ui-corner-all {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+.popup-view .ui-resizable-handle { z-index: 1000; }
+.popup-view .ui-resizable-n { top: 0; }
+.popup-view .ui-resizable-e { right: -3px; }
+.popup-view .ui-resizable-s { bottom: -3px; }
+.popup-view .ui-resizable-w { left: -3px; }
+.popup-view .ui-resizable-sw { bottom: -3px; left: -3px; }
+.popup-view .ui-resizable-ne { top: 0; right: -3px; }
+.popup-view .ui-resizable-nw { top: 0; left: -3px; }
+
+.popup-view.ui-dialog .ui-dialog-titlebar {
+  padding: 5px 0.35rem;
+  border: none;
+  background: #465c71;
+}
+
+.popup-view.ui-dialog .ui-dialog-title {
+  margin: 0;
+  line-height: 18px;
+  font-size: 14px;
+  font-variant: small-caps;
+  font-weight: 600;
+  text-transform: none;
+  color: #fff;
+}
+
+.popup-view.ui-dialog .ui-dialog-content {
+  max-height: calc(100% - 28px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.popup-view.ui-dialog .view-header {
+  display: none;
+}
+
+.popup-view.ui-dialog .view-body {
+  height: 100%;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.popup-view.ui-widget input[type='submit'], .popup-view.ui-widget button {
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 0.6rem;
+}
+
+/* Vertical splitter panel
+   ===================================================== */
+
+/**
+ * The panel fills the container anchoring view header top
+ * and view footer bottom while view body allows scrolling
+ * on overflow.
+ */
+
+.vsplitter-panel {
+  width: 100%;
+}
+
+.vsplitter-pane,
+.vsplitter-pane > * {
+  height: 100%;
+  overflow: hidden;
+}
+
+.vsplitter-pane .view-body {
+  height: 100%;
+}
+
+.vsplitter-panel > .pane1 {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  float: left;
+  max-width: 100%;
+  margin-right: -7px;
+  padding-right: 7px;
+}
+
+.vsplitter-panel > .vsplitter {
+  float: left;
+  height: 100%;
+  width: 5px;
+  border-left: 1px solid #b6b7bc;
+  border-right: 1px solid #b6b7bc;
+  cursor: ew-resize;
+}
+
+.vsplitter-buttons {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.vsplitter.ui-state-disabled {
+  opacity: 1;
+  filter: none;
+  background-image: inherit;
+}
+
+.vsplitter a {
+  display: block;
+  width: 5px;
+  height: 35px;
+  background: url(../images/splitter-left.gif) no-repeat 50% 50%;
+  cursor: pointer;
+}
+
+.vsplitter a.right-pane-button {
+  background: url(../images/splitter-right.gif) no-repeat 50% 50%;
+}

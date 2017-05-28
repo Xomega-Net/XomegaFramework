@@ -1,0 +1,330 @@
+﻿/**
+ * Covers
+ * 1. Page layout
+ * 2. HTML defaults
+ * 3. Common classes
+ * 4. General view style
+ */
+
+/* Page layout
+   ===================================================== */
+
+html {
+  font-size: 125%; /* 20px */
+}
+
+body {
+  font-size: 0.65rem;
+  font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+  background: #b6b7bc;
+  color: #696969;
+}
+
+.page > div {
+  position: fixed;
+  right: 0;
+  left: 0;
+}
+
+.page-header {
+  top: 0;
+  height: 4.25rem;
+  z-index: 1;
+}
+
+.page-header a {
+  text-decoration: none;
+}
+
+.page-header a:link
+{
+    color: white;
+}
+
+.page-header a:visited
+{
+    color: white;
+}
+
+.page-header a:hover
+{
+    color: white;
+}
+
+.page-body {
+  top: 0;
+  bottom: 0;
+  margin: 4.25rem 0 2rem;
+  width: auto;
+  height: auto;
+  background-color: #fff;
+  overflow: auto;
+  z-index: 0;
+}
+
+.page-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #3a4f63;
+  line-height: 2rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  background-color: #b6b7bc;
+  color: #4e5766;
+  z-index: 2;
+}
+
+.copyright {
+  padding: 0 10px;
+}
+
+.attribution {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  padding: 0 10px;
+  text-align: right;
+  background-color: #b6b7bc;
+}
+
+/* Page header */
+.login-display
+{
+  font-size: 1.1em;
+  display: block;
+  float: right;
+  margin: 20px 10px;
+  color: White;
+}
+
+.login-name
+{
+  font-weight: bold;
+}
+
+.site-caption {
+  height: 2.5rem;
+  background-color: #4b6c9e;
+  color: #f9f9f9;
+  overflow: hidden;
+}
+
+.site-title {
+  display: block;
+  float: left;
+  margin: 0 1rem;
+  line-height: 2.5rem;
+  font-size: 2em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.site-nav {
+  height: 1.75rem;
+  background-color: #3a4f63;
+}
+
+.menu {
+  float: left;
+  padding: 0.2rem 0.4rem;
+  white-space: nowrap;
+}
+
+.menu ul {
+  float: left;
+  width: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.menu ul li {
+  float: left;
+  display: block;
+  position: relative;
+  margin: 0px;
+}
+
+.menu ul li a, .menu ul li a:visited {
+  display: block;
+  border: 1px #4e667d solid;
+  padding: 0.2rem 1rem;
+  line-height: 0.9rem;
+  text-decoration: none;
+  color: #dde4ec;
+  background-color: #465c71;
+  white-space: nowrap;
+}
+
+.menu ul li a:hover {
+  text-decoration: none;
+  color: #465c71;
+  background-color: #bfcbd6;
+}
+
+.menu ul li a:active {
+  text-decoration: none;
+  color: #cfdbe6;
+  background-color: #465c71;
+}
+
+.menu li ul {
+  display: none;
+}
+
+.menu li:hover > ul {
+  display: block;
+  position: absolute;
+  z-index: 100;
+}
+
+.menu li:hover li {
+  float: none;
+}
+
+.menu ul ul ul {
+  left: 100%;
+  top: 0;
+}
+
+/* HTML defaults
+   ===================================================== */
+
+/* Paragraph */
+
+p {
+  margin: 0;
+}
+
+p + p {
+  margin-top: 1em;
+}
+
+/* Link */
+
+a:link, a:visited {
+  color: #034af3;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #1d60ff;
+}
+
+a:active {
+  color: #034af3;
+}
+
+a.disabled {
+  text-decoration: none;
+  color: #696969;
+  cursor: default;
+}
+
+/* Button */
+
+input[type="submit"], input[type="button"] {
+  margin-right: 0.2rem;
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  line-height: 0.8rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* Common classes
+   ===================================================== */
+
+/* Bars */
+
+.action-bar {
+  white-space: nowrap;
+  position: relative;
+}
+
+.action-bar > * {
+  vertical-align: middle;
+  margin: 0 0.2rem;
+}
+
+.action-bar > *:first-child {
+  margin-left: 0;
+}
+
+.action-bar > *:last-child {
+  margin-right: 0;
+}
+
+/* Indentation */
+
+.indented > *:not(:empty) ~ *:not(:empty) {
+  margin-top: 0.5rem;
+}
+
+/* Clearfix */
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* General view style
+   ===================================================== */
+
+.view-composition {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.view-composition > * {
+  height: 100%;
+}
+
+.view {
+  padding: 0.7rem;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 100%;
+  color: #333333;
+}
+
+.view-header {
+  margin-bottom: 0.6rem;
+  height: 1rem;
+  overflow: hidden;
+  line-height: 100%;
+  font-size: 1.5em;
+  font-weight: 600;
+  font-variant: small-caps;
+  text-transform: none;
+  color: #666666;
+}
+
+.view-body {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  margin-top: -1.6rem;
+  padding-top: 1.6rem;
+}
+
+.view.with-footer > .view-body {
+  margin-bottom: -1.7rem;
+  padding-bottom: 1.7rem;
+}
+
+.view-body > .content {
+  height: 100%;
+  overflow: auto;
+}
+
+.view-footer {
+  margin-top: 0.5rem;
+  height: 1.2rem;
+  overflow: hidden;
+}

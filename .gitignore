@@ -285,3 +285,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /src/release_all.bat
+**/*.js
+!**/Scripts/**/*.js
+**/*.d.ts
+!**/Scripts/typings/**/*.d.ts
+*.map

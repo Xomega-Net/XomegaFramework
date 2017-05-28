@@ -1,0 +1,7 @@
+<div class="msglist widget">
+  <ul data-part="list" class="fa-ul" data-bind="visible: settings.items().length > 0, foreach: settings.items">
+    <li data-bind="css: xomega.ErrorSeverity[Severity]">
+      <i class="fa-li fa" data-bind="css: $parent.iconClass(Severity)"></i><span data-bind="text: Message"></span>
+    </li>
+  </ul>
+</div>

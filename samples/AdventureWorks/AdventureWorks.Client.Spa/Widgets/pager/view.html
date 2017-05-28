@@ -1,0 +1,36 @@
+<div class="pager widget">
+    <div data-part="content"></div>
+    <div class="pagination" data-bind="visible: maxPage() > 0">
+        <div class="pgn-summary">
+            <span data-bind="text: 'Showing ' + (pageSize()*(curPage()-1)+1) + ' to ' + (Math.min(pageSize()*curPage(), settings.items().length)) + ' of ' + settings.items().length + ' items'"></span>
+        </div>
+        <div class="pgn-pages">
+            <ul data-bind="if: maxPage() > 1">
+                <li>
+                    <a href="#" class="fa fa-angle-double-left"
+                       data-bind="click: function () { curPage(1) }, enable: curPage() > 1, css: { disabled: curPage() <= 1 }"></a>
+                </li>
+                <li>
+                    <a href="#" class="fa fa-angle-left"
+                       data-bind="click: function () { curPage(curPage() - 1) }, enable: curPage() > 1, css: { disabled: curPage() <= 1 }"></a>
+                </li>
+                <li>
+                    <ul data-bind="foreach: ko.utils.range(pageFrom, pageTo)">
+                        <li><a href="#" data-bind="text: $data, click: function () { $parent.curPage($data) }, css: { active: $data == $parent.curPage() }"></a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="fa fa-angle-right"
+                       data-bind="click: function () { curPage(curPage() + 1) }, enable: curPage() < maxPage(), css: { disabled: curPage() >= maxPage() }"></a>
+                </li>
+                <li>
+                    <a href="#" class="fa fa-angle-double-right"
+                       data-bind="click: function () { curPage(maxPage()) }, enable: curPage() < maxPage(), css: { disabled: curPage() >= maxPage() }"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="pgn-page-size">
+            <span>Page size</span><select data-bind="options: pageSizes, value: pageSize"></select>
+        </div>
+    </div>
+</div>

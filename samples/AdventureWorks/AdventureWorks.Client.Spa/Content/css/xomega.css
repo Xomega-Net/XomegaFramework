@@ -1,0 +1,114 @@
+﻿/**
+ * Covers
+ * 1. Xomega object layouts
+ * 2. Xomega generated classes
+ */
+
+/* Xomega object layouts
+   ===================================================== */
+
+/* Object */
+
+.xw-obj table.xw-fieldset-layout {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.xw-obj table.xw-fieldset-layout th,
+.xw-obj table.xw-fieldset-layout td {
+  padding: 0;
+}
+
+.xw-obj fieldset {
+  margin: 0px;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+}
+
+.xw-obj fieldset legend {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 0 0 -0.2rem -1px;
+  padding: 0 0.2rem;
+}
+
+.borderless fieldset {
+  border: 0;
+}
+
+.btn-close {
+  position: absolute;
+  right: 0px;
+}
+
+/* Xomega generated classes
+   ===================================================== */
+
+/* Fields */
+
+.fieldColumn {
+  vertical-align: top;
+}
+
+.field + .field > * {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* Label */
+
+.label {
+  width: 180px;
+  margin-right: 5px;
+  vertical-align: top;
+  display: inline-block;
+  color: #666;
+}
+
+label.required {
+  font-weight: bold;
+}
+
+/* Data types */
+
+.datetime {
+  width: 125px;
+}
+
+.date {
+  width: 70px;
+}
+
+.decimal {
+  width: 60px;
+}
+
+.integer {
+  width: 60px;
+}
+
+.operator {
+  vertical-align: top;
+  margin-right: 5px;
+  width: 150px;
+}
+
+/* Data */
+
+.invalid {
+  border-color: Red;
+}
+
+/* Messages */
+
+.Critical {
+  color: Red;
+}
+
+.Error {
+  color: Red;
+}
+
+.Warning {
+  color: Purple;
+}

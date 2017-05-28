@@ -1,0 +1,215 @@
+/**
+ * Covers
+ * > Collapsible panel
+ * > Tabs
+ * > Applied criteria
+ * > Autocomplete
+ * > PickList
+ */
+
+
+/* Collapsible panel
+   ===================================================== */
+
+.cpanel {
+  border: 1px solid #5d7b9d;
+}
+
+.cpanel > .widget-header {
+  min-height: 1.7em;
+  line-height: 1.7em;
+  padding: 0 7px 1px;
+  background-color: #5d7b9d;
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cpanel > .widget-header > * {
+  float: left;
+}
+
+.cpanel > .widget-header .widget-title {
+  padding-left: 7px;
+  font-size: 1.2em;
+  font-weight: 400;
+  font-variant: small-caps;
+  text-transform: none;
+  color: #fff;
+}
+
+.cpanel > * > .widget-body {
+  padding: 0.5rem;
+}
+
+/* Tabs
+   ===================================================== */
+
+/* AjaxControlToolkit TabContainer */
+
+.ajax__tab_header a {
+  font-family: Verdana,Geneva,sans-serif;
+  font-size: 0.65rem;
+  color: #465c71;
+}
+
+.ajax__tab_xp.ajax__tab_container .ajax__tab_body {
+  font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+  font-size: inherit;
+}
+
+/* Tabs widget */
+.tabs-header {
+  border-left: 1px solid #999;
+  height: 23px;
+}
+
+.tabs-content {
+  border: 1px solid #999;
+  padding: 8px;
+}
+
+.tabs-header ul {
+  margin: 0;
+  padding: 0;
+  float: left;
+  list-style: none;
+  border-bottom: 1px solid #999;
+  width: 100%;
+}
+
+.tabs-header ul li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #999;
+  border-left: none;
+  margin-bottom: -1px;
+  background: #F0F0F0;
+  overflow: hidden;
+  position: relative;
+}
+
+.tabs-header li a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 0 20px;
+  border: 1px solid #fff;
+  outline: none;
+}
+
+.tabs-header li a:hover {
+  background: #ccc;
+  cursor: pointer;
+}
+
+html .tabs-header li.active, html .tabs-header li.active a:hover  {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+}
+
+/* Applied criteria
+   ===================================================== */
+
+.applied-criteria {
+  text-align: left;
+  border: 1px solid #5d7b9d;
+  padding: 0 7px;
+  line-height: 1.15rem;
+  background-color: aliceblue;
+  color: #5d7b9d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.applied-criteria h4 {
+  display: inline-block;
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  color: #5d7b9d;
+}
+
+.applied-criteria h4::after {
+  content: " - ";
+}
+
+.fc-label::after {
+  content: ":";
+}
+
+.fc-operator::before, .fc-datum::before {
+  content: " ";
+}
+
+.fc-operator, .fc-datum {
+  color: #666;
+}
+
+.fc-operator {
+  font-style: italic;
+}
+
+.fc-datum {
+  font-weight: 600;
+}
+
+.fc-datum::after {
+  content: " and";
+  font-weight: normal;
+}
+
+.fc-datum:last-child::after {
+  content: "";
+}
+
+.field-criteria > *:last-child::after {
+  content: "; ";
+}
+
+.field-criteria:last-child > *:last-child::after {
+  content: "";
+}
+
+/* Autocomplete (jQuery UI)
+   ===================================================== */
+
+.ui-autocomplete.ui-widget {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* PickList
+   ===================================================== */
+
+.picklist {
+  display: inline-table;
+}
+
+.picklist > * {
+  display: table-cell;
+}
+
+.picklist-buttons {
+  width: 40px;
+  text-align:center;
+  vertical-align:middle;
+}
+
+.picklist > select {
+  min-width: 100px;
+}
+
+.picklist-buttons > * {
+  width: 28px;
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 14px !important;
+  line-height: 18px !important;
+  padding: 0;
+  margin: 1px 0 !important;
+}

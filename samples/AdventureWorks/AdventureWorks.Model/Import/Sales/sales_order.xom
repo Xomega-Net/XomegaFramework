@@ -22,6 +22,9 @@
         <ui:web-control multi-value="true">
           <asp:TextBox runat="server"/>
         </ui:web-control>
+        <ui:html-control multi-value="true">
+          <input xmlns="http://www.w3.org/1999/xhtml"/>
+        </ui:html-control>
       </config>
       <enum ref="sales order status"/>
     </type>

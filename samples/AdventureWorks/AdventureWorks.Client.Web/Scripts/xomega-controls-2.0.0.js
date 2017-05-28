@@ -300,7 +300,8 @@ xomegaControls.autoComplete = function (element, property, settings) {
                 let i1 = str.substring(0, pos).lastIndexOf(delim.trim());
                 let i2 = str.indexOf(delim.trim(), pos);
                 this.value = (i1 < 0 ? '' : str.substr(0, i1) + delim) + val + (i2 < 0 ? '' : str.substring(i2));
-                if (!this.value.trim().endsWith(delim.trim())) this.value += delim;
+                if (this.value.trim().indexOf(delim.trim(), this.value.trim().length - delim.trim().length) === -1)
+                    this.value += delim; // add delimiter if value doesn't end with it
             } else {
                 this.value = val;
             }

@@ -519,11 +519,11 @@
                       Style="{StaticResource ControlStyle}"/>
             <Label Grid.Row="1" Grid.Column="0" Name="lblSalesSalesPersonId"
                    Style="{StaticResource LabelStyle}">_Sales Person:</Label>
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     xom:Property.Label="{Binding ElementName=lblSalesSalesPersonId}"
-                     x:Name="ctlSalesSalesPersonId"
-                     xom:Property.Name="{x:Static o:SalesOrderSalesObject.SalesPersonId}"
-                     Style="{StaticResource ControlStyle}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"
+                      xom:Property.Label="{Binding ElementName=lblSalesSalesPersonId}"
+                      x:Name="ctlSalesSalesPersonId"
+                      xom:Property.Name="{x:Static o:SalesOrderSalesObject.SalesPersonId}"
+                      Style="{StaticResource ControlStyle}"/>
             <Label Grid.Row="0" Grid.Column="2" Name="lblSalesSalesReason"
                    Style="{StaticResource LabelStyle}">_Sales Reason:</Label>
             <ListBox Grid.Row="0" Grid.Column="3"

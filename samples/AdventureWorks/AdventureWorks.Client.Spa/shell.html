@@ -1,0 +1,30 @@
+﻿<div class="page">
+    <script type="text/html" id="menus">
+        <li role="menuitem" id="menu" data-bind="visible: allowed">
+            <a data-bind="attr: { href: $data.hash }, text: title" />
+            <ul role="menubar" data-bind="template: {name: 'menus', foreach: $data.items}"/>
+        </li>
+    </script>
+    <div class="page-header">
+        <div class="site-caption">
+            <h1 class="site-title"><a href="#" data-bind="text: title"></a></h1>
+            <div class="login-display" data-bind="visible: !loggedIn()">
+                [ <a href="#login">Log In</a> ]
+            </div>
+            <div class="login-display" data-bind="visible: loggedIn">
+                Welcome <span class="login-name" data-bind="text: userName()"/>!
+                [ <a href="#" data-bind="click: logout">Log Out</a> ]
+            </div>
+        </div>
+        <div class="site-nav">
+            <div class="menu">
+                <ul role="menubar" data-bind="template: {name: 'menus', foreach: menu}" />
+            </div>
+        </div>
+    </div>
+    <div class="page-body" data-bind="router: {}"></div>
+    <div class="page-footer">
+        <div class="copyright">Copyright © <span data-bind="text: new Date().getFullYear()"/> . All rights reserved.</div>
+        <div class="attribution">Powered by <a href="http://xomega.net">Xomega.Net</a></div>
+    </div>
+</div>
