@@ -65,6 +65,8 @@ namespace AdventureWorks.Client.ViewModels
             this.obj.CustomerObject.StoreNameProperty.SetValue(DataRow.GetValue(row, CustomerList.StoreName));
             this.obj.CustomerObject.PersonIdProperty.SetValue(DataRow.GetValue(row, CustomerList.PersonId));
             this.obj.CustomerObject.PersonNameProperty.SetValue(DataRow.GetValue(row, CustomerList.PersonName));
+            this.obj.CustomerObject.AccountNumberProperty.SetValue(DataRow.GetValue(row, CustomerList.AccountNumber));
+            this.obj.CustomerObject.TerritoryIdProperty.SetValue(DataRow.GetValue(row, CustomerList.TerritoryId));
         }
         #endregion
 

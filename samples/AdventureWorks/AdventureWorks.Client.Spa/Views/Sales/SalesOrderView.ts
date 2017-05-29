@@ -59,6 +59,8 @@ class SalesOrderView extends DetailsViewModel {
         vm.obj.CustomerObject.StoreName.InternalValue(row.StoreName);
         vm.obj.CustomerObject.PersonId.InternalValue(row.PersonId);
         vm.obj.CustomerObject.PersonName.InternalValue(row.PersonName);
+        vm.obj.CustomerObject.AccountNumber.InternalValue(row.AccountNumber);
+        vm.obj.CustomerObject.TerritoryId.InternalValue(row.TerritoryId);
     }
 
     protected lnkDetailDetails_Params(data): any {

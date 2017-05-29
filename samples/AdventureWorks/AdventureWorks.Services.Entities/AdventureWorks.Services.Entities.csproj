@@ -1,348 +1,349 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0" DefaultTargets="Build">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{19D256BC-F220-4DAA-8129-2C82B8F65142}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdventureWorks.Services.Entities</RootNamespace>
-    <AssemblyName>AdventureWorks.Services.Entities</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <XomegaProjectType>entities</XomegaProjectType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.1.1\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="Xomega.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xomega.Framework.2.0.0\lib\net45\Xomega.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="Entities\EntityModel.edmx" />
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Entities\Model.tt">
-      <CustomToolNamespace>AdventureWorks.Services.Entities</CustomToolNamespace>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model.cs</LastGenOutput>
-      <DependentUpon>EntityModel.edmx</DependentUpon>
-    </None>
-    <None Include="Entities\Model.Context.tt">
-      <CustomToolNamespace>AdventureWorks.Services.Entities</CustomToolNamespace>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model.Context.cs</LastGenOutput>
-      <DependentUpon>EntityModel.edmx</DependentUpon>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Entities\Address.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\AddressType.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\AwBuildVersion.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\BillOfMaterials.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\BusinessEntity.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\BusinessEntityAddress.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\BusinessEntityContact.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ContactType.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CountryRegion.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CountryRegionCurrency.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CreditCard.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Culture.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Currency.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CurrencyRate.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Customer.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\DatabaseLog.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Department.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\EmailAddress.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Employee.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\EmployeeDepartmentHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\EmployeePayHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ErrorLog.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Illustration.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\JobCandidate.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Location.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Password.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Person.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PersonCreditCard.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PersonPhone.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PhoneNumberType.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Product.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductCategory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductCostHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductDescription.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductInventory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductListPriceHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductModel.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductModelIllustration.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductModelProductDescriptionCulture.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductPhoto.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductProductPhoto.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductReview.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductSubcategory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductVendor.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PurchaseOrderDetail.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PurchaseOrderHeader.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesOrder.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesOrderDetail.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesOrderReason.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesPerson.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesPersonQuotaHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesReason.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesTaxRate.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesTerritory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SalesTerritoryHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ScrapReason.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Shift.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ShipMethod.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ShoppingCartItem.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SpecialOffer.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\SpecialOfferProduct.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\StateProvince.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Store.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\TransactionHistory.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\TransactionHistoryArchive.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UnitMeasure.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Vendor.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\WorkOrder.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\WorkOrderRouting.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\Model.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Model.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Person\BusinessEntityAddressService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\CustomerService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\PersonCreditCardService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SalesOrderService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SalesReasonService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Services.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SalesPersonService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SalesTerritoryService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Production\ProductService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SpecialOfferService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Purchasing\ShipMethodService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Sales\SalesOrderServiceExtended.cs">
-      <DependentUpon>SalesOrderService.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Person\PersonService.cs">
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Services\Person\PersonServiceCustomized.cs">
-      <DependentUpon>PersonService.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj">
-      <Project>{4D902CA4-C557-4A24-9856-6302420AF029}</Project>
-      <Name>AdventureWorks.Services.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0"
+         DefaultTargets="Build">
+   <PropertyGroup>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+      <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+      <ProductVersion>8.0.50727</ProductVersion>
+      <SchemaVersion>2.0</SchemaVersion>
+      <ProjectGuid>{19D256BC-F220-4DAA-8129-2C82B8F65142}</ProjectGuid>
+      <OutputType>Library</OutputType>
+      <AppDesignerFolder>Properties</AppDesignerFolder>
+      <RootNamespace>AdventureWorks.Services.Entities</RootNamespace>
+      <AssemblyName>AdventureWorks.Services.Entities</AssemblyName>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <XomegaProjectType>entities</XomegaProjectType>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <DebugSymbols>true</DebugSymbols>
+      <DebugType>full</DebugType>
+      <Optimize>false</Optimize>
+      <OutputPath>bin\Debug\</OutputPath>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <OutputPath>bin\Release\</OutputPath>
+      <DefineConstants>TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+   </PropertyGroup>
+   <ItemGroup>
+      <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.1.1\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+      <Reference Include="System"/>
+      <Reference Include="System.ComponentModel.DataAnnotations"/>
+      <Reference Include="Xomega.Framework, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+         <HintPath>..\..\packages\Xomega.Framework.2.0.0\lib\net45\Xomega.Framework.dll</HintPath>
+         <Private>True</Private>
+      </Reference>
+   </ItemGroup>
+   <ItemGroup>
+      <EntityDeploy Include="Entities\EntityModel.edmx"/>
+      <None Include="App.config">
+         <SubType>Designer</SubType>
+      </None>
+      <None Include="Entities\Model.tt">
+         <CustomToolNamespace>AdventureWorks.Services.Entities</CustomToolNamespace>
+         <Generator>TextTemplatingFileGenerator</Generator>
+         <LastGenOutput>Model.cs</LastGenOutput>
+         <DependentUpon>EntityModel.edmx</DependentUpon>
+      </None>
+      <None Include="Entities\Model.Context.tt">
+         <CustomToolNamespace>AdventureWorks.Services.Entities</CustomToolNamespace>
+         <Generator>TextTemplatingFileGenerator</Generator>
+         <LastGenOutput>Model.Context.cs</LastGenOutput>
+         <DependentUpon>EntityModel.edmx</DependentUpon>
+      </None>
+      <None Include="packages.config"/>
+   </ItemGroup>
+   <ItemGroup>
+      <Compile Include="Entities\Address.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\AddressType.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\AwBuildVersion.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\BillOfMaterials.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\BusinessEntity.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\BusinessEntityAddress.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\BusinessEntityContact.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ContactType.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\CountryRegion.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\CountryRegionCurrency.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\CreditCard.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Culture.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Currency.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\CurrencyRate.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Customer.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\DatabaseLog.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Department.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\EmailAddress.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Employee.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\EmployeeDepartmentHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\EmployeePayHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ErrorLog.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Illustration.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\JobCandidate.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Location.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Password.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Person.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\PersonCreditCard.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\PersonPhone.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\PhoneNumberType.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Product.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductCategory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductCostHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductDescription.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductInventory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductListPriceHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductModel.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductModelIllustration.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductModelProductDescriptionCulture.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductPhoto.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductProductPhoto.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductReview.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductSubcategory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ProductVendor.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\PurchaseOrderDetail.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\PurchaseOrderHeader.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesOrder.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesOrderDetail.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesOrderReason.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesPerson.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesPersonQuotaHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesReason.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesTaxRate.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesTerritory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SalesTerritoryHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ScrapReason.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Shift.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ShipMethod.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\ShoppingCartItem.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SpecialOffer.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\SpecialOfferProduct.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\StateProvince.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Store.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\TransactionHistory.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\TransactionHistoryArchive.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\UnitMeasure.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Vendor.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\WorkOrder.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\WorkOrderRouting.cs">
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Properties\AssemblyInfo.cs"/>
+      <Compile Include="Entities\Model.cs">
+         <AutoGen>True</AutoGen>
+         <DesignTime>True</DesignTime>
+         <DependentUpon>Model.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Entities\Model.Context.cs">
+         <AutoGen>True</AutoGen>
+         <DesignTime>True</DesignTime>
+         <DependentUpon>Model.Context.tt</DependentUpon>
+      </Compile>
+      <Compile Include="Services\Person\BusinessEntityAddressService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\CustomerService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\PersonCreditCardService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SalesOrderService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SalesReasonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Services.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SalesPersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SalesTerritoryService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Production\ProductService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SpecialOfferService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Purchasing\ShipMethodService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Sales\SalesOrderServiceExtended.cs">
+         <DependentUpon>SalesOrderService.cs</DependentUpon>
+      </Compile>
+      <Compile Include="Services\Person\PersonService.cs">
+         <AutoGen>True</AutoGen>
+      </Compile>
+      <Compile Include="Services\Person\PersonServiceCustomized.cs">
+         <DependentUpon>PersonService.cs</DependentUpon>
+      </Compile>
+   </ItemGroup>
+   <ItemGroup>
+      <ProjectReference Include="..\AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj">
+         <Project>{4D902CA4-C557-4A24-9856-6302420AF029}</Project>
+         <Name>AdventureWorks.Services.Common</Name>
+      </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+      <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}"/>
+   </ItemGroup>
+   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
 </Project>

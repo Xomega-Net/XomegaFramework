@@ -72,6 +72,10 @@ namespace Xomega.Framework.Views
 
                 BindDataObject(CriteriaPanel, bind && svm.List != null? svm.List.CriteriaObject : null);
                 BindDataObject(ResultsGrid, bind ? svm.List : null);
+
+                // recalculate applied criteria with updated labels after binding
+                if (svm.List != null && svm.List.CriteriaObject != null && svm.List.AppliedCriteria != null)
+                    svm.List.AppliedCriteria = svm.List.CriteriaObject.GetFieldCriteriaSettings();
             }
             base.BindTo(viewModel);
         }

@@ -249,7 +249,7 @@ namespace Xomega.Framework
         public List<FieldCriteriaSetting> AppliedCriteria
         {
             get { return appliedCriteria; }
-            protected set
+            set
             {
                 appliedCriteria = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(AppliedCriteriaProperty));

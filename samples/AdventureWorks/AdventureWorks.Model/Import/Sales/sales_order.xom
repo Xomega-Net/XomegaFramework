@@ -847,6 +847,8 @@
           <ui:param name="store name" field="store name"/>
           <ui:param name="person id" field="person id"/>
           <ui:param name="person name" field="person name"/>
+          <ui:param name="account number" field="account number"/>
+          <ui:param name="territory id" field="territory id"/>
         </ui:result>
       </ui:link>
     </xfk:data-object>

@@ -13,7 +13,7 @@ namespace AdventureWorks.Client.Web
             rptSettings.Visible = settings != null && settings.Count > 0;
             rptSettings.DataSource = settings;
             rptSettings.DataBind();
-            lblNoData.Visible = !rptSettings.Visible;
+            lblNoData.Visible = settings == null || settings.Count == 0;
         }
     }
 }
