@@ -5,7 +5,7 @@
         <version>{version}</version>
         <authors>Xomega Team</authors>
         <owners>Xomega.Net</owners>
-        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <licenseUrl>https://github.com/Xomega-Net/XomegaFramework/blob/master/LICENSE.md</licenseUrl>
         <projectUrl>https://github.com/Xomega-Net/XomegaFramework</projectUrl>
         <iconUrl>https://avatars2.githubusercontent.com/u/17077373</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
