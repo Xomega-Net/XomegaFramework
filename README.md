@@ -45,11 +45,13 @@ Xomega framework provides rich base and utility classes for building presentatio
  
 ## Getting Started
 
-- The easiest way to get started with Xomega Framework is to install our free Visual Studio extension Xomega.Net, which provides preconfigured project templates for ASP.NET, WPF and SPA applications, and allows you to instantly generate complete and powerful search and details views right from your service model. Please check [our web site](http://xomega.net) for more details.
+1. The easiest way to get started with Xomega Framework is to install our free Visual Studio extension Xomega.Net, which provides preconfigured project templates for ASP.NET, WPF and SPA applications, and allows you to instantly generate complete and powerful search and details views right from your service model. Please check [our web site](http://xomega.net) for more details.
 
-- A more manual way involves adding Xomega NuGet packages to your Visual Studio project, and reading [How To guides on our forum](http://xomega.net/Tutorials/HowTos.aspx). Feel free to post your questions there if you don't find the information you need.
+2. You can also run our [Xomega.Examples](https://github.com/Xomega-Net/Xomega.Examples) applications to see the framework in action.
 
-- And, of course, you can always download the code and build it manually. You're welcome to post any issues, fork the code and create pull requests with any fixes or enhancements.
+3. A more manual way involves adding [Xomega NuGet packages](http://www.nuget.org/packages?q=xomega.framework) to your Visual Studio project, and reading [How To guides on our forum](http://xomega.net/Tutorials/HowTos.aspx). Feel free to post your questions there if you don't find the information you need.
+
+4. And, of course, you can always download the code and build it manually. You're welcome to post any issues, fork the code and create pull requests with any fixes or enhancements.
  
 ## Additional Resources
 
