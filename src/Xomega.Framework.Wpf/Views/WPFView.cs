@@ -77,9 +77,10 @@ namespace Xomega.Framework.Views
                     vc.ViewEvents -= OnViewEvents;
                     vc.View = null;
                 }
-                OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
             }
             this.Model = viewModel;
+            // show errors (if any) last, since the error presenter needs the model's service provider
+            OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
         }
 
         /// <summary>

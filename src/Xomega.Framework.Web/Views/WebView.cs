@@ -172,7 +172,7 @@ namespace Xomega.Framework.Web
         /// Checks if the view can be deleted
         /// </summary>
         /// <returns>True if the view can be deleted, False otherwise</returns>
-        public virtual bool CanDelete() { return false; }
+        public virtual bool CanDelete() { return true; }
 
         /// <summary>Script to popup a modal dialog for a view.</summary>
         protected string Script_ModalDialog = @"if (xomegaControls && typeof xomegaControls._modalViewPopup === 'function')
