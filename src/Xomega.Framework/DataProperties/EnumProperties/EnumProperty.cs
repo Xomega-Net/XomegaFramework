@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -102,7 +102,7 @@ namespace Xomega.Framework.Properties
         protected virtual LookupTable GetLookupTable()
         {
             if (LocalLookupTable != null) return LocalLookupTable;
-            LookupCache cache = LookupCache.Get(parent != null ? parent.ServiceProvider : DI.DefaultServiceProvider, CacheType);
+            LookupCache cache = LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
             LookupCache.LookupTableReady onReady = null;
             return cache == null ? null : cache.GetLookupTable(EnumType, onReady);
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -267,8 +267,8 @@ namespace Xomega.Framework
         public override ErrorList GetValidationErrors()
         {
             ErrorList errLst = new ErrorList();
-            if (validationErrorList != null) errLst.MergeWith(validationErrorList);
-            if (CriteriaObject != null) errLst.MergeWith(CriteriaObject.GetValidationErrors());
+            errLst.MergeWith(validationErrorList);
+            errLst.MergeWith(CriteriaObject?.GetValidationErrors());
             return errLst;
         }
 

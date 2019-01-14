@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -23,7 +23,7 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// The service provider for the view
         /// </summary>
-        public IServiceProvider ServiceProvider { get { return WebDI.CurrentServiceScope == null ? null : WebDI.CurrentServiceScope.ServiceProvider; } }
+        public IServiceProvider ServiceProvider { get { return WebDI.CurrentServiceScope?.ServiceProvider; } }
 
         /// <summary>
         /// Model the view is bound to. Should be pre-created by subclasses.
@@ -45,6 +45,8 @@ namespace Xomega.Framework.Web
             Model.Params[ViewParams.Mode.Param] = Mode;
             Model.Params[ViewParams.QuerySource] = ParentSource;
             Model.Params[ViewParams.SelectionMode.Param] = SelectionMode;
+            ErrorList viewErrors = Errors;
+            if (viewErrors != null) Model.Errors = viewErrors;
             // bind to the model
             BindTo(Model);
         }
@@ -89,6 +91,29 @@ namespace Xomega.Framework.Web
             }
         }
 
+        /// <summary>
+        /// Generates a key for storing objects in the session for the current view.
+        /// </summary>
+        /// <param name="key">The object key to generate the session key for.</param>
+        /// <returns>The generated unique session key.</returns>
+        protected string GetSessionKey(string key)
+        {
+            return string.Format("{0}|{1}|{2}", Request.CurrentExecutionFilePath, UniqueID, key);
+        }
+
+        /// <summary>The key for persisting error list in the web session.</summary>
+        private string ErrorsKey { get { return GetSessionKey("Errors"); } }
+
+        /// <summary>The error list of the view model persisted in the web session.</summary>
+        protected ErrorList Errors
+        {
+            get { return Session[ErrorsKey] as ErrorList; }
+            set
+            {
+                if (value == null) Session.Remove(ErrorsKey);
+                else Session[ErrorsKey] = value;
+            }
+        }
         #endregion
 
         #region Controls
@@ -160,8 +185,12 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected virtual void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (ucl_Errors != null && ViewModel.ErrorsProperty.Equals(e.PropertyName))
-                ucl_Errors.Show(Model != null ? Model.Errors : null);
+            ViewModel vm = sender as ViewModel;
+            if (ViewModel.ErrorsProperty == e.PropertyName)
+            {
+                if (vm != null) Errors = vm.Errors;
+                ucl_Errors?.Show(vm?.Errors);
+            }
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,13 +7,15 @@ using System.ServiceModel.Dispatcher;
 using System.ServiceModel.Channels;
 using System.Diagnostics;
 using System.ServiceModel.Description;
+using Xomega.Framework.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Xomega.Framework.Wcf
 {
     /// <summary>
     /// WCF service instance provider for a given contract type using specified service provider, which can be registered as a contract behavior.
     /// </summary>
-    public class ServiceInstanceProvider : IInstanceProvider, IContractBehavior
+    public class ServiceInstanceProvider : IInstanceProvider, IContractBehavior, IParameterInspector
     {
         private readonly IServiceProvider serviceProvider;
         private readonly Type contractType;
@@ -25,16 +27,14 @@ namespace Xomega.Framework.Wcf
         /// <param name="contractType">Contract type</param>
         public ServiceInstanceProvider(IServiceProvider serviceProvider, Type contractType)
         {
-            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
-            if (contractType == null) throw new ArgumentNullException("contractType");
-            this.serviceProvider = serviceProvider;
-            this.contractType = contractType;
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.contractType = contractType ?? throw new ArgumentNullException(nameof(contractType));
         }
 
         #region IInstanceProvider implementation
 
         /// <summary>
-        /// Returns a service object given the specified System.ServiceModel.InstanceContext object.
+        /// Returns a service object given the specified <see cref="InstanceContext"/> object.
         /// </summary>
         /// <param name="instanceContext">The current InstanceContext object.</param>
         /// <returns>A user-defined service object.</returns>
@@ -44,7 +44,7 @@ namespace Xomega.Framework.Wcf
         }
 
         /// <summary>
-        /// Returns a service object given the specified System.ServiceModel.InstanceContext object.
+        /// Returns a service object given the specified <see cref="InstanceContext"/> object.
         /// </summary>
         /// <param name="instanceContext">The current InstanceContext object.</param>
         /// <param name="message">The message that triggered the creation of a service object.</param>
@@ -62,7 +62,7 @@ namespace Xomega.Framework.Wcf
         }
 
         /// <summary>
-        /// Called when an System.ServiceModel.InstanceContext object recycles a service object.
+        /// Called when an <see cref="InstanceContext"/> object recycles a service object.
         /// </summary>
         /// <param name="instanceContext">The service's instance context.</param>
         /// <param name="instance">The service object to be recycled.</param>
@@ -95,6 +95,10 @@ namespace Xomega.Framework.Wcf
         {
             dispatchRuntime.InstanceProvider = this;
             dispatchRuntime.InstanceContextInitializers.Add(new InstanceContextServiceScope());
+            foreach (var oper in dispatchRuntime.Operations)
+            {
+                oper.ParameterInspectors.Add(this);
+            }
         }
 
         /// <summary>
@@ -114,6 +118,43 @@ namespace Xomega.Framework.Wcf
         /// <param name="endpoint">The endpoint to modify.</param>
         /// <param name="bindingParameters">The objects that binding elements require to support the behavior.</param>
         public void AddBindingParameters(ContractDescription contractDescription, ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
+        {
+        }
+
+        #endregion
+
+        #region IParameterInspector implementation
+
+        /// <summary>
+        /// Called before client calls are sent and after service responses are returned.
+        /// </summary>
+        /// <param name="operationName">The name of the operation.</param>
+        /// <param name="inputs">The objects passed to the method by the client.</param>
+        /// <returns>The correlation state that is returned as the correlationState parameter in <see cref="AfterCall(string, object[], object, object)"/>.
+        /// Return null if you do not intend to use correlation state.</returns>
+        public object BeforeCall(string operationName, object[] inputs)
+        {
+            ErrorList errors = new ErrorList();
+            foreach(object obj in inputs)
+            {
+                foreach(ValidationResult result in DataAnnotationValidator.GetValidationErrors(serviceProvider, obj))
+                {
+                    errors.AddValidationError(result.ErrorMessage);
+                }
+            }
+            if (errors.HasErrors())
+                throw new FaultException<ErrorList>(errors, "Request Validation");
+            return null;
+        }
+
+        /// <summary>
+        /// Called after client calls are returned and before service responses are sent.
+        /// </summary>
+        /// <param name="operationName">The name of the invoked operation.</param>
+        /// <param name="outputs">Any output objects.</param>
+        /// <param name="returnValue">The return value of the operation.</param>
+        /// <param name="correlationState">Any correlation state returned from the <see cref="BeforeCall(string, object[])"/> method, or null.</param>
+        public void AfterCall(string operationName, object[] outputs, object returnValue, object correlationState)
         {
         }
 

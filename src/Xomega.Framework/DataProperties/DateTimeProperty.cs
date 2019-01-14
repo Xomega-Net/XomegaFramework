@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -86,8 +86,7 @@ namespace Xomega.Framework.Properties
         {
             DateTimeProperty dtp = dp as DateTimeProperty;
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is DateTime))
-                dp.ValidationErrors.AddValidationError("{0} has an invalid date/time: {1}. Please use the following format: {2}.",
-                    dp, value, dtp != null ? dtp.Format : "N/A");
+                dp.ValidationErrors.AddValidationError(Messages.Validation_DateTimeFormat, dp, value, dtp != null ? dtp.Format : "N/A");
         }
     }
 

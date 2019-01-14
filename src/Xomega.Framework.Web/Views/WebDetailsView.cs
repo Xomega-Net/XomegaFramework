@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
-using System.ComponentModel;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Views;
@@ -15,15 +14,15 @@ namespace Xomega.Framework.Web
     {
         #region Data Object
 
-        private string objKey { get { return UniqueID + Request.CurrentExecutionFilePath; } }
+        private string ObjKey { get { return GetSessionKey("dataObj"); } }
 
-        private DataObject dataObj
+        private DataObject DataObj
         {
-            get { return Session[objKey] as DataObject; }
+            get { return Session[ObjKey] as DataObject; }
             set
             {
-                if (value == null) Session.Remove(objKey);
-                Session[objKey] = value;
+                if (value == null) Session.Remove(ObjKey);
+                Session[ObjKey] = value;
             }
         }
 
@@ -73,7 +72,7 @@ namespace Xomega.Framework.Web
             DetailsViewModel dvm = Model as DetailsViewModel;
             if (dvm != null)
             {
-                DataObject obj = dataObj;
+                DataObject obj = DataObj;
                 if (obj != null) dvm.DetailsObject = obj;
             }
 
@@ -105,7 +104,7 @@ namespace Xomega.Framework.Web
                     pnl_Object.DataBind();
                     WebPropertyBinding.BindToObject(pnl_Object, bind ? dvm.DetailsObject : null);
                 }
-                if (bind) dataObj = dvm.DetailsObject; // persist the object in session
+                if (bind) DataObj = dvm.DetailsObject; // persist the object in session
             }
             base.BindTo(viewModel);
         }

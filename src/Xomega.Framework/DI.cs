@@ -1,9 +1,10 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using Xomega.Framework.Lookup;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework
 {
@@ -34,6 +35,15 @@ namespace Xomega.Framework
         public static void AddSingletonLookupCacheProvider(this IServiceCollection container)
         {
             container.AddSingleton<ILookupCacheProvider, SingletonLookupCacheProvider>();
+        }
+
+        /// <summary>
+        /// Configures specified service container with implementation of an operator registry
+        /// </summary>
+        /// <param name="container">Service container to configure</param>
+        public static void AddOperators(this IServiceCollection container)
+        {
+            container.AddSingleton<OperatorRegistry>();
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ SET TGT=%2
 SET EPT=%3
 
 IF '%VER%'=='' (
-  echo Please use the following format: release.bat {version} [target]
+  echo Please use the following format: release_tgt.bat {version} [target]
   goto end
 )
 call release Xomega.Framework %VER% %TGT% %EPT%

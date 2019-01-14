@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,13 +18,13 @@ namespace Xomega.Framework.Views
     {
         #region View properties and constructor
 
-        /// <summary> Title of the view </summary>
+        /// <summary>Title of the view.</summary>
         public string ViewTitle { get; set; }
 
-        /// <summary>Default view width</summary>
+        /// <summary>Default view width.</summary>
         public double? ViewWidth { get; set; }
 
-        /// <summary>Default view height</summary>
+        /// <summary>Default view height.</summary>
         public double? ViewHeight { get; set; }
 
         /// <summary>
@@ -97,6 +97,9 @@ namespace Xomega.Framework.Views
 
         #region View model event handling
 
+        /// <summary>A panel that shows errors and messages.</summary>
+        protected virtual IErrorPresenter ErrorsPanel { get; }
+
         /// <summary>
         /// Error presenter for the view
         /// </summary>
@@ -104,7 +107,7 @@ namespace Xomega.Framework.Views
         {
             get
             {
-                IErrorPresenter ep = Model == null ? null : Model.ServiceProvider.GetService<IErrorPresenter>();
+                IErrorPresenter ep = ErrorsPanel ?? Model?.ServiceProvider.GetService<IErrorPresenter>();
                 if (ep is Window) ((Window)ep).Owner = Window.GetWindow(this);
                 return ep;
             }
@@ -120,7 +123,7 @@ namespace Xomega.Framework.Views
             IErrorPresenter ep = ErrorPresenter;
             ViewModel vc = sender as ViewModel;
             if (ep != null && ViewModel.ErrorsProperty.Equals(e.PropertyName))
-                ep.Show(vc != null ? vc.Errors : null);
+                ep.Show(vc?.Errors);
         }
 
         /// <summary>

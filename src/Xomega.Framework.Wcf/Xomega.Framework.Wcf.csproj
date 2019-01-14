@@ -37,6 +37,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultServiceProviderHostFactory.cs" />
-    <Compile Include="FaultErrorList.cs" />
     <Compile Include="FaultErrorParser.cs" />
     <Compile Include="InstanceContextServiceScope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

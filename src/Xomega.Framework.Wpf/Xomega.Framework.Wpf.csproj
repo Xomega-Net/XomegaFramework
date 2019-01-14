@@ -40,6 +40,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -58,6 +59,8 @@
     <Compile Include="Binding\PasswordBoxPropertyBinding.cs" />
     <Compile Include="Binding\TextBoxPropertyBinding.cs" />
     <Compile Include="Converters\ExpanderCollapsiblePanel.cs" />
+    <Compile Include="Converters\SeverityToBrushConverter.cs" />
+    <Compile Include="Converters\SeverityToIconConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Binding\ToggleButtonPropertyBinding.cs" />
     <Compile Include="Converters\RequiredToFontWeightConverter.cs" />

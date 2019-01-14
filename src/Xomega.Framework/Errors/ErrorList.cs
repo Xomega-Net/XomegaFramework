@@ -1,5 +1,6 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,7 +33,7 @@ namespace Xomega.Framework
         /// <param name="resources">Resource manager to use for error messages</param>
         public ErrorList(ResourceManager resources)
         {
-            this.resources = resources;
+            this.resources = resources ?? Messages.ResourceManager;
         }
 
         /// <summary>
@@ -52,7 +53,12 @@ namespace Xomega.Framework
             string message = null;
             if (resources != null) message = resources.GetString(code);
             if (message == null) message = code;
-            return string.Format(message, parameters);
+            try
+            {
+                message = string.Format(message, parameters);
+            }
+            catch (Exception) { } // return message as is, if the format is bad.
+            return message;
         }
 
         /// <summary>
@@ -60,9 +66,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        public void AddValidationError(string code, params object[] parameters)
+        /// <returns>The error message added to the list for further configuration.</returns>
+        public ErrorMessage AddValidationError(string code, params object[] parameters)
         {
-            Add(new ErrorMessage(ErrorType.Validation, code, GetMessage(code, parameters), ErrorSeverity.Error));
+            return Add(new ErrorMessage(ErrorType.Validation, code, GetMessage(code, parameters), ErrorSeverity.Error));
         }
 
         /// <summary>
@@ -71,9 +78,10 @@ namespace Xomega.Framework
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
         /// <param name="type">The type of error.</param>
-        public void AddError(ErrorType type, string code, params object[] parameters)
+        /// <returns>The error message added to the list for further configuration.</returns>
+        public ErrorMessage AddError(ErrorType type, string code, params object[] parameters)
         {
-            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Error));
+            return Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Error));
         }
 
         /// <summary>
@@ -93,11 +101,13 @@ namespace Xomega.Framework
         /// <param name="abort">True to abort the current operation.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
         /// <param name="type">The type of error.</param>
-        public void CriticalError(ErrorType type, string code, bool abort, params object[] parameters)
+        /// <returns>The error message added to the list, if not aborted.</returns>
+        public ErrorMessage CriticalError(ErrorType type, string code, bool abort, params object[] parameters)
         {
             ErrorMessage err = new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Critical);
             Add(err);
             if (abort) Abort(err.Message);
+            return err;
         }
 
         /// <summary>
@@ -105,10 +115,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        /// <param name="type">The type of warning.</param>
-        public void AddWarning(ErrorType type, string code, params object[] parameters)
+        /// <returns>The error message added to the list for further configuration.</returns>
+        public ErrorMessage AddWarning(string code, params object[] parameters)
         {
-            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Warning));
+            return Add(new ErrorMessage(ErrorType.Message, code, GetMessage(code, parameters), ErrorSeverity.Warning));
         }
 
         /// <summary>
@@ -116,10 +126,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="code">The message code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
-        /// <param name="type">The type of info message.</param>
-        public void AddInfo(ErrorType type, string code, params object[] parameters)
+        /// <returns>The error message added to the list for further configuration.</returns>
+        public ErrorMessage AddInfo(string code, params object[] parameters)
         {
-            Add(new ErrorMessage(type, code, GetMessage(code, parameters), ErrorSeverity.Info));
+            return Add(new ErrorMessage(ErrorType.Message, code, GetMessage(code, parameters), ErrorSeverity.Info));
         }
 
         /// <summary>
@@ -153,9 +163,10 @@ namespace Xomega.Framework
         /// Adds the given error message to the list.
         /// </summary>
         /// <param name="err">Error message to add to the list.</param>
-        public void Add(ErrorMessage err)
+        public ErrorMessage Add(ErrorMessage err)
         {
             errors.Add(err);
+            return err;
         }
 
         /// <summary>
@@ -164,7 +175,8 @@ namespace Xomega.Framework
         /// <param name="otherList">Another error list to merge the current list with.</param>
         public void MergeWith(ErrorList otherList)
         {
-            if (otherList != null) errors.AddRange(otherList.Errors);
+            if (otherList != null && otherList != this)
+                errors.AddRange(otherList.Errors);
         }
 
         /// <summary>

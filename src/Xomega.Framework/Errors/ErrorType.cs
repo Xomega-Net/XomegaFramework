@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 namespace Xomega.Framework
 {
@@ -8,33 +8,43 @@ namespace Xomega.Framework
     public enum ErrorType
     {
         /// <summary>
-        /// Error resulting from concurrency checks
+        /// Error resulting from concurrency checks.
         /// </summary>
         Concurrency,
 
         /// <summary>
-        /// Error resulting from a data issue
+        /// Error resulting from a data issue.
         /// </summary>
         Data,
 
         /// <summary>
-        /// Error originated from an external system
+        /// Error originated from an external system.
         /// </summary>
         External,
 
         /// <summary>
-        /// Error resulting from security validation
+        /// Error resulting from security validation.
         /// </summary>
         Security,
 
         /// <summary>
-        /// Internal system error
+        /// Internal system error.
         /// </summary>
         System,
 
         /// <summary>
-        /// Error resulting from request validation
+        /// Error resulting from request validation.
         /// </summary>
-        Validation
+        Validation,
+
+        /// <summary>
+        /// Error resulting from functional validation.
+        /// </summary>
+        Functional,
+
+        /// <summary>
+        /// Error contains a message or a warning.
+        /// </summary>
+        Message
     }
 }

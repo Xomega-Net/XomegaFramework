@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -87,7 +87,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="type">Cache type</param>
         public LookupCache(IServiceProvider serviceProvider, string type)
         {
-            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
             cacheLoaders = serviceProvider.GetServices<ILookupCacheLoader>();
             CacheType = type;
         }

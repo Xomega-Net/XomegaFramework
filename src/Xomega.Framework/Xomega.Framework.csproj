@@ -58,11 +58,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.Entity">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Runtime.Serialization">
@@ -88,8 +86,13 @@
     <Compile Include="Errors\ErrorAbortException.cs" />
     <Compile Include="Errors\ErrorType.cs" />
     <Compile Include="Errors\ErrorSeverity.cs" />
+    <Compile Include="Errors\CompositeResourceManager.cs" />
+    <Compile Include="Messages.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.tt</DependentUpon>
+    </Compile>
     <Compile Include="Services\IPrincipalProvider.cs" />
-    <Compile Include="Services\IValidatable.cs" />
     <Compile Include="DataObjects\DataObject.cs" />
     <Compile Include="DataProperties\BaseProperty.cs" />
     <Compile Include="DataProperties\BooleanProperty.cs" />
@@ -121,13 +124,33 @@
     <Compile Include="Lookup\LookupCache.cs" />
     <Compile Include="Lookup\XmlLookupCacheLoader.cs" />
     <Compile Include="Services\BaseService.cs" />
-    <Compile Include="Services\QueryableExtensions.cs" />
+    <Compile Include="Services\Operators\DynamicRangeUtil.cs" />
+    <Compile Include="Services\Operators\NotEqualToOperator.cs" />
+    <Compile Include="Services\Operators\IsNullOperator.cs" />
+    <Compile Include="Services\Operators\NamedUnaryOperator.cs" />
+    <Compile Include="Services\Operators\DynamicRangeOperator.cs" />
+    <Compile Include="Services\Operators\GreaterThanOperator.cs" />
+    <Compile Include="Services\Operators\GreaterThanOrEqualOperator.cs" />
+    <Compile Include="Services\Operators\BetweenOperator.cs" />
+    <Compile Include="Services\Operators\LessThanOrEqualOperator.cs" />
+    <Compile Include="Services\Operators\LessThanOperator.cs" />
+    <Compile Include="Services\Operators\StartsWithOperator.cs" />
+    <Compile Include="Services\Operators\ContainsOperator.cs" />
+    <Compile Include="Services\Operators\IsNotNullOperator.cs" />
+    <Compile Include="Services\Operators\OneOfOperator.cs" />
+    <Compile Include="Services\Operators\EqualToOperator.cs" />
+    <Compile Include="Services\Operators\Operator.cs" />
+    <Compile Include="Services\Operators\OperatorRegistry.cs" />
+    <Compile Include="Services\Output.cs" />
     <Compile Include="Services\ServiceUtil.cs" />
     <Compile Include="Errors\ErrorMessage.cs" />
     <Compile Include="Errors\ErrorList.cs" />
-    <Compile Include="Services\EntityService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataProperties\DataProperty.cs" />
+    <Compile Include="Services\Validation\XMaxLengthAttribute.cs" />
+    <Compile Include="Services\Validation\XLookupValueAttribute.cs" />
+    <Compile Include="Services\Validation\DataAnnotationValidator.cs" />
+    <Compile Include="Services\Validation\XRequiredAttribute.cs" />
     <Compile Include="ViewModels\DetailsViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionEvent.cs" />
     <Compile Include="ViewModels\ViewEvent.cs" />
@@ -141,6 +164,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Messages.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Messages.cs</LastGenOutput>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

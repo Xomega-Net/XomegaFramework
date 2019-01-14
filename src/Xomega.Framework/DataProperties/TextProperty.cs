@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 
@@ -45,7 +45,7 @@ namespace Xomega.Framework.Properties
         public static void ValidateSize(DataProperty dp, object value)
         {
             if (dp != null && dp.Size > 0 && Convert.ToString(value).Length > dp.Size)
-                dp.ValidationErrors.AddValidationError("{0} cannot be longer than {1} characters. Invalid value: {2}.", dp, dp.Size, value);
+                dp.ValidationErrors.AddValidationError(Messages.Validation_MaxLength, dp, dp.Size, value);
         }
     }
 }

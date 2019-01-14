@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -79,7 +79,7 @@ namespace Xomega.Framework.Properties
         {
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal)
                 && !(value is int) && !(value is short) && !(value is byte))
-                dp.ValidationErrors.AddValidationError("{0} contains an invalid number.", dp);
+                dp.ValidationErrors.AddValidationError(Messages.Validation_IntegerFormat, dp);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Xomega.Framework.Properties
         {
             IntegerProperty idp = dp as IntegerProperty;
             if (idp != null && (value is int?) && ((int?)value).Value < idp.MinimumValue)
-                dp.ValidationErrors.AddValidationError("{0} cannot be less than {1}.", dp, idp.MinimumValue);
+                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Xomega.Framework.Properties
         {
             IntegerProperty idp = dp as IntegerProperty;
             if (idp != null && (value is int?) && ((int?)value).Value > idp.MaximumValue)
-                dp.ValidationErrors.AddValidationError("{0} cannot be greater than {1}.", dp, idp.MaximumValue);
+                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
         }
     }
 

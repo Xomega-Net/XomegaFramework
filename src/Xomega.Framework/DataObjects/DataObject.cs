@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -666,52 +666,74 @@ namespace Xomega.Framework
         /// <summary>
         /// Reads data for the data object
         /// </summary>
-        public virtual void Read(object options)
+        public virtual ErrorList Read(object options)
         {
-            DoRead(options);
+            ErrorList msgList = DoRead(options) ?? new ErrorList();
             CrudOpions crudOpts = options as CrudOpions;
             if (crudOpts == null || crudOpts.Recursive)
-                foreach (DataObject child in childObjects.Values) child.Read(options);
+                foreach (DataObject child in childObjects.Values)
+                {
+                    msgList.AbortIfHasErrors();
+                    msgList.MergeWith(child.Read(options));
+                }
+            msgList.AbortIfHasErrors();
             IsNew = false;
+            return msgList;
         }
 
         /// <summary>
         /// Actual implementation of reading object data provided by subclasses
         /// </summary>
-        protected virtual void DoRead(object options) {}
+        protected virtual ErrorList DoRead(object options)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Saves the data object
         /// </summary>
-        public virtual void Save(object options)
+        public virtual ErrorList Save(object options)
         {
             Validate(true);
-            GetValidationErrors().AbortIfHasErrors();
-            DoSave(options);
+            ErrorList msgList = GetValidationErrors();
+            msgList.AbortIfHasErrors();
+            msgList.MergeWith(DoSave(options));
             CrudOpions crudOpts = options as CrudOpions;
             if (crudOpts == null || crudOpts.Recursive)
-                foreach (DataObject child in childObjects.Values) child.Save(options);
+                foreach (DataObject child in childObjects.Values)
+                {
+                    msgList.AbortIfHasErrors();
+                    msgList.MergeWith(child.Save(options));
+                }
+            msgList.AbortIfHasErrors();
             IsNew = false;
             SetModified(false, true);
+            return msgList;
         }
 
         /// <summary>
         /// Actual implementation of saving the data object provided by subclasses
         /// </summary>
-        protected virtual void DoSave(object options) { }
+        protected virtual ErrorList DoSave(object options)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Deletes the data object
         /// </summary>
-        public virtual void Delete(object options)
+        public virtual ErrorList Delete(object options)
         {
-            DoDelete(options);
+            return DoDelete(options);
         }
 
         /// <summary>
         /// Actual implementation of deleting the data object provided by subclasses
         /// </summary>
-        protected virtual void DoDelete(object options) { }
+        protected virtual ErrorList DoDelete(object options)
+        {
+            return null;
+        }
 
         #endregion
     }

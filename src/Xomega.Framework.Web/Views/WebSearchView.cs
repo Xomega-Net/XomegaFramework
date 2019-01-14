@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -15,15 +15,15 @@ namespace Xomega.Framework.Web
     {
         #region Data objects
 
-        private string listKey { get { return UniqueID + Request.CurrentExecutionFilePath; } }
+        private string ListKey { get { return GetSessionKey("listObj"); } }
 
-        private DataListObject listObj
+        private DataListObject ListObj
         {
-            get { return Session[listKey] as DataListObject; }
+            get { return Session[ListKey] as DataListObject; }
             set
             {
-                if (value == null) Session.Remove(listKey);
-                Session[listKey] = value;
+                if (value == null) Session.Remove(ListKey);
+                Session[ListKey] = value;
             }
         }
 
@@ -80,7 +80,7 @@ namespace Xomega.Framework.Web
             SearchViewModel svm = Model as SearchViewModel;
             if (svm != null)
             {
-                DataListObject list = listObj;
+                DataListObject list = ListObj;
                 if (list != null) svm.List = list;
                 ICollapsiblePanel collapsible = ucl_Criteria as ICollapsiblePanel;
                 if (collapsible != null)
@@ -123,7 +123,7 @@ namespace Xomega.Framework.Web
                     if (svm.List != null)
                         svm.List.PropertyChanged += OnListPropertyChanged;
                     // persist the object in session
-                    listObj = svm.List;
+                    ListObj = svm.List;
                 }
                 else
                 {

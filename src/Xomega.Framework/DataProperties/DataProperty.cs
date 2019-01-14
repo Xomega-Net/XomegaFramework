@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections;
@@ -506,7 +506,7 @@ namespace Xomega.Framework
         public static void ValidateRequired(DataProperty dp, object value)
         {
             if (dp != null && dp.Required && dp.IsValueNull(value, ValueFormat.Internal))
-                dp.ValidationErrors.AddValidationError("{0} is required.", dp);
+                dp.ValidationErrors.AddValidationError(Messages.Validation_Required, dp);
         }
 
         #endregion

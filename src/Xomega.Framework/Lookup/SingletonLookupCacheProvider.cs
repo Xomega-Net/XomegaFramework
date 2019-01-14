@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 
@@ -26,8 +26,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="serviceProvider">Service provider to use</param>
         public SingletonLookupCacheProvider(IServiceProvider serviceProvider)
         {
-            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
-            this.serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         /// <summary>

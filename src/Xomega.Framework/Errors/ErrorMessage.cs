@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System.Net;
 using System.Runtime.Serialization;
@@ -37,10 +37,10 @@ namespace Xomega.Framework
         /// <param name="sev">The error message severity.</param>
         public ErrorMessage(ErrorType type, string code, string message, ErrorSeverity sev)
         {
-            this.Code = code;
-            this.Message = message;
-            this.Severity = sev;
-            this.Type = type;
+            Code = code;
+            Message = message;
+            Severity = sev;
+            Type = type;
         }
 
         /// <summary>
@@ -78,8 +78,12 @@ namespace Xomega.Framework
             get
             {
                 if (httpStatus != null) return httpStatus.Value;
+                if (Severity < ErrorSeverity.Error)
+                    return HttpStatusCode.OK;
+                // for errors use the error type to default the status code
                 switch (Type)
                 {
+                    case ErrorType.Functional:
                     case ErrorType.Validation:
                         return HttpStatusCode.BadRequest;
                     case ErrorType.Security:
@@ -92,8 +96,7 @@ namespace Xomega.Framework
                         return HttpStatusCode.NotFound;
                     case ErrorType.System:
                     default:
-                        return Severity > ErrorSeverity.Warning ? 
-                            HttpStatusCode.InternalServerError : HttpStatusCode.SeeOther;
+                        return HttpStatusCode.InternalServerError;
                 }
             }
             set { httpStatus = value; }

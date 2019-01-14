@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.ServiceModel;
@@ -19,7 +19,7 @@ namespace Xomega.Framework.Wcf
         /// <param name="baseAddresses">An array of type System.Uri that contains the base addresses for the hosted service.</param>
         public ServiceProviderHost(IServiceProvider serviceProvider, Type serviceType, params Uri[] baseAddresses) : base(serviceType, baseAddresses)
         {
-            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
             foreach (ContractDescription contract in ImplementedContracts.Values)
             {
                 contract.ContractBehaviors.Add(new ServiceInstanceProvider(serviceProvider, contract.ContractType));

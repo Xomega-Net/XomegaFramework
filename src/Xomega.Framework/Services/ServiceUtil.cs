@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System.Collections.Generic;
-using System.Data.Objects.DataClasses;
-using System.Linq;
 using System.Reflection;
 
 namespace Xomega.Framework.Services
@@ -40,8 +38,7 @@ namespace Xomega.Framework.Services
             {
                 object val = srcProp.GetValue(src, null);
                 PropertyInfo destProp = dest.GetType().GetProperty(srcProp.Name, srcProp.PropertyType);
-                if (destProp != null && !destProp.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false)
-                        .Cast<EdmScalarPropertyAttribute>().Any(a => a.EntityKeyProperty))
+                if (destProp != null)
                     destProp.SetValue(dest, val, null);
             }
         }

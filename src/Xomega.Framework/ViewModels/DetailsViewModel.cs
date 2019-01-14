@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections.Specialized;
@@ -56,8 +56,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
-                Errors = null;
-                DetailsObject.Read(null);
+                Errors = DetailsObject.Read(null);
             }
             catch (Exception ex)
             {
@@ -93,10 +92,8 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
-                Errors = null;
-                DetailsObject.Validate(true);
-                DetailsObject.GetValidationErrors().AbortIfHasErrors();
-                DetailsObject.Save(null);
+                Errors = DetailsObject.Save(null);
+                Errors?.AbortIfHasErrors();
                 FireEvent(ViewEvent.Saved);
             }
             catch (Exception ex)
@@ -124,8 +121,8 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null || View != null && !View.CanDelete()) return;
             try
             {
-                Errors = null;
-                DetailsObject.Delete(null);
+                Errors = DetailsObject.Delete(null);
+                Errors?.AbortIfHasErrors();
                 FireEvent(ViewEvent.Deleted);
                 DetailsObject.SetModified(false, true); // so that we could close without asking
                 Close();

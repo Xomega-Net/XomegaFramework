@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -22,15 +22,6 @@ namespace Xomega.Framework.Wcf
         public static void AddWcfErrorParser(this IServiceCollection container)
         {
             container.AddSingleton<ErrorParser, FaultErrorParser>();
-        }
-
-        /// <summary>
-        /// Registers WCF fault error list with the service container
-        /// </summary>
-        /// <param name="container">Service container to configure</param>
-        public static void AddWcfErrorList(this IServiceCollection container)
-        {
-            container.AddTransient<ErrorList, FaultErrorList>();
         }
 
         /// <summary>

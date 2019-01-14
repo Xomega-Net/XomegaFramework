@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2017 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections.Specialized;
@@ -97,11 +97,12 @@ namespace Xomega.Framework.Views
             if (List == null) return false;
             try
             {
-                Errors = null;
                 List.Validate(true);
-                List.GetValidationErrors().AbortIfHasErrors();
-                List.Read(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection });
-                return true;
+                ErrorList msgList = List.GetValidationErrors();
+                msgList.AbortIfHasErrors();
+                msgList.MergeWith(List.Read(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection }));
+                Errors = msgList;
+                return !msgList.HasErrors();
             }
             catch (Exception ex)
             {
@@ -133,6 +134,7 @@ namespace Xomega.Framework.Views
                 List.ResetData();
                 if (List.CriteriaObject != null)
                     List.CriteriaObject.ResetData();
+                Errors = null;
             }
             if (AutoCollapseCriteria)
                 CriteriaCollapsed = false;
