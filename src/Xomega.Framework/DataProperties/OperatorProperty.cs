@@ -18,11 +18,6 @@ namespace Xomega.Framework.Properties
     public class OperatorProperty : EnumProperty
     {
         /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        static OperatorProperty() { }
-
-        /// <summary>
         /// The name of the operator attribute that stores the number of additional
         /// properties of the operator requires: 0, 1 or 2.
         /// </summary>

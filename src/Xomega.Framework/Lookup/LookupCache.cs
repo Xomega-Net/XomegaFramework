@@ -18,12 +18,6 @@ namespace Xomega.Framework.Lookup
     {
         #region Static accessors
 
-        /// <summary>Instrumentation hook.</summary>
-        static LookupCache() { }
-
-        /// <summary>Triggers instrumentation setup method if called first.</summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
-
         /// <summary>
         /// A constant that represents a global lookup cache that is shared for the whole application.
         /// This is typically a default option for the cache type to get.

@@ -26,6 +26,6 @@ IF NOT EXIST %NUGET_PATH% (
   copy %CACHED_NUGET% %NUGET_PATH% > nul
 )
 
-%NUGET_PATH% push "pkg\nuget\%PRJ%.%VER%\%PRJ%.%VER%.nupkg" -Source https://api.nuget.org/v3/index.json
+%NUGET_PATH% push "pkg\%PRJ%.%VER%\%PRJ%.%VER%.nupkg" -Source https://api.nuget.org/v3/index.json
 
 :end

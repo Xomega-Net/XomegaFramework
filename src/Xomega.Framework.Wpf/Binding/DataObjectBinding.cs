@@ -48,9 +48,6 @@ namespace Xomega.Framework
             return obj != null && Data.GetObjectBinding(obj) != null;
         }
 
-        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
-        static void InstrumentationShutDown() { }
-
         #endregion
 
         /// <summary>

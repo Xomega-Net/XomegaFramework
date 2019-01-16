@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
+using System.Configuration;
 using System.IdentityModel.Configuration;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
@@ -18,7 +19,13 @@ namespace Xomega.Framework.Wcf
         /// </summary>
         public DefaultServiceProviderHostFactory()
         {
-            AppInitializer.EnsureInitialized();
+            if (DI.DefaultServiceProvider != null) return;
+            const string CfgAppInit = "xomfwk:AppInitializer";
+            Type initType = AppInitializer.GetType(ConfigurationManager.AppSettings[CfgAppInit]);
+            if (initType == null)
+                throw new ApplicationException("Cannot instantiate DI application initializer. Make sure you set the "
+                    + CfgAppInit + " config to a subclass of the AppInitalizer with a default constructor.");
+            AppInitializer.Initalize(Activator.CreateInstance(initType) as AppInitializer);
         }
 
         /// <summary>

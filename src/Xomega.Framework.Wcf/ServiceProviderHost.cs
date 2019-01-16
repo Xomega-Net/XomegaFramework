@@ -25,11 +25,5 @@ namespace Xomega.Framework.Wcf
                 contract.ContractBehaviors.Add(new ServiceInstanceProvider(serviceProvider, contract.ContractType));
             }
         }
-
-        /// <summary>A startup hook that Dotfuscator can set the Setup attribute for.</summary>
-        static ServiceProviderHost() { }
-
-        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
-        static void InstrumentationShutDown() { }
     }
 }

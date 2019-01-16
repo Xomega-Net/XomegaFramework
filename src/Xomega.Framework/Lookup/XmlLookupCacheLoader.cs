@@ -14,14 +14,6 @@ namespace Xomega.Framework.Lookup
     /// </summary>
     public class XmlLookupCacheLoader : LookupCacheLoader
     {
-        /// <summary>Triggers instrumentation setup method if called first.</summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
-
-        /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        static XmlLookupCacheLoader() { }
-
         /// <summary>
         /// Reference to the XML document for the static data.
         /// </summary>

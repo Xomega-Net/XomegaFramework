@@ -20,11 +20,6 @@ namespace Xomega.Framework.Properties
     public class EnumProperty : DataProperty<Header>
     {
         /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        private static bool CascadingUsed { set; get; }
-
-        /// <summary>
         /// The type of cache to use to obtain the lookup table.
         /// By default the <see cref="LookupCache.Global"/> cache is used, which is shared across the whole application.
         /// </summary>
@@ -104,7 +99,7 @@ namespace Xomega.Framework.Properties
             if (LocalLookupTable != null) return LocalLookupTable;
             LookupCache cache = LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
             LookupCache.LookupTableReady onReady = null;
-            return cache == null ? null : cache.GetLookupTable(EnumType, onReady);
+            return cache?.GetLookupTable(EnumType, onReady);
         }
 
         /// <summary>
@@ -258,7 +253,6 @@ namespace Xomega.Framework.Properties
         /// for the current property depends on.</param>
         public void SetCascadingProperty(string attribute, DataProperty prop)
         {
-            if (!CascadingUsed) CascadingUsed = true;
             if (cascadingProperties.ContainsKey(attribute))
             {
                 cascadingProperties[attribute].Change -= CascadingPropertyChange;
@@ -311,11 +305,10 @@ namespace Xomega.Framework.Properties
 
                 if (p.IsNull() || p.IsValueNull(hv, ValueFormat.Internal)) continue;
 
-                IList<object> hvl = hv as IList<object>;
                 IList<object> pvl = pv as IList<object>;
 
                 bool match;
-                if (hvl != null)
+                if (hv is IList<object> hvl)
                     match = (pvl != null) ? pvl.Intersect(hvl).Count() > 0 : hvl.Contains(pv);
                 else match = (pvl != null) ? pvl.Contains(hv) : hv.Equals(pv);
                 if (!match) return false;

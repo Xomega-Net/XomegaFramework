@@ -23,11 +23,6 @@ namespace Xomega.Framework.Properties
     public class ComboProperty : DataProperty
     {
         /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        static ComboProperty() { }
-
-        /// <summary>
         /// The format string with placeholders for the component values
         /// that is used to build the combo value. The placeholders are numbers in curly braces,
         /// e.g. {0}, where the number corresponds to the index of each component property

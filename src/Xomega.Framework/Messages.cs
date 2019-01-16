@@ -50,19 +50,19 @@ namespace Xomega.Framework
         public const string Validation_IntegerFormat = "Validation_IntegerFormat";
 
         /// <summary>
-        /// Invalid lookup table "{1}" specified for {0}.
+        /// Invalid lookup table '{1}' specified for {0}.
         /// Where {0}=Property name, {1}=Lookup table name
         /// </summary>
         public const string Validation_InvalidLookupTable = "Validation_InvalidLookupTable";
 
         /// <summary>
-        /// The value {2} for {0} should be from the "{1}" lookup table.
+        /// The value {2} for {0} should be from the '{1}' lookup table.
         /// Where {0}=Property name, {1}=Lookup table name, {2}=Value
         /// </summary>
         public const string Validation_LookupValue = "Validation_LookupValue";
 
         /// <summary>
-        /// The values {2} for {0} should be from the "{1}" lookup table.
+        /// The values {2} for {0} should be from the '{1}' lookup table.
         /// Where {0}=Property name, {1}=Lookup table name, {2}=Values
         /// </summary>
         public const string Validation_LookupValues = "Validation_LookupValues";

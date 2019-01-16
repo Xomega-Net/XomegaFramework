@@ -61,11 +61,5 @@ namespace Xomega.Framework
         protected ValueFormat()
         {
         }
-
-        /// <summary>Instrumentation hook for the Setup attribute</summary>
-        static ValueFormat() { }
-
-        /// <summary>A shutdown hook that Dotfuscator can set the Teardown attribute for.</summary>
-        static void InstrumentationShutDown() { }
     }
 }

@@ -16,14 +16,6 @@ namespace Xomega.Framework.Services
     /// </summary>
     public class BaseService : IPrincipalProvider
     {
-        /// <summary>Triggers instrumentation setup method if called first.</summary>
-        private static readonly ValueFormat fmt = ValueFormat.Internal;
-
-        /// <summary>
-        /// Instrumentation hook.
-        /// </summary>
-        static BaseService() { }
-
         /// <summary>
         /// Service provider for this service
         /// </summary>
