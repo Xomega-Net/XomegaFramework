@@ -45,6 +45,7 @@ namespace Xomega.Framework.Services
             currentErrors = serviceProvider.GetService<ErrorList>() ?? new ErrorList(serviceProvider.GetService<ResourceManager>());
             errorParser = serviceProvider.GetService<ErrorParser>() ?? new ErrorParser();
             operators = serviceProvider.GetService<OperatorRegistry>() ?? new OperatorRegistry();
+            currentPrincipal = serviceProvider.GetService<IPrincipal>();
         }
 
         /// <summary>
@@ -157,6 +158,25 @@ namespace Xomega.Framework.Services
             Expression<Func<TElement, TValue>> prop, string oper, IEnumerable<TValue> vals)
         {
             return AddClause(qry, propName, prop, oper, vals?.ToArray());
+        }
+
+
+        /// <summary>
+        /// Adds a Where clause to the given query for the specified nullable property, operator and a list of values.
+        /// If specified operator and values are not valid, then adds validation errors and returns the same query.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the element.</typeparam> 
+        /// <typeparam name="TValue">The type of the values.</typeparam> 
+        /// <param name="qry">The query to add the Where clause to.</param>
+        /// <param name="propName">Property display name.</param>
+        /// <param name="prop">Expression for the property accessor.</param>
+        /// <param name="oper">Operator name or alias.</param>
+        /// <param name="vals">A list of criteria value(s).</param>
+        /// <returns>The query with the Where clause added, or the same query if input is invalid.</returns>
+        protected IQueryable<TElement> AddClause<TElement, TValue>(IQueryable<TElement> qry, string propName,
+            Expression<Func<TElement, TValue?>> prop, string oper, IEnumerable<TValue> vals) where TValue : struct
+        {
+            return AddClause(qry, propName, prop, oper, vals?.Cast<TValue?>().ToArray());
         }
 
         /// <summary>

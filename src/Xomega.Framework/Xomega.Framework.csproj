@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <PackageId>Xomega.Framework</PackageId>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
