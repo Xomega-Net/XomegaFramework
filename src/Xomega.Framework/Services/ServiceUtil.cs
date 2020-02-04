@@ -1,7 +1,11 @@
 ﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security.Principal;
+using System.Threading;
 
 namespace Xomega.Framework.Services
 {
@@ -44,5 +48,20 @@ namespace Xomega.Framework.Services
         }
 
         #endregion
+
+        /// <summary>
+        /// Get the principal for the current operation.
+        /// </summary>
+        public static IPrincipal GetCurrentPrincipal(this IServiceProvider serviceProvider)
+        {
+            var currentPrincipal = serviceProvider.GetService<IPrincipal>();
+            if (currentPrincipal == null)
+            {
+                var principalProvider = serviceProvider.GetService<IPrincipalProvider>();
+                if (principalProvider != null)
+                    currentPrincipal = principalProvider.CurrentPrincipal;
+            }
+            return currentPrincipal ?? Thread.CurrentPrincipal;
+        }
     }
 }

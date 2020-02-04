@@ -45,7 +45,7 @@ namespace Xomega.Framework.Services
             currentErrors = serviceProvider.GetService<ErrorList>() ?? new ErrorList(serviceProvider.GetService<ResourceManager>());
             errorParser = serviceProvider.GetService<ErrorParser>() ?? new ErrorParser();
             operators = serviceProvider.GetService<OperatorRegistry>() ?? new OperatorRegistry();
-            currentPrincipal = serviceProvider.GetService<IPrincipal>();
+            currentPrincipal = serviceProvider.GetCurrentPrincipal();
         }
 
         /// <summary>
