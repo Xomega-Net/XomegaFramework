@@ -41,14 +41,12 @@ namespace Xomega.Framework.Properties
         /// <returns>The value converted to the given format.</returns>
         protected override object ConvertValue(object value, ValueFormat format)
         {
-            Header h = value as Header;
-            if (format == ValueFormat.Transport && h != null)
+            if (format == ValueFormat.Transport)
             {
-                try
-                {
-                    return new Guid(h.Id);
-                }
-                catch (Exception) { }
+                Header h = value as Header;
+                Guid id;
+                if (h != null && Guid.TryParse(h.Id, out id)) return id;
+                else if (value != null && Guid.TryParse(value.ToString(), out id)) return id;
             }
             return base.ConvertValue(value, format);
         }
