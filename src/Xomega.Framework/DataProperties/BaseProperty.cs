@@ -66,7 +66,7 @@ namespace Xomega.Framework
         /// User-friendly property label that can be used in error messages and other places
         /// to identify the property for the user.
         /// </summary>
-        public string Label { get ; set; }
+        public string Label { get; set; }
 
         /// <summary>
         /// Returns a user-friendly string representation of the property.
@@ -80,6 +80,15 @@ namespace Xomega.Framework
             string res = Regex.Replace(Name, "([a-z])([A-Z])", "$1 $2");
             res = Regex.Replace(res, "([A-Z][A-Z])([A-Z])([a-z])", "$1 $2$3");
             return res;
+        }
+
+        /// <summary>
+        /// Sets the property label text, replacing extraneous characters.
+        /// </summary>
+        /// <param name="text"></param>
+        public virtual void SetLabel(string text)
+        {
+            Label = text?.Replace("_", "")?.Trim()?.Trim(':');
         }
         #endregion
 

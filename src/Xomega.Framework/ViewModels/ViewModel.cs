@@ -25,7 +25,7 @@ namespace Xomega.Framework.Views
         {
             if (svcProvider == null) throw new ArgumentNullException("svcProvider");
 
-            // create a separate scope for each view to avoid memore leaks
+            // create a separate scope for each view to avoid memory leaks
             var scope = svcProvider.CreateScope();
             this.ServiceProvider = (scope != null) ? scope.ServiceProvider : svcProvider;
 

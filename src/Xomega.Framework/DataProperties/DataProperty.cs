@@ -249,7 +249,7 @@ namespace Xomega.Framework
         /// <returns>The string representation of the given list.</returns>
         public virtual string ListToString(IList list, ValueFormat format)
         {
-            string res = "";
+            string res = ""; 
             foreach (object val in list)
                 res += (res == "" ? "" : displayListSeparator) + Convert.ToString(val);
             return res;
@@ -321,7 +321,7 @@ namespace Xomega.Framework
                     string[] vals = ((string)value).Split(
                         ParseListSeparators, StringSplitOptions.None);
                     foreach (string val in vals)
-                        if (!IsValueNull(val, format)) lst.Add(val);
+                        if (!IsValueNull(val, format)) lst.Add(val.Trim());
                 }
                 else lst.Add(value);
                 IList resLst = CreateList(format);
@@ -419,20 +419,17 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// A list of validation errors for the current property value.
-        /// Null means that the validation has not been performed since the property value last changed.
-        /// An empty list means that the validation has been performed and the value is valid.
-        /// Non-empty list means that the value has been validated and is not valid if the list contains any errors.
-        /// </summary>
-        private ErrorList validationErrorList;
-
-        /// <summary>
         /// Returns the list of validation errors for the property.
         /// Null means that the validation has not been performed since the property value last changed.
         /// An empty list means that the validation has been performed and the value is valid.
         /// Non-empty list means that the value has been validated and is not valid if the list contains any errors.
         /// </summary>
-        public ErrorList ValidationErrors { get { return validationErrorList; } }
+        public ErrorList ValidationErrors { get; private set; }
+
+        /// <summary>
+        /// Gets a combined error text by concatenating all validation error messages with a new line delimiter.
+        /// </summary>
+        public string ErrorsText => Editable && Visible ? ValidationErrors?.ErrorsText : "";
 
         /// <summary>
         /// Returns if the current property value has been validated and is valid, i.e. has no validation errors.
@@ -442,7 +439,7 @@ namespace Xomega.Framework
         public bool IsValid(bool validate)
         {
             if (validate) Validate();
-            return validationErrorList != null && !validationErrorList.HasErrors();
+            return ValidationErrors != null && !ValidationErrors.HasErrors();
         }
 
         /// <summary>
@@ -452,7 +449,7 @@ namespace Xomega.Framework
         /// </summary>
         public void ResetValidation()
         {
-            validationErrorList = null;
+            ValidationErrors = null;
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null));
         }
 
@@ -468,9 +465,9 @@ namespace Xomega.Framework
         public virtual void Validate(bool force)
         {
             if (force) ResetValidation();
-            if (validationErrorList != null) return;
+            if (ValidationErrors != null) return;
 
-            validationErrorList = new ErrorList();
+            ValidationErrors = new ErrorList();
 
             if (Validator != null && Editable)
             {
@@ -523,6 +520,34 @@ namespace Xomega.Framework
             Required = p.Required;
             AccessLevel = p.AccessLevel;
             Visible = p.Visible;
+        }
+
+        /// <summary>
+        /// Space-delimited string with the property states.
+        /// It can be used as styles or CSS classes on property-bound controls.
+        /// </summary>
+        /// <param name="states">The combination of property states to return.</param>
+        public virtual string GetStateString(PropertyChange states)
+        {
+            var state = new HashSet<string>();
+            if (Visible)
+            {
+                if (Editable)
+                {
+                    if (Required && states.IncludesRequired())
+                        state.Add("required");
+                    if (Modified == true && states.IncludesValue())
+                        state.Add("modified");
+                    if (ValidationErrors != null && states.IncludesValidation())
+                        state.Add(IsValid(false) ? "valid" : "invalid");
+                }
+                else if (states.IncludesEditable())
+                    state.Add("readonly");
+            }
+            else if (states.IncludesVisible())
+                state.Add("hidden");
+
+            return string.Join(" ", state);
         }
     }
 }

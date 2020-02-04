@@ -74,9 +74,7 @@ namespace Xomega.Framework
         {
             if (lblText != null && property.Label == null)
             {
-                lblText = lblText.Replace("_", "").Trim();
-                if (lblText.EndsWith(":")) lblText = lblText.Substring(0, lblText.Length - 1);
-                property.Label = lblText;
+                property.SetLabel(lblText);
             }
         }
 

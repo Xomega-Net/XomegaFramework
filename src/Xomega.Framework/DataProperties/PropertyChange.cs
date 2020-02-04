@@ -114,6 +114,12 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Returns if the current combination of changes includes the specified changes.
+        /// </summary>
+        /// <returns>True if the current combination of changes includes the specified changes, otherwise false.</returns>
+        public bool IncludesChanges(PropertyChange changes) { return (change & changes.change) > 0; }
+
+        /// <summary>
         /// Returns if the current combination of changes includes a value change.
         /// </summary>
         /// <returns>True if the current combination of changes includes a value change, otherwise false.</returns>

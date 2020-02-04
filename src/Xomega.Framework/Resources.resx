@@ -142,19 +142,19 @@
     <comment>{0}=Property name, {1}=Lookup table name</comment>
   </data>
   <data name="Validation_LookupValue" xml:space="preserve">
-    <value>The value {2} for {0} should be from the '{1}' lookup table.</value>
+    <value>The value '{2}' for {0} should be from the '{1}' lookup table.</value>
     <comment>{0}=Property name, {1}=Lookup table name, {2}=Value</comment>
   </data>
   <data name="Validation_LookupValues" xml:space="preserve">
-    <value>The values {2} for {0} should be from the '{1}' lookup table.</value>
+    <value>The values '{2}' for {0} should be from the '{1}' lookup table.</value>
     <comment>{0}=Property name, {1}=Lookup table name, {2}=Values</comment>
   </data>
   <data name="Validation_MaxLength" xml:space="preserve">
-    <value>The value {2} for {0} should not be longer than {1} characters.</value>
+    <value>The value '{2}' for {0} should not be longer than {1} characters.</value>
     <comment>{0}=Property name, {1}=Maximum length, {2}=Value</comment>
   </data>
   <data name="Validation_MaxLengths" xml:space="preserve">
-    <value>The values {2} for {0} should not be longer than {1} characters.</value>
+    <value>The values '{2}' for {0} should not be longer than {1} characters.</value>
     <comment>{0}=Property name, {1}=Maximum length, {2}=Values</comment>
   </data>
   <data name="Validation_NumberMaximum" xml:space="preserve">
