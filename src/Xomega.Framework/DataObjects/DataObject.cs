@@ -7,6 +7,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Security.Principal;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework
 {
@@ -153,6 +155,7 @@ namespace Xomega.Framework
         internal void AddProperty(DataProperty property)
         {
             properties[property.Name] = property;
+            property.Change += OnDataPropertyChange;
         }
 
         /// <summary>
@@ -208,6 +211,10 @@ namespace Xomega.Framework
         {
             childObjects[name] = obj;
             obj.Parent = this;
+            obj.PropertyChanged += (s, e) => {
+                if (e.PropertyName == ModifiedProperty)
+                  OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
+            };
         }
 
         /// <summary>
@@ -234,6 +241,18 @@ namespace Xomega.Framework
         {
             foreach (DataProperty p in properties.Values) p.FirePropertyChange(args);
             foreach (DataObject obj in childObjects.Values) obj.FireDataPropertyChange(args);
+        }
+
+        /// <summary>
+        /// Handles change events from own data properties.
+        /// Raises modification state change if a property value has changed.
+        /// </summary>
+        /// <param name="sender">Property that send the event.</param>
+        /// <param name="e">The property change event.</param>
+        protected virtual void OnDataPropertyChange(object sender, PropertyChangeEventArgs e)
+        {
+            if (e.Change.IncludesValue())
+                OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
         }
 
         /// <summary>
@@ -325,6 +344,12 @@ namespace Xomega.Framework
                     PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel));
             }
         }
+
+        /// <summary>
+        /// The principal for the current operation
+        /// </summary>
+        public IPrincipal CurrentPrincipal => ServiceProvider.GetCurrentPrincipal();
+
         #endregion
 
         #region Data Contract support
@@ -577,6 +602,11 @@ namespace Xomega.Framework
         #region Modification support
 
         /// <summary>
+        /// The name of the property that stores modification state.
+        /// </summary>
+        public const string ModifiedProperty = "Modified";
+
+        /// <summary>
         /// A flag indicating if the object is tracking modifications
         /// </summary>
         public bool TrackModifications = true;
@@ -593,7 +623,7 @@ namespace Xomega.Framework
         /// Returns the modification state of the data object.
         /// </summary>
         /// <returns>The modification state of the data object.
-        /// Null means the date object has never been initialized with data.
+        /// Null means the data object has never been initialized with data.
         /// False means the data object has been initialized, but has not been changed since then.
         /// True means that the data object has been modified since it was initialized.</returns>
         public bool? IsModified()
@@ -613,7 +643,7 @@ namespace Xomega.Framework
         /// Sets the modification state for the data object to the specified value.
         /// </summary>
         /// <param name="modified">The modification state value.
-        /// Null means the date object has never been initialized with data.
+        /// Null means the data object has never been initialized with data.
         /// False means the data object has been initialized, but has not been changed since then.
         /// True means that the data object has been modified since it was initialized.</param>
         /// <param name="recursive">True to propagate the modification state
@@ -626,6 +656,7 @@ namespace Xomega.Framework
                 foreach (DataProperty prop in properties.Values) prop.Modified = modified;
                 foreach (DataObject child in childObjects.Values) child.SetModified(modified, true);
             }
+            OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
         }
 
         #endregion
