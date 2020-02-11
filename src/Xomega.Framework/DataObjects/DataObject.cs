@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
 using Xomega.Framework.Services;
 
 namespace Xomega.Framework
@@ -669,20 +671,30 @@ namespace Xomega.Framework
         public class CrudOpions
         {
             /// <summary>
-            /// Indicates if the operation should call child objects recursively
+            /// Indicates if the operation should call child objects recursively.
             /// </summary>
             public bool Recursive = true;
+
+            /// <summary>
+            /// Indicates if the operation should stop on any errors.
+            /// </summary>
+            public bool AbortOnErrors = true;
+
+            /// <summary>
+            /// Indicates if the operation should call child objects in parallel.
+            /// </summary>
+            public bool Parallel = true;
         }
 
         /// <summary>
-        /// The name of the IsNew observable property
+        /// The name of the IsNew observable property.
         /// </summary>
         public const string IsNewProperty = "IsNew";
 
         private bool isNew = true;
 
         /// <summary>
-        /// An indicator if the object is new and not yet saved
+        /// An indicator if the object is new and not yet saved.
         /// </summary>
         public bool IsNew
         {
@@ -695,16 +707,17 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Reads data for the data object
+        /// Reads data for the data object.
         /// </summary>
         public virtual ErrorList Read(object options)
         {
             ErrorList msgList = DoRead(options) ?? new ErrorList();
             CrudOpions crudOpts = options as CrudOpions;
-            if (crudOpts == null || crudOpts.Recursive)
+            if (crudOpts?.Recursive ?? true)
                 foreach (DataObject child in childObjects.Values)
                 {
-                    msgList.AbortIfHasErrors();
+                    if (crudOpts?.AbortOnErrors ?? true)
+                        msgList.AbortIfHasErrors();
                     msgList.MergeWith(child.Read(options));
                 }
             msgList.AbortIfHasErrors();
@@ -713,7 +726,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Actual implementation of reading object data provided by subclasses
+        /// Actual implementation of reading object data provided by subclasses.
         /// </summary>
         protected virtual ErrorList DoRead(object options)
         {
@@ -721,7 +734,52 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Saves the data object
+        /// Reads data for the data object asynchronously.
+        /// </summary>
+        public virtual async Task<ErrorList> ReadAsync(object options, CancellationToken token = default)
+        {
+            List<Task<ErrorList>> readTasks = new List<Task<ErrorList>>
+            {
+                DoReadAsync(options, token)
+            };
+            CrudOpions crudOpts = options as CrudOpions;
+            if (crudOpts?.Recursive ?? true)
+                foreach (DataObject child in childObjects.Values)
+                    readTasks.Add(child.ReadAsync(options, token));
+
+            ErrorList msgList = new ErrorList();
+            if (crudOpts?.Parallel ?? true)
+            {
+                await Task.WhenAll(readTasks.ToArray());
+                foreach (var rt in readTasks)
+                    msgList.MergeWith(rt.Result);
+            }
+            else
+            {
+                foreach (var rt in readTasks)
+                {
+                    if (crudOpts?.AbortOnErrors ?? true)
+                        msgList.AbortIfHasErrors();
+                    token.ThrowIfCancellationRequested();
+                    await rt;
+                    msgList.MergeWith(rt.Result);
+                }
+            }
+            msgList.AbortIfHasErrors();
+            IsNew = false;
+            return msgList;
+        }
+
+        /// <summary>
+        /// Actual implementation of reading object data asynchronously provided by subclasses.
+        /// </summary>
+        protected virtual async Task<ErrorList> DoReadAsync(object options, CancellationToken token = default)
+        {
+            return await Task.FromResult(DoRead(options));
+        }
+
+        /// <summary>
+        /// Saves the data object.
         /// </summary>
         public virtual ErrorList Save(object options)
         {
@@ -743,7 +801,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Actual implementation of saving the data object provided by subclasses
+        /// Actual implementation of saving the data object provided by subclasses.
         /// </summary>
         protected virtual ErrorList DoSave(object options)
         {
@@ -751,7 +809,56 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Deletes the data object
+        /// Saves the data object asynchronously.
+        /// </summary>
+        public virtual async Task<ErrorList> SaveAsync(object options, CancellationToken token = default)
+        {
+            Validate(true);
+            ErrorList msgList = GetValidationErrors();
+            msgList.AbortIfHasErrors();
+
+            List<Task<ErrorList>> saveTasks = new List<Task<ErrorList>>
+            {
+                DoSaveAsync(options, token)
+            };
+            CrudOpions crudOpts = options as CrudOpions;
+            if (crudOpts?.Recursive ?? true)
+                foreach (DataObject child in childObjects.Values)
+                    saveTasks.Add(child.SaveAsync(options, token));
+
+            if (crudOpts?.Parallel ?? false)
+            {
+                await Task.WhenAll(saveTasks.ToArray());
+                foreach (var st in saveTasks)
+                    msgList.MergeWith(st.Result);
+            }
+            else
+            {
+                foreach (var st in saveTasks)
+                {
+                    if (crudOpts?.AbortOnErrors ?? true)
+                        msgList.AbortIfHasErrors();
+                    token.ThrowIfCancellationRequested();
+                    await st;
+                    msgList.MergeWith(st.Result);
+                }
+            }
+            msgList.AbortIfHasErrors();
+            IsNew = false;
+            SetModified(false, true);
+            return msgList;
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of saving the data object provided by subclasses.
+        /// </summary>
+        protected virtual async Task<ErrorList> DoSaveAsync(object options, CancellationToken token = default)
+        {
+            return await Task.FromResult(DoSave(options));
+        }
+
+        /// <summary>
+        /// Deletes the data object.
         /// </summary>
         public virtual ErrorList Delete(object options)
         {
@@ -759,11 +866,27 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Actual implementation of deleting the data object provided by subclasses
+        /// Actual implementation of deleting the data object provided by subclasses.
         /// </summary>
         protected virtual ErrorList DoDelete(object options)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Deletes the data object asynchronously.
+        /// </summary>
+        public virtual async Task<ErrorList> DeleteAsync(object options, CancellationToken token = default)
+        {
+            return await DoDeleteAsync(options, token);
+        }
+
+        /// <summary>
+        /// Asynchronously implementation of deleting the data object provided by subclasses.
+        /// </summary>
+        protected virtual async Task<ErrorList> DoDeleteAsync(object options, CancellationToken token = default)
+        {
+            return await Task.FromResult(DoDelete(options));
         }
 
         #endregion

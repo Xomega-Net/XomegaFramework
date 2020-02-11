@@ -1,7 +1,19 @@
 ﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Xomega.Framework
 {
+    /// <summary>
+    /// Delegate for asynchronous view events.
+    /// </summary>
+    /// <param name="sender">Event sender.</param>
+    /// <param name="viewEvent">The view event.</param>
+    /// <param name="token">Cancellation token.</param>
+    /// <returns></returns>
+    public delegate Task AsyncViewEventHandler(object sender, ViewEvent viewEvent, CancellationToken token = default);
+
     /// <summary>
     /// A class that represents a single view event or a combination of
     /// multiple view events for notifying of several events at once.

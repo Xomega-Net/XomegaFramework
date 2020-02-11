@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Lookup
 {
@@ -56,23 +57,17 @@ namespace Xomega.Framework.Lookup
         /// <summary>
         /// Static list of registered lookup cache loaders.
         /// </summary>
-        private IEnumerable<ILookupCacheLoader> cacheLoaders = new List<ILookupCacheLoader>();
+        private readonly IEnumerable<ILookupCacheLoader> cacheLoaders;
 
         /// <summary>
         /// A cache of lookup tables by type.
         /// </summary>
-        private Dictionary<string, LookupTable> cache = new Dictionary<string, LookupTable>();
+        private readonly Dictionary<string, LookupTable> cache = new Dictionary<string, LookupTable>();
 
         /// <summary>
-        /// A dictionary by lookup table type of listeners
-        /// waiting to be notified when the lookup table is loaded.
+        /// An internal semaphore to ensure that the cache is loaded by one thread at a time.
         /// </summary>
-        private Dictionary<string, LookupTableReady> notifyQueues = new Dictionary<string, LookupTableReady>();
-
-        /// <summary>
-        /// An internal reader/writer lock to synchronize access to the data.
-        /// </summary>
-        private ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+        private readonly SemaphoreSlim loadSem = new SemaphoreSlim(1,1);
 
         /// <summary>
         /// Constructs a new lookup cache of the specified type.
@@ -82,7 +77,7 @@ namespace Xomega.Framework.Lookup
         public LookupCache(IServiceProvider serviceProvider, string type)
         {
             if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-            cacheLoaders = serviceProvider.GetServices<ILookupCacheLoader>();
+            cacheLoaders = serviceProvider.GetServices<ILookupCacheLoader>() ?? new List<ILookupCacheLoader>();
             CacheType = type;
         }
 
@@ -100,56 +95,45 @@ namespace Xomega.Framework.Lookup
         /// <returns>A lookup table of the specified type or <c>null</c> if no lookup table can be found.</returns>
         public virtual LookupTable GetLookupTable(string type)
         {
-            return GetLookupTable(type, null);
+            if (type != null && cache.ContainsKey(type)) return cache[type];
+            // if the type is not in the cache, try loading it asynchronously and wait for results
+            return Task.Run(async () => { return await GetLookupTableAsync(type); }).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Gets a lookup table of the specified type from the cache.
         /// </summary>
         /// <param name="type">Lookup table type.</param>
-        /// <param name="onReadyCallback">The method to call when the loading is complete if it happened asynchronously.</param>
         /// <returns>A lookup table of the specified type or <c>null</c> if no lookup table can be found.</returns>
-        public virtual LookupTable GetLookupTable(string type, LookupTableReady onReadyCallback)
+        /// <param name="token">Cancellation token.</param>
+        public async Task<LookupTable> GetLookupTableAsync(string type, CancellationToken token = default)
         {
             if (type == null) return null;
-            rwLock.EnterUpgradeableReadLock();
-            try
+            if (!cache.ContainsKey(type))
             {
-                if (!cache.ContainsKey(type)) LoadLookupTable(type, onReadyCallback);
-                return cache.ContainsKey(type) ? cache[type] : null;
+                try
+                {
+                    await loadSem.WaitAsync();
+                    if (!cache.ContainsKey(type))
+                        await LoadLookupTableAsync(type, token);
+                }
+                finally
+                {
+                    loadSem.Release();
+                }
             }
-            finally
-            {
-                rwLock.ExitUpgradeableReadLock();
-            }
+            return cache.ContainsKey(type) ? cache[type] : null;
         }
 
         /// <summary>
         /// A subroutine for loading the lookup table if it's not loaded.
         /// </summary>
         /// <param name="type">The type of the lookup table to load.</param>
-        /// <param name="onReadyCallback">The method to call when the loading is complete if it happened asynchronously.</param>
-        protected virtual void LoadLookupTable(string type, LookupTableReady onReadyCallback)
+        /// <param name="token">Cancellation token.</param>
+        protected virtual async Task LoadLookupTableAsync(string type, CancellationToken token = default)
         {
-            // Protection from queuing up listeners for a table type that is not supported,
-            // which will never be notified thereby creating a memory leak.
-            if (!cacheLoaders.Any(cl => cl.IsSupported(CacheType, type)))
-            {
-                notifyQueues.Remove(type);
-                return;
-            }
-            if (notifyQueues.ContainsKey(type))
-            { // The table is already being loaded, so just add the listener to the queue to be notified.
-                LookupTableReady notify = notifyQueues[type];
-                if (notify == null) notify = onReadyCallback;
-                else if (onReadyCallback != null) notify += onReadyCallback;
-                notifyQueues[type] = notify;
-            }
-            else
-            { // Set up the notify queue and start loading.
-                notifyQueues[type] = onReadyCallback;
-                foreach (ILookupCacheLoader cl in cacheLoaders) cl.Load(this, type);
-            }
+            await Task.WhenAll(cacheLoaders.Where(cl => cl.IsSupported(CacheType, type))
+                .Select(cl => cl.LoadAsync(this, type, token)));
         }
 
         /// <summary>
@@ -160,7 +144,6 @@ namespace Xomega.Framework.Lookup
         public virtual void RemoveLookupTable(string type)
         {
             cache.Remove(type);
-            notifyQueues.Remove(type);
         }
 
         /// <summary>
@@ -171,18 +154,7 @@ namespace Xomega.Framework.Lookup
         public virtual void CacheLookupTable(LookupTable table)
         {
             if (table == null || table.Type == null) return;
-            rwLock.EnterWriteLock();
-            try
-            {
-                cache[table.Type] = table;
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
-            }
-            LookupTableReady notify;
-            if (notifyQueues.TryGetValue(table.Type, out notify) && notify != null) notify(table.Type);
-            notifyQueues.Remove(table.Type);
+            cache[table.Type] = table;
         }
     }
 }

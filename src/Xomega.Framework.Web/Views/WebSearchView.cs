@@ -2,6 +2,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Views;
@@ -71,7 +73,7 @@ namespace Xomega.Framework.Web
         #region Initialization
 
         /// <summary>
-        /// Initializes the already constructed view model for each request
+        /// Initializes the already constructed view model for each request.
         /// </summary>
         /// <param name="e">Standard event arguments</param>
         protected override void OnLoad(EventArgs e)
@@ -104,15 +106,11 @@ namespace Xomega.Framework.Web
 
         #region Binding
 
-        /// <summary>
-        /// Binds the view to its model, or unbinds the current model if null is passed.
-        /// </summary>
-        /// <param name="viewModel">Model to bind the view to</param>
+        /// <inheritdoc/>
         public override void BindTo(ViewModel viewModel)
         {
             bool bind = viewModel != null;
-            SearchViewModel svm = (bind ? viewModel : this.Model) as SearchViewModel;
-            if (svm != null)
+            if ((viewModel ?? Model) is SearchViewModel svm)
             {
                 if (btn_Select != null && bind && svm.Params != null)
                     btn_Select.Visible = (svm.Params[ViewParams.SelectionMode.Param] != null);
@@ -153,7 +151,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Handles CriteriaCollapsed property change to update the state of Criteria panel
+        /// Handles CriteriaCollapsed property change to update the state of Criteria panel.
         /// </summary>
         /// <param name="sender">Model that sent the event</param>
         /// <param name="e">Event arguments</param>
@@ -164,7 +162,8 @@ namespace Xomega.Framework.Web
             if (collapsible != null && SearchViewModel.CriteriaCollapsedProperty.Equals(e.PropertyName))
             {
                 SearchViewModel svm = sender as SearchViewModel;
-                collapsible.Collapsed = svm != null ? svm.CriteriaCollapsed : false;
+                if (svm != null)
+                    collapsible.Collapsed = svm.CriteriaCollapsed;
             }
         }
 
@@ -191,25 +190,33 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected virtual void Search(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Search(sender, e);
+            if (Page.IsAsync)
+                Page.RegisterAsyncTask(new PageAsyncTask(async (ct) => await SearchAsync(ct)));
+            else if (Model is SearchViewModel svm)
+                svm.Search(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for searching that delegates the action to the view model.
+        /// </summary>
+        protected virtual async Task SearchAsync(CancellationToken token = default)
+        {
+            if (Model is SearchViewModel svm)
+                await svm.SearchAsync(token);
         }
 
         /// <summary>
         /// Default handler for refreshing that delegates the action to the view model.
         /// </summary>
-        protected virtual void Refresh(object sender, EventArgs e)
-        {
-            Search(sender, e);
-        }
+        protected virtual void Refresh(object sender, EventArgs e) => Search(sender, e);
 
         /// <summary>
         /// Default handler for resetting that delegates the action to the view model.
         /// </summary>
         protected virtual void Reset(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Reset(sender, e);
+            if (Model is SearchViewModel svm)
+                svm.Reset(sender, e);
         }
 
         /// <summary>
@@ -217,8 +224,19 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected virtual void Select(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Select(sender, e);
+            if (Page.IsAsync)
+                Page.RegisterAsyncTask(new PageAsyncTask(async (ct) => await SelectAsync(ct)));
+            else if (Model is SearchViewModel svm)
+                svm.Select(sender, e);
+        }
+
+        /// <summary>
+        /// Default handler for selectinging that delegates the action to the view model.
+        /// </summary>
+        protected virtual async Task SelectAsync(CancellationToken token = default)
+        {
+            if (Model is SearchViewModel svm)
+                await svm.SelectAsync(token);
         }
 
         #endregion

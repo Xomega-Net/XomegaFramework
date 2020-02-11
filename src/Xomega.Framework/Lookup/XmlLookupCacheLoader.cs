@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -52,8 +54,10 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="tableType">The lookup table type to load.</param>
         /// <param name="updateCache">The method to call to store the loaded lookup table in the cache.</param>
-        protected override void LoadCache(string tableType, CacheUpdater updateCache)
+        /// <param name="token">Cancellation token.</param>
+        protected override async Task LoadCacheAsync(string tableType, CacheUpdater updateCache, CancellationToken token = default)
         {
+            await base.LoadCacheAsync(tableType, updateCache, token);
             string ns = "http://www.xomega.net/omodel";
             foreach (XElement enm in doc.Descendants(XName.Get("enum", ns)))
             {

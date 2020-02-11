@@ -1,5 +1,8 @@
 ﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Xomega.Framework.Lookup
 {
     /// <summary>
@@ -24,6 +27,7 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="cache">The lookup cache where to populate the lookup table.</param>
         /// <param name="tableType">The type of the lookup table to populate.</param>
-        void Load(LookupCache cache, string tableType);
+        /// <param name="token">Cancellation token.</param>
+        Task LoadAsync(LookupCache cache, string tableType, CancellationToken token = default);
     }
 }

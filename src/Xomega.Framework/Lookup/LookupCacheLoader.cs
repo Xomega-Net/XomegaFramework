@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Lookup
 {
@@ -27,7 +29,7 @@ namespace Xomega.Framework.Lookup
         /// The list of supported table types, which is either
         /// specified initially or constructed from the first run.
         /// </summary>
-        protected List<string> supportedTypes;
+        protected ICollection<string> supportedTypes;
 
         /// <summary>
         /// Indicates whether or not the loaded lookup tables should be case sensitive.
@@ -49,7 +51,7 @@ namespace Xomega.Framework.Lookup
             this.cacheType = cacheType;
             this.caseSensitive = caseSensitive;
             if (tableTypes != null && tableTypes.Length > 0)
-                supportedTypes = new List<string>(tableTypes);
+                supportedTypes = new HashSet<string>(tableTypes);
         }
 
         /// <summary>
@@ -71,32 +73,48 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="cache">The lookup cache where to populate the lookup table.</param>
         /// <param name="tableType">The type of the lookup table to populate.</param>
-        public virtual void Load(LookupCache cache, string tableType)
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task LoadAsync(LookupCache cache, string tableType, CancellationToken token = default)
         {
-            if (!IsSupported(cache.CacheType, tableType)) return;
-
-            LoadCache(tableType, delegate (LookupTable table) {
+            void cacheUpdater(LookupTable table)
+            {
                 cache.CacheLookupTable(table);
                 // ensure supportedTypes gets populated
-                if (supportedTypes == null) supportedTypes = new List<string>();
-                if (!supportedTypes.Contains(table.Type)) supportedTypes.Add(table.Type);
-            });
+                if (supportedTypes == null) supportedTypes = new HashSet<string>();
+                supportedTypes.Add(table.Type);
+            }
+            await LoadCacheAsync(tableType, cacheUpdater, token);
         }
 
         /// <summary>
-        /// A delegate that a subclass should call in the <see cref="LoadCache"/> method after creating
-        /// and loading a lookup table to actually store it in the cache.
+        /// A delegate that a subclass should call in the <see cref="LoadCacheAsync(string, CacheUpdater, CancellationToken)"/>
+        /// method after creating and loading a lookup table to actually store it in the cache.
         /// </summary>
         /// <param name="table">The created and loaded LookupTable to be stored in the cache.</param>
         protected delegate void CacheUpdater(LookupTable table);
 
         /// <summary>
-        /// Subroutine implemented by subclasses to perform the actual loading
+        /// Asynchronous subroutine implemented by subclasses to perform the actual loading
         /// of the lookup table and storing it in the cache using the provided updateCache delegate.
-        /// The loading process can be either synchronous or asynchronous.
         /// </summary>
         /// <param name="tableType">The lookup table type to load.</param>
         /// <param name="updateCache">The method to call to store the loaded lookup table in the cache.</param>
-        protected abstract void LoadCache(string tableType, CacheUpdater updateCache);
+        /// <param name="token">Cancellation token.</param>
+        protected virtual async Task LoadCacheAsync(string tableType, CacheUpdater updateCache, CancellationToken token = default)
+        {
+            // subclasses can implement this
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Synchronous wrapper for loading of the lookup table and storing it in the cache using the provided updateCache delegate.
+        /// The method invokes the asynchronous routine and waits for it to complete.
+        /// </summary>
+        /// <param name="tableType">The lookup table type to load.</param>
+        /// <param name="updateCache">The method to call to store the loaded lookup table in the cache.</param>
+        protected void LoadCache(string tableType, CacheUpdater updateCache)
+        {
+            Task.Run(async () => await LoadCacheAsync(tableType, updateCache)).Wait();
+        }
     }
 }

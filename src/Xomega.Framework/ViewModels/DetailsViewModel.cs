@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Views
 {
@@ -20,11 +22,7 @@ namespace Xomega.Framework.Views
         {
         }
 
-        /// <summary>
-        /// Activates the view model and the view
-        /// </summary>
-        /// <param name="parameters">Parameters to activate the view with</param>
-        /// <returns>True if the view was successfully activated, False otherwise</returns>
+        /// <inheritdoc/>
         public override bool Activate(NameValueCollection parameters)
         {
             if (!base.Activate(parameters) || DetailsObject == null) return false;
@@ -32,6 +30,18 @@ namespace Xomega.Framework.Views
             DetailsObject.SetValues(Params);
 
             if (ViewParams.Action.Create != Params[ViewParams.Action.Param]) LoadData();
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public override async Task<bool> ActivateAsync(NameValueCollection parameters, CancellationToken token = default)
+        {
+            if (!await base.ActivateAsync(parameters, token) || DetailsObject == null) return false;
+
+            DetailsObject.SetValues(Params);
+
+            if (ViewParams.Action.Create != Params[ViewParams.Action.Param])
+                await LoadDataAsync(token);
             return true;
         }
 
@@ -49,7 +59,7 @@ namespace Xomega.Framework.Views
         #region Data loading
 
         /// <summary>
-        /// Main function to load details data
+        /// Main function to load details data.
         /// </summary>
         public virtual void LoadData()
         {
@@ -57,6 +67,22 @@ namespace Xomega.Framework.Views
             try
             {
                 Errors = DetailsObject.Read(null);
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Main function to load details data.
+        /// </summary>
+        public virtual async Task LoadDataAsync(CancellationToken token = default)
+        {
+            if (DetailsObject == null) return;
+            try
+            {
+                Errors = await DetailsObject.ReadAsync(null, token);
             }
             catch (Exception ex)
             {
@@ -76,6 +102,21 @@ namespace Xomega.Framework.Views
                 LoadData(); // reload child lists if a child was updated
 
             base.OnChildEvent(childViewModel, e);
+        }
+
+        /// <summary>
+        /// Default async handler for saving or deleting of a child details view.
+        /// </summary>
+        /// <param name="childViewModel">Child view model that fired the original event</param>
+        /// <param name="e">Event object</param>
+        /// <param name="token">Cancellation token.</param>
+        protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
+        {
+            // ignore events from grandchildren
+            if (e.IsSaved() || e.IsDeleted())
+                await LoadDataAsync(token); // reload child lists if a child was updated
+
+            await base.OnChildEventAsync(childViewModel, e, token);
         }
 
         #endregion
@@ -103,22 +144,38 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// A function that determines if the current object can be saved
+        /// Handler for asynchronously saving the current view.
         /// </summary>
-        /// <returns></returns>
-        public virtual bool SaveEnabled()
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task SaveAsync(CancellationToken token = default)
         {
-            return true;
+            if (DetailsObject == null) return;
+            try
+            {
+                Errors = await DetailsObject.SaveAsync(null, token);
+                Errors?.AbortIfHasErrors();
+                await FireEventAsync(ViewEvent.Saved, token);
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
         }
 
         /// <summary>
-        /// Handler for deleting the object displayed in the current view
+        /// A function that determines if the current object can be saved.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool SaveEnabled() => true;
+
+        /// <summary>
+        /// Handler for deleting the object displayed in the current view.
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         public virtual void Delete(object sender, EventArgs e)
         {
-            if (DetailsObject == null || View != null && !View.CanDelete()) return;
+            if (DetailsObject == null || (View is IView v) && !v.CanDelete()) return;
             try
             {
                 Errors = DetailsObject.Delete(null);
@@ -134,9 +191,29 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// A function that determines if the current object can be deleted
+        /// Handler for deleting the object displayed in the current view.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task DeleteAsync(CancellationToken token = default)
+        {
+            if (DetailsObject == null || (View is IAsyncView av) && !(await av.CanDeleteAsync(token))) return;
+            try
+            {
+                Errors = await DetailsObject.DeleteAsync(null, token);
+                Errors?.AbortIfHasErrors();
+                await FireEventAsync(ViewEvent.Deleted, token);
+                DetailsObject.SetModified(false, true); // so that we could close without asking
+                await CloseAsync(token);
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+            }
+        }
+
+        /// <summary>
+        /// A function that determines if the current object can be deleted.
+        /// </summary>
         public virtual bool DeleteEnabled()
         {
             return DetailsObject != null && !DetailsObject.IsNew;

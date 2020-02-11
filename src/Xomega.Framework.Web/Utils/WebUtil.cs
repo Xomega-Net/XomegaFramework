@@ -69,6 +69,21 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
+        /// Sets visibility for control that may be made visible during an async task
+        /// by calling the corresponding method on the control's <see cref="WebPage"/>,
+        /// which tracks this control to set its visibility during the proper life cycle event,
+        /// in order to work around issues with extenders' visibility.
+        /// </summary>
+        /// <param name="control">Control that may be made visible during an async task.</param>
+        /// <param name="visible">True to make it visible, false otherwise.</param>
+        public static void SetControlVisible(Control control, bool visible)
+        {
+            if (control?.Page is WebPage wp)
+                wp.SetControlVisible(control, visible);
+            else if (control != null) control.Visible = visible;
+        }
+
+        /// <summary>
         /// Adds a query string from NameValueCollection object to the url.
         /// </summary>
         public static string AddQueryString(string url, NameValueCollection nvc)

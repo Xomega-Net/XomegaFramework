@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Views;
@@ -89,15 +91,11 @@ namespace Xomega.Framework.Web
 
         #region Binding
 
-        /// <summary>
-        /// Binds the view to its model, or unbinds the current model if null is passed.
-        /// </summary>
-        /// <param name="viewModel">Model to bind the view to</param>
+        /// <inheritdoc/>
         public override void BindTo(ViewModel viewModel)
         {
             bool bind = viewModel != null;
-            DetailsViewModel dvm = (bind ? viewModel : this.Model) as DetailsViewModel;
-            if (dvm != null)
+            if ((viewModel ?? Model) is DetailsViewModel dvm)
             {
                 if (dvm.DetailsObject != null && pnl_Object != null)
                 {
@@ -118,8 +116,19 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected virtual void Save(object sender, EventArgs e)
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm != null) dvm.Save(sender, e);
+            if (Page.IsAsync)
+                Page.RegisterAsyncTask(new PageAsyncTask(async (ct) => await SaveAsync(ct)));
+            else if (Model is DetailsViewModel dvm)
+                dvm.Save(sender, e);
+        }
+
+        /// <summary>
+        /// Async handler for saving the view delegating the action to the view model.
+        /// </summary>
+        protected virtual async Task SaveAsync(CancellationToken token = default)
+        {
+            if (Model is DetailsViewModel dvm)
+                await dvm.SaveAsync(token);
         }
 
         /// <summary>
@@ -127,8 +136,19 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected virtual void Delete(object sender, EventArgs e)
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm != null) dvm.Delete(sender, e);
+            if (Page.IsAsync)
+                Page.RegisterAsyncTask(new PageAsyncTask(async (ct) => await DeleteAsync(ct)));
+            else if (Model is DetailsViewModel dvm)
+                dvm.Delete(sender, e);
+        }
+
+        /// <summary>
+        /// Async handler for deleting the view delegating the action to the view model.
+        /// </summary>
+        protected virtual async Task DeleteAsync(CancellationToken token = default)
+        {
+            if (Model is DetailsViewModel dvm)
+                await dvm.DeleteAsync(token);
         }
 
         #endregion

@@ -98,8 +98,7 @@ namespace Xomega.Framework.Properties
         {
             if (LocalLookupTable != null) return LocalLookupTable;
             LookupCache cache = LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
-            LookupCache.LookupTableReady onReady = null;
-            return cache?.GetLookupTable(EnumType, onReady);
+            return cache?.GetLookupTable(EnumType);
         }
 
         /// <summary>

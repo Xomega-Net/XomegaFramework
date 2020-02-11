@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Views
 {
@@ -22,11 +24,7 @@ namespace Xomega.Framework.Views
 
         }
 
-        /// <summary>
-        /// Activates the view model and the view
-        /// </summary>
-        /// <param name="parameters">Parameters to activate the view with</param>
-        /// <returns>True if the view was successfully activated, False otherwise</returns>
+        /// <inheritdoc/>
         public override bool Activate(NameValueCollection parameters)
         {
             if (!base.Activate(parameters) || List == null) return false;
@@ -44,6 +42,29 @@ namespace Xomega.Framework.Views
 
             // try to auto-select as appropriate and don't show the view if succeeded
             if (Params[ViewParams.Action.Param] == ViewParams.Action.Select && AutoSelect())
+                return false;
+
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public override async Task<bool> ActivateAsync(NameValueCollection parameters, CancellationToken token = default)
+        {
+            if (!await base.ActivateAsync(parameters, token) || List == null) return false;
+
+            // set list selection mode from the parameters if passed
+            if (Params[ViewParams.SelectionMode.Param] != null)
+                List.RowSelectionMode = Params[ViewParams.SelectionMode.Param];
+
+            // set criteria from the parameters
+            if (List.CriteriaObject != null) List.CriteriaObject.SetValues(Params);
+
+            // auto-run search if specified so in parameters, or if there are no criteria to set
+            if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || List.CriteriaObject == null)
+                await SearchAsync(false, token);
+
+            // try to auto-select as appropriate and don't show the view if succeeded
+            if (Params[ViewParams.Action.Param] == ViewParams.Action.Select && await AutoSelectAsync(token))
                 return false;
 
             return true;
@@ -112,6 +133,32 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
+        /// Perfroms asynchronous search with the current criteria and populates the list.
+        /// </summary>
+        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>True on success, false in case of errors.</returns>
+        public virtual async Task<bool> SearchAsync(bool preserveSelection, CancellationToken token = default)
+        {
+            if (List == null) return false;
+            try
+            {
+                List.Validate(true);
+                ErrorList msgList = List.GetValidationErrors();
+                msgList.AbortIfHasErrors();
+                var res = await List.ReadAsync(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection }, token);
+                msgList.MergeWith(res);
+                Errors = msgList;
+                return !msgList.HasErrors();
+            }
+            catch (Exception ex)
+            {
+                Errors = errorParser.FromException(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Search function exposed as an event handler for the Search button
         /// </summary>
         /// <param name="sender">Event sender</param>
@@ -119,6 +166,16 @@ namespace Xomega.Framework.Views
         public virtual void Search(object sender, EventArgs e)
         {
             if (Search(true) && AutoCollapseCriteria)
+                CriteriaCollapsed = true;
+        }
+
+        /// <summary>
+        /// Search function exposed as an event handler for the Search button.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task SearchAsync(CancellationToken token = default)
+        {
+            if (await SearchAsync(true, token) && AutoCollapseCriteria)
                 CriteriaCollapsed = true;
         }
 
@@ -150,7 +207,32 @@ namespace Xomega.Framework.Views
         /// <returns>True if automatic selection succeeded, false otherwise.</returns>
         public virtual bool AutoSelect()
         {
-            if (List == null || List.CriteriaObject != null && !List.CriteriaObject.HasCriteria() || !Search(false)) return false;
+            if (List == null || List.CriteriaObject != null && !List.CriteriaObject.HasCriteria() || !Search(false))
+                return false;
+            bool res = DoAutoSelect();
+            if (res) FireEvent(new ViewSelectionEvent(List.SelectedRows));
+            return res;
+        }
+
+        /// <summary>
+        /// Automates async row selection process.
+        /// </summary>
+        /// <returns>True if automatic selection succeeded, false otherwise.</returns>
+        public virtual async Task<bool> AutoSelectAsync(CancellationToken token = default)
+        {
+            if (List == null || List.CriteriaObject != null && !List.CriteriaObject.HasCriteria() ||
+                !(await SearchAsync(false, token))) return false;
+            bool res = DoAutoSelect();
+            if (res) await FireEventAsync(new ViewSelectionEvent(List.SelectedRows), token);
+            return res;
+        }
+
+        /// <summary>
+        /// Automates row selection process after search.
+        /// </summary>
+        /// <returns>True if automatic selection succeeded, false otherwise.</returns>
+        protected virtual bool DoAutoSelect()
+        {
             if (List.RowCount > 1 && AutoCollapseCriteria)
                 CriteriaCollapsed = true;
             else if (List.RowCount == 0)
@@ -158,7 +240,6 @@ namespace Xomega.Framework.Views
             else if (List.RowCount == 1)
             {
                 List.SelectRow(0);
-                FireEvent(new ViewSelectionEvent(List.SelectedRows));
                 return true;
             }
             return false;
@@ -173,6 +254,18 @@ namespace Xomega.Framework.Views
             {
                 FireEvent(new ViewSelectionEvent(List.SelectedRows));
                 Close();
+            }
+        }
+
+        /// <summary>
+        /// Default async handler for convirming selected records and closing the view.
+        /// </summary>
+        public virtual async Task SelectAsync(CancellationToken token = default)
+        {
+            if (List != null)
+            {
+                await FireEventAsync(new ViewSelectionEvent(List.SelectedRows), token);
+                await CloseAsync(token);
             }
         }
 
@@ -196,6 +289,25 @@ namespace Xomega.Framework.Views
                 Search(true);
 
             base.OnChildEvent(childViewModel, e);
+        }
+
+        /// <summary>
+        /// Handles child closing or change to refresh the list.
+        /// </summary>
+        /// <param name="childViewModel">Child view model that fired the original event</param>
+        /// <param name="e">Event object</param>
+        /// <param name="token">Cancellation token.</param>
+        protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
+        {
+            if (e.IsClosed() && List != null)
+            {
+                List.ClearSelectedRows();
+                List.FireCollectionChanged();
+            }
+            if (e.IsSaved() || e.IsDeleted())
+                await SearchAsync(true, token);
+
+            await base.OnChildEventAsync(childViewModel, e, token);
         }
 
         #endregion

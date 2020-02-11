@@ -2,6 +2,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Views;
@@ -15,7 +17,7 @@ namespace Xomega.Framework.Web
     /// <remarks>
     /// As a convention, each view in a composition should be wrapped in a container panel that represents the view in it.
     /// </remarks>
-    public class WebView : UserControl, IView
+    public class WebView : UserControl, IView, IAsyncView
     {
 
         #region Initialization
@@ -37,6 +39,10 @@ namespace Xomega.Framework.Web
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            // call page's method for initial state here,
+            // once the page has been set and viewstate loaded
+            WebUtil.SetControlVisible(this, Visible);
             if (btn_Close != null)
                 btn_Close.Click += Close;
 
@@ -137,10 +143,7 @@ namespace Xomega.Framework.Web
 
         #region Binding
 
-        /// <summary>
-        /// Binds the view to its view model, or unbinds the current view model if null is passed.
-        /// </summary>
-        /// <param name="model">Model to bind the view to</param>
+        /// <inheritdoc/>
         public virtual void BindTo(ViewModel model)
         {
             bool bind = model != null;
@@ -157,12 +160,14 @@ namespace Xomega.Framework.Web
                     ParentSource = vm.Params[ViewParams.QuerySource];
                     SelectionMode = vm.Params[ViewParams.SelectionMode.Param];
                     vm.ViewEvents += OnViewEvents;
+                    vm.AsyncViewEvents += OnViewEventsAsync;
                     vm.PropertyChanged += OnModelPropertyChanged;
                     vm.View = this;
                 }
                 else
                 {
                     vm.ViewEvents -= OnViewEvents;
+                    vm.AsyncViewEvents -= OnViewEventsAsync;
                     vm.PropertyChanged -= OnModelPropertyChanged;
                     vm.View = null;
                     Mode = null;
@@ -197,11 +202,12 @@ namespace Xomega.Framework.Web
 
         #region Show/Close with JavaScript
 
-        /// <summary>
-        /// Checks if the view can be deleted
-        /// </summary>
-        /// <returns>True if the view can be deleted, False otherwise</returns>
-        public virtual bool CanDelete() { return true; }
+        /// <inheritdoc/>
+        public virtual bool CanDelete() => true;
+
+        /// <inheritdoc/>
+        public virtual async Task<bool> CanDeleteAsync(CancellationToken token = default)
+            => await Task.FromResult(CanDelete());
 
         /// <summary>Script to popup a modal dialog for a view.</summary>
         protected string Script_ModalDialog = @"if (xomegaControls && typeof xomegaControls._modalViewPopup === 'function')
@@ -218,10 +224,10 @@ namespace Xomega.Framework.Web
         /// <summary>Shortcut to get the main view panel</summary>
         protected virtual Control ViewPanel { get { return Controls[0]; } }
 
-        /// <summary>Shows the view in the specified mode.</summary>
+        /// <inheritdoc/>
         public virtual bool Show()
         {
-            Visible = true;
+            WebUtil.SetControlVisible(this, true);
             UpdatePanel upl = WebUtil.FindParentUpdatePanel(this);
             if (upl != null) upl.Update();
 
@@ -237,21 +243,29 @@ namespace Xomega.Framework.Web
             return true;
         }
 
-        /// <summary>
-        /// Checks if the view can be closed
-        /// </summary>
-        /// <returns>True if the view can be closed, False otherwise</returns>
-        public bool CanClose()
-        {
-            return true;
-        }
+        /// <inheritdoc/>
+        public virtual async Task<bool> ShowAsync(CancellationToken token = default)
+            => await Task.FromResult(Show());
 
-        /// <summary>
-        /// Closes the view
-        /// </summary>
+        /// <inheritdoc/>
+        public bool CanClose() => true;
+
+        /// <inheritdoc/>
+        public virtual async Task<bool> CanCloseAsync(CancellationToken token = default)
+            => await Task.FromResult(CanClose());
+
+        /// <inheritdoc/>
         public void Close()
         {
-            Visible = false;
+            DoClose();
+            Model.FireEvent(ViewEvent.Closed);
+            Dispose();
+        }
+
+        // The actual closing routine.
+        private void DoClose()
+        {
+            WebUtil.SetControlVisible(this, false);
             UpdatePanel upl = WebUtil.FindParentUpdatePanel(this), uplHost = null;
             if (upl != null)
             {
@@ -269,7 +283,13 @@ namespace Xomega.Framework.Web
                     RegisterStartupScript("Visible", Script_Splitter_OnViewVisibilityChange, upl.ClientID);
                     break;
             }
-            Model.FireEvent(ViewEvent.Closed);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task CloseAsync(CancellationToken token = default)
+        {
+            DoClose();
+            await Model.FireEventAsync(ViewEvent.Closed, token);
             Dispose();
         }
 
@@ -332,6 +352,18 @@ namespace Xomega.Framework.Web
         protected virtual void OnViewEvents(object sender, ViewEvent e)
         {
             if (upl_Main != null) upl_Main.Update();
+        }
+
+        /// <summary>
+        /// Provides the base method for handling view events
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">View event</param>
+        /// <param name="token">Cancellation token.</param>
+        protected virtual async Task OnViewEventsAsync(object sender, ViewEvent e, CancellationToken token = default)
+        {
+            if (upl_Main != null) upl_Main.Update();
+            await Task.CompletedTask;
         }
 
         #endregion
