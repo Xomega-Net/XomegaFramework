@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;

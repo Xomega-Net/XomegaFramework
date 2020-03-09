@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 
 namespace Xomega.Framework.Lookup
