@@ -80,6 +80,7 @@ namespace Xomega.Framework.Properties
                 if (IsValueNull(value, format)) return null;
                 decimal d;
                 if (decimal.TryParse(Convert.ToString(value), ParseStyles, null, out d)) return d;
+                if (format == ValueFormat.Transport) return null;
             }
             if (format == ValueFormat.DisplayString && value is decimal? && !IsValueNull(value, format))
                 return ((decimal?)value).Value.ToString(DisplayFormat);

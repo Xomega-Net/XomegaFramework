@@ -68,6 +68,7 @@ namespace Xomega.Framework.Properties
                 string str = Convert.ToString(value).Trim().ToLower();
                 if (TrueStrings.Contains(str)) return true;
                 if (FalseStrings.Contains(str)) return false;
+                if (format == ValueFormat.Transport) return false;
             }
             return base.ConvertValue(value, format);
         }

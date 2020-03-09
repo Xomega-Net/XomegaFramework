@@ -44,9 +44,9 @@ namespace Xomega.Framework.Properties
             if (format == ValueFormat.Transport)
             {
                 Header h = value as Header;
-                long id;
-                if (h != null && long.TryParse(h.Id, out id)) return id;
+                if (h != null && long.TryParse(h.Id, out long id)) return id;
                 else if (value != null && long.TryParse(value.ToString(), out id)) return id;
+                else return null;
             }
             return base.ConvertValue(value, format);
         }

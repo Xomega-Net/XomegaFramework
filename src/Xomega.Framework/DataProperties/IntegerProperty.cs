@@ -66,6 +66,7 @@ namespace Xomega.Framework.Properties
                 if (IsValueNull(value, format)) return null;
                 int i;
                 if (int.TryParse(Convert.ToString(value), NumberStyles.Number, null, out i)) return i;
+                if (format == ValueFormat.Transport) return null;
             }
             return base.ConvertValue(value, format);
         }

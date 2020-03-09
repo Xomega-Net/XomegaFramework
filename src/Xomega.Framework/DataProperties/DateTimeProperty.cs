@@ -66,6 +66,7 @@ namespace Xomega.Framework.Properties
                 if (IsValueNull(value, format)) return null;
                 DateTime dt;
                 if (DateTime.TryParse(Convert.ToString(value), out dt)) return dt;
+                if (format == ValueFormat.Transport) return null;
             }
             if (format.IsString())
             {

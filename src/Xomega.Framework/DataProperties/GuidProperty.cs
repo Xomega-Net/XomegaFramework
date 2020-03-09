@@ -47,11 +47,8 @@ namespace Xomega.Framework.Properties
                 if (value is Guid?) return value;
                 if (value is Guid) return (Guid?)value;
                 if (IsValueNull(value, format)) return null;
-                try
-                {
-                    return new Guid?(new Guid(Convert.ToString(value)));
-                }
-                catch (Exception) { }
+                if (Guid.TryParse(Convert.ToString(value), out Guid id)) return new Guid?(id);
+                if (format == ValueFormat.Transport) return null;
             }
             return base.ConvertValue(value, format);
         }
