@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.Web.UI;
 
@@ -16,7 +18,7 @@ namespace Xomega.Framework.Web
 
         // A list to track controls that should be hidden, but must be made visible temporarily
         // for their extenders to work.
-        private HashSet<Control> ControlsToHide = new HashSet<Control>();
+        private readonly HashSet<Control> ControlsToHide = new HashSet<Control>();
 
         /// <summary>
         /// Overrides OnPreRender in Async mode to make all hidden registered controls visible temporarily,
@@ -55,13 +57,10 @@ namespace Xomega.Framework.Web
             if (IsAsync)
             {
                 if (visible)
-                {
                     ControlsToHide.Remove(control);
-                    control.Visible = visible;
-                }
                 else ControlsToHide.Add(control);
             }
-            else control.Visible = visible;
+            control.Visible = visible;
         }
     }
 }
