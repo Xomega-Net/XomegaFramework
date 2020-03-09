@@ -61,7 +61,7 @@ namespace Xomega.Framework.Views
 
             // auto-run search if specified so in parameters, or if there are no criteria to set
             if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || List.CriteriaObject == null)
-                await SearchAsync(false, token);
+                await SearchAsync(token);
 
             // try to auto-select as appropriate and don't show the view if succeeded
             if (Params[ViewParams.Action.Param] == ViewParams.Action.Select && await AutoSelectAsync(token))
@@ -121,7 +121,7 @@ namespace Xomega.Framework.Views
                 List.Validate(true);
                 ErrorList msgList = List.GetValidationErrors();
                 msgList.AbortIfHasErrors();
-                msgList.MergeWith(List.Read(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection }));
+                msgList.MergeWith(List.Read(new DataObject.CrudOpions { PreserveSelection = preserveSelection }));
                 Errors = msgList;
                 return !msgList.HasErrors();
             }
@@ -146,7 +146,7 @@ namespace Xomega.Framework.Views
                 List.Validate(true);
                 ErrorList msgList = List.GetValidationErrors();
                 msgList.AbortIfHasErrors();
-                var res = await List.ReadAsync(new DataListObject.PopulateListOptions { PreserveSelection = preserveSelection }, token);
+                var res = await List.ReadAsync(new DataObject.CrudOpions { PreserveSelection = preserveSelection }, token);
                 msgList.MergeWith(res);
                 Errors = msgList;
                 return !msgList.HasErrors();

@@ -684,6 +684,11 @@ namespace Xomega.Framework
             /// Indicates if the operation should call child objects in parallel.
             /// </summary>
             public bool Parallel = true;
+
+            /// <summary>
+            /// A flag indicating whether or not to preserve selection in data lists.
+            /// </summary>
+            public bool PreserveSelection = false;
         }
 
         /// <summary>

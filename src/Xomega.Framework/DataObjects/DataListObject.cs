@@ -140,7 +140,7 @@ namespace Xomega.Framework
             {
                 string oldValue = rowSelectionMode;
                 rowSelectionMode = value;
-                if (!String.Equals(oldValue, value))
+                if (!string.Equals(oldValue, value))
                     FireSelectionChanged();
             }
         }
@@ -198,35 +198,48 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// A list of currently selected data rows
+        /// A list of currently selected data rows.
         /// </summary>
         public List<DataRow> SelectedRows { get { return data.Where(r => r.Selected).ToList(); } }
 
         /// <summary>
-        /// Single-select data row with a specified index
+        /// Checks if the data row with a specified index is selected.
+        /// </summary>
+        /// <param name="idx">Index of the row to check</param>
+        /// <returns>True if the row is selected, false otherwise</returns>
+        public bool IsRowSelected(int idx) => (idx >= 0 && idx < data.Count) ? data[idx].Selected : false;
+
+        /// <summary>
+        /// Single-select data row with a specified index.
         /// </summary>
         /// <param name="idx">Index of the row to select</param>
         /// <returns>True if selection was allowed, false otherwise</returns>
-        public bool SelectRow(int idx)
-        {
-            return SelectRows(idx, idx, true);
-        }
+        public bool SelectRow(int idx) => SelectRows(idx, idx, true);
 
         /// <summary>
-        /// Select all data rows
+        /// Select all data rows.
         /// </summary>
-        public void SelectAllRows()
-        {
-            SelectRows(0, data.Count - 1, false);
-        }
+        public void SelectAllRows() => SelectRows(0, data.Count - 1, false);
 
         /// <summary>
-        /// Clear selection for all data rows
+        /// Clear selection for all data rows.
         /// </summary>
-        public void ClearSelectedRows()
+        public void ClearSelectedRows() => SelectRows(0, -1, true);
+
+        /// <summary>
+        /// Toggles selection for the specified row.
+        /// </summary>
+        /// <param name="row">The row index.</param>
+        public void ToggleSelection(int row)
         {
-            SelectRows(0, -1, true);
+            if (IsRowSelected(row))
+            {
+                data[row].Selected = false;
+                FireSelectionChanged();
+            }                
+            else SelectRow(row);
         }
+
         #endregion
 
         #region Applied criteria
@@ -378,16 +391,6 @@ namespace Xomega.Framework
         #region Data Contract support
 
         /// <summary>
-        /// Options for populating data list object from a list of data contracts
-        /// </summary>
-        public class PopulateListOptions {
-            /// <summary>
-            /// A flag indicating whether or not to preserve selection.
-            /// </summary>
-            public bool PreserveSelection = false;
-        }
-
-        /// <summary>
         /// Populates the data object list and imports the data from the given data contract list
         /// with ability to preserve currently selected entities.
         /// </summary>
@@ -399,7 +402,7 @@ namespace Xomega.Framework
             if (list == null) return;
             List<DataRow> sel = new List<DataRow>();
             ListSortCriteria keys = new ListSortCriteria();
-            PopulateListOptions opts = options as PopulateListOptions;
+            CrudOpions opts = options as CrudOpions;
             if (opts != null && opts.PreserveSelection)
             {
                 sel = SelectedRows;

@@ -29,7 +29,9 @@ namespace Xomega.Framework.Views
 
             DetailsObject.SetValues(Params);
 
-            if (ViewParams.Action.Create != Params[ViewParams.Action.Param]) LoadData();
+            if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
+                DetailsObject.SetModified(false, true);
+            else LoadData(false);
             return true;
         }
 
@@ -40,8 +42,9 @@ namespace Xomega.Framework.Views
 
             DetailsObject.SetValues(Params);
 
-            if (ViewParams.Action.Create != Params[ViewParams.Action.Param])
-                await LoadDataAsync(token);
+            if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
+                DetailsObject.SetModified(false, true);
+            else await LoadDataAsync(false, token);
             return true;
         }
 
@@ -61,12 +64,13 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Main function to load details data.
         /// </summary>
-        public virtual void LoadData()
+        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection in child lists.</param>
+        public virtual void LoadData(bool preserveSelection)
         {
             if (DetailsObject == null) return;
             try
             {
-                Errors = DetailsObject.Read(null);
+                Errors = DetailsObject.Read(new DataObject.CrudOpions { PreserveSelection = preserveSelection });
             }
             catch (Exception ex)
             {
@@ -77,12 +81,14 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Main function to load details data.
         /// </summary>
-        public virtual async Task LoadDataAsync(CancellationToken token = default)
+        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection in child lists.</param>
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task LoadDataAsync(bool preserveSelection, CancellationToken token = default)
         {
             if (DetailsObject == null) return;
             try
             {
-                Errors = await DetailsObject.ReadAsync(null, token);
+                Errors = await DetailsObject.ReadAsync(new DataObject.CrudOpions { PreserveSelection = preserveSelection }, token);
             }
             catch (Exception ex)
             {
@@ -99,7 +105,7 @@ namespace Xomega.Framework.Views
         {
             // ignore events from grandchildren
             if (e.IsSaved() || e.IsDeleted())
-                LoadData(); // reload child lists if a child was updated
+                LoadData(true); // reload child lists if a child was updated
 
             base.OnChildEvent(childViewModel, e);
         }
@@ -114,7 +120,7 @@ namespace Xomega.Framework.Views
         {
             // ignore events from grandchildren
             if (e.IsSaved() || e.IsDeleted())
-                await LoadDataAsync(token); // reload child lists if a child was updated
+                await LoadDataAsync(true, token); // reload child lists if a child was updated
 
             await base.OnChildEventAsync(childViewModel, e, token);
         }
