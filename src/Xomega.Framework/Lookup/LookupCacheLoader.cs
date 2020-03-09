@@ -116,5 +116,15 @@ namespace Xomega.Framework.Lookup
         {
             Task.Run(async () => await LoadCacheAsync(tableType, updateCache)).Wait();
         }
+
+        /// <summary>
+        /// Helper method to set the active flag from a boolean.
+        /// </summary>
+        protected bool IsActive(bool active) => active;
+
+        /// <summary>
+        /// Helper method to set the active flag from a nullable boolean that defaults to true.
+        /// </summary>
+        protected bool IsActive(bool? active) => active ?? true;
     }
 }

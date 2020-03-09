@@ -82,10 +82,10 @@ namespace Xomega.Framework.Properties
         /// <summary>
         /// Sets an instance of local lookup table that depends on the current state of the data object.
         /// </summary>
-        public void SetLookupTable(LookupTable table)
+        public void SetLookupTable(LookupTable table, bool clearInvalidValues = true)
         {
-            SetValue(null);
             LocalLookupTable = table;
+            if (clearInvalidValues) ClearInvalidValues();
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null));
         }
 
@@ -233,6 +233,22 @@ namespace Xomega.Framework.Properties
             return cval;
         }
 
+        /// <summary>
+        /// Clears values that don't match the current value list
+        /// without changing the modification state of the property.
+        /// </summary>
+        public virtual void ClearInvalidValues()
+        {
+            if (!IsNull())
+            {
+                bool? mod = Modified;
+                SetValue(TransportValue);
+                if (IsMultiValued) Values = Values.Where(h => h.IsValid).ToList();
+                else if (!Value.IsValid) Value = null;
+                Modified = mod; // don't change the modified flag for initial load
+            }
+        }
+
         #region Cascading Properties
 
         /// <summary>
@@ -283,6 +299,12 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
+        /// True if null cascading value matches only values with attributes set to null.
+        /// False if cascading value matches any value.
+        /// </summary>
+        public bool CascadingMatchNulls { get; set; }
+
+        /// <summary>
         /// The method that determines if a given possible value matches the current values
         /// of all cascading properties using the attribute specified for each property.
         /// Cascading properties with blank values are ignored, i.e. a blank value
@@ -302,14 +324,15 @@ namespace Xomega.Framework.Properties
                 object pv = p.InternalValue;
                 object hv = p.ResolveValue(h[attr], ValueFormat.Internal);
 
-                if (p.IsNull() || p.IsValueNull(hv, ValueFormat.Internal)) continue;
+                if (p.IsNull() && !CascadingMatchNulls) continue;
 
                 IList<object> pvl = pv as IList<object>;
 
                 bool match;
                 if (hv is IList<object> hvl)
                     match = (pvl != null) ? pvl.Intersect(hvl).Count() > 0 : hvl.Contains(pv);
-                else match = (pvl != null) ? pvl.Contains(hv) : hv.Equals(pv);
+                else if (hv != null) match = (pvl != null) ? pvl.Contains(hv) : hv.Equals(pv);
+                else match = pv == null;
                 if (!match) return false;
             }
             return true;

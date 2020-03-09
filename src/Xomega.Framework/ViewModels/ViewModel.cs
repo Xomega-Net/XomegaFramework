@@ -51,6 +51,11 @@ namespace Xomega.Framework.Views
         /// Parameters the view was last activated with.
         /// </summary>
         public NameValueCollection Params { get; private set; }
+        
+        /// <summary>
+        /// Indicates if the view model has been activated.
+        /// </summary>
+        public bool Activated { get; private set; }
 
         /// <summary>
         /// Activates the view model and the view.
@@ -60,6 +65,7 @@ namespace Xomega.Framework.Views
         public virtual bool Activate(NameValueCollection parameters)
         {
             Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
+            Activated = true;
             return true;
         }
 
@@ -71,7 +77,9 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public virtual async Task<bool> ActivateAsync(NameValueCollection parameters, CancellationToken token = default)
         {
+            if (Activated) return false;
             Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
+            Activated = true;
             return await Task.FromResult(true);
         }
 

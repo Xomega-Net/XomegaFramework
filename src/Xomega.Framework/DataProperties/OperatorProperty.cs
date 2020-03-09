@@ -183,8 +183,8 @@ namespace Xomega.Framework.Properties
 
         /// <summary>
         /// Updates the visibility and the Required flag of the additional properties
-        /// based on the currently selected operator. This method is triggered
-        /// whenever the current operator changes.
+        /// based on the currently selected operator. Clears their values, if invisible.
+        /// This method is triggered whenever the current operator changes.
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">Property change event arguments.</param>
@@ -192,13 +192,17 @@ namespace Xomega.Framework.Properties
         {
             if (!e.Change.IncludesValue() && !e.Change.IncludesVisible() || additionalProperty == null) return;
             int depCnt = 0;
-            if (!IsNull()) Int32.TryParse("" + Value[AttributeAddlProps], out depCnt);
+            if (!IsNull()) int.TryParse("" + Value[AttributeAddlProps], out depCnt);
             additionalProperty.Visible = Visible && depCnt > 0;
             additionalProperty.Required = additionalProperty.Visible;
+            if (!additionalProperty.Visible)
+                additionalProperty.SetValue(null);
             if (additionalProperty2 != null)
             {
                 additionalProperty2.Visible = Visible && depCnt > 1;
                 additionalProperty2.Required = additionalProperty2.Visible;
+                if (!additionalProperty2.Visible)
+                    additionalProperty2.SetValue(null);
             }
         }
     }
