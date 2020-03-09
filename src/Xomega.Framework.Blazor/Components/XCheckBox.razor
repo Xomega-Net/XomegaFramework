@@ -1,0 +1,24 @@
+﻿@* Copyright (c) 2020 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <label @attributes="AdditionalAttributes" accesskey="@AccessKey">
+        <input type="checkbox"
+               class="@CssClass"
+               disabled="@(!IsEditable)"
+               checked="@Value" @onchange="@OnValueChanged" @onfocus="@OnFocus" @onblur="OnBlur"
+               title="@Property?.ErrorsText" />
+        @GetLabel(Label)
+    </label>
+}
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; }
+
+    protected bool? Value => (Property as BooleanProperty)?.Value;
+
+}

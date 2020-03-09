@@ -1,0 +1,63 @@
+﻿@* Copyright (c) 2020 Xomega.Net. All rights reserved. *@
+
+@inject IAuthorizationPolicyProvider AuthPolicyProvider
+@inject IAuthorizationService AuthService
+
+@if (VisibleItems?.Count() > 0)
+{
+    <ul>
+        @foreach (var mi in VisibleItems)
+        {
+            <li>
+                @if (!string.IsNullOrEmpty(mi.Text))
+                {
+                    <NavLink href="@mi.Href">@mi.Text</NavLink>
+                }
+                <NavMenu Items="@mi.Items" />
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public List<MenuItem> Items { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    protected List<MenuItem> VisibleItems;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        VisibleItems = new List<MenuItem>();
+        if (Items != null)
+        {
+            foreach (var mi in Items)
+            {
+                if (await IsAuthorized(mi))
+                    VisibleItems.Add(mi);
+            }
+        }
+    }
+
+    protected async Task<bool> IsAuthorized(MenuItem mi)
+    {
+        bool authorized = true;
+        if (mi.AuthorizeData != null && AuthState != null)
+        {
+            var curAuthState = await AuthState;
+            var policy = await AuthorizationPolicy.CombineAsync(AuthPolicyProvider, new[] { mi.AuthorizeData });
+            var res = await AuthService.AuthorizeAsync(curAuthState.User, mi, policy);
+            if (!res.Succeeded) authorized = false;
+        }
+        if (!authorized || !string.IsNullOrEmpty(mi.Href) || mi.Items == null || mi.Items.Count == 0)
+            return authorized;
+
+        foreach (var i in mi.Items)
+            if (await IsAuthorized(i)) return true;
+
+        return false;
+    }
+}

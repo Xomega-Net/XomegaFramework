@@ -1,0 +1,18 @@
+﻿@* Copyright (c) 2020 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <span @attributes="AdditionalAttributes" class="@CssClass">
+        @(Property == null ? "" : Row != null ?
+DataRow.GetString(Row, Property.Name) : Property.DisplayStringValue)
+</span>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        ObservedChanges = PropertyChange.Value + PropertyChange.Visible;
+    }
+}

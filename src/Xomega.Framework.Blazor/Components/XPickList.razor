@@ -1,0 +1,104 @@
+﻿@* Copyright (c) 2020 Xomega.Net. All rights reserved. *@
+
+@using System.Collections
+
+@inherits XOptionsComponent
+
+@if (IsVisible)
+{
+    <div class="picklist" title="@Property?.ErrorsText" @attributes="@AdditionalAttributes">
+        @if (IsEditable)
+        {
+            <select @ref="AvailableList" multiple="@IsMultiValue" size="@Rows">
+                @if (Property != null)
+                {
+                    var selected = SelectedItems;
+                    @foreach (var i in AvailableItems)
+                    {
+                        if (selected.Contains(i)) continue;
+                        var val = Property.ValueToString(i, ValueFormat.EditString);
+                        <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                    }
+                }
+            </select>
+            <div class="picklist-buttons">
+                <input type="button" value=">>" @onclick="@AddAll" />
+                <input type="button" value=">" @onclick="@Add" />
+                <input type="button" value="<" @onclick="@Remove" />
+                <input type="button" value="<<" @onclick="@RemoveAll" />
+            </div>
+        }
+        <select @ref="SelectedList" multiple="@IsMultiValue" size="@Rows">
+            @if (Property != null)
+            {
+                @foreach (var i in SelectedItems)
+                {
+                    var val = Property.ValueToString(i, ValueFormat.EditString);
+                    <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                }
+            }
+        </select>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public int Rows { get; set; } = 6;
+
+    protected ElementReference AvailableList { get; set; }
+    protected ElementReference SelectedList { get; set; }
+
+    protected List<string> HighlightedValues;
+
+    protected bool IsHighlighted(string value)
+        => HighlightedValues != null && HighlightedValues.Contains(value);
+
+    protected void AddAll(MouseEventArgs e)
+    {
+        if (Property?.ItemsProvider == null) return;
+        List<object> values = new List<object>();
+        foreach (object val in AvailableItems) values.Add(val);
+        UpdateProperty(values);
+    }
+
+    protected async Task Add(MouseEventArgs e)
+    {
+        HighlightedValues = await GetSelectedValues(AvailableList);
+        if (Property == null || HighlightedValues.Count() == 0) return;
+
+        if (!IsMultiValue && IsNull)
+            UpdateProperty(HighlightedValues[0]);
+        else if (IsMultiValue)
+        {
+            IList sel = Property.ResolveValue(HighlightedValues, ValueFormat.Internal) as IList;
+            IList val = Property.InternalValue as IList;
+            if (val != null && sel != null)
+                foreach (object v in val)
+                    if (!sel.Contains(v)) sel.Add(v);
+            UpdateProperty(sel);
+        }
+    }
+
+    protected async Task Remove(MouseEventArgs e)
+    {
+        HighlightedValues = await GetSelectedValues(SelectedList);
+        if (Property == null || HighlightedValues.Count() == 0) return;
+
+        if (!IsMultiValue && !IsNull)
+            UpdateProperty(null);
+        else if (IsMultiValue)
+        {
+            IList sel = Property.ResolveValue(HighlightedValues, ValueFormat.Internal) as IList;
+            IList val = Property.InternalValue as IList;
+            if (val != null && sel != null)
+                foreach (object v in sel) val.Remove(v);
+            UpdateProperty(val);
+        }
+    }
+
+    protected void RemoveAll(MouseEventArgs e)
+    {
+        UpdateProperty(null);
+    }
+}

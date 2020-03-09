@@ -1,0 +1,24 @@
+﻿@* Copyright (c) 2020 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <label @attributes="AdditionalAttributes" class="@CssClass" accesskey="@AccessKey">@GetLabel(Text)</label>
+}
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ObservedChanges = PropertyChange.Required + PropertyChange.Visible;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Property != null)
+            Property.SetLabel(Text);
+    }
+}
