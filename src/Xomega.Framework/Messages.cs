@@ -20,6 +20,11 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Unexpected system error occurred. Please see logs for details.
+        /// </summary>
+        public const string Exception_Unhandled = "Exception_Unhandled";
+
+        /// <summary>
         /// Unsupported operator {0} for the {1}.
         /// Where {0}=Operator, {1}=Field name
         /// </summary>
@@ -56,25 +61,25 @@ namespace Xomega.Framework
         public const string Validation_InvalidLookupTable = "Validation_InvalidLookupTable";
 
         /// <summary>
-        /// The value {2} for {0} should be from the '{1}' lookup table.
+        /// The value '{2}' for {0} should be from the '{1}' lookup table.
         /// Where {0}=Property name, {1}=Lookup table name, {2}=Value
         /// </summary>
         public const string Validation_LookupValue = "Validation_LookupValue";
 
         /// <summary>
-        /// The values {2} for {0} should be from the '{1}' lookup table.
+        /// The values '{2}' for {0} should be from the '{1}' lookup table.
         /// Where {0}=Property name, {1}=Lookup table name, {2}=Values
         /// </summary>
         public const string Validation_LookupValues = "Validation_LookupValues";
 
         /// <summary>
-        /// The value {2} for {0} should not be longer than {1} characters.
+        /// The value '{2}' for {0} should not be longer than {1} characters.
         /// Where {0}=Property name, {1}=Maximum length, {2}=Value
         /// </summary>
         public const string Validation_MaxLength = "Validation_MaxLength";
 
         /// <summary>
-        /// The values {2} for {0} should not be longer than {1} characters.
+        /// The values '{2}' for {0} should not be longer than {1} characters.
         /// Where {0}=Property name, {1}=Maximum length, {2}=Values
         /// </summary>
         public const string Validation_MaxLengths = "Validation_MaxLengths";

@@ -18,7 +18,7 @@ namespace Xomega.Framework
         /// <summary>
         /// A resource manager, which can be used to translate the error messages to the current language.
         /// </summary>
-        private ResourceManager resources;
+        private readonly ResourceManager resources;
 
         /// <summary>
         /// Constructs a new error list
@@ -48,7 +48,7 @@ namespace Xomega.Framework
         /// <param name="code">The error code.</param>
         /// <param name="parameters">An array of parameters to substitute into the message placeholders.</param>
         /// <returns>Localized message  for the given error code with substituted parameters.</returns>
-        public string GetMessage(string code, object[] parameters)
+        public string GetMessage(string code, params object[] parameters)
         {
             string message = null;
             if (resources != null) message = resources.GetString(code);

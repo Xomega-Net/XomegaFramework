@@ -3,6 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using System.Resources;
 using Xomega.Framework.Lookup;
 using Xomega.Framework.Services;
 
@@ -19,13 +20,14 @@ namespace Xomega.Framework
         public static IServiceProvider DefaultServiceProvider { get; internal set; }
 
         /// <summary>
-        /// Configures specified service container with implementation of an error list and a default error parser
+        /// Configures specified service container with implementation of an error list and a default error parser.
         /// </summary>
-        /// <param name="container">Service container to configure</param>
-        public static void AddErrors(this IServiceCollection container)
+        /// <param name="container">Service container to configure.</param>
+        /// <param name="fullException">True to make error parser include full details of unhandled exceptions. False otherwise.</param>
+        public static void AddErrors(this IServiceCollection container, bool fullException)
         {
             container.AddScoped<ErrorList>();
-            container.AddSingleton<ErrorParser>();
+            container.AddSingleton(sp => new ErrorParser(sp.GetService<ResourceManager>(), fullException));
         }
 
         /// <summary>

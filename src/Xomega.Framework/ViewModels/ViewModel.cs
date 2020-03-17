@@ -5,6 +5,7 @@ using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,12 +31,11 @@ namespace Xomega.Framework.Views
 
             // create a separate scope for each view to avoid memory leaks
             var scope = svcProvider.CreateScope();
-            this.ServiceProvider = (scope != null) ? scope.ServiceProvider : svcProvider;
+            ServiceProvider = (scope != null) ? scope.ServiceProvider : svcProvider;
 
             Params = new NameValueCollection();
 
-            errorParser = svcProvider.GetService<ErrorParser>();
-            if (errorParser == null) errorParser = new ErrorParser();
+            errorParser = svcProvider.GetService<ErrorParser>() ?? new ErrorParser(svcProvider.GetService<ResourceManager>());
 
             Initialize();
         }

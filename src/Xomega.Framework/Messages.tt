@@ -40,7 +40,7 @@
         {
             Name = d.Attribute("name").Value,
             Value = d.Element("value").Value,
-            Comment = d.Element("comment").Value
+            Comment = d.Element("comment")?.Value
         };
 #>
 using System;
@@ -67,7 +67,9 @@ namespace <#= resourceNamespace #>
 
         /// <summary>
         /// <#= entry.Value #>
+<# if (entry.Comment != null) { #>
         /// Where <#= entry.Comment #>
+<# } #>
         /// </summary>
         public const string <#= entry.Name.Replace('.', '_') #> = "<#= entry.Name #>";
 <# } #>
