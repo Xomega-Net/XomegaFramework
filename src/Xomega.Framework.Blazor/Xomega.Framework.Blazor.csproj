@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Xomega.Framework.AspNetCore\Xomega.Framework.AspNetCore.csproj" />
     <ProjectReference Include="..\Xomega.Framework\Xomega.Framework.csproj" />
   </ItemGroup>
 

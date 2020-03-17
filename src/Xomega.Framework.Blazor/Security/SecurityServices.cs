@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework.Blazor
 {

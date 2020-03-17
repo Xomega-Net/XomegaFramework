@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Xomega.Framework.Blazor
+namespace Xomega.Framework.Services
 {
     /// <summary>
     /// Current principal provider based on the current HTTP context.
