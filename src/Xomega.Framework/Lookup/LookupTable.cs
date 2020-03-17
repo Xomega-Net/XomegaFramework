@@ -47,7 +47,7 @@ namespace Xomega.Framework.Lookup
         /// A flag of whether or not to use case-sensitive lookups.
         /// </summary>
         [DataMember]
-        protected bool caseSensitive;
+        public bool CaseSensitive { get; set; }
 
         /// <summary>
         /// An internal reader/writer lock to synchronize access to the data.
@@ -64,7 +64,7 @@ namespace Xomega.Framework.Lookup
         {
             Type = type;
             this.data = data;
-            this.caseSensitive = caseSensitive;
+            CaseSensitive = caseSensitive;
             foreach (Header h in data) if (h != null) h.Type = type;
         }
 
@@ -72,7 +72,13 @@ namespace Xomega.Framework.Lookup
         /// A type string for the lookup table.
         /// </summary>
         [DataMember]
-        public string Type { get; private set; }
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Temporarily exposed raw data for (de)serializing by System.Text.Json, which needs public properties.
+        /// See https://github.com/dotnet/runtime/issues/29743
+        /// </summary>
+        public IEnumerable<Header> Data { get => data; set => data = value; }
 
         /// <summary>
         /// Enumerates all values in the table.
@@ -120,11 +126,9 @@ namespace Xomega.Framework.Lookup
             rwLock.EnterUpgradeableReadLock();
             try
             {
-                IndexedTable tbl;
-                if (!indexedData.TryGetValue(format, out tbl))
+                if (!indexedData.TryGetValue(format, out IndexedTable tbl))
                     tbl = BuildIndexedTable(format);
-                Header res = null;
-                if (tbl.TryGetValue(value, out res)) return res;
+                if (tbl.TryGetValue(value, out Header res)) return res;
                 return res;
             }
             finally
@@ -184,8 +188,7 @@ namespace Xomega.Framework.Lookup
                 {
                     if (h == null) continue;
                     string key = h.ToString(format);
-                    Header h1 = null;
-                    if (tbl.TryGetValue(key, out h1))
+                    if (tbl.TryGetValue(key, out Header h1))
                         h1.AddToAttribute(GroupAttrPrefix + format, h);
                     else tbl[key] = h;
                 }
@@ -203,8 +206,8 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         public bool Equals(string x, string y)
         {
-            StringComparison opt = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-            return String.Equals(x, y, opt);
+            StringComparison opt = CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            return string.Equals(x, y, opt);
         }
 
         /// <summary>
@@ -212,7 +215,7 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         public int GetHashCode(string obj)
         {
-            return obj == null ? 0 : caseSensitive ? obj.GetHashCode() : obj.ToUpper().GetHashCode();
+            return obj == null ? 0 : CaseSensitive ? obj.GetHashCode() : obj.ToUpper().GetHashCode();
         }
     }
 }

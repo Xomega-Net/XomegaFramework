@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace Xomega.Framework.Lookup
         /// <summary>
         /// A cache of lookup tables by type.
         /// </summary>
-        private readonly Dictionary<string, LookupTable> cache = new Dictionary<string, LookupTable>();
+        private readonly ConcurrentDictionary<string, LookupTable> cache = new ConcurrentDictionary<string, LookupTable>();
 
         /// <summary>
         /// An internal semaphore to ensure that the cache is loaded by one thread at a time.
@@ -143,7 +144,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="type">The type of the lookup table to remove.</param>
         public virtual void RemoveLookupTable(string type)
         {
-            cache.Remove(type);
+            cache.TryRemove(type, out _);
         }
 
         /// <summary>

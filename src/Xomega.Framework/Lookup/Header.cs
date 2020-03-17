@@ -48,9 +48,10 @@ namespace Xomega.Framework
         private Dictionary<string, object> attributes = new Dictionary<string, object>();
 
         /// <summary>
-        /// Default format to use when converting the header to a string. By default, it displays the header ID.
+        /// Temporarily exposed attributes for (de)serializing by System.Text.Json, which needs public properties.
+        /// See https://github.com/dotnet/runtime/issues/29743
         /// </summary>
-        private string defaultFormat = FieldId;
+        public Dictionary<string, object> Attributes { get => attributes; set => attributes = value; }
 
         /// <summary>
         /// Constructs an invalid header of the given type with just an ID.
@@ -139,7 +140,7 @@ namespace Xomega.Framework
         /// Default format to use when converting the header to a string. By default, it displays the header ID.
         /// </summary>
         [DataMember]
-        public string DefaultFormat { get { return defaultFormat; } set { defaultFormat = value; } }
+        public string DefaultFormat { get; set; } = FieldId;
 
         /// <summary>
         /// Returns a value of the given named attribute.
@@ -168,8 +169,7 @@ namespace Xomega.Framework
                 return;
             }
             if (value == null || value.Equals(curVal)) return;
-            IList lst = curVal as IList;
-            if (lst == null)
+            if (!(curVal is IList lst))
             {
                 lst = new List<object>();
                 if (curVal != null) lst.Add(curVal);
@@ -256,9 +256,8 @@ namespace Xomega.Framework
             {
                 string res = "";
                 object attr = this[attrName];
-                IList lst = attr as IList;
-                if (lst == null) res = Convert.ToString(attr);
-                else foreach(string s in lst) res += (res == "" ? "" : ", ") + s;
+                if (!(attr is IList lst)) res = Convert.ToString(attr);
+                else foreach (string s in lst) res += (res == "" ? "" : ", ") + s;
                 return res;
             }
             return m.Value;
