@@ -7,14 +7,30 @@ using System;
 
 namespace Xomega.Framework.Services
 {
+    /// <summary>
+    /// Default controller for unhandled exceptions in REST services,
+    /// which formats them and returns as Xomega <see cref="Output"/> structure.
+    /// </summary>
     public class ErrorController : BaseController
     {
+        /// <summary>
+        /// Default path for the error controller.
+        /// </summary>
         public const string DefaultPath = "/error";
 
+        /// <summary>
+        /// Constructs a new error controller with injected services.
+        /// </summary>
+        /// <param name="errorList">An error list for the current errors.</param>
+        /// <param name="errorParser">An injected error parser.</param>
         public ErrorController(ErrorList errorList, ErrorParser errorParser) : base(errorList, errorParser)
         {
         }
 
+        /// <summary>
+        /// Outputs unhandle exception as an error list in the <see cref="Output"/> structure.
+        /// </summary>
+        /// <returns></returns>
         [Route(DefaultPath)]
         [AllowAnonymous]
         [HttpGet]

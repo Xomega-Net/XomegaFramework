@@ -4,8 +4,16 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Xomega.Framework.Services
 {
+    /// <summary>
+    /// Extension methods to handle model validation errors using Xomega Framework.
+    /// </summary>
     public static class ModelValidation
     {
+        /// <summary>
+        /// Adds model validation errors from the model state to the list of current errors.
+        /// </summary>
+        /// <param name="currentErrors">The list of current errors to add any model validation errors to.</param>
+        /// <param name="modelState">Model state that contains model validation errors.</param>
         public static void AddModelErrors(this ErrorList currentErrors, ModelStateDictionary modelState)
         {
             foreach (var ms in modelState)
