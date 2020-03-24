@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;net461</TargetFrameworks>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <UseWPF>true</UseWPF>
     <PackageId>Xomega.Framework.Wpf</PackageId>
     <Version>2.1.0</Version>
     <Authors>Xomega Team</Authors>
@@ -20,6 +21,11 @@
     <DocumentationFile>bin/Xomega.Framework.Web.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup Condition="$(TargetFramework) == 'netcoreapp3.0'">
+    <Compile Remove="Converters\SeverityToIconConverter.cs" />
+    <Compile Remove="TokenUtils.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
   </ItemGroup>
@@ -28,7 +34,7 @@
     <ProjectReference Include="..\Xomega.Framework\Xomega.Framework.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework) == 'net461'">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.IdentityModel" />

@@ -55,8 +55,7 @@ namespace Xomega.Framework.Views
         public override void BindTo(ViewModel viewModel)
         {
             bool bind = viewModel != null;
-            SearchViewModel svm = (bind ? viewModel : this.Model) as SearchViewModel;
-            if (svm != null)
+            if ((viewModel ?? Model) is SearchViewModel svm)
             {
                 if (SelectButton != null && bind && viewModel.Params != null)
                     SelectButton.Visibility = (viewModel.Params[ViewParams.SelectionMode.Param] == null) ? Visibility.Hidden : Visibility.Visible;
@@ -70,7 +69,7 @@ namespace Xomega.Framework.Views
                 OnModelPropertyChanged(bind ? svm : null, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
                 OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
 
-                BindDataObject(CriteriaPanel, bind && svm.List != null? svm.List.CriteriaObject : null);
+                BindDataObject(CriteriaPanel, bind && svm.List != null ? svm.List.CriteriaObject : null);
                 BindDataObject(ResultsGrid, bind ? svm.List : null);
 
                 // recalculate applied criteria with updated labels after binding
@@ -90,8 +89,7 @@ namespace Xomega.Framework.Views
             base.OnModelPropertyChanged(sender, e);
             if (CriteriaExpander != null && SearchViewModel.CriteriaCollapsedProperty.Equals(e.PropertyName))
             {
-                SearchViewModel svm = sender as SearchViewModel;
-                CriteriaExpander.Collapsed = svm != null ? svm.CriteriaCollapsed : false;
+                CriteriaExpander.Collapsed = sender is SearchViewModel svm ? svm.CriteriaCollapsed : false;
             }
         }
 
@@ -104,8 +102,7 @@ namespace Xomega.Framework.Views
         {
             if (AppliedCriteriaPanel != null && DataListObject.AppliedCriteriaProperty.Equals(e.PropertyName))
             {
-                DataListObject list = sender as DataListObject;
-                AppliedCriteriaPanel.BindTo(list != null ? list.AppliedCriteria : null);
+                AppliedCriteriaPanel.BindTo(sender is DataListObject list ? list.AppliedCriteria : null);
             }
         }
 
@@ -114,10 +111,13 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for searching that delegates the action to the view model.
         /// </summary>
-        protected virtual void Search(object sender, EventArgs e)
+        protected virtual async void Search(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Search(sender, e);
+            if (Model is SearchViewModel svm)
+            {
+                if (IsAsync) await svm.SearchAsync();
+                else svm.Search(sender, e);
+            }
         }
 
         /// <summary>
@@ -125,17 +125,19 @@ namespace Xomega.Framework.Views
         /// </summary>
         protected virtual void Reset(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Reset(sender, e);
+            if (Model is SearchViewModel svm) svm.Reset(sender, e);
         }
 
         /// <summary>
         /// Default handler for selectinging that delegates the action to the view model.
         /// </summary>
-        protected virtual void Select(object sender, EventArgs e)
+        protected virtual async void Select(object sender, EventArgs e)
         {
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null) svm.Select(sender, e);
+            if (Model is SearchViewModel svm)
+            {
+                if (IsAsync) await svm.SelectAsync();
+                svm.Select(sender, e);
+            }
         }
 
         #endregion

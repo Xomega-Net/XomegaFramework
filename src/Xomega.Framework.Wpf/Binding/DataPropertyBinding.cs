@@ -74,8 +74,7 @@ namespace Xomega.Framework
         public static void RemoveBindings(DependencyObject el)
         {
             if (el == null) return;
-            IDisposable binding = el.GetValue(Property.BindingProperty) as IDisposable;
-            if (binding != null)
+            if (el.GetValue(Property.BindingProperty) is IDisposable binding)
             {
                 binding.Dispose();
                 el.SetValue(Property.BindingProperty, null);
@@ -107,8 +106,7 @@ namespace Xomega.Framework
             element = fwkElement;
 
             OnDataContextChanged(element, new DependencyPropertyChangedEventArgs());
-            FrameworkElement el = fwkElement as FrameworkElement;
-            if (el != null)
+            if (fwkElement is FrameworkElement el)
             {
                 el.DataContextChanged += OnDataContextChanged;
                 el.LostFocus += OnLostFocus;
@@ -120,17 +118,27 @@ namespace Xomega.Framework
             }
         }
 
-        /// <summary>
-        /// Binds the framework element to the given property.
-        /// </summary>
-        /// <param name="property">The data property to bind the framework element to.</param>
-        public override void BindTo(DataProperty property)
+        /// <inheritdoc/>
+        public override void BindTo(DataProperty property, DataRow row)
         {
-            base.BindTo(property);
+            base.BindTo(property, row);
             if (property == null)
             {
                 element.SetValue(Property.ValidationProperty, null);
                 BindingOperations.ClearBinding(element, ValidationExpressionProperty);
+            }
+        }
+
+        /// <inheritdoc/>
+        /// Overridden to update elements in a thread-safe manner.
+        protected override void OnPropertyChange(object sender, PropertyChangeEventArgs e)
+        {
+            if (property == sender && !PreventElementUpdate)
+            {
+                bool b = PreventModelUpdate;
+                PreventModelUpdate = true;
+                element.Dispatcher.Invoke(() => UpdateElement(e.Change));
+                PreventModelUpdate = b;
             }
         }
 
@@ -140,8 +148,7 @@ namespace Xomega.Framework
         public override void Dispose()
         {
             base.Dispose();
-            FrameworkElement el = element as FrameworkElement;
-            if (el != null)
+            if (element is FrameworkElement el)
             {
                 el.DataContextChanged -= OnDataContextChanged;
                 el.LostFocus -= OnLostFocus;
@@ -154,16 +161,16 @@ namespace Xomega.Framework
         /// </summary>
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            DependencyObject element = sender as DependencyObject;
-            if (element == null) return;
-            DataObject obj = element.GetValue(FrameworkElement.DataContextProperty) as DataObject;
-            string childPath = Property.GetChildObject(element);
-            obj = FindChildObject(obj, childPath) as DataObject;
+            if (!(sender is DependencyObject element)) return;
+            var ctx = element.GetValue(FrameworkElement.DataContextProperty);
+            DataRow dr = ctx as DataRow;
+            DataObject obj = (dr != null) ? dr.List : 
+                FindChildObject(ctx as DataObject, Property.GetChildObject(element));
             string propertyName = Property.GetName(element);
             DataProperty dp = null;
             if (obj != null && propertyName != null)
                 dp = obj[propertyName];
-            BindTo(dp);
+            element.Dispatcher.Invoke(() => BindTo(dp, dr));
         }
 
         private void OnLostFocus(object sender, RoutedEventArgs e)
@@ -178,7 +185,7 @@ namespace Xomega.Framework
         /// </summary>
         protected override void UpdateEditability()
         {
-            element.SetValue(FrameworkElement.IsEnabledProperty, property.Editable);
+            element.SetValue(UIElement.IsEnabledProperty, property.Editable);
         }
 
         /// <summary>
@@ -189,9 +196,9 @@ namespace Xomega.Framework
         protected override void UpdateVisibility()
         {
             Visibility vis = property.Visible ? Visibility.Visible : Visibility.Collapsed;
-            element.SetValue(FrameworkElement.VisibilityProperty, vis);
-            UIElement lbl = element.GetValue(Property.LabelProperty) as UIElement;
-            if (lbl != null && BindingOperations.GetBinding(lbl, UIElement.VisibilityProperty) == null)
+            element.SetValue(UIElement.VisibilityProperty, vis);
+            if (element.GetValue(Property.LabelProperty) is UIElement lbl && 
+                BindingOperations.GetBinding(lbl, UIElement.VisibilityProperty) == null)
                 lbl.Visibility = vis;
         }
 
@@ -203,8 +210,8 @@ namespace Xomega.Framework
         protected override void UpdateRequired()
         {
             element.SetValue(Property.RequiredProperty, property.Required);
-            DependencyObject lbl = element.GetValue(Property.LabelProperty) as DependencyObject;
-            if (lbl != null) lbl.SetValue(Property.RequiredProperty, property.Required);
+            if (element.GetValue(Property.LabelProperty) is DependencyObject lbl)
+                lbl.SetValue(Property.RequiredProperty, property.Required);
         }
 
         /// <summary>
@@ -214,8 +221,8 @@ namespace Xomega.Framework
         /// </summary>
         protected override void UpdateValidation()
         {
-            ErrorList errors = property.ValidationErrors == null ? null : property.ValidationErrors;
-            BindingExpression exp = (BindingExpression)GetValidationExpression();
+            ErrorList errors = property?.ValidationErrors;
+            BindingExpression exp = GetValidationExpression();
             element.SetValue(Property.ValidationProperty, new Property.ValidationResults() { Errors = errors });
             Validation.ClearInvalid(exp);
             if (errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable)
@@ -235,14 +242,15 @@ namespace Xomega.Framework
         protected BindingExpression GetValidationExpression()
         {
             // get a dummy binding expression so that we could use it for WPF validation framework
-            FrameworkElement fwkEl = element as FrameworkElement;
-            BindingExpression be = fwkEl == null ? null : fwkEl.GetBindingExpression(ValidationExpressionProperty);
+            BindingExpression be = !(element is FrameworkElement fwkEl) ? null : fwkEl.GetBindingExpression(ValidationExpressionProperty);
             if (be != null) return be;
-            System.Windows.Data.Binding bnd = new System.Windows.Data.Binding("Show");
-            bnd.Mode = BindingMode.TwoWay;
-            bnd.NotifyOnValidationError = true;
-            bnd.ValidatesOnExceptions = true;
-            bnd.Source = new Property.ValidationResults();
+            System.Windows.Data.Binding bnd = new System.Windows.Data.Binding("Show")
+            {
+                Mode = BindingMode.TwoWay,
+                NotifyOnValidationError = true,
+                ValidatesOnExceptions = true,
+                Source = new Property.ValidationResults()
+            };
             return (BindingExpression)BindingOperations.SetBinding(element, ValidationExpressionProperty, bnd);
         }
 
@@ -256,8 +264,8 @@ namespace Xomega.Framework
         {
             object lbl = element.GetValue(Property.LabelProperty);
             // if it is a label, set its target to this element unless it's already set
-            Label elLbl = lbl as Label;
-            if (elLbl != null && elLbl.Target == null && BindingOperations.GetBinding(elLbl, Label.TargetProperty) == null)
+            if (lbl is Label elLbl && elLbl.Target == null && 
+                BindingOperations.GetBinding(elLbl, Label.TargetProperty) == null)
                 elLbl.Target = element as UIElement;
 
             // set property label if it is not already set and if associated label is present

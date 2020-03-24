@@ -54,11 +54,8 @@ namespace Xomega.Framework
         /// <returns></returns>
         public static object Get(object dataItem, string property, ValueFormat format)
         {
-            DataRow dr = dataItem as DataRow;
-            if (dr == null) return null;
-            DataProperty dp = dr.List[property];
-            if (dp == null || dp.Column < 0 || dp.Column >= dr.Count) return null;
-            return dp.ResolveValue(dr[dp.Column], format);
+            var dr = dataItem as DataRow;
+            return dr?.List[property]?.GetValue(format, dr);
         }
         #endregion
 
@@ -102,7 +99,7 @@ namespace Xomega.Framework
         /// is equal to other. Greater than zero This object is greater than other.</returns>
         public int CompareTo(DataRow other)
         {
-            return CompareTo(other, List == null ? null : List.SortCriteria);
+            return CompareTo(other, List?.SortCriteria);
         }
 
         /// <summary>
@@ -125,8 +122,8 @@ namespace Xomega.Framework
                 DataProperty p = List[sortFld.PropertyName];
                 if (p != null)
                 {
-                    object val1 = this[p.Column];
-                    object val2 = other[p.Column];
+                    object val1 = p.GetValue(ValueFormat.Internal, this);
+                    object val2 = p.GetValue(ValueFormat.Internal, other);
                     if (val1 == val2) res = 0;
                     else if (val1 == null && val2 != null) res = -1;
                     else if (val1 != null && val2 == null) res = 1;

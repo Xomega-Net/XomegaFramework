@@ -54,7 +54,7 @@ namespace Xomega.Framework.Web
             if (property == null) return;
 
             HyperLink lnk = (HyperLink)control;
-            lnk.Text = property.DisplayStringValue;
+            lnk.Text = property.GetStringValue(ValueFormat.DisplayString, row);
             if (lnk.NavigateUrl != null)
             {
                 lnk.NavigateUrl = lnk.NavigateUrl.Replace("{value}", property.EditStringValue);

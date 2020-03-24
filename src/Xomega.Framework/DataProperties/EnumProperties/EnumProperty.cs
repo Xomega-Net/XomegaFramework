@@ -74,31 +74,15 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// An instance of local lookup table when the possible values are not globally cached,
-        /// but depend on the current state of the data object.
-        /// </summary>
-        protected LookupTable LocalLookupTable;
-
-        /// <summary>
-        /// Sets an instance of local lookup table that depends on the current state of the data object.
-        /// </summary>
-        public void SetLookupTable(LookupTable table, bool clearInvalidValues = true)
-        {
-            LocalLookupTable = table;
-            if (clearInvalidValues) ClearInvalidValues();
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null));
-        }
-
-        /// <summary>
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
         /// </summary>
         /// <returns>The lookup table to be used for the property.</returns>
         protected virtual LookupTable GetLookupTable()
         {
-            if (LocalLookupTable != null) return LocalLookupTable;
-            LookupCache cache = LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
-            return cache?.GetLookupTable(EnumType);
+            LookupCache cache = LocalCacheLoader?.LocalCache ?? LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
+            string tableType = LocalCacheLoader?.TableType ?? EnumType;
+            return cache?.GetLookupTable(tableType);
         }
 
         /// <summary>
@@ -170,17 +154,18 @@ namespace Xomega.Framework.Properties
         /// <summary>
         /// A function that is used by default as the possible items provider
         /// for the property by getting all possible values from the lookup table
-        /// filtered by the specified filter function if any and ordered by
-        /// the specified SortField function if any.
+        /// filtered by the specified filter function, if any, and ordered by
+        /// the specified SortField function, if any.
         /// </summary>
         /// <param name="input">The user input so far.</param>
+        /// <param name="row">The data row context, if any.</param>
         /// <returns>A list of possible values.</returns>
-        protected virtual IEnumerable GetItems(object input)
+        protected virtual IEnumerable GetItems(object input, DataRow row)
         {
             LookupTable tbl = GetLookupTable();
             if (tbl != null)
             {
-                IEnumerable<Header> res = tbl.GetValues(FilterFunc);
+                IEnumerable<Header> res = tbl.GetValues(FilterFunc, row);
                 if (SortField != null) res = res.OrderBy(SortField);
                 foreach (Header h in res)
                 {
@@ -198,18 +183,19 @@ namespace Xomega.Framework.Properties
         /// By default all active headers are allowed.
         /// This is the default filter function.
         /// </summary>
-        /// <param name="h"></param>
-        /// <returns></returns>
-        public virtual bool IsAllowed(Header h)
+        /// <param name="h">The header to check.</param>
+        /// <param name="row">The data row context, if any.</param>
+        /// <returns>True if the header value is allowed, false otherwise.</returns>
+        public virtual bool IsAllowed(Header h, DataRow row = null)
         {
-            return h != null && h.IsActive && MatchesCascadingProperties(h);
+            return h != null && h.IsActive && MatchesCascadingProperties(h, row);
         }
 
         /// <summary>
         /// A function to filter allowed items.
         /// By default only active items are allowed.
         /// </summary>
-        public Func<Header, bool> FilterFunc;
+        public Func<Header, DataRow, bool> FilterFunc;
 
         /// <summary>
         /// A function that extracts an item field to be used for sorting.
@@ -233,21 +219,77 @@ namespace Xomega.Framework.Properties
             return cval;
         }
 
+        #region Local Cache Loader
+
+        /// <summary>
+        /// Cache loader with a local cache to use as a list of possible values for this property.
+        /// </summary>
+        public LocalLookupCacheLoader LocalCacheLoader { get; set; }
+
+        /// <summary>
+        /// A list of source data properties for the values of the local cache loader input parameters.
+        /// </summary>
+        protected Dictionary<string, DataProperty> cacheLoaderSources = new Dictionary<string, DataProperty>();
+
+        /// <summary>
+        /// Sets a source data property for the specified input parameter of the local cache loader.
+        /// The value of the input parameter will come from the source property, and the cache will be reloaded
+        /// whenever the value of the source property changes.
+        /// </summary>
+        /// <param name="parameter">The name of the input parameter of the local cache loader.</param>
+        /// <param name="sourceProperty">The source data property for the parameter's value.</param>
+        public void SetCacheLoaderParameters(string parameter, DataProperty sourceProperty)
+        {
+            if (cacheLoaderSources.ContainsKey(parameter))
+            {
+                cacheLoaderSources[parameter].Change -= CacheLoaderParameterChange;
+                cacheLoaderSources.Remove(parameter);
+            }
+            if (sourceProperty != null)
+            {
+                cacheLoaderSources[parameter] = sourceProperty;
+                sourceProperty.Change += CacheLoaderParameterChange;
+            }
+        }
+
+        /// <summary>
+        /// Listens to the changes in values of the source parameter properties,
+        /// reloads the local cache with the new parameters, clears any current values
+        /// that are no longer match valid for the new cache. Also fires an event
+        /// to notify the listeners that the list of possible values changed.
+        /// </summary>
+        /// <param name="property">The source parameter property that was changed.</param>
+        /// <param name="e">Event arguments that describe the property change.</param>
+        private void CacheLoaderParameterChange(object property, PropertyChangeEventArgs e)
+        {
+            if (!e.Change.IncludesValue() || LocalCacheLoader == null) return;
+
+            var newParams = new Dictionary<string, object>();
+            foreach (string key in cacheLoaderSources.Keys)
+                newParams[key] = cacheLoaderSources[key].TransportValue;
+            LocalCacheLoader.SetParameters(newParams);
+            ClearInvalidValues(e.Row);
+
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
+        }
+
         /// <summary>
         /// Clears values that don't match the current value list
         /// without changing the modification state of the property.
         /// </summary>
-        public virtual void ClearInvalidValues()
+        public virtual void ClearInvalidValues(DataRow row = null)
         {
-            if (!IsNull())
+            if (!IsNull(row))
             {
                 bool? mod = Modified;
-                SetValue(TransportValue);
-                if (IsMultiValued) Values = Values.Where(h => h.IsValid).ToList();
-                else if (!Value.IsValid) Value = null;
+                SetValue(GetValue(ValueFormat.Transport, row), row);
+                if (IsMultiValued) SetValues(GetValues(row).Where(h => h.IsValid).ToList(), row);
+                else if (!GetValue(row).IsValid) SetValue(null, row);
                 Modified = mod; // don't change the modified flag for initial load
             }
         }
+
+        #endregion
 
         #region Cascading Properties
 
@@ -286,16 +328,17 @@ namespace Xomega.Framework.Properties
         /// to notify the listeners that the list of possible values changed.
         /// </summary>
         /// <param name="property">The cascading property that was changed.</param>
-        /// <param name="eventArgs">Event arguments that describe the property change.</param>
-        private void CascadingPropertyChange(object property, PropertyChangeEventArgs eventArgs)
+        /// <param name="e">Event arguments that describe the property change.</param>
+        private void CascadingPropertyChange(object property, PropertyChangeEventArgs e)
         {
-            if (!eventArgs.Change.IncludesValue()) return;
+            if (!e.Change.IncludesValue()) return;
+            
             if (!IsNull() && FilterFunc != null)
             {
-                if (IsMultiValued) Values = Values.Where(FilterFunc).ToList();
-                else if (!FilterFunc(Value)) Value = null;
+                if (IsMultiValued) Values = Values.Where(h => FilterFunc(h, e.Row)).ToList();
+                else if (!FilterFunc(Value, e.Row)) Value = null;
             }
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null));
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
         }
 
         /// <summary>
@@ -314,14 +357,15 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="h">The possible value to match against cascading properties.
         /// It should have the same attributes as specified for each cascading property.</param>
+        /// <param name="row">The data row context, if any.</param>
         /// <returns>True, if the specified value matches the current value(s) of all cascading properties,
         /// false otherwise.</returns>
-        public virtual bool MatchesCascadingProperties(Header h)
+        public virtual bool MatchesCascadingProperties(Header h, DataRow row = null)
         {
             foreach (string attr in cascadingProperties.Keys)
             {
                 DataProperty p = cascadingProperties[attr];
-                object pv = p.InternalValue;
+                object pv = p.GetValue(ValueFormat.Internal, row);
                 object hv = p.ResolveValue(h[attr], ValueFormat.Internal);
 
                 if (p.IsNull() && !CascadingMatchNulls) continue;

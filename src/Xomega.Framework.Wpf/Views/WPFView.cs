@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,7 +16,7 @@ namespace Xomega.Framework.Views
     /// Base class for WPF views.
     /// A view can contain other child views that can be shown or hidden dynamically.
     /// </summary>
-    public class WPFView : UserControl, IView, INotifyPropertyChanged
+    public class WPFView : UserControl, IView, IAsyncView, INotifyPropertyChanged
     {
         #region View properties and constructor
 
@@ -34,6 +36,11 @@ namespace Xomega.Framework.Views
         {
             ChildViews = new List<IView>();
         }
+
+        /// <summary>
+        /// Indicates whether or not the view is using async operations.
+        /// </summary>
+        protected bool IsAsync { get; set; }
 
         /// <summary>
         /// Checks if the view can be deleted
@@ -161,8 +168,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         public virtual bool Show()
         {
-            WPFView ownerView = Owner as WPFView;
-            ContentControl ownerPanel = ownerView != null ? ownerView.ChildPanel : null;
+            ContentControl ownerPanel = Owner is WPFView ownerView ? ownerView.ChildPanel : null;
             if (Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
                 if (ViewWidth != null) MinWidth = ViewWidth.Value;
@@ -207,8 +213,7 @@ namespace Xomega.Framework.Views
             set {
                 if (value == this)
                     throw new InvalidOperationException("Cannot set the owner to itself");
-                WPFView ownerView = owner as WPFView;
-                if (ownerView != null && !ownerView.ChildViews.Contains(this))
+                if (owner is WPFView ownerView && !ownerView.ChildViews.Contains(this))
                     ownerView.ChildViews.Remove(this);
                 owner = value;
                 ownerView = owner as WPFView;
@@ -242,8 +247,7 @@ namespace Xomega.Framework.Views
             GridSplitter splitter = null;
             foreach (DependencyObject child in grid.Children)
             {
-                GridSplitter sp = child as GridSplitter;
-                if (sp == null) continue;
+                if (!(child is GridSplitter sp)) continue;
                 else if (splitter == null)
                 {
                     splitter = sp;
@@ -299,8 +303,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         public virtual void Close()
         {
-            ContentControl ownerPanel = Parent as ContentControl;
-            if (ownerPanel != null && Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            if (Parent is ContentControl ownerPanel && Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
                 CollapseParentSplitter(true);
                 Model.FireEvent(ViewEvent.Closed);
@@ -340,8 +343,7 @@ namespace Xomega.Framework.Views
         {
             if (Model != null)
                 Model.FireEvent(ViewEvent.Closed);
-            Window w = sender as Window;
-            if (w != null && w.Owner != null) w.Owner.Activate();
+            if (sender is Window w && w.Owner != null) w.Owner.Activate();
         }
 
         /// <summary>
@@ -356,6 +358,29 @@ namespace Xomega.Framework.Views
             }
             Owner = null; // remove from parent
         }
+
+        #endregion
+
+        #region IAsyncView implementation
+
+        /// <inheritdoc/>
+        public Task<bool> ShowAsync(CancellationToken token = default)
+            => Task.FromResult(Show());
+
+        /// <inheritdoc/>
+        public Task<bool> CanCloseAsync(CancellationToken token = default)
+            => Task.FromResult(CanClose());
+
+        /// <inheritdoc/>
+        public Task CloseAsync(CancellationToken token = default)
+        {
+            Close();
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> CanDeleteAsync(CancellationToken token = default)
+            => Task.FromResult(CanDelete());
 
         #endregion
     }

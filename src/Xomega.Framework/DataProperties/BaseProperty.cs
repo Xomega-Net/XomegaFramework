@@ -142,7 +142,7 @@ namespace Xomega.Framework
                 bool oldValue = Editable;
                 this.editable = value;
                 if (Editable != oldValue) FirePropertyChange(
-                    new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable));
+                    new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable, null));
             }
         }
 
@@ -169,7 +169,7 @@ namespace Xomega.Framework
                 PropertyChange change = PropertyChange.Editing;
                 if (!editing) change += PropertyChange.Value;
                 if (editing != b) FirePropertyChange(
-                    new PropertyChangeEventArgs(change, b, editing));
+                    new PropertyChangeEventArgs(change, b, editing, null));
             }
         }
         #endregion
@@ -203,7 +203,7 @@ namespace Xomega.Framework
                 bool oldValue = Visible;
                 this.visible = value;
                 if (Visible != oldValue) FirePropertyChange(
-                    new PropertyChangeEventArgs(PropertyChange.Visible, oldValue, Visible));
+                    new PropertyChangeEventArgs(PropertyChange.Visible, oldValue, Visible, null));
             }
         }
         #endregion
@@ -235,7 +235,7 @@ namespace Xomega.Framework
                 bool oldValue = Required;
                 this.required = value;
                 if (Required != oldValue) FirePropertyChange(
-                    new PropertyChangeEventArgs(PropertyChange.Required, oldValue, Required));
+                    new PropertyChangeEventArgs(PropertyChange.Required, oldValue, Required, null));
             }
         }
         #endregion
@@ -261,7 +261,7 @@ namespace Xomega.Framework
                 AccessLevel oldValue = accessLevel;
                 accessLevel = value;
                 FirePropertyChange(new PropertyChangeEventArgs(
-                    PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel));
+                    PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel, null));
             }
         }
 

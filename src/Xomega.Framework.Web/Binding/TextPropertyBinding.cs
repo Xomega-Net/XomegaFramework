@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Properties;
 
@@ -51,7 +50,7 @@ namespace Xomega.Framework.Web
             if (property is EnumProperty && property.ItemsProvider != null)
             {
                 string values = "";
-                IEnumerable items = property.ItemsProvider(null);
+                IEnumerable items = property.ItemsProvider(null, row);
                 foreach (object i in items)
                 {
                     if (values.Length > 0) values += ",";

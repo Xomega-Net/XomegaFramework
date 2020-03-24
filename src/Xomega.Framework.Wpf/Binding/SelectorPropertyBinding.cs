@@ -37,7 +37,7 @@ namespace Xomega.Framework.Binding
         protected SelectorPropertyBinding(Selector selector) : base(selector)
         {
             selector.SelectionChanged += OnSelectionChanged;
-            selector.AddHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
+            selector.AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
         }
 
         /// <summary>
@@ -54,8 +54,7 @@ namespace Xomega.Framework.Binding
         {
             if (PreventElementUpdate) return;
 
-            ListBox lb = element as ListBox;
-            if (lb != null && lb.SelectedItems.Count > 1)
+            if (element is ListBox lb && lb.SelectedItems.Count > 1)
                 UpdateProperty(lb.SelectedItems);
             else UpdateProperty(((Selector)element).SelectedItem);
         }
@@ -65,8 +64,7 @@ namespace Xomega.Framework.Binding
         /// </summary>
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            ComboBox cb = element as ComboBox;
-            if (cb != null && element == sender)
+            if (element is ComboBox cb && element == sender)
                 UpdateProperty(cb.Text);
         }
 
@@ -87,11 +85,11 @@ namespace Xomega.Framework.Binding
         /// unless it has already been set in XAML.
         /// </summary>
         /// <param name="property">The data property to bind the framework element to.</param>
-        public override void BindTo(DataProperty property)
+        /// <param name="row">The data row context, if any.</param>
+        public override void BindTo(DataProperty property, DataRow row)
         {
             // update selection mode before updating the values
-            ListBox lb = element as ListBox;
-            if (lb != null && property != null)
+            if (element is ListBox lb && property != null)
             {
                 if (!property.IsMultiValued)
                     lb.SelectionMode = SelectionMode.Single;
@@ -101,7 +99,7 @@ namespace Xomega.Framework.Binding
             Selector sel = (Selector)element;
             if (property != null && sel.ItemTemplate == null && sel.ItemTemplateSelector == null)
                 sel.ItemTemplate = XamlReader.Parse(defaultTemplate) as DataTemplate;
-            base.BindTo(property);
+            base.BindTo(property, row);
             if (sel.DataContext == null) FixPopupRootMemoryLeak();
         }
 
@@ -113,8 +111,8 @@ namespace Xomega.Framework.Binding
         {
             if (element is ComboBox && VisualTreeHelper.GetChildrenCount(element) > 0)
             {
-                FrameworkElement templateRoot = VisualTreeHelper.GetChild(element, 0) as FrameworkElement;
-                Popup popup = templateRoot == null ? null : VisualTreeHelper.GetChild(templateRoot, 0) as Popup;
+                Popup popup = (VisualTreeHelper.GetChild(element, 0) is FrameworkElement templateRoot) ?
+                    VisualTreeHelper.GetChild(templateRoot, 0) as Popup : null;
                 if (popup != null)
                 {
                     // get the popup root private field via reflection
@@ -136,9 +134,8 @@ namespace Xomega.Framework.Binding
         protected override void UpdateElement(PropertyChange change)
         {
             base.UpdateElement(change);
-            Selector sel = element as Selector;
 
-            if (property == null || sel == null) return;
+            if (property == null || !(element is Selector sel)) return;
 
             object val = property.InternalValue;
             IList lst = val as IList;
@@ -152,7 +149,7 @@ namespace Xomega.Framework.Binding
                 sel.Items.Clear();
                 IEnumerable src = null;
                 if (lb != null && !property.Editable && lst != null) src = lst;
-                else if (property.ItemsProvider != null) src = property.ItemsProvider(null);
+                else if (property.ItemsProvider != null) src = property.ItemsProvider(null, row);
 
                 // for non-required drop down lists add null string option
                 if (cb != null && !cb.IsEditable && !property.Required)
@@ -171,7 +168,7 @@ namespace Xomega.Framework.Binding
                 else if (lst != null && lst.Count > 0) sel.SelectedItem = lst[0];
                 else sel.SelectedItem = val;
 
-                if (cb != null && cb.IsEditable) cb.Text = property.EditStringValue;
+                if (cb != null && cb.IsEditable) cb.Text = property.GetStringValue(ValueFormat.EditString, row);
             }
         }
     }

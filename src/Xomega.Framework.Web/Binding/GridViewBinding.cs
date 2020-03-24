@@ -52,11 +52,9 @@ namespace Xomega.Framework.Web
         {
             grid.RowDataBound += delegate(object sender, GridViewRowEventArgs e)
             {
-                DataRow dataRow = e.Row.DataItem as DataRow;
-                if (dataRow == null) return;
-                dataRow.List.CurrentRow = e.Row.DataItemIndex;
+                if (!(e.Row.DataItem is DataRow dataRow)) return;
                 if (dataRow.Selected) e.Row.ApplyStyle(grid.SelectedRowStyle);
-                BindToObject(e.Row, dataRow.List, true);
+                BindToObject(e.Row, dataRow.List, dataRow);
             };
             grid.PageIndexChanging += delegate(object sender, GridViewPageEventArgs e)
             {
@@ -123,8 +121,7 @@ namespace Xomega.Framework.Web
             {
                 if (list == null || e.CommandName != "New") return;
                 DataRow newRow = new DataRow(list);
-                int index = 0;
-                if (Int32.TryParse("" + e.CommandArgument, out index)) index++;
+                if (int.TryParse("" + e.CommandArgument, out int index)) index++;
                 grid.EditIndex = index;
                 list.Insert(grid.PageSize * grid.PageIndex + index, newRow);
             };
@@ -132,7 +129,7 @@ namespace Xomega.Framework.Web
             {
                 if (e.Cancel || list == null) return;
                 int idx = grid.PageSize * grid.PageIndex + e.NewSelectedIndex;
-                if (list.SelectRow(idx)) list.FireCollectionChanged();
+                list.SelectRow(idx);
                 // cancel, since we don't really want the grid to set SelectedIndex, which doesn't work for with paging
                 e.Cancel = true;
             };
@@ -160,17 +157,21 @@ namespace Xomega.Framework.Web
         /// <param name="list">The data list object to bind to.</param>
         public virtual void BindTo(DataListObject list)
         {
-            INotifyCollectionChanged observableList = this.list as INotifyCollectionChanged;
-            if (observableList != null) observableList.CollectionChanged -= OnListChanged;
-            if (this.list != null) this.list.SelectionChanged -= OnListSelectionChanged;
-            this.list = list;
-            observableList = list as INotifyCollectionChanged;
-            if (observableList != null)
+            if (this.list != null)
             {
-                OnListChanged(null, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                observableList.CollectionChanged += OnListChanged;
+                this.list.CollectionChanged -= OnListChanged;
+                this.list.SelectionChanged -= OnListSelectionChanged;
             }
-            if (list != null) list.SelectionChanged += OnListSelectionChanged;
+            this.list = list;
+            if (list != null)
+            {
+                this.list.CollectionChanged += OnListChanged;
+                this.list.SelectionChanged += OnListSelectionChanged;
+            }
+
+            GridView grid = (GridView)control;
+            grid.DataSource = list?.GetData();
+            grid.DataBind();
         }
 
         /// <summary>
@@ -179,11 +180,7 @@ namespace Xomega.Framework.Web
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
         protected void OnListSelectionChanged(object sender, EventArgs e)
-        {
-            GridView grid = (GridView)control;
-            grid.DataSource = list != null ? list.GetData() : null;
-            grid.DataBind();
-        }
+            => ((GridView)control).DataBind();
 
         /// <summary>
         /// Handles the collection change event of the data list object to update the grid control.
@@ -191,8 +188,6 @@ namespace Xomega.Framework.Web
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
         protected void OnListChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnListSelectionChanged(sender, e);
-        }
+            => OnListSelectionChanged(sender, e);
     }
 }

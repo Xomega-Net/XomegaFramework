@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace Xomega.Framework.Binding
@@ -47,7 +45,7 @@ namespace Xomega.Framework.Binding
             {
                 Hyperlink lnk = (Hyperlink)element;
                 lnk.Inlines.Clear();
-                lnk.Inlines.Add(property.DisplayStringValue);
+                lnk.Inlines.Add(property.GetStringValue(ValueFormat.DisplayString, row));
             }
         }
 

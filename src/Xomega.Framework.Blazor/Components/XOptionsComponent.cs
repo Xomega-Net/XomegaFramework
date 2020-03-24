@@ -27,7 +27,7 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// A list of possible values for the property.
         /// </summary>
-        protected IEnumerable AvailableItems => Property?.ItemsProvider?.Invoke(null) ?? new ArrayList();
+        protected IEnumerable AvailableItems => Property?.ItemsProvider?.Invoke(null, Row) ?? new ArrayList();
 
         /// <summary>
         /// A list of selected/current value(s) of the property.

@@ -42,7 +42,7 @@ namespace Xomega.Framework.Web
             protected override void OnPropertyBound()
             {
                 base.OnPropertyBound();
-                (control as BaseDateTimeControl).OnPropertyBound(property as DateTimeProperty);
+                (control as BaseDateTimeControl).OnPropertyBound(property as DateTimeProperty, row);
             }
         }
 
@@ -50,10 +50,11 @@ namespace Xomega.Framework.Web
         /// Control's OnPropertyBound event handler extension.
         /// </summary>
         /// <param name="prop">Property object.</param>
-        public virtual void OnPropertyBound(DateTimeProperty prop)
+        /// <param name="row">The data row context, if in a list.</param>
+        public virtual void OnPropertyBound(DateTimeProperty prop, DataRow row)
         {
-            BasePropertyBinding pb = WebPropertyBinding.Create(txt_DateTime) as BasePropertyBinding;
-            if (pb != null) pb.BindTo(prop);
+            if (BaseBinding.Create(txt_DateTime) is BasePropertyBinding pb)
+                pb.BindTo(prop, row);
         }
 
         #endregion

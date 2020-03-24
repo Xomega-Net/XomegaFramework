@@ -61,8 +61,7 @@ namespace Xomega.Framework
         /// <param name="e">Event arguments.</param>
         public static void OnValueFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            TextBlock el = d as TextBlock;
-            if (el == null) return;
+            if (!(d is TextBlock el)) return;
 
             OnDataContextChanged(el, new DependencyPropertyChangedEventArgs());
             el.DataContextChanged += OnDataContextChanged;
@@ -76,8 +75,7 @@ namespace Xomega.Framework
         /// <param name="e">Event arguments.</param>
         private static void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            TextBlock tb = sender as TextBlock;
-            if (tb == null) return;
+            if (!(sender is TextBlock tb)) return;
 
             DataPropertyBinding binding = GetBinding(tb);
             if (binding != null && binding.BoundProperty != null)

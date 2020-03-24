@@ -68,8 +68,7 @@ namespace Xomega.Framework.Web
         {
             base.OnPropertyBound();
 
-            ListBox lb = control as ListBox;
-            if (lb != null)
+            if (control is ListBox lb)
                 lb.SelectionMode = property.IsMultiValued ? ListSelectionMode.Multiple : ListSelectionMode.Single;
         }
 
@@ -81,16 +80,15 @@ namespace Xomega.Framework.Web
         /// <param name="value">The value to set on the data property.</param>
         protected override void UpdateProperty(object value)
         {
-            EnumProperty enumProp = property as EnumProperty;
-            if (enumProp != null && enumProp.FilterFunc != null)
+            if (property is EnumProperty enumProp && enumProp.FilterFunc != null)
             {
                 object internalValue = enumProp.ResolveValue(value, ValueFormat.Internal);
                 if (enumProp.IsMultiValued)
                 {
-                    List<Header> Values = internalValue as List<Header>;
-                    if (Values != null) value = Values.Where(enumProp.FilterFunc).ToList();
+                    if (internalValue is List<Header> Values)
+                        value = Values.Where(h => enumProp.FilterFunc(h, row)).ToList();
                 }
-                else if (internalValue is Header && !enumProp.FilterFunc((Header)internalValue)) value = null;
+                else if (internalValue is Header && !enumProp.FilterFunc((Header)internalValue, row)) value = null;
             }
 
             base.UpdateProperty(value);
@@ -106,9 +104,8 @@ namespace Xomega.Framework.Web
         {
             // let the base handle everything except value change
             base.UpdateElement(change - PropertyChange.Value);
-            ListControl list = control as ListControl;
 
-            if (property == null || list == null) return;
+            if (property == null || !(control is ListControl list)) return;
 
             object val = property.InternalValue;
             IList lst = val == null ? new ArrayList() : val as IList;
@@ -125,7 +122,7 @@ namespace Xomega.Framework.Web
                 // get the list of items to show
                 IEnumerable src = null;
                 if (isMultiVal && !property.Editable) src = lst;
-                else if (property.ItemsProvider != null) src = property.ItemsProvider(null);
+                else if (property.ItemsProvider != null) src = property.ItemsProvider(null, row);
 
                 list.Items.Clear(); // clear control's item collection
 

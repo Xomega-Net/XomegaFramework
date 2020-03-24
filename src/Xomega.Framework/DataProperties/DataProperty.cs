@@ -32,67 +32,39 @@ namespace Xomega.Framework
         #region Property value(s) accessors
 
         /// <summary>
-        /// The members to store the value of the data property.
-        /// If the property is multivalued this will be pointing to a list of values.
-        /// </summary>
-        private object value;
-
-        /// <summary>
         /// The column index of the property when it is part of a data list object.
         /// </summary>
-        internal int Column = -1;
+        internal int Column { get; set; } = -1;
 
         /// <summary>
-        /// The current row for the property when it is part of a data list object.
+        /// The property value as it is stored internally.
         /// </summary>
-        public int Row
+        public object InternalValue { get; private set; }
+
+        /// <summary>
+        /// Gets the value of the current property in the specified format,
+        /// using the provided data row as the data source, if applicable.
+        /// If no row is specified, then returns the value of the property itself.
+        /// </summary>
+        /// <param name="format">The format to return the value in.</param>
+        /// <param name="row">The data row to use as a source.</param>
+        /// <returns></returns>
+        public object GetValue(ValueFormat format, DataRow row = null)
         {
-            get
-            {
-                DataListObject list = parent as DataListObject;
-                return list != null ? list.CurrentRow : -1;
-            }
-            set
-            {
-                DataListObject list = parent as DataListObject;
-                if (list != null) list.CurrentRow = value;
-            }
+            object val = Column < 0 ? InternalValue : row == null || row.List != parent || Column >= row.Count ? null : row[Column];
+            return format.IsString() ? ValueToString(val, format) : ResolveValue(val, format);
         }
 
         /// <summary>
-        /// Sets the table and the colunn index for this data property when it is part of a data list object.
+        /// Gets a string value of the current property in the specified string format,
+        /// using the provided data row as the data source, if applicable.
+        /// If no row is specified, then returns the value of the property itself.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="index"></param>
-        internal void SetTableColumn(IList table, int index)
-        {
-            this.value = table;
-            this.Column = index;
-        }
-
-        /// <summary>
-        /// Returns the property value as it is stored internally retrieving it from the current row if needed.
-        /// </summary>
-        public object InternalValue
-        {
-            get {
-                if (Column < 0) return value;
-                IList tbl = value as IList;
-                if (tbl == null || Row < 0 || Row > tbl.Count - 1) return null; // safety check
-                IList row = tbl[Row] as IList;
-                return row != null ? row[Column] : null;
-            }
-            private set {
-                if (Column < 0) this.value = value;
-                else
-                {
-                    IList tbl = this.value as IList;
-                    if (tbl == null || Row < 0 || Row > tbl.Count - 1) return; // safety check
-                    IList row = tbl[Row] as IList;
-                    if (row != null) row[Column] = value;
-                }
-            }
-        }
+        /// <param name="format">The string format to return the value in.</param>
+        /// <param name="row">The data row to use as a source.</param>
+        /// <returns></returns>
+        public string GetStringValue(ValueFormat format, DataRow row = null)
+            => GetValue(format, row)?.ToString();
 
         /// <summary>
         /// Returns the property value in a display string format.
@@ -100,7 +72,7 @@ namespace Xomega.Framework
         /// and combined into a delimited string.
         /// </summary>
         /// <seealso cref="ValueFormat.DisplayString"/>
-        public string DisplayStringValue { get { return ValueToString(InternalValue, ValueFormat.DisplayString); } }
+        public string DisplayStringValue => GetStringValue(ValueFormat.DisplayString);
 
         /// <summary>
         /// Returns the property value in an edit string format.
@@ -108,37 +80,45 @@ namespace Xomega.Framework
         /// and combined into a delimited string.
         /// </summary>
         /// <seealso cref="ValueFormat.EditString"/>
-        public string EditStringValue { get { return ValueToString(InternalValue, ValueFormat.EditString); } }
+        public string EditStringValue => GetStringValue(ValueFormat.EditString);
 
         /// <summary>
         /// Returns the property value in a transport format.
         /// Multiple values will be returned as a list of values converted to the transport format.
         /// </summary>
         /// <seealso cref="ValueFormat.Transport"/>
-        public object TransportValue { get { return ResolveValue(InternalValue, ValueFormat.Transport); } }
+        public object TransportValue => GetValue(ValueFormat.Transport);
 
         /// <summary>
         /// Sets the value of the property and triggers a property change event.
         /// The value is first converted to the internal format if possible.
+        /// If data row is specified, sets the value of this property in that row.
         /// </summary>
         /// <param name="val">The new value to set to the property.</param>
-        public void SetValue(object val)
+        /// <param name="row">The data row context, if any.</param>
+        public void SetValue(object val, DataRow row = null)
         {
             object oldValue = InternalValue;
             object newValue = ResolveValue(val, ValueFormat.Internal);
-            InternalValue = newValue;
+
+            if (Column < 0)
+                InternalValue = newValue;
+            else if (row != null && row.List == parent && Column < row.Count)
+                row[Column] = newValue;
+
             // update Modified flag, make sure to not set it back from true to false
             if (!Modified.HasValue) Modified = false;
             else if (!Equals(oldValue, newValue)) Modified = true;
             ResetValidation();
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue));
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row));
         }
 
         /// <summary>
         /// Checks if the current property value is null.
         /// </summary>
         /// <returns>True if the current property value is null, otherwise false.</returns>
-        public bool IsNull() { return IsValueNull(InternalValue, ValueFormat.Internal); }
+        public bool IsNull(DataRow row = null)
+            => IsValueNull(GetValue(ValueFormat.Internal, row), ValueFormat.Internal);
 
         /// <summary>
         /// Resets property value and modified state to default values
@@ -149,40 +129,16 @@ namespace Xomega.Framework
             Modified = null;
         }
 
+        /// <summary>
+        /// Tracks the modification state of the property. Null means the property value has never been set.
+        /// False means the value has been set only once (initialized).
+        /// True means that the value has been modified since it was initialized.
+        /// </summary>
+        public bool? Modified { get; set; }
+
         #endregion
 
         #region Value configuration
-
-        /// <summary>
-        /// The string to display when the property value is null.
-        /// Setting such string as a value will be considered as setting the value to null.
-        /// The default is empty string.
-        /// </summary>
-        private string nullString = "";
-
-        /// <summary>
-        /// The string to display when the property value is restricted and not allowed to be viewed (e.g. N/A).
-        /// The default is empty string.
-        /// </summary>
-        private string restrictedString = "";
-
-        /// <summary>
-        /// The separators to use for multivalued properties to parse the list of values from the input string.
-        /// The default is comma, semicolon and a new line.
-        /// </summary>
-        private string[] parseListSeparators = new string[] { ",", ";", "\n" };
-
-        /// <summary>
-        /// The separator to use for multivalued properties to combine the list of values into a display string.
-        /// The default is comma with a space.
-        /// </summary>
-        private string displayListSeparator = ", ";
-
-        /// <summary>
-        /// The maximum length for each property value when the value is of type string.
-        /// The default is -1, which means there is no maximum length.
-        /// </summary>
-        private int size = -1;
 
         /// <summary>
         /// Gets or sets whether the property contains multiple values (a list) or a single value.
@@ -190,35 +146,35 @@ namespace Xomega.Framework
         public bool IsMultiValued { get; set; }
 
         /// <summary>
-        /// Gets or sets the string to display when the property value is null.
+        /// The string to display when the property value is null.
         /// Setting such string as a value will be considered as setting the value to null.
         /// The default is empty string.
         /// </summary>
-        public string NullString { get { return nullString; } set { nullString = value; } }
+        public string NullString { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the string to display when the property value is restricted and not allowed to be viewed (e.g. N/A).
+        /// The string to display when the property value is restricted and not allowed to be viewed (e.g. N/A).
         /// The default is empty string.
         /// </summary>
-        public string RestrictedString { get { return restrictedString; } set { restrictedString = value; } }
+        public string RestrictedString { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the separators to use for multivalued properties to parse the list of values from the input string.
+        /// The separators to use for multivalued properties to parse the list of values from the input string.
         /// The default is comma, semicolon and a new line.
         /// </summary>
-        public string[] ParseListSeparators { get { return parseListSeparators; } set { parseListSeparators = value; } }
+        public string[] ParseListSeparators { get; set; } = new string[] { ",", ";", "\n" };
 
         /// <summary>
-        /// Gets or sets the separator to use for multivalued properties to combine the list of values into a display string.
+        /// The separator to use for multivalued properties to combine the list of values into a display string.
         /// The default is comma with a space.
         /// </summary>
-        public string DisplayListSeparator { get { return displayListSeparator; } set { displayListSeparator = value; } }
+        public string DisplayListSeparator { get; set; } = ", ";
 
         /// <summary>
-        /// Gets or sets the maximum length for each property value when the value is of type string.
+        /// The maximum length for each property value when the value is of type string.
         /// The default is -1, which means there is no maximum length.
         /// </summary>
-        public int Size { get { return size; } set { size = value; } }
+        public int Size { get; set; } = -1;
 
 
         /// <summary>
@@ -226,7 +182,8 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="input">The user input so far.</param>
         /// <returns>A list of possible values.</returns>
-        public delegate IEnumerable GetValueList(object input);
+        /// <param name="row">The data row context, if any.</param>
+        public delegate IEnumerable GetValueList(object input, DataRow row);
 
         /// <summary>
         /// A function to provide a list of possible values for the property where applicable.
@@ -249,9 +206,9 @@ namespace Xomega.Framework
         /// <returns>The string representation of the given list.</returns>
         public virtual string ListToString(IList list, ValueFormat format)
         {
-            string res = ""; 
+            string res = "";
             foreach (object val in list)
-                res += (res == "" ? "" : displayListSeparator) + Convert.ToString(val);
+                res += (res == "" ? "" : DisplayListSeparator) + Convert.ToString(val);
             return res;
         }
 
@@ -265,8 +222,7 @@ namespace Xomega.Framework
         public string ValueToString(object value, ValueFormat format)
         {
             object cVal = ResolveValue(value, format);
-            IList lst = cVal as IList;
-            return lst != null ? ListToString(lst, format) : Convert.ToString(cVal);
+            return cVal is IList lst ? ListToString(lst, format) : Convert.ToString(cVal);
         }
 
         /// <summary>
@@ -282,8 +238,7 @@ namespace Xomega.Framework
         public virtual bool IsValueNull(object value, ValueFormat format)
         {
             if (value == null) return true;
-            IList lst = value as IList;
-            if (lst != null && lst.Count == 0) return true;
+            if (value is IList lst && lst.Count == 0) return true;
             if (value is string)
             {
                 string str = ((string)value).Trim();
@@ -349,10 +304,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="format">The format to create a new list for.</param>
         /// <returns>A new list for the given format.</returns>
-        protected virtual IList CreateList(ValueFormat format)
-        {
-            return new List<object>();
-        }
+        protected virtual IList CreateList(ValueFormat format) => new List<object>();
 
         /// <summary>
         /// A delegate to support custom conversion functions. It will try to convert the value
@@ -378,32 +330,8 @@ namespace Xomega.Framework
         /// <param name="value">A single value to convert to the given format.</param>
         /// <param name="format">The value format to convert the value to.</param>
         /// <returns>The value converted to the given format.</returns>
-        protected virtual object ConvertValue(object value, ValueFormat format)
-        {
-            return value;
-        }
+        protected virtual object ConvertValue(object value, ValueFormat format) => value;
 
-        #endregion
-
-        #region Value modification tracking
-
-        /// <summary>
-        /// Tracks the modification state of the property. Null means the property value has never been set.
-        /// False means the value has been set only once (initialized).
-        /// True means that the value has been modified since it was initialized.
-        /// </summary>
-        private bool? modified;
-
-        /// <summary>
-        /// Gets or sets the modification state of the property. Null means the property value has never been set.
-        /// False means the value has been set only once (initialized).
-        /// True means that the value has been modified since it was initialized.
-        /// </summary>
-        public bool? Modified
-        {
-            get { return modified; }
-            set { modified = value; }
-        }
         #endregion
 
         #region Validation
@@ -450,7 +378,7 @@ namespace Xomega.Framework
         public void ResetValidation()
         {
             ValidationErrors = null;
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null));
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, null));
         }
 
         /// <summary>
@@ -471,12 +399,11 @@ namespace Xomega.Framework
 
             if (Validator != null && Editable && Visible)
             {
-                IList lst = InternalValue as IList;
-                if (lst != null && lst.Count > 0)
+                if (InternalValue is IList lst && lst.Count > 0)
                     foreach (object val in lst) Validator(this, val);
                 else Validator(this, InternalValue);
             }
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null));
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, null));
         }
 
         /// <summary>

@@ -53,9 +53,10 @@ namespace Xomega.Framework.Binding
         /// Sets the maximum text length to the property size if available.
         /// </summary>
         /// <param name="property">The data property to bind the text box to.</param>
-        public override void BindTo(DataProperty property)
+        /// <param name="row">The data row context, if any.</param>
+        public override void BindTo(DataProperty property, DataRow row)
         {
-            base.BindTo(property);
+            base.BindTo(property, row);
             ((PasswordBox)element).MaxLength = (property != null && !property.IsMultiValued && property.Size > 0) ? property.Size : 0;
         }
 
@@ -71,7 +72,7 @@ namespace Xomega.Framework.Binding
 
             if (change.IncludesValue())
             {
-                ((PasswordBox)element).Password = property.Editable ? property.EditStringValue : property.DisplayStringValue;
+                ((PasswordBox)element).Password = property.GetStringValue(property.Editable ? ValueFormat.EditString : ValueFormat.DisplayString, row);
             }
         }
     }

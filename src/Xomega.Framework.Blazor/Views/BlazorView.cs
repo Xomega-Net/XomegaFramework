@@ -120,10 +120,9 @@ namespace Xomega.Framework.Blazor.Views
         /// Helper function returning the class for selected rows.
         /// </summary>
         /// <param name="list">List object of the row.</param>
-        /// <param name="row">The row index.</param>
+        /// <param name="row">The data row.</param>
         /// <returns>Row's CSS class based on whether or not the row is selected.</returns>
-        protected virtual string SelectedClass(DataListObject list, int row)
-            => list.IsRowSelected(row) ? "selected" : "";
+        protected virtual string SelectedClass(DataListObject list, DataRow row) => row.Selected ? "selected" : "";
 
         /// <summary>
         /// Helper function returning the class for selectable lists.
@@ -136,9 +135,9 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// Handles row selection on click for the specified list object, if the latter is selectable.
         /// </summary>
-        /// <param name="list"></param>
-        /// <param name="row"></param>
-        protected virtual void RowClicked(DataListObject list, int row)
+        /// <param name="list">The context list object.</param>
+        /// <param name="row">The row that was clicked.</param>
+        protected virtual void RowClicked(DataListObject list, DataRow row)
         {
             if (SelectableClass(list) != "")
                 list.ToggleSelection(row);

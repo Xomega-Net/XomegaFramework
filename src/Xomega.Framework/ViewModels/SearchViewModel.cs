@@ -127,7 +127,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
                 return false;
             }
         }
@@ -153,7 +153,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
                 return false;
             }
         }
@@ -283,9 +283,8 @@ namespace Xomega.Framework.Views
             if (e.IsClosed() && List != null)
             {
                 List.ClearSelectedRows();
-                List.FireCollectionChanged();
             }
-            if (e.IsSaved() || e.IsDeleted())
+            if (e.IsSaved(false) || e.IsDeleted(false))
                 Search(true);
 
             base.OnChildEvent(childViewModel, e);
@@ -302,9 +301,8 @@ namespace Xomega.Framework.Views
             if (e.IsClosed() && List != null)
             {
                 List.ClearSelectedRows();
-                List.FireCollectionChanged();
             }
-            if (e.IsSaved() || e.IsDeleted())
+            if (e.IsSaved(false) || e.IsDeleted(false))
                 await SearchAsync(true, token);
 
             await base.OnChildEventAsync(childViewModel, e, token);

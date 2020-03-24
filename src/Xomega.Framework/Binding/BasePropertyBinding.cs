@@ -20,31 +20,34 @@ namespace Xomega.Framework
         protected DataProperty property;
 
         /// <summary>
-        /// The row in the list that this binding is bound to or -1 if the property is not in a list.
+        /// The row in the list that this binding is bound to or null if the property is not in a list.
         /// </summary>
-        protected int row = - 1;
+        protected DataRow row;
 
         /// <summary>
         /// Returns the actual data property that the framework element is bound to.
         /// </summary>
-        public DataProperty BoundProperty { get { return property; } }
+        public DataProperty BoundProperty => property;
 
         /// <summary>
         /// Binds the framework element to the given property.
         /// </summary>
         /// <param name="property">The data property to bind the framework element to.</param>
-        public virtual void BindTo(DataProperty property)
+        /// <param name="row">The data row in a list to use as a context.</param>
+        public virtual void BindTo(DataProperty property, DataRow row)
         {
-            if (this.property != null) this.property.Change -= OnPropertyChange;
+            if (this.property != null)
+                this.property.Change -= OnPropertyChange;
             this.property = property;
-            this.row = property != null ? property.Row : -1;
+            this.row = row;
             if (property != null)
             {
                 OnPropertyBound();
-                OnPropertyChange(property, new PropertyChangeEventArgs(PropertyChange.All, null, null));
+                OnPropertyChange(property, new PropertyChangeEventArgs(PropertyChange.All, null, null, row));
                 // don't listen for data list properties, as it gets dispatched to the entire column
                 // and significantly degrades performance
-                if (property.Column < 0) property.Change += OnPropertyChange;
+                if (!(property.GetParent() is DataListObject))
+                    property.Change += OnPropertyChange;
             }
         }
 
@@ -104,8 +107,6 @@ namespace Xomega.Framework
         {
             if (property == null) return;
 
-            property.Row = row;
-
             if (change.IncludesEditable()) UpdateEditability();
             if (change.IncludesVisible()) UpdateVisibility();
             if (change.IncludesRequired() || change.IncludesEditable()) UpdateRequired();
@@ -159,9 +160,8 @@ namespace Xomega.Framework
             {
                 bool b = PreventElementUpdate;
                 PreventElementUpdate = true;
-                property.Row = row;
                 property.Editing = true;
-                property.SetValue(value);
+                property.SetValue(value, row);
                 PreventElementUpdate = b;
             }
         }
@@ -171,7 +171,7 @@ namespace Xomega.Framework
         /// </summary>
         public override void Dispose()
         {
-            BindTo(null); // unbind
+            BindTo(null, null); // unbind
         }
 
         /// <summary>

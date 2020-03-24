@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -44,7 +45,7 @@ namespace Xomega.Framework.Binding
 
             if (change.IncludesValue())
             {
-                ((TextBlock)element).Text = property.DisplayStringValue;
+                ((TextBlock)element).Text = property.GetStringValue(ValueFormat.DisplayString, row);
             }
         }
 

@@ -91,11 +91,12 @@ namespace Xomega.Framework.Lookup
         /// Only values that match the filter will be cloned, which is better for performance.
         /// </summary>
         /// <param name="filterFunc">A function to filter the values or <c>null</c> to return all values.</param>
+        /// <param name="row">The data row context, if any.</param>
         /// <returns>A filtered enumeration that contains copies of each value matching the filter.</returns>
-        public IEnumerable<Header> GetValues(Func<Header, bool> filterFunc)
+        public IEnumerable<Header> GetValues(Func<Header, DataRow, bool> filterFunc, DataRow row = null)
         {
             IEnumerable<Header> lst = data;
-            if (filterFunc != null) lst = lst.Where(filterFunc);
+            if (filterFunc != null) lst = lst.Where(h => filterFunc(h, row));
             return lst.Where(h => h != null).Select(h => h.Clone()).AsEnumerable();
         }
 

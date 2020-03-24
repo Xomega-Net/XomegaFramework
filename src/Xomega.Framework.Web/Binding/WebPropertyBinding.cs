@@ -88,7 +88,7 @@ namespace Xomega.Framework.Web
         /// <param name="obj">Data object to bind the web control to.</param>
         public static void BindToObject(Control ctl, DataObject obj)
         {
-            BindToObject(ctl, obj, false);
+            BindToObject(ctl, obj, null);
         }
 
         /// <summary>
@@ -98,27 +98,28 @@ namespace Xomega.Framework.Web
         /// </summary>
         /// <param name="ctl">Control to bind to the given data object.</param>
         /// <param name="obj">Data object to bind the control to.</param>
-        /// <param name="bindCurrentRow">For list objects specifies whether to bind the whole list or just the current row.</param>
-        public static void BindToObject(Control ctl, DataObject obj, bool bindCurrentRow)
+        /// <param name="currentRow">For list objects specifies the current row to bind. If null, the whole list will be bound.</param>
+        public static void BindToObject(Control ctl, DataObject obj, DataRow currentRow)
         {
             if (obj == null || ctl == null) return;
 
             AttributeCollection attr = GetControlAttributes(ctl);
-            string childPath = attr != null ? attr[AttrChildObject] : null;
+            string childPath = attr?[AttrChildObject];
             DataObject cObj = FindChildObject(obj, childPath);
             obj = cObj as DataObject;
-            string propertyName = attr != null ? attr[AttrProperty] : null;
+            string propertyName = attr?[AttrProperty];
             if (obj != null && propertyName != null)
             {
-                WebPropertyBinding binding = Create(ctl) as WebPropertyBinding;
-                if (binding != null) binding.BindTo(obj[propertyName]);
+                if (Create(ctl) is WebPropertyBinding binding)
+                    binding.BindTo(obj[propertyName], currentRow);
                 // remove attributes that are no longer needed to minimize HTML
                 attr.Remove(AttrChildObject);
                 attr.Remove(AttrProperty);
             }
-            else if (cObj is DataListObject && !bindCurrentRow) BindToList(ctl, (DataListObject)cObj);
+            else if (cObj is DataListObject && currentRow == null)
+                BindToList(ctl, (DataListObject)cObj);
             else foreach (Control c in ctl.Controls)
-                    BindToObject(c, obj, bindCurrentRow);
+                    BindToObject(c, obj, currentRow);
         }
 
         /// <summary>
@@ -130,8 +131,8 @@ namespace Xomega.Framework.Web
         {
             if (list == null || ctl == null) return;
 
-            IListBindable listBinding = Create(ctl) as IListBindable;
-            if (listBinding != null) listBinding.BindTo(list);
+            if (Create(ctl) is IListBindable listBinding)
+                listBinding.BindTo(list);
         }
 
         #endregion
@@ -334,11 +335,11 @@ namespace Xomega.Framework.Web
             base.UpdateElement(change);
             if (property == null) return;
 
-            ITextControl txtCtl = control as ITextControl;
-            if (change.IncludesValue() && txtCtl != null)
+            if (change.IncludesValue() && control is ITextControl txtCtl)
             {
-                txtCtl.Text = control is IEditableTextControl && property.Editable ?
-                    property.EditStringValue : property.DisplayStringValue;
+                txtCtl.Text = property.GetStringValue(control is IEditableTextControl && property.Editable ?
+                    ValueFormat.EditString : ValueFormat.DisplayString,
+                    row);
             }
         }
     }

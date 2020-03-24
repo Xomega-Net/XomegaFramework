@@ -121,7 +121,7 @@ namespace Xomega.Framework.Properties
             if (AdditionalPropertyName2 != null)
                 additionalProperty2 = parent[AdditionalPropertyName2];
 
-            OnValueChanged(this, new PropertyChangeEventArgs(PropertyChange.All, null, null));
+            OnValueChanged(this, new PropertyChangeEventArgs(PropertyChange.All, null, null, null));
         }
 
         /// <summary>
@@ -131,8 +131,9 @@ namespace Xomega.Framework.Properties
         /// This method is used as a filter function for the list of operators to display.
         /// </summary>
         /// <param name="oper">The operator to check.</param>
+        /// <param name="row">The data row context, if any.</param>
         /// <returns>True if the given operator is applicable, otherwise false.</returns>
-        public bool IsApplicable(Header oper)
+        public bool IsApplicable(Header oper, DataRow row = null)
         {
             object multiVal = oper[AttributeMultival];
             if (additionalProperty == null && multiVal != null || additionalProperty != null && (
@@ -150,8 +151,7 @@ namespace Xomega.Framework.Properties
             Type propType = additionalProperty.GetType();
 
             // probe exclude types first
-            IList exclTypes = exclType as IList;
-            if (exclTypes != null)
+            if (exclType is IList exclTypes)
             {
                 foreach (string s in exclTypes)
                     if (TypeMatches(propType, s)) return false;
@@ -159,8 +159,7 @@ namespace Xomega.Framework.Properties
             else if (TypeMatches(propType, "" + exclType)) return false;
 
             // probe include types next
-            IList types = type as IList;
-            if (types != null)
+            if (type is IList types)
             {
                 foreach (string s in types)
                     if (TypeMatches(propType, s)) return true;

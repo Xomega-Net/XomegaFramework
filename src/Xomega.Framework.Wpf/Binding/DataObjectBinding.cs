@@ -56,7 +56,7 @@ namespace Xomega.Framework
         protected DataObject context;
 
         /// <summary>
-        /// The framework element that is bound to the data property.
+        /// The framework element that is bound to the data object.
         /// </summary>
         protected DependencyObject element;
 
@@ -69,8 +69,7 @@ namespace Xomega.Framework
             element = fwkElement;
 
             OnDataContextChanged(element, new DependencyPropertyChangedEventArgs());
-            FrameworkElement el = fwkElement as FrameworkElement;
-            if (el != null)
+            if (fwkElement is FrameworkElement el)
             {
                 el.DataContextChanged += OnDataContextChanged;
             }
@@ -82,8 +81,7 @@ namespace Xomega.Framework
         /// </summary>
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            DependencyObject element = sender as DependencyObject;
-            if (element == null) return;
+            if (!(sender is DependencyObject element)) return;
             DataObject obj = element.GetValue(FrameworkElement.DataContextProperty) as DataObject;
             BindTo(obj);
         }
@@ -94,7 +92,7 @@ namespace Xomega.Framework
         /// <param name="obj">The data object to bind the framework element to.</param>
         public virtual void BindTo(DataObject obj)
         {
-            this.context = obj;
+            context = obj;
         }
 
         /// <summary>
@@ -102,8 +100,7 @@ namespace Xomega.Framework
         /// </summary>
         public override void Dispose()
         {
-            FrameworkElement el = element as FrameworkElement;
-            if (el != null)
+            if (element is FrameworkElement el)
             {
                 el.DataContextChanged -= OnDataContextChanged;
             }

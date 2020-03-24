@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -46,7 +47,7 @@ namespace Xomega.Framework.Binding
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (property == null) return;
-            string curText = property.Editable ? property.EditStringValue : property.DisplayStringValue;
+            string curText = property.GetStringValue(property.Editable ? ValueFormat.EditString : ValueFormat.DisplayString, row);
             string newText = ((TextBox)element).Text;
             // Only update if the text really changed, since the event may not be user-triggered
             // and this may cause a value change (e.g. for time boxes where seconds are not displayed)
@@ -59,9 +60,10 @@ namespace Xomega.Framework.Binding
         /// Sets the maximum text length to the property size if available.
         /// </summary>
         /// <param name="property">The data property to bind the text box to.</param>
-        public override void BindTo(DataProperty property)
+        /// <param name="row">The data row context, if any.</param>
+        public override void BindTo(DataProperty property, DataRow row)
         {
-            base.BindTo(property);
+            base.BindTo(property, row);
             ((TextBox)element).MaxLength = (property != null && !property.IsMultiValued && property.Size > 0) ? property.Size : 0;
         }
 
@@ -77,7 +79,7 @@ namespace Xomega.Framework.Binding
 
             if (change.IncludesValue())
             {
-                ((TextBox)element).Text = property.Editable ? property.EditStringValue : property.DisplayStringValue;
+                ((TextBox)element).Text = property.GetStringValue(property.Editable ? ValueFormat.EditString : ValueFormat.DisplayString, row);
             }
         }
     }

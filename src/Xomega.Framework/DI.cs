@@ -36,7 +36,7 @@ namespace Xomega.Framework
         /// <param name="container">Service container to configure</param>
         public static void AddSingletonLookupCacheProvider(this IServiceCollection container)
         {
-            container.AddSingleton<ILookupCacheProvider, SingletonLookupCacheProvider>();
+            container.AddSingleton<ILookupCacheProvider, DefaultLookupCacheProvider>();
         }
 
         /// <summary>

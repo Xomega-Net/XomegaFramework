@@ -8,12 +8,12 @@ namespace Xomega.Framework.Lookup
     /// A default implementation of the <c>ILookupCacheProvider</c> interface.
     /// For any cache type it returns the same global instance of the lookup cache.
     /// </summary>
-    public class SingletonLookupCacheProvider : ILookupCacheProvider
+    public class DefaultLookupCacheProvider : ILookupCacheProvider
     {
         /// <summary>
         /// The global instance of the lookup cache provider.
         /// </summary>
-        private static LookupCache globalInstance;
+        private LookupCache globalInstance;
 
         /// <summary>
         /// Service provider for the lookup cache provider
@@ -24,7 +24,7 @@ namespace Xomega.Framework.Lookup
         /// Constructs a singleton lookup cache provider
         /// </summary>
         /// <param name="serviceProvider">Service provider to use</param>
-        public SingletonLookupCacheProvider(IServiceProvider serviceProvider)
+        public DefaultLookupCacheProvider(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
@@ -37,7 +37,7 @@ namespace Xomega.Framework.Lookup
         public virtual LookupCache GetLookupCache(string type)
         {
             if (globalInstance == null)
-                globalInstance = new LookupCache(serviceProvider, LookupCache.Global);
+                globalInstance = new LookupCache(serviceProvider, null, LookupCache.Global);
             return globalInstance;
         }
     }

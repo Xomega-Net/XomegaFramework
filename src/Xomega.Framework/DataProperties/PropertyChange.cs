@@ -1,58 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
-using System;
-
 namespace Xomega.Framework
 {
-    /// <summary>
-    /// Event arguments for the property change events.
-    /// </summary>
-    public class PropertyChangeEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Property change or combination of changes for the notification.
-        /// </summary>
-        private PropertyChange change;
-
-        /// <summary>
-        /// For a single change, the old value before the change occured, where appliable.
-        /// </summary>
-        private object oldValue;
-
-        /// <summary>
-        /// For a single change, the new value after the change occured, where appliable.
-        /// </summary>
-        private object newValue;
-
-        /// <summary>
-        /// Constructs property change event arguments.
-        /// </summary>
-        /// <param name="change">The change or combination of changes that took place.</param>
-        /// <param name="oldValue">The old value before the change.</param>
-        /// <param name="newValue">The new value after the change.</param>
-        public PropertyChangeEventArgs(PropertyChange change, object oldValue, object newValue)
-        {
-            this.change = change;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
-        }
-
-        /// <summary>
-        /// Returns the property change or combination of changes for the notification.
-        /// </summary>
-        public PropertyChange Change { get { return change; } }
-
-        /// <summary>
-        /// For a single change, returns the old value before the change occured, where appliable.
-        /// </summary>
-        public object OldValue { get { return oldValue; } }
-
-        /// <summary>
-        /// For a single change, returns the new value after the change occured, where appliable.
-        /// </summary>
-        public object NewValue { get { return newValue; } }
-    }
-
     /// <summary>
     /// A class that represents a single property change or a combination of
     /// multiple property changes for notifying of several changes at once.
@@ -102,7 +51,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Internal bitmask integer representing the property change(s).
         /// </summary>
-        private int change;
+        private readonly int change;
 
         /// <summary>
         /// Constructs a property change class.

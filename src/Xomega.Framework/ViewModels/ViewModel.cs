@@ -35,7 +35,7 @@ namespace Xomega.Framework.Views
 
             Params = new NameValueCollection();
 
-            errorParser = svcProvider.GetService<ErrorParser>() ?? new ErrorParser(svcProvider.GetService<ResourceManager>());
+            ErrorParser = svcProvider.GetService<ErrorParser>() ?? new ErrorParser(svcProvider.GetService<ResourceManager>());
 
             Initialize();
         }
@@ -175,7 +175,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// The error parser for handling service exceptions
         /// </summary>
-        protected ErrorParser errorParser;
+        public ErrorParser ErrorParser { get; set; }
 
         #endregion
 

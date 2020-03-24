@@ -42,65 +42,71 @@ namespace Xomega.Framework
         /// </summary>
         public virtual T Value
         {
-            get
+            get => GetValue();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets a single typed value for properties that are not multivalued.
+        /// </summary>
+        /// <param name="row">The data row context, if any.</param>
+        /// <returns>A typed value for the specified row or the current property.</returns>
+        public virtual T GetValue(DataRow row = null)
+        {
+            object value = GetValue(ValueFormat.Internal, row);
+            if (value is T) return (T)value;
+            else
             {
-                object value = InternalValue;
-                if (value is T) return (T)value;
-                else
-                {
-                    IList lst = value as IList;
-                    if (lst != null && lst.Count > 0 && lst[0] is T)
-                        return (T)lst[0];
-                    else return default(T);
-                }
-            }
-            set
-            {
-                if (IsMultiValued)
-                {
-                    List<T> lst = new List<T>();
-                    lst.Add(value);
-                    SetValue(lst);
-                }
-                else SetValue(value);
+                if (value is IList lst && lst.Count > 0 && lst[0] is T)
+                    return (T)lst[0];
+                else return default;
             }
         }
 
         /// <summary>
         /// Gets or sets a typed list of values for multivalued properties.
         /// </summary>
-        public virtual List<T> Values
+        public List<T> Values
         {
-            get
+            get => GetValues();
+            set => SetValues(value);
+        }
+
+        /// <summary>
+        /// Gets a typed list of values from the property or the specified row for multivalued properties.
+        /// </summary>
+        /// <param name="row">The data row context, if any.</param>
+        /// <returns>A typed list of values for the specified row or the current property.</returns>
+        public virtual List<T> GetValues(DataRow row = null)
+        {
+            object value = GetValue(ValueFormat.Internal, row);
+            if (value is List<T>) return (List<T>)value;
+            else if (value is T)
+                return new List<T> { (T)value };
+            else
             {
-                object value = InternalValue;
-                if (value is List<T>) return (List<T>)value;
-                else if (value is T)
+                if (!(value is IList lst)) return null;
+
+                List<T> res = new List<T>();
+                foreach (object obj in lst)
                 {
-                    List<T> lst = new List<T>();
-                    lst.Add((T)value);
-                    return lst;
+                    if (obj is T) res.Add((T)obj);
+                    else return null;
                 }
-                else
-                {
-                    IList lst = value as IList;
-                    if (lst == null) return null;
-                    
-                    List<T> res = new List<T>();
-                    foreach (object obj in lst)
-                    {
-                        if (obj is T) res.Add((T)obj);
-                        else return null;
-                    }
-                    return res;
-                }
+                return res;
             }
-            set
-            {
-                if (IsMultiValued) SetValue(value);
-                else if (value != null && value.Count > 0) SetValue(value[0]);
-                else SetValue(null);
-            }
+        }
+
+        /// <summary>
+        /// Sets a list of typed values on the specified data row or the property itself.
+        /// </summary>
+        /// <param name="value">The typed value to set.</param>
+        /// <param name="row">The data row context, if any.</param>
+        public virtual void SetValues(List<T> value, DataRow row = null)
+        {
+            if (IsMultiValued) SetValue(value, row);
+            else if (value != null && value.Count > 0) SetValue(value[0], row);
+            else SetValue(null, row);
         }
     }
 }

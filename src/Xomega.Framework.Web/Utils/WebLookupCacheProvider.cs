@@ -10,7 +10,7 @@ namespace Xomega.Framework.Lookup
     /// For a user cache type it returns an instance of the lookup cache from the user session.
     /// Otherwise it returns a global instance for the application.
     /// </summary>
-    public class WebLookupCacheProvider : SingletonLookupCacheProvider
+    public class WebLookupCacheProvider : DefaultLookupCacheProvider
     {
         private const string SessionKey = "ILookupCacheProvider";
 
@@ -30,12 +30,11 @@ namespace Xomega.Framework.Lookup
         /// <returns>An instance of a lookup cache of the given type.</returns>
         public override LookupCache GetLookupCache(string type)
         {
-            if (LookupCache.User.Equals(type) && HttpContext.Current != null && HttpContext.Current.Session != null)
+            if (type == LookupCache.User && HttpContext.Current?.Session != null)
             {
-                LookupCache userCache = HttpContext.Current.Session[SessionKey] as LookupCache;
-                if (userCache == null)
+                if (!(HttpContext.Current.Session[SessionKey] is LookupCache userCache))
                 {
-                    userCache = new LookupCache(serviceProvider, LookupCache.User);
+                    userCache = new LookupCache(serviceProvider, null, LookupCache.User);
                     HttpContext.Current.Session[SessionKey] = userCache;
                 }
                 return userCache;

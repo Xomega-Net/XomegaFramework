@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Controls;
 
@@ -45,11 +46,10 @@ namespace Xomega.Framework.Binding
         /// <param name="obj">The data object to bind the framework element to.</param>
         public override void BindTo(DataObject obj)
         {
-            DataListObject lst = obj as DataListObject;
-            if (lst != null)
+            ListView lv = (ListView)element;
+            if (obj is DataListObject lst)
             {
                 lst.SelectionChanged -= OnListObjectSelectionChanged;
-                lst.CollectionChanged -= CleanupBindings;
             }
             base.BindTo(obj); // assigns context
             OnListObjectSelectionChanged(context, EventArgs.Empty); // update current selection
@@ -57,10 +57,14 @@ namespace Xomega.Framework.Binding
             if (lst != null)
             {
                 lst.SelectionChanged += OnListObjectSelectionChanged;
-                lst.CollectionChanged += CleanupBindings;
             }
             else CleanupBindings(element, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            ((ListView)element).ItemsSource = lst;
+
+            if (lv.ItemsSource is INotifyCollectionChanged oldSrc)
+                oldSrc.CollectionChanged -= CleanupBindings;
+            lv.ItemsSource = lst?.GetData();
+            if (lv.ItemsSource is INotifyCollectionChanged newSrc)
+                newSrc.CollectionChanged += CleanupBindings;
         }
 
         /// <summary>
@@ -79,8 +83,7 @@ namespace Xomega.Framework.Binding
         private void OnListObjectSelectionChanged(object sender, EventArgs e)
         {
             ListView listView = element as ListView;
-            DataListObject listObj = sender as DataListObject;
-            if (PreventElementUpdate || listObj == null) return;
+            if (PreventElementUpdate || !(sender is DataListObject listObj)) return;
 
             PreventModelUpdate = true;
 
@@ -97,10 +100,9 @@ namespace Xomega.Framework.Binding
             else listView.SelectedItems.Clear();
 
             // set selected item(s) from the list object
-            var listData = listObj.GetData();
-            foreach (DataListObject.RowProxyObject r in listView.Items)
+            foreach (DataRow r in listView.Items)
             {
-                if (listData[r.Row].Selected)
+                if (r.Selected)
                 {
                     if (listView.SelectionMode == SelectionMode.Single)
                     {
@@ -119,13 +121,13 @@ namespace Xomega.Framework.Binding
         private void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listView = element as ListView;
-            DataListObject listObj = context as DataListObject;
-            if (PreventModelUpdate || listObj == null || listObj.CollectionChangeFiring) return;
+            if (PreventModelUpdate || !(context is DataListObject listObj)) return;
 
             PreventElementUpdate = true;
-            listObj.ClearSelectedRows();
-            foreach (DataListObject.RowProxyObject r in listView.SelectedItems)
-                listObj.SelectRows(r.Row, r.Row, false);
+            var selectedRows = new List<DataRow>();
+            foreach (DataRow r in listView.SelectedItems)
+                selectedRows.Add(r);
+            listObj.SelectedRows = selectedRows;
             PreventElementUpdate = false;
         }
     }

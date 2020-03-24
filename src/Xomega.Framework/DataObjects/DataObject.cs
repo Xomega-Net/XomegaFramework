@@ -302,7 +302,7 @@ namespace Xomega.Framework
                 bool oldValue = Editable;
                 this.editable = value;
                 if (Editable != oldValue) FireDataPropertyChange(
-                    new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable));
+                    new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable, null));
             }
         }
 
@@ -343,7 +343,7 @@ namespace Xomega.Framework
                 AccessLevel oldValue = accessLevel;
                 accessLevel = value;
                 FireDataPropertyChange(new PropertyChangeEventArgs(
-                    PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel));
+                    PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel, null));
             }
         }
 
@@ -367,6 +367,22 @@ namespace Xomega.Framework
         /// <param name="dataContract">The data contract object to copy the values from.</param>
         /// <param name="options">Additional options for the operation.</param>
         public virtual void FromDataContract(object dataContract, object options)
+            => FromDataContract(dataContract, options, null);
+
+        /// <summary>
+        /// Sets the values of the given data row or, if the row is null,
+        /// the data object from the given data contract object
+        /// by copying the values of the data contract object fields to the
+        /// data object properties or child objects with the same names.
+        /// If there is no exact match between some data contract field names
+        /// and the data object property names, this method can be overridden
+        /// in the subclass to address each such case.
+        /// </summary>
+        /// <param name="dataContract">The data contract object to copy the values from.</param>
+        /// <param name="options">Additional options for the operation.</param>
+        /// <param name="row">The row to set the values for.
+        /// Null to set values of the current data object.</param>
+        protected void FromDataContract(object dataContract, object options, DataRow row)
         {
             if (dataContract == null) return;
             SetModified(false, false);
@@ -378,9 +394,9 @@ namespace Xomega.Framework
                 if (dp != null)
                 {
                     dp.Modified = null;
-                    dp.SetValue(val);
+                    dp.SetValue(val, row);
                 }
-                else if ((child = this.GetChildObject(pi.Name)) != null)
+                else if ((child = GetChildObject(pi.Name)) != null)
                 {
                     child.FromDataContract(val, options);
                 }
@@ -392,7 +408,7 @@ namespace Xomega.Framework
                         if (cdp != null)
                         {
                             cdp.Modified = null;
-                            cdp.SetValue(cpi.GetValue(val, null));
+                            cdp.SetValue(cpi.GetValue(val, null), row);
                         }
                     }
                 }
@@ -414,7 +430,7 @@ namespace Xomega.Framework
         public virtual void ToDataContract(object dataContract, object options)
         {
             if (dataContract == null) return;
-            ToDataContractProperties(dataContract, dataContract.GetType().GetProperties(), options);
+            ToDataContractProperties(dataContract, dataContract.GetType().GetProperties(), options, null);
         }
 
         /// <summary>
@@ -447,7 +463,8 @@ namespace Xomega.Framework
         /// the current data object values to.</param>
         /// <param name="props">The data contract object fields to set.</param>
         /// <param name="options">Additional options for the operation.</param>
-        protected void ToDataContractProperties(object dataContract, PropertyInfo[] props, object options)
+        /// <param name="row">The data row context, if any.</param>
+        protected void ToDataContractProperties(object dataContract, PropertyInfo[] props, object options, DataRow row = null)
         {
             if (dataContract == null) return;
             foreach (PropertyInfo pi in props)

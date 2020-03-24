@@ -74,7 +74,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 
@@ -104,7 +104,7 @@ namespace Xomega.Framework.Views
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
             // ignore events from grandchildren
-            if (e.IsSaved() || e.IsDeleted())
+            if (e.IsSaved(false) || e.IsDeleted(false))
                 LoadData(true); // reload child lists if a child was updated
 
             base.OnChildEvent(childViewModel, e);
@@ -119,7 +119,7 @@ namespace Xomega.Framework.Views
         protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
         {
             // ignore events from grandchildren
-            if (e.IsSaved() || e.IsDeleted())
+            if (e.IsSaved(false) || e.IsDeleted(false))
                 await LoadDataAsync(true, token); // reload child lists if a child was updated
 
             await base.OnChildEventAsync(childViewModel, e, token);
@@ -145,7 +145,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 
@@ -164,7 +164,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 
@@ -192,7 +192,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 
@@ -213,7 +213,7 @@ namespace Xomega.Framework.Views
             }
             catch (Exception ex)
             {
-                Errors = errorParser.FromException(ex);
+                Errors = ErrorParser.FromException(ex);
             }
         }
 

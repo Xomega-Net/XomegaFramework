@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
@@ -75,8 +76,8 @@ namespace Xomega.Framework.Binding
             }
             if (change.IncludesValue())
             {
-                bool? check = null;
                 object val = property.InternalValue;
+                bool? check;
                 if (val is bool) check = (bool)val;
                 else check = val as bool?;
                 ((ToggleButton)element).IsChecked = check;

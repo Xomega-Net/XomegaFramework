@@ -13,20 +13,20 @@ namespace Xomega.Framework
     /// <summary>
     /// A dynamic data object that has a list of rows as its data instead of specific values.
     /// </summary>
-    public abstract class DataListObject : DataObject, INotifyCollectionChanged, IEnumerator<DataObject>, IEnumerable<DataObject>
+    public abstract class DataListObject : DataObject, INotifyCollectionChanged
     {
         #region List data and edit data
 
         /// <summary>
         /// The data table for the list stored as an array of arrays
         /// </summary>
-        protected List<DataRow> data = new List<DataRow>();
+        protected DataRowCollection data = new DataRowCollection();
 
         /// <summary>
         /// Gets the underlying list of data rows for the data list object.
         /// </summary>
         /// <returns>A list of DataRow objects.</returns>
-        public IList<DataRow> GetData() { return new ReadOnlyCollection<DataRow>(data); }
+        public IList<DataRow> GetData() { return new ReadOnlyObservableCollection<DataRow>(data); }
 
         /// <summary>
         /// The number of columns in the data list.
@@ -67,7 +67,8 @@ namespace Xomega.Framework
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            foreach (DataProperty p in Properties) p.SetTableColumn(data, ColumnCount++);
+            foreach (DataProperty p in Properties) p.Column = ColumnCount++;
+            data.CollectionChanged += (s, e) => FireCollectionChange(e);
         }
 
         /// <summary>
@@ -77,7 +78,6 @@ namespace Xomega.Framework
         {
             AppliedCriteria = null;
             data.Clear();
-            FireCollectionChanged();
         }
 
         /// <summary>
@@ -110,12 +110,8 @@ namespace Xomega.Framework
         /// <summary>
         /// Sorts the data object list according to the specified comparison function.
         /// </summary>
-        public void Sort(Comparison<DataRow> cmp)
-        {
-            if (cmp == null) data.Sort();
-            else data.Sort(cmp);
-            FireCollectionChanged();
-        }
+        public void Sort(Comparison<DataRow> cmp) => data.Sort(cmp);
+
         #endregion
 
         #region Selection support
@@ -200,7 +196,16 @@ namespace Xomega.Framework
         /// <summary>
         /// A list of currently selected data rows.
         /// </summary>
-        public List<DataRow> SelectedRows { get { return data.Where(r => r.Selected).ToList(); } }
+        public List<DataRow> SelectedRows
+        {
+            get => data.Where(r => r.Selected).ToList();
+            set
+            {
+                data.ToList().ForEach(r => r.Selected = false);
+                if (value != null) value.ForEach(r => r.Selected = true);
+                FireSelectionChanged();
+            }
+        }
 
         /// <summary>
         /// Checks if the data row with a specified index is selected.
@@ -213,8 +218,13 @@ namespace Xomega.Framework
         /// Single-select data row with a specified index.
         /// </summary>
         /// <param name="idx">Index of the row to select</param>
-        /// <returns>True if selection was allowed, false otherwise</returns>
-        public bool SelectRow(int idx) => SelectRows(idx, idx, true);
+        public void SelectRow(int idx) => SelectRows(idx, idx, true);
+
+        /// <summary>
+        /// Select a single data row in the list, and clear selection on all other rows.
+        /// </summary>
+        /// <param name="row">The row to select.</param>
+        public void SelectRow(DataRow row) => SelectedRows = new[] { row }.ToList();
 
         /// <summary>
         /// Select all data rows.
@@ -230,14 +240,10 @@ namespace Xomega.Framework
         /// Toggles selection for the specified row.
         /// </summary>
         /// <param name="row">The row index.</param>
-        public void ToggleSelection(int row)
+        public void ToggleSelection(DataRow row)
         {
-            if (IsRowSelected(row))
-            {
-                data[row].Selected = false;
-                FireSelectionChanged();
-            }                
-            else SelectRow(row);
+            row.Selected = !row.Selected;
+            FireSelectionChanged();
         }
 
         #endregion
@@ -354,14 +360,6 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Fire a CollectionChanged event for the entire list
-        /// </summary>
-        public void FireCollectionChanged()
-        {
-            FireCollectionChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-
-        /// <summary>
         /// Insert a new data row at the specified index. The data row should have this list as a parent.
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
@@ -370,7 +368,6 @@ namespace Xomega.Framework
         {
             if (row.List != this || index < 0 || index > data.Count) return;
             data.Insert(index, row);
-            FireCollectionChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, row, index));
         }
 
         /// <summary>
@@ -380,10 +377,7 @@ namespace Xomega.Framework
         public void RemoveAt(int index)
         {
             if (index < 0 || index >= data.Count) return;
-
-            DataRow removed = data[index];
             data.RemoveAt(index);
-            FireCollectionChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, index));
         }
 
         #endregion
@@ -398,29 +392,26 @@ namespace Xomega.Framework
         /// <param name="options">Additional options for the operation.</param>
         public override void FromDataContract(object dataContract, object options)
         {
-            IEnumerable list = dataContract as IEnumerable;
-            if (list == null) return;
+            if (!(dataContract is IEnumerable list)) return;
             List<DataRow> sel = new List<DataRow>();
             ListSortCriteria keys = new ListSortCriteria();
-            CrudOpions opts = options as CrudOpions;
-            if (opts != null && opts.PreserveSelection)
+            if (options is CrudOpions opts && opts.PreserveSelection)
             {
                 sel = SelectedRows;
                 keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));
             }
-            data.Clear();
-            Reset();
-            SetModified(false, false);
+
+            List<DataRow> rows = new List<DataRow>();
             foreach (object contractItem in list)
             {
                 DataRow r = new DataRow(this);
-                data.Add(r);
-                MoveNext();
-                base.FromDataContract(contractItem, options);
+                rows.Add(r);
+                FromDataContract(contractItem, options, r);
                 r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
+            SetModified(false, false);
+            data.ReplaceData(rows);
             if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
-            FireCollectionChanged();
             FireSelectionChanged();
         }
 
@@ -444,126 +435,62 @@ namespace Xomega.Framework
         /// <param name="options">Additional options for the operation.</param>
         public override void ToDataContract(object obj, object options)
         {
-            IList list = obj as IList;
-            if (list == null) return;
+            if (!(obj is IList list)) return;
             Type listType = list.GetType();
             if (!listType.IsGenericType || listType.GetGenericArguments().Length != 1) return;
 
             Type contractItemType = list.GetType().GetGenericArguments()[0];
-            foreach (DataObject objectItem in this)
+            foreach (DataRow row in data)
             {
                 object item = Activator.CreateInstance(contractItemType);
-                objectItem.ToDataContract(item, options);
+                ToDataContractProperties(item, contractItemType.GetProperties(), options, row);
                 list.Add(item);
             }
         }
 
         #endregion
 
-        #region IEnumerable interfaces
+        #region DataRowCollection
 
         /// <summary>
-        /// The current row index if set.
+        /// Observable collection of data rows that allows bulk updates and sorting.
         /// </summary>
-        private int currentRow = -1;
-
-        /// <summary>
-        /// Accessor for the current row index.
-        /// </summary>
-        public int CurrentRow { get { return currentRow; } set { currentRow = value < 0 ? -1 : value; } }
-
-        /// <summary>
-        /// Resets the current enumerator and returns this object as an enumerator that iterates through the collection of data objects.
-        /// </summary>
-        /// <returns>An IEnumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<DataObject> GetEnumerator()
+        public class DataRowCollection : ObservableCollection<DataRow>
         {
-            Reset();
-            return this;
-        }
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+            private bool suppressNotification;
 
-        /// <summary>
-        /// Gets the current element in the collection.
-        /// </summary>
-        public DataObject Current { get { return new RowProxyObject(this, CurrentRow); } }
-
-        /// <summary>
-        /// Empty dispose method.
-        /// </summary>
-        public void Dispose() {}
-
-        /// <summary>
-        /// Gets the current untyped element in the collection.
-        /// </summary>
-        object IEnumerator.Current { get { return Current; } }
-
-        /// <summary>
-        /// Advances the enumerator to the next element of the collection.
-        /// </summary>
-        /// <returns></returns>
-        public bool MoveNext()
-        {
-            if (++CurrentRow < RowCount) return true;
-            return false;
-        }
-
-        /// <summary>
-        /// Sets the enumerator to its initial position, which is before the first element in the collection.
-        /// </summary>
-        public void Reset() { CurrentRow = -1; }
-
-        #endregion
-
-        #region RowProxyObject
-
-        /// <summary>
-        /// A proxy data object for a row in the list that is returned by the enumerator on the list object.
-        /// </summary>
-        public class RowProxyObject : DataObject
-        {
-            /// <summary>
-            /// The data list object, for which this object is a proxy.
-            /// </summary>
-            public DataListObject List { get; private set; }
-
-            /// <summary>
-            /// The row index of the row in the data list object, for which this is a proxy.
-            /// </summary>
-            public int Row { get; private set; }
-
-            /// <summary>
-            /// Constructs a new data list row proxy object.
-            /// </summary>
-            /// <param name="list">The list from which to construct the row proxy object.</param>
-            /// <param name="row">The row index.</param>
-            public RowProxyObject(DataListObject list, int row)
+            /// <inheritdoc/>
+            protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
             {
-                this.List = list;
-                this.Row = row;
+                if (!suppressNotification)
+                    base.OnCollectionChanged(e);
             }
 
             /// <summary>
-            /// Empty implemenation of the abstract Initalize method.
+            /// Replaces collection data with the new data provided with a single collection change notificiation.
             /// </summary>
-            protected override void Initialize()
+            /// <param name="source">The new data to replace the current list data with.</param>
+            public void ReplaceData(IEnumerable<DataRow> source)
             {
-                // no-op for this abstract method
+                suppressNotification = true;
+                Clear();
+                foreach (var row in source) Add(row);
+                suppressNotification = false;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
             /// <summary>
-            /// Overrides retrieval of data properties by name to return the corresponding property of the data list
-            /// after setting its current row to this object's row.
+            /// Sorts the current collection of rows using the specified comparison function.
+            /// If no comparison function is specified, sorts the rows based on the sort criteria
+            /// of the associated data list object.
             /// </summary>
-            /// <param name="name">The name of the property.</param>
-            /// <returns>A data property of the associated list object with the proper current row set.</returns>
-            public override DataProperty this[string name]
+            /// <param name="comparison">The comparison function to use.</param>
+            public void Sort(Comparison<DataRow> comparison)
             {
-                get
-                {
-                    List.CurrentRow = Row;
-                    return List[name];
-                }
+                List<DataRow> rows = new List<DataRow>(this);
+                if (comparison == null) rows.Sort();
+                else rows.Sort(comparison);
+                ReplaceData(rows);
             }
         }
 

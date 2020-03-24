@@ -44,8 +44,7 @@ namespace Xomega.Framework.Views
         public override void BindTo(ViewModel viewModel)
         {
             bool bind = viewModel != null;
-            DetailsViewModel dvm = (bind ? viewModel : Model) as DetailsViewModel;
-            if (dvm != null)
+            if ((viewModel ?? Model) is DetailsViewModel dvm)
             {
                 BindDataObject(this, bind ? dvm.DetailsObject : null);
             }
@@ -58,9 +57,8 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public override bool CanClose()
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            DataObject dtlObj = (dvm != null) ? dvm.DetailsObject : null;
-            bool? modified = dtlObj != null ? dtlObj.IsModified() : null;
+            DataObject dtlObj = (Model is DetailsViewModel dvm) ? dvm.DetailsObject : null;
+            bool? modified = dtlObj?.IsModified();
             if (modified != null && modified.Value && MessageBox.Show(
                     "You have unsaved changes. Do you want to discard them and close the window?",
                     "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning,
@@ -75,10 +73,13 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for saving the view delegating the action to the view model.
         /// </summary>
-        protected virtual void Save(object sender, EventArgs e)
+        protected virtual async void Save(object sender, EventArgs e)
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm != null) dvm.Save(sender, e);
+            if (Model is DetailsViewModel dvm)
+            {
+                if (IsAsync) await dvm.SaveAsync();
+                dvm.Save(sender, e);
+            }
         }
 
         /// <summary>
@@ -86,17 +87,20 @@ namespace Xomega.Framework.Views
         /// </summary>
         protected virtual bool SaveEnabled()
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            return (dvm != null) ? dvm.SaveEnabled() : false;
+            return (Model is DetailsViewModel dvm) ? dvm.SaveEnabled() : false;
         }
 
         /// <summary>
         /// Default handler for deleting the view delegating the action to the view model.
         /// </summary>
-        protected virtual void Delete(object sender, EventArgs e)
+        protected virtual async void Delete(object sender, EventArgs e)
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm != null) dvm.Delete(sender, e); // this will call CanDelete
+            if (Model is DetailsViewModel dvm)
+            {
+                // this will call CanDelete
+                if (IsAsync) await dvm.DeleteAsync();
+                dvm.Delete(sender, e);
+            }
         }
 
         /// <summary>
@@ -104,8 +108,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         protected virtual bool DeleteEnabled()
         {
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            return (dvm != null) ? dvm.DeleteEnabled() : false;
+            return (Model is DetailsViewModel dvm) ? dvm.DeleteEnabled() : false;
         }
 
         /// <summary>

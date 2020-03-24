@@ -34,7 +34,7 @@
                 else if (Property is DateTimeProperty dtp)
                     return dtp.Value?.ToString("yyyy-MM-ddTHH:mm");
             }
-            return IsEditable ? Property.EditStringValue : Property.DisplayStringValue;
+            return Property.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
         }
     }
 
@@ -71,7 +71,7 @@
                 delimiter = Property.DisplayListSeparator
             };
 
-            foreach (object i in Property.ItemsProvider(null))
+            foreach (object i in Property.ItemsProvider(null, Row))
             {
                 settings.items.Add(new
                 {

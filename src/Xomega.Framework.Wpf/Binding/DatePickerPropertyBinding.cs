@@ -57,9 +57,10 @@ namespace Xomega.Framework.Binding
         /// Sets the long format on the date picker if the property has current culture's long date format
         /// </summary>
         /// <param name="property">The data property to bind the date picker to.</param>
-        public override void BindTo(DataProperty property)
+        /// <param name="row">The data row context, if any.</param>
+        public override void BindTo(DataProperty property, DataRow row)
         {
-            base.BindTo(property);
+            base.BindTo(property, row);
             DateTimeProperty dtp = property as DateTimeProperty;
             if (dtp != null)
             {
@@ -81,7 +82,7 @@ namespace Xomega.Framework.Binding
             {
                 DateTimeProperty dtp = property as DateTimeProperty;
                 if (dtp != null) ((DatePicker)element).SelectedDate = dtp.Value;
-                else ((DatePicker)element).Text = property.Editable ? property.EditStringValue : property.DisplayStringValue;
+                else ((DatePicker)element).Text = property.GetStringValue(property.Editable ? ValueFormat.EditString : ValueFormat.DisplayString, row);
             }
         }
     }

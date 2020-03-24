@@ -32,10 +32,15 @@ namespace Xomega.Framework.Lookup
         public const string User = "UserLookupCache";
 
         /// <summary>
-        /// Gets an instance of a lookup cache of the specified type.
-        /// Typically either <see cref="LookupCache.Global"/> or <see cref="LookupCache.User"/> constants are used as a cache type.
+        /// A constant that represents a local lookup cache for the current property.
         /// </summary>
-        /// <param name="serviceProvider">Service provider to use</param>
+        public const string Local = "LocalLookupCache";
+
+        /// <summary>
+        /// Gets an instance of a lookup cache of the specified type.
+        /// Typically either <see cref="Global"/> or <see cref="User"/> constants are used as a cache type.
+        /// </summary>
+        /// <param name="serviceProvider">Service provider to use.</param>
         /// <param name="cacheType">Cache type.</param>
         /// <returns>An instance of a lookup cache of the specified type or <c>null</c> if no cache can be found.</returns>
         public static LookupCache Get(IServiceProvider serviceProvider, string cacheType)
@@ -44,10 +49,11 @@ namespace Xomega.Framework.Lookup
             if (cacheProvider == null)
             {
                 Trace.TraceWarning("No ILookupCacheProvider service is configured. Using default SingletonLookupCacheProvider.");
-                cacheProvider = new SingletonLookupCacheProvider(serviceProvider);
+                cacheProvider = new DefaultLookupCacheProvider(serviceProvider);
             }
             return cacheProvider.GetLookupCache(cacheType);
         }
+
         #endregion
 
         /// <summary>
@@ -74,20 +80,15 @@ namespace Xomega.Framework.Lookup
         /// Constructs a new lookup cache of the specified type.
         /// </summary>
         /// <param name="serviceProvider">Service provider for the cache</param>
+        /// <param name="cacheLoaders">A list of specific cache loaders for the current cache.
+        /// If null, cache loaders registered with the service provider will be used.</param>
         /// <param name="type">Cache type</param>
-        public LookupCache(IServiceProvider serviceProvider, string type)
+        public LookupCache(IServiceProvider serviceProvider, List<ILookupCacheLoader> cacheLoaders, string type)
         {
             if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-            cacheLoaders = serviceProvider.GetServices<ILookupCacheLoader>() ?? new List<ILookupCacheLoader>();
+            this.cacheLoaders = cacheLoaders ?? serviceProvider.GetServices<ILookupCacheLoader>() ?? new List<ILookupCacheLoader>();
             CacheType = type;
         }
-
-        /// <summary>
-        /// A delegate for notifying the caller that requested a lookup table that this table
-        /// has been loaded when the latter happened asynchronously (e.g. a WCF service call in Silverlight).
-        /// </summary>
-        /// <param name="type">The type of lookup table that has been loaded.</param>
-        public delegate void LookupTableReady(string type);
 
         /// <summary>
         /// Gets a lookup table of the specified type from the cache.
@@ -96,7 +97,7 @@ namespace Xomega.Framework.Lookup
         /// <returns>A lookup table of the specified type or <c>null</c> if no lookup table can be found.</returns>
         public virtual LookupTable GetLookupTable(string type)
         {
-            if (type != null && cache.ContainsKey(type)) return cache[type];
+            if (type != null && cache.TryGetValue(type, out LookupTable tbl)) return tbl;
             // if the type is not in the cache, try loading it asynchronously and wait for results
             return Task.Run(async () => { return await GetLookupTableAsync(type); }).GetAwaiter().GetResult();
         }

@@ -36,10 +36,6 @@ namespace Xomega.Framework.Web
                 if (property != null && control.Page != null && !PreventModelUpdate)
                 {
                     PostedValue = control.Page.Request.Form[control.UniqueID];
-                    int row;
-                    DataListObject list = property.GetParent() as DataListObject;
-                    if (list != null && int.TryParse(GetControlAttribute("row"), out row))
-                        list.CurrentRow = row;
                     UpdateProperty(PostedValue == null ? false : true);
                 }
             };
@@ -69,13 +65,11 @@ namespace Xomega.Framework.Web
             base.UpdateElement(change - PropertyChange.Value);
             if (property == null) return;
 
-            bool check = property.InternalValue is bool && (bool)property.InternalValue;
+            object val = property.GetValue(ValueFormat.Internal, row);
+            bool check =  val is bool && (bool)val;
             if (change.IncludesValue())
             {
                 ((CheckBox)control).Checked = check;
-                DataListObject list = property.GetParent() as DataListObject;
-                if (list != null)
-                    SetControlAttribute("row", "" + list.CurrentRow);
             }
             // Update property value after binding to make it in sync with the checkbox.
             // Otherwise if the checkbox stays unchecked it will not post a false value

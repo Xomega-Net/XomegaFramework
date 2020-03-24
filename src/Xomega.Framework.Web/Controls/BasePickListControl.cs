@@ -41,7 +41,7 @@ namespace Xomega.Framework.Web
                 {
                     if (property == null || property.ItemsProvider == null) return;
                     List<object> values = new List<object>();
-                    foreach (object val in property.ItemsProvider(null)) values.Add(val);
+                    foreach (object val in property.ItemsProvider(null, row)) values.Add(val);
                     property.SetValue(values);
                 };
 
@@ -167,7 +167,7 @@ namespace Xomega.Framework.Web
                     ListBox lbxItems = (control as BasePickListControl).lbx_Items;
                     lbxItems.Items.Clear();
 
-                    IEnumerable items = property.ItemsProvider != null ? property.ItemsProvider(null) : null;
+                    IEnumerable items = property.ItemsProvider != null ? property.ItemsProvider(null, row) : null;
                     if (items != null) foreach (object i in items)
                     {
                         string value = property.ValueToString(i, ValueFormat.EditString);
