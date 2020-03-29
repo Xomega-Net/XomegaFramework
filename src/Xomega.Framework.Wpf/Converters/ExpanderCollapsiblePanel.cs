@@ -9,7 +9,7 @@ namespace Xomega.Framework.Views
     /// </summary>
     public class ExpanderCollapsiblePanel : ICollapsiblePanel
     {
-        private Expander exp;
+        private readonly Expander exp;
 
         /// <summary>
         /// Constructs a new ICollapsiblePanel wrapper for the given Expander
@@ -25,8 +25,8 @@ namespace Xomega.Framework.Views
         /// </summary>
         public bool Collapsed
         {
-            get { return !exp.IsExpanded; }
-            set { exp.IsExpanded = !value; }
+            get => !exp.IsExpanded;
+            set => exp.IsExpanded = !value;
         }
     }
 }

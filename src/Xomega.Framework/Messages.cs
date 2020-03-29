@@ -101,5 +101,33 @@ namespace Xomega.Framework
         /// Where {0}=Property name
         /// </summary>
         public const string Validation_Required = "Validation_Required";
+
+        /// <summary>
+        /// Are you sure you want to delete this object?
+        /// This action cannot be undone.
+        /// </summary>
+        public const string View_DeleteMessage = "View_DeleteMessage";
+
+        /// <summary>
+        /// Delete Confirmation
+        /// </summary>
+        public const string View_DeleteTitle = "View_DeleteTitle";
+
+        /// <summary>
+        /// New {0}
+        /// Where {0}=Base title
+        /// </summary>
+        public const string View_TitleNew = "View_TitleNew";
+
+        /// <summary>
+        /// You have unsaved changes.
+        /// Do you want to discard them and close the view?
+        /// </summary>
+        public const string View_UnsavedMessage = "View_UnsavedMessage";
+
+        /// <summary>
+        /// Unsaved Changes
+        /// </summary>
+        public const string View_UnsavedTitle = "View_UnsavedTitle";
     }
 }

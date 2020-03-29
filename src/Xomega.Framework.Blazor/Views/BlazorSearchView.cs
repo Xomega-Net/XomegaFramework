@@ -79,13 +79,6 @@ namespace Xomega.Framework.Blazor.Views
         protected virtual bool SelectVisible => Model?.Params?[ViewParams.SelectionMode.Param] != null;
 
         /// <inheritdoc/>
-        protected override string SelectableClass(DataListObject list)
-        {
-            if (list == ListObject && !SelectVisible) return "";
-            return base.SelectableClass(list);
-        }
-
-        /// <inheritdoc/>
         public override void BindTo(ViewModel viewModel)
         {
             if (ListObject != null) ListObject.CollectionChanged -= OnListChanged;

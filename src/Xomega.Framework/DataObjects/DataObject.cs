@@ -101,8 +101,7 @@ namespace Xomega.Framework
         /// <param name="obj">The object to copy the state from.</param>
         public virtual void CopyFrom(DataObject obj)
         {
-            DataObject dObj = obj as DataObject;
-            if (dObj == null) return;
+            if (!(obj is DataObject dObj)) return;
             foreach (DataProperty p in properties.Values)
                 p.CopyFrom(dObj[p.Name]);
             foreach (string chName in childObjects.Keys)
@@ -136,19 +135,19 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="name">The property of the name to return.</param>
         /// <returns>The data property of the data object with the given name or null if not found.</returns>
-        public virtual DataProperty this[string name] { get { return HasProperty(name) ? properties[name] : null; } }
+        public virtual DataProperty this[string name] => HasProperty(name) ? properties[name] : null;
 
         /// <summary>
         /// Checks of the data object has a property with the given name.
         /// </summary>
         /// <param name="name">The property name to check for existence.</param>
         /// <returns>True if the data object contains a property with the given name, false otherwise.</returns>
-        public bool HasProperty(string name) { return name == null ? false : properties.ContainsKey(name); }
+        public bool HasProperty(string name) => name == null ? false : properties.ContainsKey(name);
 
         /// <summary>
         /// Returns an enumeration of the data object properties.
         /// </summary>
-        public IEnumerable<DataProperty> Properties { get { return properties.Values; } }
+        public IEnumerable<DataProperty> Properties => properties.Values;
 
         /// <summary>
         /// Adds the specified property to the data object.
@@ -218,6 +217,11 @@ namespace Xomega.Framework
                   OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
             };
         }
+
+        /// <summary>
+        /// Returns an enumeration of the data object's child objects.
+        /// </summary>
+        public IEnumerable<DataObject> Children => childObjects.Values;
 
         /// <summary>
         /// Gets the child object or object list for the given name or null
@@ -477,8 +481,7 @@ namespace Xomega.Framework
                         if (dp.IsMultiValued)
                         {
                             IList lst = null;
-                            IEnumerable valLst = dp.TransportValue as IEnumerable;
-                            if (valLst != null)
+                            if (dp.GetValue(ValueFormat.Transport, row) is IEnumerable valLst)
                             {
                                 // create the right type of list and copy the values rather than directly assign
                                 lst = CreateInstance(pi.PropertyType) as IList;
@@ -486,11 +489,11 @@ namespace Xomega.Framework
                             }
                             pi.SetValue(dataContract, lst, null);
                         }
-                        else pi.SetValue(dataContract, dp.TransportValue, null);
+                        else pi.SetValue(dataContract, dp.GetValue(ValueFormat.Transport, row), null);
                     }
                     continue;
                 }
-                object obj = null;
+                object obj;
                 try { obj = CreateInstance(pi.PropertyType); }
                 catch { continue; }
 
@@ -501,7 +504,7 @@ namespace Xomega.Framework
                     foreach (PropertyInfo cpi in pi.PropertyType.GetProperties())
                     {
                         DataProperty cdp = this[pi.Name + "_" + cpi.Name];
-                        if (cdp != null && cdp.IsValid(true)) cpi.SetValue(obj, cdp.TransportValue, null);
+                        if (cdp != null && cdp.IsValid(true)) cpi.SetValue(obj, cdp.GetValue(ValueFormat.Transport, row), null);
                     }
                 }
                 pi.SetValue(dataContract, obj, null);
@@ -809,8 +812,7 @@ namespace Xomega.Framework
             ErrorList msgList = GetValidationErrors();
             msgList.AbortIfHasErrors();
             msgList.MergeWith(DoSave(options));
-            CrudOpions crudOpts = options as CrudOpions;
-            if (crudOpts == null || crudOpts.Recursive)
+            if (!(options is CrudOpions crudOpts) || crudOpts.Recursive)
                 foreach (DataObject child in childObjects.Values)
                 {
                     msgList.AbortIfHasErrors();

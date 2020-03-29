@@ -136,7 +136,7 @@ namespace Xomega.Framework.Views
             if (Model is SearchViewModel svm)
             {
                 if (IsAsync) await svm.SelectAsync();
-                svm.Select(sender, e);
+                else svm.Select(sender, e);
             }
         }
 

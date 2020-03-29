@@ -28,27 +28,32 @@ namespace Xomega.Framework
         /// <summary>
         /// A static constant representing a Closed event
         /// </summary>
-        public static readonly ViewEvent Closed = new ViewEvent(1 << 0);
+        public static readonly ViewEvent Opened = new ViewEvent(1 << 0);
+
+        /// <summary>
+        /// A static constant representing a Closed event
+        /// </summary>
+        public static readonly ViewEvent Closed = new ViewEvent(1 << 1);
 
         /// <summary>
         /// A static constant representing a Saved event
         /// </summary>
-        public static readonly ViewEvent Saved = new ViewEvent(1 << 1);
+        public static readonly ViewEvent Saved = new ViewEvent(1 << 2);
 
         /// <summary>
         /// A static constant representing a Deleted event
         /// </summary>
-        public static readonly ViewEvent Deleted = new ViewEvent(1 << 2);
+        public static readonly ViewEvent Deleted = new ViewEvent(1 << 3);
 
         /// <summary>
         /// A static constant representing a Child view event
         /// </summary>
-        public static readonly ViewEvent Child = new ViewEvent(1 << 3);
+        public static readonly ViewEvent Child = new ViewEvent(1 << 4);
 
         /// <summary>
         /// Internal bitmask integer representing the view event(s).
         /// </summary>
-        private int events;
+        private readonly int events;
 
         /// <summary>
         /// Constructs a view event class.
@@ -58,6 +63,12 @@ namespace Xomega.Framework
         {
             this.events = events;
         }
+
+        /// <summary>
+        /// Returns if the view was opened.
+        /// </summary>
+        /// <returns>True if the view was opened, false otherwise.</returns>
+        public bool IsOpened(bool self = true) { return (self && !IsChild() || !self) && (events & Opened.events) > 0; }
 
         /// <summary>
         /// Returns if the view was closed.

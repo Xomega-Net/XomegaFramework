@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI;
@@ -47,17 +48,19 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected Button btn_Delete;
 
-        /// <summary>
-        /// Sets the state of the buttons after callbacks before rendering
-        /// </summary>
-        /// <param name="e">Event args</param>
-        protected override void OnPreRender(EventArgs e)
+        /// <inheritdoc/>
+        protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnPreRender(e);
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm == null) return;
-            if (btn_Save != null) btn_Save.Enabled = dvm.SaveEnabled();
-            if (btn_Delete != null) btn_Delete.Enabled = dvm.DeleteEnabled();
+            base.OnModelPropertyChanged(sender, e);
+
+            // We really want to listen for changes in IsNew on the data object to update the Delete button's state.
+            // But since the view model doesn't have such property, we piggyback off of the ViewTitle property,
+            // which also depends on the IsNew value.
+            if (e.PropertyName == ViewModel.ViewTitleProperty && sender is DetailsViewModel dvm)
+            {
+                if (btn_Save != null) btn_Save.Enabled = dvm.SaveEnabled();
+                if (btn_Delete != null) btn_Delete.Enabled = dvm.DeleteEnabled();
+            }
         }
 
         #endregion
@@ -71,8 +74,7 @@ namespace Xomega.Framework.Web
         protected override void OnLoad(EventArgs e)
         {
             // restore view model state
-            DetailsViewModel dvm = Model as DetailsViewModel;
-            if (dvm != null)
+            if (Model is DetailsViewModel dvm)
             {
                 DataObject obj = DataObj;
                 if (obj != null) dvm.DetailsObject = obj;
@@ -82,7 +84,11 @@ namespace Xomega.Framework.Web
             if (btn_Save != null)
                 btn_Save.Click += Save;
             if (btn_Delete != null)
+            {
                 btn_Delete.Click += Delete;
+                var msg = Model.GetString(Messages.View_DeleteMessage).Replace(Environment.NewLine, "\\n");
+                btn_Delete.OnClientClick = $"if (!confirm('{msg}')) return false;";
+            }
 
             base.OnLoad(e);
         }
@@ -103,6 +109,7 @@ namespace Xomega.Framework.Web
                     WebPropertyBinding.BindToObject(pnl_Object, bind ? dvm.DetailsObject : null);
                 }
                 if (bind) DataObj = dvm.DetailsObject; // persist the object in session
+                else dvm.DetailsObject = null; // detach view model from persisted object
             }
             base.BindTo(viewModel);
         }

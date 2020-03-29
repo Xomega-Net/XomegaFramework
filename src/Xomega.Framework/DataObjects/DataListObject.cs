@@ -142,7 +142,7 @@ namespace Xomega.Framework
         }
 
         // internal selection mode
-        private string rowSelectionMode = SelectionModeSingle;
+        private string rowSelectionMode;
 
         /// <summary>
         /// Occurs when selection has been changed
@@ -242,6 +242,8 @@ namespace Xomega.Framework
         /// <param name="row">The row index.</param>
         public void ToggleSelection(DataRow row)
         {
+            if (!row.Selected && RowSelectionMode == SelectionModeSingle)
+                ClearSelectedRows();
             row.Selected = !row.Selected;
             FireSelectionChanged();
         }

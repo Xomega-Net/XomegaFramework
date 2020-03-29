@@ -2,7 +2,6 @@
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Views;
@@ -50,6 +49,13 @@ namespace Xomega.Framework.Blazor.Views
         /// </summary>
         protected virtual bool DeleteEnabled => (Model as DetailsViewModel)?.DeleteEnabled() ?? false;
 
+        /// <inheritdoc/>
+        public override async Task<bool> CanDeleteAsync(CancellationToken token = default)
+        {
+            var msg = Model.GetString(Messages.View_DeleteMessage);
+            return await JSRuntime.InvokeAsync<bool>("confirm", token, msg);
+        }
+
         /// <summary>
         /// Default handler for saving the view delegating the action to the view model.
         /// </summary>
@@ -62,30 +68,6 @@ namespace Xomega.Framework.Blazor.Views
         protected virtual async Task OnDeleteAsync(MouseEventArgs e)
             => await DetailsModel?.DeleteAsync();
 
-        /// <inheritdoc/>
-        public override void BindTo(ViewModel viewModel)
-        {
-            if (DetailsObject != null) DetailsObject.PropertyChanged -= OnDetailsObjectChanged;
-            base.BindTo(viewModel);
-            OnDetailsObjectChanged(this, new PropertyChangedEventArgs(DataObject.ModifiedProperty));
-            if (DetailsObject != null) DetailsObject.PropertyChanged += OnDetailsObjectChanged;
-        }
-
-        /// <summary>
-        /// Handles changes in the Modified property of the view model's data object, and updates the view title accordingly.
-        /// </summary>
-        /// <param name="sender">Event sender.</param>
-        /// <param name="e">Property chang event arguments.</param>
-        protected virtual async void OnDetailsObjectChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == DataObject.ModifiedProperty
-                && (DetailsObject?.TrackModifications ?? false)
-                && TitleComponent != null)
-            {
-                await TitleComponent.SetModified(IsModified());
-            }
-        }
-
         /// <summary>
         /// Asynchrounsly determines if the view can be closed. If the view is modified,
         /// then prompts the user to confirm discarding unsaved changes.
@@ -97,8 +79,8 @@ namespace Xomega.Framework.Blazor.Views
         {
             if (IsModified())
             {
-                return await JSRuntime.InvokeAsync<bool>("confirm", token,
-                    "You have unsaved changes. Do you want to discard them and close the view?");
+                var msg = Model.GetString(Messages.View_UnsavedMessage);
+                return await JSRuntime.InvokeAsync<bool>("confirm", token, msg);
             }
             return await base.CanCloseAsync(token);
         }

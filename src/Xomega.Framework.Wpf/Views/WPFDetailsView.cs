@@ -11,6 +11,16 @@ namespace Xomega.Framework.Views
     /// </summary>
     public class WPFDetailsView : WPFView
     {
+        /// <summary>
+        /// View model as a details view model.
+        /// </summary>
+        protected DetailsViewModel DetailsModel => Model as DetailsViewModel;
+
+        /// <summary>
+        /// Exposed details object from the details view model.
+        /// </summary>
+        protected DataObject DetailsObject => DetailsModel?.DetailsObject;
+
         /// <summary>Button to delete the current object</summary>
         protected virtual Button DeleteButton { get; }
 
@@ -38,17 +48,11 @@ namespace Xomega.Framework.Views
             }
         }
 
-        /// <summary>
-        /// Binds the view to its model, or unbinds the current model if null is passed.
-        /// </summary>
+        /// <inheritdoc/>
         public override void BindTo(ViewModel viewModel)
         {
-            bool bind = viewModel != null;
-            if ((viewModel ?? Model) is DetailsViewModel dvm)
-            {
-                BindDataObject(this, bind ? dvm.DetailsObject : null);
-            }
             base.BindTo(viewModel);
+            BindDataObject(this, DetailsObject);
         }
 
         /// <summary>
@@ -57,11 +61,11 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view can be closed, False otherwise</returns>
         public override bool CanClose()
         {
-            DataObject dtlObj = (Model is DetailsViewModel dvm) ? dvm.DetailsObject : null;
-            bool? modified = dtlObj?.IsModified();
-            if (modified != null && modified.Value && MessageBox.Show(
-                    "You have unsaved changes. Do you want to discard them and close the window?",
-                    "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning,
+            bool isModified = DetailsObject?.IsModified() ?? false;
+            if (isModified && MessageBox.Show(
+                    Model?.GetString(Messages.View_UnsavedMessage),
+                    Model?.GetString(Messages.View_UnsavedTitle),
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning,
                     MessageBoxResult.No) == MessageBoxResult.No)
                 return false;
 
@@ -78,7 +82,7 @@ namespace Xomega.Framework.Views
             if (Model is DetailsViewModel dvm)
             {
                 if (IsAsync) await dvm.SaveAsync();
-                dvm.Save(sender, e);
+                else dvm.Save(sender, e);
             }
         }
 
@@ -99,7 +103,7 @@ namespace Xomega.Framework.Views
             {
                 // this will call CanDelete
                 if (IsAsync) await dvm.DeleteAsync();
-                dvm.Delete(sender, e);
+                else dvm.Delete(sender, e);
             }
         }
 
@@ -118,8 +122,9 @@ namespace Xomega.Framework.Views
         public override bool CanDelete()
         {
             return MessageBox.Show(
-                "Are you sure you want to delete this object?\nThis action cannot be undone.",
-                "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning,
+                Model?.GetString(Messages.View_DeleteMessage),
+                Model?.GetString(Messages.View_DeleteTitle),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning,
                 MessageBoxResult.No) == MessageBoxResult.Yes;
         }
 

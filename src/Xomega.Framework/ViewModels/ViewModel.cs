@@ -90,6 +90,35 @@ namespace Xomega.Framework.Views
         /// <summary> The view for the model. </summary>
         public object View { get; set; }
 
+        /// <summary>
+        /// Base title of the view to be overridden in subclasses.
+        /// The override can include additional data from the object.
+        /// </summary>
+        public virtual string BaseTitle => GetString("View");
+
+        /// <summary> Property name for the view title. </summary>
+        public const string ViewTitleProperty = "ViewTitle";
+
+        /// <summary>
+        /// The current title of the view, which is based on the <see cref="BaseTitle"/>,
+        /// and can include additional indicators of the view state, such as modification.
+        /// </summary>
+        public virtual string ViewTitle => BaseTitle;
+
+        /// <summary>
+        /// Gets localized string using the specified key and parameters.
+        /// If no resource is defined for the key, the key text will be used.
+        /// </summary>
+        /// <param name="key">The resource key or the actual text.</param>
+        /// <param name="values">Values to substitute into any placeholders in the text.</param>
+        /// <returns></returns>
+        public string GetString(string key, params object[] values)
+        {
+            var resources = ServiceProvider.GetService<ResourceManager>() ?? Messages.ResourceManager;
+            var text = resources.GetString(key) ?? key;
+            return string.Format(text, values);
+        }
+
         #endregion
 
         #region Events
@@ -208,6 +237,8 @@ namespace Xomega.Framework.Views
             tgtView.BindTo(tgtViewModel);
             if (tgtView != curView) tgtView.Show();
 
+            tgtViewModel.FireEvent(ViewEvent.Opened);
+
             return true;
         }
 
@@ -242,6 +273,8 @@ namespace Xomega.Framework.Views
             tgtView.BindTo(tgtViewModel);
             if (tgtView != curView)
                 await tgtView.ShowAsync(token);
+
+            await tgtViewModel.FireEventAsync(ViewEvent.Opened);
 
             return true;
         }
@@ -306,6 +339,29 @@ namespace Xomega.Framework.Views
         protected virtual async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
         {
             await FireEventAsync(childViewModel, e + ViewEvent.Child, token);
+        }
+
+        /// <summary>
+        /// Updates selection in the specified list object for a details open/close event
+        /// using the provided key property on the details view object.
+        /// </summary>
+        /// <param name="list">Data list object to update.</param>
+        /// <param name="keyChildProp">The key property on the child details view.</param>
+        /// <param name="e">Open/close event of the chilid details view.</param>
+        /// <returns></returns>
+        protected virtual bool UpdateListSelection(DataListObject list, DataProperty keyChildProp, ViewEvent e)
+        {
+            // Find key property in the list with the same name, as the key property in the child details object.
+            var keyListProp = list?.Properties?.Where(p => p.IsKey && p.Name == keyChildProp?.Name)?.FirstOrDefault();
+            if (keyListProp != null)
+            {
+                if (e.IsOpened())
+                    list.SelectedRows = list.GetData().Where(r => Equals(keyListProp.GetValue(ValueFormat.Internal, r),
+                        keyChildProp.InternalValue)).ToList();
+                else if (e.IsClosed()) list.ClearSelectedRows();
+                return true;
+            }
+            return false;
         }
 
         #endregion

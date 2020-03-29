@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,11 +29,11 @@ namespace Xomega.Framework.Views
         {
             if (!base.Activate(parameters) || DetailsObject == null) return false;
 
-            DetailsObject.SetValues(Params);
+            InitializeObject();
 
-            if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
-                DetailsObject.SetModified(false, true);
-            else LoadData(false);
+            if (ViewParams.Action.Create != Params[ViewParams.Action.Param])
+                LoadData(false);
+
             return true;
         }
 
@@ -40,22 +42,69 @@ namespace Xomega.Framework.Views
         {
             if (!await base.ActivateAsync(parameters, token) || DetailsObject == null) return false;
 
+            InitializeObject();
+
+            if (ViewParams.Action.Create != Params[ViewParams.Action.Param])
+                await LoadDataAsync(false, token);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Initializes view model's details object.
+        /// </summary>
+        protected virtual void InitializeObject()
+        {
             DetailsObject.SetValues(Params);
 
             if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
                 DetailsObject.SetModified(false, true);
-            else await LoadDataAsync(false, token);
-            return true;
         }
 
         #endregion
 
         #region Data object
 
+        private DataObject detailsObject;
+
         /// <summary>
         /// The primary data object for the details view.
         /// </summary>
-        public DataObject DetailsObject;
+        public DataObject DetailsObject {
+            get => detailsObject;
+            set
+            {
+                if (detailsObject != null) detailsObject.PropertyChanged -= OnDetailsObjectChanged;
+                detailsObject = value;
+                if (detailsObject != null) detailsObject.PropertyChanged += OnDetailsObjectChanged;
+            }
+        }
+
+        /// <summary>
+        /// Handles changes in the Modified and IsNew properties of the data object to notify views of any view title updates.
+        /// </summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Property chang event arguments.</param>
+        protected virtual void OnDetailsObjectChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == DataObject.ModifiedProperty ||
+                e.PropertyName == DataObject.IsNewProperty)
+                OnPropertyChanged(new PropertyChangedEventArgs(ViewTitleProperty));
+        }
+
+        /// <inheritdoc/>
+        public override string ViewTitle
+        {
+            get
+            {
+                bool isNew = DetailsObject?.IsNew ?? true;
+                bool isModified = DetailsObject?.IsModified() ?? false;
+                string title = BaseTitle;
+                if (isNew) title = GetString(Messages.View_TitleNew, title);
+                if (isModified) title += "*";
+                return title;
+            }
+        }
 
         #endregion
 
@@ -96,6 +145,28 @@ namespace Xomega.Framework.Views
             }
         }
 
+        #endregion
+
+        #region Child updates
+
+        /// <summary>
+        /// Finds a child list for the child details view and updates its selected rows
+        /// when the child details view is opened or closed.
+        /// </summary>
+        /// <param name="dvm">View model of the child details view.</param>
+        /// <param name="e">View event of the child details view.</param>
+        protected virtual void UpdateDetailsSelection(DetailsViewModel dvm, ViewEvent e)
+        {
+            var keyProp = DetailsObject?.Properties?.Where(p => p.IsKey)?.FirstOrDefault();
+            var keyChildProp = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey && p.Name != keyProp?.Name)?.FirstOrDefault();
+            if (keyChildProp == null) return;
+
+            foreach (var list in DetailsObject.Children.Where(c => c is DataListObject).Cast<DataListObject>())
+            {
+                if (UpdateListSelection(list, keyChildProp, e)) break;
+            }
+        }
+
         /// <summary>
         /// Default handler for saving or deleting of a child details view.
         /// </summary>
@@ -103,9 +174,13 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event object</param>
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
+            UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
             // ignore events from grandchildren
             if (e.IsSaved(false) || e.IsDeleted(false))
+            {
                 LoadData(true); // reload child lists if a child was updated
+                UpdateDetailsSelection(childViewModel as DetailsViewModel, ViewEvent.Opened);
+            }
 
             base.OnChildEvent(childViewModel, e);
         }
@@ -118,9 +193,13 @@ namespace Xomega.Framework.Views
         /// <param name="token">Cancellation token.</param>
         protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
         {
+            UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
             // ignore events from grandchildren
             if (e.IsSaved(false) || e.IsDeleted(false))
+            {
                 await LoadDataAsync(true, token); // reload child lists if a child was updated
+                UpdateDetailsSelection(childViewModel as DetailsViewModel, ViewEvent.Opened);
+            }
 
             await base.OnChildEventAsync(childViewModel, e, token);
         }

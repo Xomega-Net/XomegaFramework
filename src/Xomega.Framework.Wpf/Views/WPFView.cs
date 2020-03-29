@@ -20,9 +20,6 @@ namespace Xomega.Framework.Views
     {
         #region View properties and constructor
 
-        /// <summary>Title of the view.</summary>
-        public string ViewTitle { get; set; }
-
         /// <summary>Default view width.</summary>
         public double? ViewWidth { get; set; }
 
@@ -46,7 +43,33 @@ namespace Xomega.Framework.Views
         /// Checks if the view can be deleted
         /// </summary>
         /// <returns>True if the view can be deleted, False otherwise</returns>
-        public virtual bool CanDelete() { return false; }
+        public virtual bool CanDelete() => false;
+
+        #endregion
+
+        #region View title
+
+        /// <summary>
+        /// Text control that serves as a view title for inline views.
+        /// </summary>
+        protected virtual TextBlock TitleControl { get; }
+
+        /// <summary>
+        /// Updates either the title of the ower window or the view control with the view title.
+        /// </summary>
+        public virtual void UpdateViewTitle()
+        {
+            if (Model == null) return;
+            Window w = Window.GetWindow(this);
+            bool isTopLevel = w?.Content == this;
+            if (isTopLevel)
+                w.Title = Model.ViewTitle;
+            if (TitleControl != null)
+            {
+                TitleControl.Visibility = isTopLevel ? Visibility.Collapsed : Visibility.Visible;
+                TitleControl.Text = Model.ViewTitle;
+            }
+        }
 
         #endregion
 
@@ -61,7 +84,7 @@ namespace Xomega.Framework.Views
         public virtual void BindTo(ViewModel viewModel)
         {
             bool bind = viewModel != null;
-            ViewModel vc = bind ? viewModel : this.Model;
+            ViewModel vc = bind ? viewModel : Model;
             if (vc != null)
             {
                 if (CloseButton != null)
@@ -85,9 +108,10 @@ namespace Xomega.Framework.Views
                     vc.View = null;
                 }
             }
-            this.Model = viewModel;
+            Model = viewModel;
             // show errors (if any) last, since the error presenter needs the model's service provider
             OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
+            OnModelPropertyChanged(bind ? vc : null, new PropertyChangedEventArgs(ViewModel.ViewTitleProperty));
         }
 
         /// <summary>
@@ -127,14 +151,15 @@ namespace Xomega.Framework.Views
         /// <param name="e">Event arguments</param>
         protected virtual void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            IErrorPresenter ep = ErrorPresenter;
             ViewModel vc = sender as ViewModel;
-            if (ep != null && ViewModel.ErrorsProperty.Equals(e.PropertyName))
-                ep.Show(vc?.Errors);
+            if (e.PropertyName == ViewModel.ErrorsProperty)
+                ErrorPresenter?.Show(vc?.Errors);
+            else if (e.PropertyName == ViewModel.ViewTitleProperty)
+                UpdateViewTitle();
         }
 
         /// <summary>
-        /// Listens for view events allowing subclasses to handle them
+        /// Listens for view events allowing subclasses to handle them.
         /// </summary>
         /// <param name="sender">View model that sent the event</param>
         /// <param name="e">View event</param>
@@ -151,13 +176,11 @@ namespace Xomega.Framework.Views
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Raises property changed event
+        /// Raises property changed event.
         /// </summary>
         /// <param name="e">Event arguments with property name</param>
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged?.Invoke(this, e);
-        }
+            => PropertyChanged?.Invoke(this, e);
 
         #endregion
 
@@ -179,7 +202,6 @@ namespace Xomega.Framework.Views
             else
             {
                 Window w = CreateWindow();
-                w.Title = ViewTitle;
                 w.Content = this;
                 if (Owner != null) w.Owner = Window.GetWindow(Owner);
                 if (ViewWidth != null) w.Width = ViewWidth.Value;
@@ -188,6 +210,7 @@ namespace Xomega.Framework.Views
                 w.Closed += OnWindowClosed;
                 w.Show();
             }
+            UpdateViewTitle();
             return true;
         }
 

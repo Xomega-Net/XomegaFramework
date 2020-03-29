@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Blazor.Components;
@@ -31,14 +32,7 @@ namespace Xomega.Framework.Blazor.Views
         [Inject] protected NavigationManager Navigation { get; set; }
 
         /// <summary>
-        /// View title that can be specified as a parameter.
-        /// </summary>
-        [Parameter]
-        public string Title { get; set; }
-
-        /// <summary>
-        /// A reference to the title component for the view that displays its modification state.
-        /// The view updates the title component whenever modification state is changed.
+        /// A reference to the title component for the view.
         /// </summary>
         protected ViewTitle TitleComponent { get; set; }
 
@@ -60,13 +54,16 @@ namespace Xomega.Framework.Blazor.Views
                 if (bind)
                 {
                     vm.AsyncViewEvents += OnViewEventsAsync;
+                    vm.PropertyChanged += OnModelPropertyChanged;
                     vm.View = this;
                 }
                 else
                 {
                     vm.AsyncViewEvents -= OnViewEventsAsync;
+                    vm.PropertyChanged -= OnModelPropertyChanged;
                     vm.View = null;
                 }
+                OnModelPropertyChanged(bind ? vm : null, new PropertyChangedEventArgs(ViewModel.ViewTitleProperty));
             }
             Model = viewModel;
             // refresh the view if binding to a different model (e.g. master-details)
@@ -257,6 +254,8 @@ namespace Xomega.Framework.Blazor.Views
 
         #endregion
 
+        #region View event handling
+
         /// <summary>
         /// Provides the base method for handling view events.
         /// </summary>
@@ -265,5 +264,21 @@ namespace Xomega.Framework.Blazor.Views
         /// <param name="token">Cancellation token.</param>
         protected virtual async Task OnViewEventsAsync(object sender, ViewEvent e, CancellationToken token = default)
             => await InvokeAsync(() => StateHasChanged());
+
+        /// <summary>
+        /// Handles property change for errors to update the Errors panel
+        /// </summary>
+        /// <param name="sender">Model that sent the event</param>
+        /// <param name="e">Event arguments</param>
+        protected virtual async void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null && sender is ViewModel vm)
+            {
+                TitleComponent.Title = vm.ViewTitle;
+                await TitleComponent.Update();
+            }
+        }
+
+        #endregion
     }
 }

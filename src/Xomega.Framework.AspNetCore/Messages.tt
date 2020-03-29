@@ -66,8 +66,10 @@ namespace <#= resourceNamespace #>
 <# foreach(var entry in entries) { #>
 
         /// <summary>
-        /// <#= entry.Value #>
-<# if (entry.Comment != null) { #>
+<# foreach(var line in entry.Value.Split('\n')) { #>
+        /// <#= line #>
+<# }
+if (entry.Comment != null) { #>
         /// Where <#= entry.Comment #>
 <# } #>
         /// </summary>

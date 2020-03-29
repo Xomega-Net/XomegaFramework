@@ -79,13 +79,11 @@ namespace Xomega.Framework.Web
         protected override void OnLoad(EventArgs e)
         {
             // restore view model state
-            SearchViewModel svm = Model as SearchViewModel;
-            if (svm != null)
+            if (Model is SearchViewModel svm)
             {
                 DataListObject list = ListObj;
                 if (list != null) svm.List = list;
-                ICollapsiblePanel collapsible = ucl_Criteria as ICollapsiblePanel;
-                if (collapsible != null)
+                if (ucl_Criteria is ICollapsiblePanel collapsible)
                     svm.CriteriaCollapsed = collapsible.Collapsed;
             }
 
@@ -158,11 +156,9 @@ namespace Xomega.Framework.Web
         protected override void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnModelPropertyChanged(sender, e);
-            ICollapsiblePanel collapsible = ucl_Criteria as ICollapsiblePanel;
-            if (collapsible != null && SearchViewModel.CriteriaCollapsedProperty.Equals(e.PropertyName))
+            if (ucl_Criteria is ICollapsiblePanel collapsible && SearchViewModel.CriteriaCollapsedProperty.Equals(e.PropertyName))
             {
-                SearchViewModel svm = sender as SearchViewModel;
-                if (svm != null)
+                if (sender is SearchViewModel svm)
                     collapsible.Collapsed = svm.CriteriaCollapsed;
             }
         }
@@ -176,8 +172,7 @@ namespace Xomega.Framework.Web
         {
             if (ucl_AppliedCriteria != null && DataListObject.AppliedCriteriaProperty.Equals(e.PropertyName))
             {
-                DataListObject list = sender as DataListObject;
-                ucl_AppliedCriteria.BindTo((list != null) ? list.AppliedCriteria : null);
+                ucl_AppliedCriteria.BindTo((sender is DataListObject list) ? list.AppliedCriteria : null);
             }
         }
 

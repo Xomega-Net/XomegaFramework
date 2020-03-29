@@ -137,6 +137,11 @@ namespace Xomega.Framework.Web
         /// <summary>
         /// Close button
         /// </summary>
+        protected Label lbl_ViewTitle;
+
+        /// <summary>
+        /// Close button
+        /// </summary>
         protected Button btn_Close;
 
         #endregion
@@ -174,8 +179,9 @@ namespace Xomega.Framework.Web
                     ParentSource = null;
                 }
                 OnModelPropertyChanged(bind ? vm : null, new PropertyChangedEventArgs(ViewModel.ErrorsProperty));
+                OnModelPropertyChanged(bind ? vm : null, new PropertyChangedEventArgs(ViewModel.ViewTitleProperty));
             }
-            this.Model = model;
+            Model = model;
         }
 
         /// <summary>
@@ -191,10 +197,15 @@ namespace Xomega.Framework.Web
         protected virtual void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ViewModel vm = sender as ViewModel;
-            if (ViewModel.ErrorsProperty == e.PropertyName)
+            if (e.PropertyName == ViewModel.ErrorsProperty)
             {
                 if (vm != null) Errors = vm.Errors;
                 ucl_Errors?.Show(vm?.Errors);
+            }
+            else if (e.PropertyName == ViewModel.ViewTitleProperty)
+            {
+                if (lbl_ViewTitle != null)
+                    lbl_ViewTitle.Text = vm?.ViewTitle;
             }
         }
 

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -274,16 +275,25 @@ namespace Xomega.Framework.Views
         #region Child updates
 
         /// <summary>
+        /// Updates selected rows in the list when the child details view is opened or closed.
+        /// </summary>
+        /// <param name="dvm">View model of the child details view.</param>
+        /// <param name="e">View event of the child details view.</param>
+        protected virtual void UpdateDetailsSelection(DetailsViewModel dvm, ViewEvent e)
+        {
+            var keyChildProp = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey)?.FirstOrDefault();
+            UpdateListSelection(List, keyChildProp, e);
+        }
+
+
+        /// <summary>
         /// Handles child closing or change to refresh the list.
         /// </summary>
         /// <param name="childViewModel">Child view model that fired the original event</param>
         /// <param name="e">Event object</param>
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
-            if (e.IsClosed() && List != null)
-            {
-                List.ClearSelectedRows();
-            }
+            UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
             if (e.IsSaved(false) || e.IsDeleted(false))
                 Search(true);
 
@@ -298,10 +308,7 @@ namespace Xomega.Framework.Views
         /// <param name="token">Cancellation token.</param>
         protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
         {
-            if (e.IsClosed() && List != null)
-            {
-                List.ClearSelectedRows();
-            }
+            UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
             if (e.IsSaved(false) || e.IsDeleted(false))
                 await SearchAsync(true, token);
 
