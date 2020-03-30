@@ -31,7 +31,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         public WPFView()
         {
-            ChildViews = new List<IView>();
+            ChildViews = new List<WPFView>();
         }
 
         /// <summary>
@@ -61,13 +61,14 @@ namespace Xomega.Framework.Views
         {
             if (Model == null) return;
             Window w = Window.GetWindow(this);
-            bool isTopLevel = w?.Content == this;
-            if (isTopLevel)
-                w.Title = Model.ViewTitle;
+            bool isTopLevel = (Owner == null || Window.GetWindow(Owner) != w);
+            string viewTitle = Model.ViewTitle;
+            if (isTopLevel && w != null && viewTitle != null)
+                w.Title = viewTitle;
             if (TitleControl != null)
             {
                 TitleControl.Visibility = isTopLevel ? Visibility.Collapsed : Visibility.Visible;
-                TitleControl.Text = Model.ViewTitle;
+                TitleControl.Text = viewTitle;
             }
         }
 
@@ -202,7 +203,6 @@ namespace Xomega.Framework.Views
             else
             {
                 Window w = CreateWindow();
-                w.Content = this;
                 if (Owner != null) w.Owner = Window.GetWindow(Owner);
                 if (ViewWidth != null) w.Width = ViewWidth.Value;
                 if (ViewHeight != null) w.Height = ViewHeight.Value;
@@ -220,7 +220,8 @@ namespace Xomega.Framework.Views
         /// <returns>A window for the view</returns>
         protected virtual Window CreateWindow()
         {
-            return new Window();
+            var windowCreator = Model?.ServiceProvider.GetService<IWindowCreator>();
+            return windowCreator != null ? windowCreator.CreateWindow(this) : new Window { Content = this };
         }
 
         #endregion
@@ -246,7 +247,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary> A list of child views owned by this view </summary>
-        private List<IView> ChildViews { get; set; }
+        private List<WPFView> ChildViews { get; set; }
 
         /// <summary> Panel for displaying inline child views </summary>
         protected virtual ContentControl ChildPanel { get; }
@@ -326,7 +327,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         public virtual void Close()
         {
-            if (Parent is ContentControl ownerPanel && Model.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
+            if (Parent is ContentControl ownerPanel && Model?.Params[ViewParams.Mode.Param] == ViewParams.Mode.Inline)
             {
                 CollapseParentSplitter(true);
                 Model.FireEvent(ViewEvent.Closed);
@@ -375,11 +376,12 @@ namespace Xomega.Framework.Views
         public virtual void Dispose()
         {
             BindTo(null); // unbind model to get it garbage collected in case of weak refs on this view
-            foreach (IView v in new List<IView>(ChildViews)) // use a new list
-            { // since the child view will try to remove itself from ChildViews here
-                v.Dispose();
+            foreach (var v in ChildViews)
+            {
+                // close any child views without asking, since we should've asked before disposing
+                v.canCloseChecked = true;
+                v.Close();
             }
-            Owner = null; // remove from parent
         }
 
         #endregion
