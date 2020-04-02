@@ -1,5 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
 using System.Resources;
@@ -13,9 +15,9 @@ namespace Xomega.Framework
     public class ErrorParser
     {
         /// <summary>
-        /// A resource manager, which can be used to translate the error messages to the current language.
+        /// Service provider for looking up services, such as a resource manager or a logger.
         /// </summary>
-        private readonly ResourceManager resources;
+        private readonly IServiceProvider serviceProvider;
 
         /// <summary>
         /// A flag indicating whether or not to return full exception details in the error list.
@@ -25,11 +27,11 @@ namespace Xomega.Framework
         /// <summary>
         /// Constructs a new error parser.
         /// </summary>
-        /// <param name="resources">Resource manager to use for localization.</param>
+        /// <param name="serviceProvider">Service provider.</param>
         /// <param name="fullException">Whether or not to return full exception details in the error list.</param>
-        public ErrorParser(ResourceManager resources, bool fullException = true)
+        public ErrorParser(IServiceProvider serviceProvider, bool fullException)
         {
-            this.resources = resources;
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             this.fullException = fullException;
         }
 
@@ -38,8 +40,9 @@ namespace Xomega.Framework
         /// otherwise constructs a new error list with the exception as the error message.
         /// </summary>
         /// <param name="ex">Exception to retrieve the error list from.</param>
+        /// <param name="logger">The logger to use for logging unhandled exceptions.</param>
         /// <returns>An error list retrieved from the exception.</returns>
-        public virtual ErrorList FromException(Exception ex)
+        public virtual ErrorList FromException(Exception ex, ILogger logger = null)
         {
             // check if exception is ErrorAbortException first
             if (ex is ErrorAbortException ea) return ea.Errors;
@@ -56,9 +59,21 @@ namespace Xomega.Framework
                 }
                 catch (Exception) { }
             }
+            
+            LogException(ex, logger ?? serviceProvider.GetService<ILogger<ErrorParser>>());
 
             // construct a new error list from exception string
             return GetExceptionErrorList(ex.ToString());
+        }
+
+        /// <summary>
+        /// Logs the exception using the specified logger. Subclasses can override the message.
+        /// </summary>
+        /// <param name="ex">Exception to log.</param>
+        /// <param name="logger">Logger to use.</param>
+        protected virtual void LogException(Exception ex, ILogger logger)
+        {
+            if (logger != null) logger.LogError(ex, "Unhandled Exception");
         }
 
         /// <summary>
@@ -69,6 +84,7 @@ namespace Xomega.Framework
         /// <returns>An error list with a single error for the exception.</returns>
         protected ErrorList GetExceptionErrorList(string exceptionMessage)
         {
+            var resources = serviceProvider.GetService<ResourceManager>();
             ErrorList errList = new ErrorList(resources);
             errList.Add(new ErrorMessage(
                 ErrorType.System,

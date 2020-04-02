@@ -5,7 +5,6 @@ using System;
 using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.Reflection;
-using System.Resources;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 
@@ -23,7 +22,7 @@ namespace Xomega.Framework.Wcf
         /// <param name="fullException">True to make error parser include full details of unhandled exceptions. False otherwise.</param>
         public static void AddWcfErrorParser(this IServiceCollection container, bool fullException)
         {
-            container.AddSingleton<ErrorParser>(sp => new FaultErrorParser(sp.GetService<ResourceManager>(), fullException));
+            container.AddSingleton<ErrorParser>(sp => new FaultErrorParser(sp, fullException));
         }
 
         /// <summary>

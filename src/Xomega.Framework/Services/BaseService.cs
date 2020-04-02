@@ -42,8 +42,8 @@ namespace Xomega.Framework.Services
         public BaseService(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            currentErrors = serviceProvider.GetService<ErrorList>() ?? new ErrorList(serviceProvider.GetService<ResourceManager>());
-            errorParser = serviceProvider.GetService<ErrorParser>() ?? new ErrorParser(serviceProvider.GetService<ResourceManager>());
+            currentErrors = serviceProvider.GetRequiredService<ErrorList>();
+            errorParser = serviceProvider.GetRequiredService<ErrorParser>();
             operators = serviceProvider.GetService<OperatorRegistry>() ?? new OperatorRegistry();
             currentPrincipal = serviceProvider.GetCurrentPrincipal();
         }

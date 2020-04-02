@@ -35,7 +35,7 @@ namespace Xomega.Framework.Views
 
             Params = new NameValueCollection();
 
-            ErrorParser = svcProvider.GetService<ErrorParser>() ?? new ErrorParser(svcProvider.GetService<ResourceManager>());
+            ErrorParser = svcProvider.GetRequiredService<ErrorParser>();
 
             Initialize();
         }

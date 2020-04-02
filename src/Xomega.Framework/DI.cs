@@ -3,7 +3,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
-using System.Resources;
 using Xomega.Framework.Lookup;
 using Xomega.Framework.Services;
 
@@ -27,7 +26,7 @@ namespace Xomega.Framework
         public static void AddErrors(this IServiceCollection container, bool fullException)
         {
             container.AddScoped<ErrorList>();
-            container.AddSingleton(sp => new ErrorParser(sp.GetService<ResourceManager>(), fullException));
+            container.AddSingleton(sp => new ErrorParser(sp, fullException));
         }
 
         /// <summary>
