@@ -244,7 +244,7 @@ namespace Xomega.Framework
             // get a dummy binding expression so that we could use it for WPF validation framework
             BindingExpression be = !(element is FrameworkElement fwkEl) ? null : fwkEl.GetBindingExpression(ValidationExpressionProperty);
             if (be != null) return be;
-            System.Windows.Data.Binding bnd = new System.Windows.Data.Binding("Show")
+            System.Windows.Data.Binding bnd = new System.Windows.Data.Binding("Errors.ErrorsText")
             {
                 Mode = BindingMode.TwoWay,
                 NotifyOnValidationError = true,
