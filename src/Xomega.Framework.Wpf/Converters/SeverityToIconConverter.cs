@@ -1,63 +1,54 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Xomega.Framework.Converters
 {
     /// <summary>
-    /// A value converter that can convert a Severity value of the ErrorMessage to an icon image source.
-    /// It uses default system icons for severities, but allows setting custom icons as well.
+    /// A value converter that can convert a Severity value of the ErrorMessage to an icon brush from application resources.
     /// </summary>
     public class SeverityToIconConverter : IValueConverter
     {
         /// <summary>
-        /// Icon for the <see cref="ErrorSeverity.Info"/>.
+        /// Icon key for the <see cref="ErrorSeverity.Info"/>.
         /// </summary>
-        public Icon Info { get; set; } = SystemIcons.Information;
+        public string Info { get; set; } = "InformationIcon";
 
         /// <summary>
-        /// Icon for the <see cref="ErrorSeverity.Warning"/>.
+        /// Icon key for the <see cref="ErrorSeverity.Warning"/>.
         /// </summary>
-        public Icon Warning { get; set; } = SystemIcons.Warning;
+        public string Warning { get; set; } = "WarningIcon";
 
         /// <summary>
-        /// Icon for the <see cref="ErrorSeverity.Error"/>.
+        /// Icon key for the <see cref="ErrorSeverity.Error"/>.
         /// </summary>
-        public Icon Error { get; set; } = SystemIcons.Error;
+        public string Error { get; set; } = "ErrorIcon";
 
         /// <summary>
-        /// Icon for the <see cref="ErrorSeverity.Critical"/>.
+        /// Icon key for the <see cref="ErrorSeverity.Critical"/>.
         /// </summary>
-        public Icon Critical { get; set; } = SystemIcons.Error;
+        public string Critical { get; set; } = "ErrorIcon";
 
         /// <summary>
-        /// Converts the severity value to an image source.
+        /// Converts the severity value to a drawing brush from application resources.
         /// </summary>
         /// <param name="value">The Xomega severity enumeration value.</param>
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>The image source for the specified severity.</returns>
+        /// <returns>The drawing bursh for the specified severity.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Icon icon = ErrorSeverity.Info.Equals(value) ? Info :
+            string icon = ErrorSeverity.Info.Equals(value) ? Info :
                 ErrorSeverity.Warning.Equals(value) ? Warning :
                 ErrorSeverity.Error.Equals(value) ? Error :
                 ErrorSeverity.Critical.Equals(value) ? Critical :
-                SystemIcons.Question;
+                "QuestionIcon";
 
-            ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
-                icon.Handle,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
-            return imageSource;
+            return Application.Current.Resources[icon];
         }
 
         /// <summary>

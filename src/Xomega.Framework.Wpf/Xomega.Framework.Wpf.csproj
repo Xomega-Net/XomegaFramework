@@ -22,7 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'netcoreapp3.0'">
-    <Compile Remove="Converters\SeverityToIconConverter.cs" />
     <Compile Remove="TokenUtils.cs" />
   </ItemGroup>
 
