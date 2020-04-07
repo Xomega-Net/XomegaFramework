@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Resources;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace Xomega.Framework
 {
@@ -63,7 +64,7 @@ namespace Xomega.Framework
             LogException(ex, logger ?? serviceProvider.GetService<ILogger<ErrorParser>>());
 
             // construct a new error list from exception string
-            return GetExceptionErrorList(ex.ToString());
+            return GetExceptionErrorList(ex.Message);
         }
 
         /// <summary>
@@ -74,6 +75,7 @@ namespace Xomega.Framework
         protected virtual void LogException(Exception ex, ILogger logger)
         {
             if (logger != null) logger.LogError(ex, "Unhandled Exception");
+            else Trace.TraceError(ex.ToString());
         }
 
         /// <summary>

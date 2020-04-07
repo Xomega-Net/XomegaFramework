@@ -20,10 +20,10 @@ namespace Xomega.Framework.Wcf
         /// Gets the service scope for the current instance context.
         /// </summary>
         /// <param name="serviceProvider">Service provider used to create service scope.</param>
-        /// <returns></returns>
+        /// <returns>Current service scope, or a new one based on the specified service provider.</returns>
         public IServiceScope GetServiceScope(IServiceProvider serviceProvider)
         {
-            if (serviceScope == null) serviceScope = serviceProvider.CreateScope();
+            if (serviceScope == null) serviceScope = serviceProvider?.CreateScope();
             return serviceScope;
         }
 

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.ServiceModel.Description;
 using Xomega.Framework.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Xomega.Framework.Wcf
 {
@@ -58,6 +59,15 @@ namespace Xomega.Framework.Wcf
                 return serviceProvider.GetService(contractType);
             }
             IServiceScope scope = ctxScope.GetServiceScope(serviceProvider);
+
+            // find and set the current principal on the principal provider for the current scope
+            IPrincipalProvider principalProvider = scope.ServiceProvider.GetService<IPrincipalProvider>();
+            if (principalProvider != null)
+            {
+                if (ServiceSecurityContext.Current.AuthorizationContext.Properties.TryGetValue("ClaimsPrincipal", out object principal))
+                    principalProvider.CurrentPrincipal = principal as ClaimsPrincipal;
+            }
+
             return scope.ServiceProvider.GetService(contractType);
         }
 
@@ -134,16 +144,18 @@ namespace Xomega.Framework.Wcf
         /// Return null if you do not intend to use correlation state.</returns>
         public object BeforeCall(string operationName, object[] inputs)
         {
-            ErrorList errors = new ErrorList();
-            foreach(object obj in inputs)
+            InstanceContextServiceScope ctxScope = OperationContext.Current.InstanceContext.Extensions.Find<InstanceContextServiceScope>();
+            var svcProvider = ctxScope?.GetServiceScope(null)?.ServiceProvider;
+            ErrorList errors = svcProvider?.GetService<ErrorList>();
+            if (errors == null) return null;
+
+            foreach (object obj in inputs)
             {
                 foreach(ValidationResult result in DataAnnotationValidator.GetValidationErrors(serviceProvider, obj))
                 {
                     errors.AddValidationError(result.ErrorMessage);
                 }
             }
-            if (errors.HasErrors())
-                throw new FaultException<ErrorList>(errors, "Request Validation");
             return null;
         }
 

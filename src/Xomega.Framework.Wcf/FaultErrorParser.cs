@@ -27,7 +27,7 @@ namespace Xomega.Framework.Wcf
 
             // use the server side exception if applicable
             if (ex is FaultException<ExceptionDetail> fexd && fexd.Detail != null)
-                return GetExceptionErrorList(fexd.Detail.ToString());
+                return GetExceptionErrorList(fexd.Detail.Message);
 
             return base.FromException(ex);
         }
