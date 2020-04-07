@@ -115,8 +115,21 @@ namespace Xomega.Framework.Views
         {
             if (Model is SearchViewModel svm)
             {
-                if (IsAsync) await svm.SearchAsync();
-                else svm.Search(sender, e);
+                // store enabled state of the search button to restore at the end
+                // in case when a subclass overrides search and manages the button's state
+                bool enabled = SearchButton?.IsEnabled ?? false;
+                try
+                {
+                    if (SearchButton != null)
+                        SearchButton.IsEnabled = false;
+                    if (IsAsync) await svm.SearchAsync();
+                    else svm.Search(sender, e);
+                }
+                finally
+                {
+                    if (SearchButton != null)
+                        SearchButton.IsEnabled = enabled;
+                }
             }
         }
 

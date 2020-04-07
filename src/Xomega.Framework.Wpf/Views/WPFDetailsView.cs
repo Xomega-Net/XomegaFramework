@@ -81,8 +81,21 @@ namespace Xomega.Framework.Views
         {
             if (Model is DetailsViewModel dvm)
             {
-                if (IsAsync) await dvm.SaveAsync();
-                else dvm.Save(sender, e);
+                // store enabled state of the save button to restore at the end
+                // in case when a subclass overrides save and manages the button's state
+                bool enabled = SaveButton?.IsEnabled ?? false;
+                try
+                {
+                    if (SaveButton != null) // prevent double-clicks
+                        SaveButton.IsEnabled = false;
+                    if (IsAsync) await dvm.SaveAsync();
+                    else dvm.Save(sender, e);
+                }
+                finally
+                {
+                    if (SaveButton != null)
+                        SaveButton.IsEnabled = enabled;
+                }
             }
         }
 
@@ -101,9 +114,21 @@ namespace Xomega.Framework.Views
         {
             if (Model is DetailsViewModel dvm)
             {
-                // this will call CanDelete
-                if (IsAsync) await dvm.DeleteAsync();
-                else dvm.Delete(sender, e);
+                bool enabled = DeleteButton?.IsEnabled ?? false;
+                try
+                {
+                    if (DeleteButton != null)
+                        DeleteButton.IsEnabled = false;
+                    // this will call CanDelete
+                    if (IsAsync) await dvm.DeleteAsync();
+                    else dvm.Delete(sender, e);
+
+                }
+                finally
+                {
+                    if (DeleteButton != null)
+                        DeleteButton.IsEnabled = enabled;
+                }
             }
         }
 
