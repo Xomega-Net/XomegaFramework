@@ -348,6 +348,12 @@ namespace Xomega.Framework.Properties
         public bool CascadingMatchNulls { get; set; }
 
         /// <summary>
+        /// True if null attribute value matches any value of the cascading property.
+        /// False if null attribute value matches only null value of the cascading property.
+        /// </summary>
+        public bool NullsMatchAnyCascading { get; set; }
+
+        /// <summary>
         /// The method that determines if a given possible value matches the current values
         /// of all cascading properties using the attribute specified for each property.
         /// Cascading properties with blank values are ignored, i.e. a blank value
@@ -376,6 +382,7 @@ namespace Xomega.Framework.Properties
                 if (hv is IList<object> hvl)
                     match = (pvl != null) ? pvl.Intersect(hvl).Count() > 0 : hvl.Contains(pv);
                 else if (hv != null) match = (pvl != null) ? pvl.Contains(hv) : hv.Equals(pv);
+                else if (NullsMatchAnyCascading) match = true;
                 else match = pv == null;
                 if (!match) return false;
             }
