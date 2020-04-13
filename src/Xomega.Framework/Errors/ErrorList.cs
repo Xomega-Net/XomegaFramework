@@ -37,11 +37,6 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Internal list of error messages.
-        /// </summary>
-        protected List<ErrorMessage> errors = new List<ErrorMessage>();
-
-        /// <summary>
         /// Gets the text message based on the given error code and parameters.
         /// Uses the resource manager if set to look up the localized message by the error code.
         /// </summary>
@@ -155,7 +150,7 @@ namespace Xomega.Framework
         /// <returns>True if the current list has any errors or critical errors, otherwise false.</returns>
         public bool HasErrors()
         {
-            foreach (ErrorMessage e in errors) if (e.Severity > ErrorSeverity.Warning) return true;
+            foreach (ErrorMessage e in Errors) if (e.Severity > ErrorSeverity.Warning) return true;
             return false;
         }
 
@@ -165,7 +160,7 @@ namespace Xomega.Framework
         /// <param name="err">Error message to add to the list.</param>
         public ErrorMessage Add(ErrorMessage err)
         {
-            errors.Add(err);
+            Errors.Add(err);
             return err;
         }
 
@@ -176,27 +171,19 @@ namespace Xomega.Framework
         public void MergeWith(ErrorList otherList)
         {
             if (otherList != null && otherList != this)
-                errors.AddRange(otherList.Errors);
+                Errors.AddRange(otherList.Errors);
         }
 
         /// <summary>
         /// Clears the error list.
         /// </summary>
-        public void Clear() { errors.Clear(); }
+        public void Clear() { Errors.Clear(); }
 
         /// <summary>
-        /// Returns a read-only collection of error messages from this list.
+        /// Returns a collection of error messages from this list.
         /// </summary>
         [DataMember]
-        public ICollection<ErrorMessage> Errors
-        {
-            get { return errors.AsReadOnly(); }
-            set
-            {
-                // this is to support deserialization that doesn't have access to private members (e.g. in Silverlight)
-                if (errors == null) errors = new List<ErrorMessage>(value);
-            }
-        }
+        public List<ErrorMessage> Errors { get; set; } = new List<ErrorMessage>();
 
         /// <summary>
         ///  Gets a combined error text by concatenating all error messages with a new line delimiter.
@@ -206,7 +193,7 @@ namespace Xomega.Framework
             get
             {
                 string errText = "";
-                foreach (ErrorMessage err in errors)
+                foreach (ErrorMessage err in Errors)
                 {
                     if (!string.IsNullOrEmpty(errText)) errText += "\n";
                     errText += err.Message;
@@ -226,8 +213,8 @@ namespace Xomega.Framework
             get
             {
                 if (httpStatus != null) return httpStatus.Value;
-                if (errors.Count == 0) return HttpStatusCode.OK;
-                return errors.Max(e => e.HttpStatus);
+                if (Errors.Count == 0) return HttpStatusCode.OK;
+                return Errors.Max(e => e.HttpStatus);
             }
             set { httpStatus = value; }
         }

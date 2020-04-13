@@ -16,7 +16,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Default constructor to support deserialization.
         /// </summary>
-        protected ErrorMessage() { }
+        public ErrorMessage() { }
         
         /// <summary>
         /// Constructs an error with a given error code and message.

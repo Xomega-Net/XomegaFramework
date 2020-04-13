@@ -17,6 +17,11 @@ namespace Xomega.Framework.Services
         /// </summary>
         [DataMember]
         public ErrorList Messages { get; set; }
+        
+        /// <summary>
+        /// Default construction to support deserialization
+        /// </summary>
+        public Output() { }
 
         /// <summary>
         /// Constructs a new output with the given list of messages.
@@ -52,6 +57,11 @@ namespace Xomega.Framework.Services
         /// </summary>
         [DataMember]
         public T Result { get; set; }
+
+        /// <summary>
+        /// Default construction to support deserialization
+        /// </summary>
+        public Output() { }
 
         /// <summary>
         /// Constructs an output with a given message list and a specific result.
