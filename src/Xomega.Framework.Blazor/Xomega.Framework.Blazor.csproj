@@ -17,6 +17,7 @@
     <PackageOutputPath>../pkg/$(PackageId).$(Version)</PackageOutputPath>
     <DocumentationFile>bin/Xomega.Framework.Blazor.xml</DocumentationFile>
     <PackageIcon>Logo.png</PackageIcon>
+    <Description>Xomega framework for building server-side Blazor apps.</Description>
   </PropertyGroup>
 
   <ItemGroup>
