@@ -4,24 +4,25 @@
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <PackageId>Xomega.Framework</PackageId>
-    <Version>2.1.1</Version>
+    <Version>3.0.0</Version>
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
     <Copyright>Copyright © Xomega.Net 2010-2020</Copyright>
     <Description>A powerful .NET framework for building multi-tier web or desktop applications using MVVM pattern.</Description>
     <PackageTags>WPF ASP.NET MVC MVVM WCF EntityFramework</PackageTags>
-    <PackageIconUrl>https://avatars2.githubusercontent.com/u/17077373</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Xomega-Net/XomegaFramework/blob/master/LICENSE.md</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>../pkg/$(PackageId).$(Version)</PackageOutputPath>
     <DocumentationFile>bin/Xomega.Framework.xml</DocumentationFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageIcon>Logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
@@ -42,6 +43,14 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Resources.resx</DependentUpon>
       <LastGenOutput>Messages.cs</LastGenOutput>
+    </None>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
