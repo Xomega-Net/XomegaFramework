@@ -262,7 +262,7 @@ namespace Xomega.Framework.Properties
         /// <param name="e">Event arguments that describe the property change.</param>
         private void CacheLoaderParameterChange(object property, PropertyChangeEventArgs e)
         {
-            if (!e.Change.IncludesValue() || LocalCacheLoader == null) return;
+            if (!e.Change.IncludesValue() || LocalCacheLoader == null || Equals(e.OldValue, e.NewValue)) return;
 
             var newParams = new Dictionary<string, object>();
             foreach (string key in cacheLoaderSources.Keys)
@@ -331,8 +331,8 @@ namespace Xomega.Framework.Properties
         /// <param name="e">Event arguments that describe the property change.</param>
         private void CascadingPropertyChange(object property, PropertyChangeEventArgs e)
         {
-            if (!e.Change.IncludesValue()) return;
-            
+            if (!e.Change.IncludesValue() || Equals(e.OldValue, e.NewValue)) return;
+
             if (!IsNull() && FilterFunc != null)
             {
                 if (IsMultiValued) Values = Values.Where(h => FilterFunc(h, e.Row)).ToList();
