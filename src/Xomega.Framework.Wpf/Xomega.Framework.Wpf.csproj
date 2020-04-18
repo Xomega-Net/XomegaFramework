@@ -19,6 +19,8 @@
     <DocumentationFile>bin/Xomega.Framework.Web.xml</DocumentationFile>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>Logo.png</PackageIcon>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,17 +6,19 @@
     <PackageId>Xomega.Framework.AspNetCore</PackageId>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>Logo.png</PackageIcon>
+    <Company>Xomega.Net</Company>
+    <Authors>Xomega Team</Authors>
+    <Product>Xomega.Framework</Product>
+    <Copyright>Copyright © Xomega.Net 2020</Copyright>
+    <Description>Xomega framework for building ASP.NET Core based Web API and apps.</Description>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
     <PackageTags>ASP.NET Core WebAPI Xomega</PackageTags>
     <DocumentationFile>bin\Xomega.Framework.AspNetCore.xml</DocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>../pkg/$(PackageId).$(Version)</PackageOutputPath>
-    <Copyright>Copyright © Xomega.Net 2020</Copyright>
-    <Product>Xomega.Framework</Product>
-    <Company>Xomega.Net</Company>
-    <Authors>Xomega Team</Authors>
-    <Description>Xomega framework for building ASP.NET Core based Web API and apps.</Description>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

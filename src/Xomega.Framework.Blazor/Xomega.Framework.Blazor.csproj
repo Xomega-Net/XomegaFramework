@@ -5,10 +5,11 @@
     <Version>3.0.0</Version>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <PackageId>Xomega.Framework.Blazor</PackageId>
-    <Copyright>Copyright © Xomega.Net 2020</Copyright>
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
+    <Copyright>Copyright © Xomega.Net 2020</Copyright>
+    <Description>Xomega framework for building server-side Blazor apps.</Description>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
     <PackageTags>ASP.NET Blazor Xomega</PackageTags>
@@ -17,7 +18,8 @@
     <PackageOutputPath>../pkg/$(PackageId).$(Version)</PackageOutputPath>
     <DocumentationFile>bin/Xomega.Framework.Blazor.xml</DocumentationFile>
     <PackageIcon>Logo.png</PackageIcon>
-    <Description>Xomega framework for building server-side Blazor apps.</Description>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
