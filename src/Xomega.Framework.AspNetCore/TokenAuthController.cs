@@ -4,10 +4,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Security.Claims;
-using Xomega.Framework;
-using Xomega.Framework.Services;
 
-namespace Blazor1.Services.Rest
+namespace Xomega.Framework.Services
 {
     /// <summary>
     /// Base class for token-based authentication controllers.
