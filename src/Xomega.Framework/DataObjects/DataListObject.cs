@@ -306,7 +306,7 @@ namespace Xomega.Framework
         /// <returns>Validation errors from the data list object and the criteria object.</returns>
         public override ErrorList GetValidationErrors()
         {
-            ErrorList errLst = new ErrorList();
+            ErrorList errLst = NewErrorList();
             errLst.MergeWith(validationErrorList);
             errLst.MergeWith(CriteriaObject?.GetValidationErrors());
             return errLst;
@@ -332,7 +332,7 @@ namespace Xomega.Framework
             if (force) ResetValidation();
             if (validationErrorList != null) return;
 
-            validationErrorList = new ErrorList();
+            validationErrorList = NewErrorList();
         }
 
         #endregion

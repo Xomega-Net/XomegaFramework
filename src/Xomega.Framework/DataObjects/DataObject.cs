@@ -1,11 +1,13 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
+using System.Resources;
 using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.Threading;
@@ -565,6 +567,12 @@ namespace Xomega.Framework
         #region Validation
 
         /// <summary>
+        /// Constructs a new error list with injected resources from the current service provider.
+        /// </summary>
+        /// <returns>A new error list.</returns>
+        public ErrorList NewErrorList() => new ErrorList(ServiceProvider?.GetService<ResourceManager>());
+
+        /// <summary>
         /// A list of validation errors that are not tied to any particular
         /// data property but rather to the data object as a whole.
         /// Null value means that the object has not been validated yet.
@@ -577,7 +585,7 @@ namespace Xomega.Framework
         /// <returns>Validation errors from the data object, all its properties and child objects.</returns>
         public virtual ErrorList GetValidationErrors()
         {
-            ErrorList errLst = new ErrorList();
+            ErrorList errLst = NewErrorList();
             if (validationErrorList != null) errLst.MergeWith(validationErrorList);
             foreach (DataProperty p in properties.Values) errLst.MergeWith(p.ValidationErrors);
             foreach (DataObject obj in childObjects.Values) errLst.MergeWith(obj.GetValidationErrors());
@@ -616,7 +624,7 @@ namespace Xomega.Framework
             if (force) ResetValidation();
             if (validationErrorList != null) return;
 
-            validationErrorList = new ErrorList();
+            validationErrorList = NewErrorList();
         }
 
         #endregion
@@ -736,7 +744,7 @@ namespace Xomega.Framework
         /// </summary>
         public virtual ErrorList Read(object options)
         {
-            ErrorList msgList = DoRead(options) ?? new ErrorList();
+            ErrorList msgList = DoRead(options) ?? NewErrorList();
             CrudOpions crudOpts = options as CrudOpions;
             if (crudOpts?.Recursive ?? true)
                 foreach (DataObject child in childObjects.Values)
@@ -772,7 +780,7 @@ namespace Xomega.Framework
                 foreach (DataObject child in childObjects.Values)
                     readTasks.Add(child.ReadAsync(options, token));
 
-            ErrorList msgList = new ErrorList();
+            ErrorList msgList = NewErrorList();
             if (crudOpts?.Parallel ?? true)
             {
                 await Task.WhenAll(readTasks.ToArray());

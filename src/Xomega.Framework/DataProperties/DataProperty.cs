@@ -395,7 +395,7 @@ namespace Xomega.Framework
             if (force) ResetValidation();
             if (ValidationErrors != null) return;
 
-            ValidationErrors = new ErrorList();
+            ValidationErrors = parent?.NewErrorList() ?? new ErrorList();
 
             if (Validator != null && Editable && Visible)
             {
