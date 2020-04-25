@@ -2,7 +2,7 @@
 
 <th class="sortable" @onclick="@OnHeaderClicked">@Text @if (SortField != null)
 {
-    <i class='sort-glyph fa @GetSortClasses()' aria-hidden='true' />
+    <i class='sort-glyph fas @GetSortClasses()' aria-hidden='true' />
 }</th>
 
 @code {
@@ -11,6 +11,12 @@
 
     [Parameter]
     public BaseProperty Property { get; set; }
+
+    [Parameter]
+    public string AscendingClass { get; set; } = "fa-long-arrow-alt-up";
+
+    [Parameter]
+    public string DescendingClass { get; set; } = "fa-long-arrow-alt-down";
 
     protected DataListObject List => Property?.GetParent() as DataListObject;
 
@@ -25,9 +31,9 @@
         if (sf == null) return "";
         string cls = $"sort-{SortCriteria.IndexOf(sf) + 1} ";
         if (sf.SortDirection == ListSortDirection.Ascending)
-            cls += "fa-long-arrow-up";
+            cls += AscendingClass;
         else if (sf.SortDirection == ListSortDirection.Descending)
-            cls += "fa-long-arrow-down";
+            cls += DescendingClass;
         return cls;
     }
 
