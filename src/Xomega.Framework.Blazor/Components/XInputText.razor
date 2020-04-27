@@ -8,7 +8,7 @@
 @if (IsVisible)
 {
     <input @ref="Input" type="@InputType" @attributes="AdditionalAttributes" class="@CssClass"
-           readonly="@(!IsEditable)"
+           disabled="@(!IsEditable)"
            maxlength="@MaxLength"
            value="@Value" @onchange="@OnValueChanged" @onblur="OnBlur"
            title="@Property?.ErrorsText" />
