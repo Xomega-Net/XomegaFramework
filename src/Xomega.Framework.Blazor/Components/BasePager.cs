@@ -71,7 +71,8 @@ namespace Xomega.Framework.Blazor.Components
         /// <summary>
         /// Indexes of the items on the current page.
         /// </summary>
-        protected virtual IEnumerable<int> Indexes => Enumerable.Range(PageSize * (CurrentPage - 1), Math.Min(PageSize * CurrentPage, ItemsCount));
+        protected virtual IEnumerable<int> Indexes => Enumerable.Range(PageSize * (CurrentPage - 1),
+                           Math.Max(0, Math.Min(PageSize, ItemsCount - PageSize * (CurrentPage - 1))));
 
         /// <inheritdoc/>
         protected override async Task OnParametersSetAsync()
