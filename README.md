@@ -13,13 +13,15 @@ The framework has been built from more than 15 years of experience, and is based
 The framework consists of the core package, as well as several additional packages that target specific technologies, as follows.
 
 - **Xomega.Framework** - the core package that contains reusable code for both web and desktop clients, as well as for the service layer.
-- **Xomega.Framework.Web** - implementation of views and data bindings for ASP.NET WebForms.
 - **Xomega.Framework.Wpf** - implementation of views and data bindings for WPF.
+- **Xomega.Framework.Blazor** - implementation of views and property-bound components for Blazor Server.
+- **Xomega.Framework.AspNetCore** - support for hosting and using business services via REST API.
+- **Xomega.Framework.Web** - implementation of views and data bindings for ASP.NET WebForms.
 - **Xomega.Framework.Wcf** - support for hosting and using business services in WCF.
 
 ## Features
 
-Xomega framework provides rich base and utility classes for building presentation layer data objects that can be bound to the standard ASP.NET or WPF controls, and then used to build view models and views from those. Some of the important features that the framework supports are as follows.
+Xomega framework provides rich base and utility classes for building presentation layer data objects that can be bound to Blazor components or the standard WPF and ASP.NET controls, and then used to build view models and views from those. Some of the important features that the framework supports are as follows.
 
 - **Data Properties** encapsulate a data value (or multiple values) and metadata, such as editability, visibility, security access, required flag, possible values, modification tracking, and also formatting, validation and conversion rules for the values. Properties can notify listeners about changes in the value or the metadata, and can be bound to UI controls, which would reflect any changes in the data properties, and update the property value from the user input.
 
@@ -29,13 +31,15 @@ Xomega framework provides rich base and utility classes for building presentatio
 
 - **Caching of reference data** on the client allows you to quickly populate selection lists, and to look up a data item by a unique key using self-indexing look-up tables. It supports multiple types of caches with extensible cache loaders, and ability to store additional attributes with each item.
 
-- **View Models and Views** provide platform-independent base classes for presentation views and their view models. They support publishing of view-level events, such as Close, Save or Delete, as well as navigation between views with input and output parameters, and handling updates from the child views.
+- **View Models and Views** provide platform-independent base classes for presentation views and their view models. They support publishing of view-level events, such as Close, Save or Delete, as well as navigation between views with input and output parameters, prompting for unsaved changes, and handling updates from the child views.
 
-- **Search Views** implement support for search screens with a results grid that may allow selection, and a criteria section with flexible search operators. This includes both the generic logic, and the specific implementations for ASP.NET and WPF. 
+- **Search Views** implement support for search screens with a results grid that may allow selection, and a criteria section with flexible search operators. This includes both the generic logic, and the specific implementations for Blazor, ASP.NET and WPF. 
 
-- **Details Views** implement CRUD logic, validation and modification tracking for details screens both generically, and specifically for ASP.NET and WPF.
+- **Details Views** implement CRUD logic, validation and modification tracking for details screens both generically, and specifically for Blazor, ASP.NET and WPF.
 
 - **Bindings for common ASP.NET and WPF controls** to Data Properties and Data Objects allows you to easily attach views to the view models and their underlying data objects.
+
+- **Property-bound Blazor components** provide a set of ready-to-use Blazor components that can be bound to data objects's properties, as well as base classes to implement custom property-bound components.
 
 - **Client-Side Validation** takes care of running all standard and custom validations on your data objects, highlighting invalid fields with an error tooltip, and also displaying a list of all validation errors using proper field labels in the error text.
 
@@ -45,9 +49,9 @@ Xomega framework provides rich base and utility classes for building presentatio
  
 ## Getting Started
 
-1. The easiest way to get started with Xomega Framework is to install our free Visual Studio extension Xomega.Net, which provides preconfigured project templates for ASP.NET, WPF and SPA applications, and allows you to instantly generate complete and powerful search and details views right from your service model. Please check [our web site](http://xomega.net) for more details.
+1. The easiest way to get started with Xomega Framework is to install our free Visual Studio extension Xomega.Net, which provides preconfigured project templates for Blazor, ASP.NET, WPF and SPA applications, and allows you to instantly generate complete and powerful search and details views right from your service model. Please check [our web site](http://xomega.net) for more details.
 
-2. You can also run our [Xomega.Examples](https://github.com/Xomega-Net/Xomega.Examples) applications to see the framework in action.
+2. You can also run our [Xomega.Examples](https://github.com/Xomega-Net/Xomega.Examples) applications to see the framework in action using all supported technologies and architectures.
 
 3. A more manual way involves adding [Xomega NuGet packages](http://www.nuget.org/packages?q=xomega.framework) to your Visual Studio project, and reading [How To guides on our forum](http://xomega.net/Tutorials/HowTos.aspx). Feel free to post your questions there if you don't find the information you need.
 
