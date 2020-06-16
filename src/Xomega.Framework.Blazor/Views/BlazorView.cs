@@ -274,7 +274,7 @@ namespace Xomega.Framework.Blazor.Views
         {
             if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null && sender is ViewModel vm)
             {
-                TitleComponent.Title = vm.ViewTitle;
+                TitleComponent.SetTitle(vm.ViewTitle);
                 await TitleComponent.Update();
             }
         }

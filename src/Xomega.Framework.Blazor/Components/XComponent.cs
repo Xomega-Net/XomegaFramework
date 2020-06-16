@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Blazor
 {
@@ -115,16 +117,19 @@ namespace Xomega.Framework.Blazor
         {
             base.OnParametersSet();
             if (Property != null)
-                Property.Change += OnPropertyChange;
+            {
+                Property.AsyncChange += OnPropertyChangeAsync;
+            }
         }
 
         /// <summary>
-        /// Handles property change events by refreshing the component, if the change is
+        /// Handles async property change events by refreshing the component, if the change is
         /// obsereved by the component.
         /// </summary>
         /// <param name="sender">Sender of the property change.</param>
         /// <param name="e">Property change details.</param>
-        protected async virtual void OnPropertyChange(object sender, PropertyChangeEventArgs e)
+        /// <param name="token">Cancellation token.</param>
+        protected async virtual Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
         {
             if (e.Change.IncludesChanges(ObservedChanges))
             {
@@ -139,12 +144,12 @@ namespace Xomega.Framework.Blazor
         /// Updates the property with the specified value, and marks it as being edited.
         /// </summary>
         /// <param name="value">The new value for the property</param>
-        protected void UpdateProperty(object value)
+        protected async Task UpdateProperty(object value)
         {
             if (Property != null)
             {
                 Property.Editing = true;
-                Property.SetValue(value);
+                await Property.SetValueAsync(value);
             }
         }
 
@@ -153,9 +158,9 @@ namespace Xomega.Framework.Blazor
         /// It can be used on the corresponding HTML elements in the actual components.
         /// </summary>
         /// <param name="e">Change event arguments.</param>
-        protected virtual void OnValueChanged(ChangeEventArgs e)
+        protected virtual async Task OnValueChanged(ChangeEventArgs e)
         {
-            UpdateProperty(e.Value);
+            await UpdateProperty(e.Value);
         }
 
         /// <summary>
@@ -186,7 +191,7 @@ namespace Xomega.Framework.Blazor
         public void Dispose()
         {
             if (Property != null)
-                Property.Change -= OnPropertyChange;
+                Property.AsyncChange -= OnPropertyChangeAsync;
         }
     }
 }

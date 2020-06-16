@@ -1,7 +1,10 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -100,6 +103,11 @@ namespace Xomega.Framework
         public event EventHandler<PropertyChangeEventArgs> Change;
 
         /// <summary>
+        /// Async property change event.
+        /// </summary>
+        public event Func<object, PropertyChangeEventArgs, CancellationToken, Task> AsyncChange;
+
+        /// <summary>
         /// A method to fire a property change event.
         /// If certain property information is calculated and depends on the factors
         /// that are outside of the property's control (e.g. editability), 
@@ -110,7 +118,20 @@ namespace Xomega.Framework
         public void FirePropertyChange(PropertyChangeEventArgs args)
         {
             Change?.Invoke(this, args);
+            AsyncChange?.DynamicInvoke(this, args, default(CancellationToken));
         }
+
+        /// <summary>
+        /// Asyncronously fires the specified property change event.
+        /// </summary>
+        public async Task FirePropertyChangeAsync(PropertyChangeEventArgs args, CancellationToken token = default)
+        {
+            Change?.Invoke(this, args);
+            var tasks = AsyncChange?.GetInvocationList()?.Select(d => (Task)d.DynamicInvoke(this, args, token));
+            if (tasks != null)
+                await Task.WhenAll(tasks);
+        }
+
         #endregion
 
         #region Editability support

@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xomega.Framework.Blazor
+namespace Xomega.Framework.Services
 {
     /// <summary>
     /// A service that handles sign-in for blazor apps, allowing for a blazor-based login view.

@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework.Lookup
 {
@@ -46,13 +48,14 @@ namespace Xomega.Framework.Lookup
         /// Sets input parameters for this cache loader and reloads the local cache based on the new parameters.
         /// </summary>
         /// <param name="parameters">New input parameters for the cache loader.</param>
-        public void SetParameters(Dictionary<string, object> parameters)
+        /// <param name="token">Cancellation token.</param>
+        public async Task SetParametersAsync(Dictionary<string, object> parameters, CancellationToken token = default)
         {
             Parameters = parameters;
             foreach (var type in supportedTypes)
                 LocalCache.RemoveLookupTable(type);
             foreach (var type in supportedTypes)
-                LocalCache.GetLookupTable(type);
+                await LocalCache.GetLookupTableAsync(type, token);
         }
     }
 }

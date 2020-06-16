@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -418,6 +420,38 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Populates the data object list and imports the data from the given data contract list
+        /// with ability to preserve currently selected entities.
+        /// </summary>
+        /// <param name="dataContract">Enumeration of data contract objects to populate the list from.</param>
+        /// <param name="options">Additional options for the operation.</param>
+        /// <param name="token">Cancellation token.</param>
+        public override async Task FromDataContractAsync(object dataContract, object options, CancellationToken token = default)
+        {
+            if (!(dataContract is IEnumerable list)) return;
+            List<DataRow> sel = new List<DataRow>();
+            ListSortCriteria keys = new ListSortCriteria();
+            if (options is CrudOpions opts && opts.PreserveSelection)
+            {
+                sel = SelectedRows;
+                keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));
+            }
+
+            List<DataRow> rows = new List<DataRow>();
+            foreach (object contractItem in list)
+            {
+                DataRow r = new DataRow(this);
+                rows.Add(r);
+                await FromDataContractAsync(contractItem, options, r, token);
+                r.Selected = sel.Any(s => SameEntity(s, r, keys));
+            }
+            SetModified(false, false);
+            data.ReplaceData(rows);
+            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
+            FireSelectionChanged();
+        }
+
+        /// <summary>
         /// Checks if two data rows represent the same entity. Can be overridden in subclasses.
         /// </summary>
         /// <param name="r1">First row</param>
@@ -426,7 +460,7 @@ namespace Xomega.Framework
         /// <returns>True, if the two rows represent the same entity, false otherwise.</returns>
         protected virtual bool SameEntity(DataRow r1, DataRow r2, ListSortCriteria keys)
         {
-            return r1 == null || keys == null || keys.Count == 0 ? false : r1.CompareTo(r2, keys) == 0;
+            return r1 != null && keys != null && keys.Count != 0 && r1.CompareTo(r2, keys) == 0;
         }
 
         /// <summary>

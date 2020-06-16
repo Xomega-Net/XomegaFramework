@@ -5,6 +5,7 @@ using Microsoft.JSInterop;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xomega.Framework.Blazor
@@ -27,7 +28,31 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// A list of possible values for the property.
         /// </summary>
-        protected IEnumerable AvailableItems => Property?.ItemsProvider?.Invoke(null, Row) ?? new ArrayList();
+        protected IEnumerable AvailableItems { get; set; } = new ArrayList();
+
+        /// <summary>
+        /// Get a list of possible values for the property.
+        /// </summary>
+        protected async Task GetAvailableItems(CancellationToken token = default)
+        {
+            if (Property?.AsyncItemsProvider != null)
+                AvailableItems = await Property.AsyncItemsProvider(null, Row, token);
+        }
+
+        /// <inheritdoc/>
+        protected async override Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
+            await GetAvailableItems();
+        }
+
+        /// <inheritdoc/>
+        protected async override Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        {
+            if (e.Change.IncludesItems())
+                await GetAvailableItems(token);
+            await base.OnPropertyChangeAsync(sender, e, token);
+        }
 
         /// <summary>
         /// A list of selected/current value(s) of the property.
@@ -43,7 +68,7 @@ namespace Xomega.Framework.Blazor
         /// <param name="item">The item to check.</param>
         /// <returns>True, if the item should be selected, false otherwise.</returns>
         protected bool IsSelected(object value, object item) =>
-            IsMultiValue ? value is IList && ((IList)value).Contains(item) : item.Equals(value);
+            IsMultiValue ? value is IList list && list.Contains(item) : item.Equals(value);
 
         /// <summary>
         /// Custom template for displaying item options.

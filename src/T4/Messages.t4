@@ -1,0 +1,79 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ output extension=".cs" #>
+<#
+    IServiceProvider serviceProvider = (IServiceProvider)Host;
+    DTE dte = (DTE)serviceProvider.GetService(typeof(DTE));
+    
+    var templateProjectItem = dte.Solution.FindProjectItem(Host.TemplateFile);
+    var project = templateProjectItem.ContainingProject;
+    var resourceDir = Path.GetDirectoryName(Host.TemplateFile);
+    var projectDir = Path.GetDirectoryName((string)project.Properties.Item("FullPath").Value);
+
+    var resourceNamespace = (string)project.Properties.Item("RootNamespace").Value;
+    if (resourceDir != projectDir)
+        resourceNamespace += resourceDir.Substring(projectDir.Length).Replace(Path.DirectorySeparatorChar, '.');
+
+    var resourceProjectItem = (ProjectItem)templateProjectItem.Collection.Parent;
+    string resourceFile = (string)resourceProjectItem.Properties.Item("FullPath").Value;
+    string resourceName = resourceNamespace + "." + Path.GetFileNameWithoutExtension(resourceFile);
+
+    var ns = (string)resourceProjectItem.Properties.Item("CustomToolNamespace")?.Value;
+    if (!string.IsNullOrEmpty(ns))
+        resourceNamespace = ns;
+    ns = (string)templateProjectItem.Properties.Item("CustomToolNamespace")?.Value;
+    if (!string.IsNullOrEmpty(ns))
+        resourceNamespace = ns;
+
+    string className = Path.GetFileNameWithoutExtension(Host.TemplateFile);
+    var doc = XDocument.Load(resourceFile);
+    var entries =
+        from d in doc.Root.Elements("data")
+        select new
+        {
+            Name = d.Attribute("name").Value,
+            Value = d.Element("value").Value,
+            Comment = d.Element("comment")?.Value
+        };
+#>
+using System;
+using System.Resources;
+
+namespace <#= resourceNamespace #>
+{
+    /// <summary>
+    /// Message codes, as well as a resource manager to get a (localized) message text for those.
+    /// </summary>
+    public static class <#= className #>
+    {
+        private static readonly Lazy<ResourceManager> resourceManager =
+            new Lazy<ResourceManager>(() => new ResourceManager("<#= resourceName #>", typeof(<#= className #>).Assembly));
+
+        /// <summary>
+        /// Resource manager for the current messages.
+        /// </summary>
+        public static ResourceManager ResourceManager
+        {
+            get { return resourceManager.Value; }
+        }
+<# foreach(var entry in entries) { #>
+
+        /// <summary>
+<# foreach(var line in entry.Value.Split('\n')) { #>
+        /// <#= line #>
+<# }
+if (entry.Comment != null) { #>
+        /// Where <#= entry.Comment #>
+<# } #>
+        /// </summary>
+        public const string <#= entry.Name.Replace('.', '_') #> = "<#= entry.Name #>";
+<# } #>
+    }
+}

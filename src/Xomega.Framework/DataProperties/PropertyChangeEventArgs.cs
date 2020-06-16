@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {

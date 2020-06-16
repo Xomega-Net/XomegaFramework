@@ -59,8 +59,8 @@
         if (IsMultiValue)
         {
             var value = await GetSelectedValues(SelectList);
-            UpdateProperty(value);
+            await UpdateProperty(value);
         }
-        else UpdateProperty(e.Value);
+        else await UpdateProperty(e.Value);
     }
 }

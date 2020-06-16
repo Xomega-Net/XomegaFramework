@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -114,6 +116,31 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Asyncronously sets the value of the property and triggers a property change event.
+        /// The value is first converted to the internal format if possible.
+        /// If data row is specified, sets the value of this property in that row.
+        /// </summary>
+        /// <param name="val">The new value to set to the property.</param>
+        /// <param name="row">The data row context, if any.</param>
+        /// <param name="token">Cancellation token.</param>
+        public async Task SetValueAsync(object val, DataRow row = null, CancellationToken token = default)
+        {
+            object oldValue = InternalValue;
+            object newValue = await ResolveValueAsync(val, ValueFormat.Internal);
+
+            if (Column < 0)
+                InternalValue = newValue;
+            else if (row != null && row.List == parent && Column < row.Count)
+                row[Column] = newValue;
+
+            // update Modified flag, make sure to not set it back from true to false
+            if (!Modified.HasValue) Modified = false;
+            else if (!Equals(oldValue, newValue)) Modified = true;
+            ResetValidation();
+            await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row), token);
+        }
+
+        /// <summary>
         /// Checks if the current property value is null.
         /// </summary>
         /// <returns>True if the current property value is null, otherwise false.</returns>
@@ -189,6 +216,12 @@ namespace Xomega.Framework
         /// A function to provide a list of possible values for the property where applicable.
         /// </summary>
         public GetValueList ItemsProvider;
+
+        /// <summary>
+        /// A function to asyncronously provide a list of possible values for the property
+        /// based on the specified input and current row, where applicable.
+        /// </summary>
+        public Func<object, DataRow, CancellationToken, Task<IEnumerable>> AsyncItemsProvider;
 
         #endregion
 
@@ -299,6 +332,58 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Asynchronously resolves the given value or a list of values to the specified format
+        /// based on the current property configuration. If the property is restricted or the value is null
+        /// and the format is string based, the <c> RestrictedString</c> or <c>NullString</c> are returned respectively.
+        /// If the property is multivalued it will try to convert the value to a list or parse it into a list if it's a string
+        /// or just add it to a new list as is and then convert each value in the list into the given format.
+        /// Otherwise it will try to convert the single value to the given format.
+        /// If a custom value converter is set on the property, it will be used first before the default property conversion rules are applied.
+        /// </summary>
+        /// <param name="value">The value or list of values to resolve to the given format.</param>
+        /// <param name="format">The format to convert the value to.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>A value or a list of values resolved to the given format based on the property configuration.</returns>
+        public async Task<object> ResolveValueAsync(object value, ValueFormat format, CancellationToken token = default)
+        {
+            if (IsRestricted())
+                return format.IsString() ? RestrictedString : value;
+
+            if (IsValueNull(value, format))
+                return format.IsString() ? NullString : null;
+
+            if (IsMultiValued)
+            {
+                IList lst = new List<object>();
+                if (value is IList list) lst = list;
+                else if (value is string str)
+                {
+                    string[] vals = str.Split(
+                        ParseListSeparators, StringSplitOptions.None);
+                    foreach (string val in vals)
+                        if (!IsValueNull(val, format)) lst.Add(val.Trim());
+                }
+                else lst.Add(value);
+                IList resLst = CreateList(format);
+                foreach (object val in lst)
+                {
+                    object cval = val;
+                    if (AsyncValueConverter == null || !await AsyncValueConverter(ref cval, format, token))
+                        cval = await ConvertValueAsync(cval, format, token);
+                    if (!IsValueNull(cval, format)) resLst.Add(cval);
+                }
+                return resLst;
+            }
+            else
+            {
+                object cval = value;
+                if (AsyncValueConverter == null || !await AsyncValueConverter(ref cval, format, token))
+                    cval = await ConvertValueAsync(cval, format, token);
+                return cval;
+            }
+        }
+
+        /// <summary>
         /// Creates a new list for the given format. The default implementation just returns a new untyped ArrayList.
         /// Subclasses can override it to return typed generic lists for the Transport format.
         /// </summary>
@@ -324,6 +409,24 @@ namespace Xomega.Framework
         public TryConvertValue ValueConverter;
 
         /// <summary>
+        /// A delegate to support custom async conversion functions. It will try to convert the value
+        /// that is passed by reference to the specified format by setting the reference to the 
+        /// converted value. It will return whether or not the conversion succeeded, which determines
+        /// if further conversion rules need to be applied.
+        /// If the delegate is only able to convert values to just one format, it should return false for other formats.
+        /// </summary>
+        /// <param name="value">A reference to the value to be converted.</param>
+        /// <param name="format">The format to convert the value to.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>True if the conversion succeeded, otherwise false.</returns>
+        public delegate Task<bool> TryConvertValueAsync(ref object value, ValueFormat format, CancellationToken token = default);
+
+        /// <summary>
+        ///  A custom value converter that can be set on the property for asynchronously converting values to a given format.
+        /// </summary>
+        public TryConvertValueAsync AsyncValueConverter;
+
+        /// <summary>
         /// Converts a single value to a given format. The default implementation does nothing to the value,
         /// but subclasses can implement the property specific rules for each format.
         /// </summary>
@@ -331,6 +434,18 @@ namespace Xomega.Framework
         /// <param name="format">The value format to convert the value to.</param>
         /// <returns>The value converted to the given format.</returns>
         protected virtual object ConvertValue(object value, ValueFormat format) => value;
+
+        /// <summary>
+        /// Asynchronously converts a single value to a given format.
+        /// The default implementation delegates it to the synchronous version,
+        /// but subclasses can implement the property specific rules for each format.
+        /// </summary>
+        /// <param name="value">A single value to convert to the given format.</param>
+        /// <param name="format">The value format to convert the value to.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The value converted to the given format.</returns>
+        protected virtual async Task<object> ConvertValueAsync(object value, ValueFormat format, CancellationToken token = default) => 
+            await Task.FromResult(ConvertValue(value, format));
 
         #endregion
 

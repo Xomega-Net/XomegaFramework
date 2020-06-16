@@ -3,6 +3,7 @@
 @inherits XComponent
 
 @using System.Linq
+@using System.Threading
 @inject IJSRuntime jsRuntime
 
 @if (IsVisible)
@@ -62,7 +63,7 @@
         }
 
         // use jQuery UI autocomplete widget for enum properties
-        if (Input.Id != null && Property is EnumProperty && Property.ItemsProvider != null)
+        if (Input.Id != null && Property is EnumProperty && Property.AsyncItemsProvider != null)
         {
             var settings = new
             {
@@ -71,7 +72,7 @@
                 delimiter = Property.DisplayListSeparator
             };
 
-            foreach (object i in Property.ItemsProvider(null, Row))
+            foreach (object i in await Property.AsyncItemsProvider(null, Row, default(CancellationToken)))
             {
                 settings.items.Add(new
                 {

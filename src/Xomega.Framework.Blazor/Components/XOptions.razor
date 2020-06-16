@@ -71,7 +71,7 @@
 
     protected string InputType => IsMultiValue ? "checkbox" : "radio";
 
-    protected void OnSelected(ChangeEventArgs e, object value)
+    protected async Task OnSelected(ChangeEventArgs e, object value)
     {
         if (IsMultiValue)
         {
@@ -80,8 +80,8 @@
             if (!sel) val.Remove(value);
             else if (!val.Contains(value))
                 val.Add(value);
-            UpdateProperty(val);
+            await UpdateProperty(val);
         }
-        else UpdateProperty(e.Value);
+        else await UpdateProperty(e.Value);
     }
 }

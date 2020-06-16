@@ -422,6 +422,69 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Sets the data object values from the given data contract object
+        /// by copying the values of the data contract object fields to the
+        /// data object properties or child objects with the same names.
+        /// If there is no exact match between some data contract field names
+        /// and the data object property names, this method can be overridden
+        /// in the subclass to address each such case.
+        /// </summary>
+        /// <param name="dataContract">The data contract object to copy the values from.</param>
+        /// <param name="options">Additional options for the operation.</param>
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task FromDataContractAsync(object dataContract, object options,
+                                                        CancellationToken token = default)
+            => await FromDataContractAsync(dataContract, options, null, token);
+
+        /// <summary>
+        /// Sets the values of the given data row or, if the row is null,
+        /// the data object from the given data contract object
+        /// by copying the values of the data contract object fields to the
+        /// data object properties or child objects with the same names.
+        /// If there is no exact match between some data contract field names
+        /// and the data object property names, this method can be overridden
+        /// in the subclass to address each such case.
+        /// </summary>
+        /// <param name="dataContract">The data contract object to copy the values from.</param>
+        /// <param name="options">Additional options for the operation.</param>
+        /// <param name="row">The row to set the values for.
+        /// <param name="token">Cancellation token.</param>
+        /// Null to set values of the current data object.</param>
+        protected async Task FromDataContractAsync(object dataContract, object options, DataRow row,
+                                                   CancellationToken token = default)
+        {
+            if (dataContract == null) return;
+            SetModified(false, false);
+            foreach (PropertyInfo pi in dataContract.GetType().GetProperties())
+            {
+                object val = pi.GetValue(dataContract, null);
+                DataProperty dp = this[pi.Name];
+                DataObject child;
+                if (dp != null)
+                {
+                    dp.Modified = null;
+                    await dp.SetValueAsync(val, row, token);
+                }
+                else if ((child = GetChildObject(pi.Name)) != null)
+                {
+                    await child.FromDataContractAsync(val, options, token);
+                }
+                else if (val != null)
+                {
+                    foreach (PropertyInfo cpi in pi.PropertyType.GetProperties())
+                    {
+                        DataProperty cdp = this[pi.Name + "_" + cpi.Name];
+                        if (cdp != null)
+                        {
+                            cdp.Modified = null;
+                            await cdp.SetValueAsync(cpi.GetValue(val, null), row, token);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Exports the data object property values and child object values
         /// to the given data contract object by setting all its properties
         /// to the values of the corresponding properties or child objects

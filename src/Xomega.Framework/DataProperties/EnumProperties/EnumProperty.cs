@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xomega.Framework.Lookup;
 
 namespace Xomega.Framework.Properties
@@ -59,6 +61,7 @@ namespace Xomega.Framework.Properties
             KeyFormat = Header.FieldId;
             DisplayFormat = Header.FieldText;
             ItemsProvider = GetItems;
+            AsyncItemsProvider = GetItemsAsync;
             FilterFunc = IsAllowed;
             SortField = DefaultSortField;
         }
@@ -77,12 +80,26 @@ namespace Xomega.Framework.Properties
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
         /// </summary>
+        /// <param name="cachedOnly">True to return only the cached lookup table, False to try to load the it, if it's not cached.</param>
         /// <returns>The lookup table to be used for the property.</returns>
-        protected virtual LookupTable GetLookupTable()
+        protected virtual LookupTable GetLookupTable(bool cachedOnly = false)
         {
             LookupCache cache = LocalCacheLoader?.LocalCache ?? LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
             string tableType = LocalCacheLoader?.TableType ?? EnumType;
-            return cache?.GetLookupTable(tableType);
+            return cache?.GetLookupTable(tableType, cachedOnly);
+        }
+
+        /// <summary>
+        /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
+        /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The lookup table to be used for the property.</returns>
+        protected async virtual Task<LookupTable> GetLookupTableAsync(CancellationToken token = default)
+        {
+            LookupCache cache = LocalCacheLoader?.LocalCache ?? LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
+            string tableType = LocalCacheLoader?.TableType ?? EnumType;
+            return await cache?.GetLookupTableAsync(tableType, token);
         }
 
         /// <summary>
@@ -128,7 +145,7 @@ namespace Xomega.Framework.Properties
                     if (trimmed.Length > 0)
                         str = trimmed;
                 }
-                LookupTable tbl = GetLookupTable();
+                LookupTable tbl = GetLookupTable(true);
                 if (tbl != null)
                 {
                     h = null;
@@ -151,6 +168,37 @@ namespace Xomega.Framework.Properties
             return base.ConvertValue(value, format);
         }
 
+        /// <inheritdoc/>
+        protected override async Task<object> ConvertValueAsync(object value, ValueFormat format, CancellationToken token = default)
+        {
+            Header h = value as Header;
+            if (format == ValueFormat.Internal)
+            {
+                if (h != null && h.Type == EnumType) return value;
+                string str = Convert.ToString(value);
+                if (str != null)
+                {
+                    string trimmed = str.Trim();
+                    if (trimmed.Length > 0)
+                        str = trimmed;
+                }
+                LookupTable tbl = await GetLookupTableAsync(token);
+                if (tbl != null)
+                {
+                    h = null;
+                    if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str);
+                    if (h == null) h = tbl.LookupById(str);
+                    if (h != null)
+                    {
+                        h.DefaultFormat = KeyFormat;
+                        return h;
+                    }
+                }
+                return new Header(EnumType, str);
+            }
+            return await base.ConvertValueAsync(value, format, token);
+        }
+
         /// <summary>
         /// A function that is used by default as the possible items provider
         /// for the property by getting all possible values from the lookup table
@@ -163,6 +211,34 @@ namespace Xomega.Framework.Properties
         protected virtual IEnumerable GetItems(object input, DataRow row)
         {
             LookupTable tbl = GetLookupTable();
+            if (tbl != null)
+            {
+                IEnumerable<Header> res = tbl.GetValues(FilterFunc, row);
+                if (SortField != null) res = res.OrderBy(SortField);
+                foreach (Header h in res)
+                {
+                    // use key format as default for WPF for editable combo boxes, since there seems to be
+                    // no other way to control it on the framework level
+                    h.DefaultFormat = KeyFormat;
+                }
+                return res;
+            }
+            else return Enumerable.Empty<Header>();
+        }
+
+        /// <summary>
+        /// A function that is used by default as the possible items provider
+        /// for the property by getting all possible values from the lookup table
+        /// filtered by the specified filter function, if any, and ordered by
+        /// the specified SortField function, if any.
+        /// </summary>
+        /// <param name="input">The user input so far.</param>
+        /// <param name="row">The data row context, if any.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>A list of possible values.</returns>
+        protected async virtual Task<IEnumerable> GetItemsAsync(object input, DataRow row, CancellationToken token = default)
+        {
+            LookupTable tbl = await GetLookupTableAsync(token);
             if (tbl != null)
             {
                 IEnumerable<Header> res = tbl.GetValues(FilterFunc, row);
@@ -242,13 +318,13 @@ namespace Xomega.Framework.Properties
         {
             if (cacheLoaderSources.ContainsKey(parameter))
             {
-                cacheLoaderSources[parameter].Change -= CacheLoaderParameterChange;
+                cacheLoaderSources[parameter].AsyncChange -= CacheLoaderParameterChange;
                 cacheLoaderSources.Remove(parameter);
             }
             if (sourceProperty != null)
             {
                 cacheLoaderSources[parameter] = sourceProperty;
-                sourceProperty.Change += CacheLoaderParameterChange;
+                sourceProperty.AsyncChange += CacheLoaderParameterChange;
             }
         }
 
@@ -260,15 +336,16 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="property">The source parameter property that was changed.</param>
         /// <param name="e">Event arguments that describe the property change.</param>
-        private void CacheLoaderParameterChange(object property, PropertyChangeEventArgs e)
+        /// <param name="token">Cancellation token.</param>
+        private async Task CacheLoaderParameterChange(object property, PropertyChangeEventArgs e, CancellationToken token)
         {
             if (!e.Change.IncludesValue() || LocalCacheLoader == null || Equals(e.OldValue, e.NewValue)) return;
 
             var newParams = new Dictionary<string, object>();
             foreach (string key in cacheLoaderSources.Keys)
                 newParams[key] = cacheLoaderSources[key].TransportValue;
-            LocalCacheLoader.SetParameters(newParams);
-            ClearInvalidValues(e.Row);
+            await LocalCacheLoader.SetParametersAsync(newParams, token);
+            await ClearInvalidValues(e.Row, token);
 
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
         }
@@ -277,14 +354,16 @@ namespace Xomega.Framework.Properties
         /// Clears values that don't match the current value list
         /// without changing the modification state of the property.
         /// </summary>
-        public virtual void ClearInvalidValues(DataRow row = null)
+        public virtual async Task ClearInvalidValues(DataRow row = null, CancellationToken token = default)
         {
             if (!IsNull(row))
             {
                 bool? mod = Modified;
-                SetValue(GetValue(ValueFormat.Transport, row), row);
-                if (IsMultiValued) SetValues(GetValues(row).Where(h => h.IsValid).ToList(), row);
-                else if (!GetValue(row).IsValid) SetValue(null, row);
+                await SetValueAsync(GetValue(ValueFormat.Transport, row), row, token);
+                if (IsMultiValued)
+                    await SetValueAsync(GetValues(row).Where(h => h.IsValid).ToList(), row, token);
+                else if (!GetValue(row).IsValid)
+                    await SetValueAsync(null, row, token);
                 Modified = mod; // don't change the modified flag for initial load
             }
         }

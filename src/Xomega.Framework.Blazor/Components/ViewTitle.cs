@@ -17,6 +17,14 @@ namespace Xomega.Framework.Blazor.Components
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// The title of the view.
+        /// </summary>
+        public void SetTitle(string value)
+        {
+            Title = value;
+        }
+
         /// <inheritdoc/>
         protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(0, Title);
 

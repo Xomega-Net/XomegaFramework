@@ -94,10 +94,12 @@ namespace Xomega.Framework.Lookup
         /// Gets a lookup table of the specified type from the cache.
         /// </summary>
         /// <param name="type">Lookup table type.</param>
+        /// <param name="cachedOnly">True to return only the cached lookup table, False to try to load the it, if it's not cached.</param>
         /// <returns>A lookup table of the specified type or <c>null</c> if no lookup table can be found.</returns>
-        public virtual LookupTable GetLookupTable(string type)
+        public virtual LookupTable GetLookupTable(string type, bool cachedOnly = false)
         {
             if (type != null && cache.TryGetValue(type, out LookupTable tbl)) return tbl;
+            if (cachedOnly) return null;
             // if the type is not in the cache, try loading it asynchronously and wait for results
             return Task.Run(async () => { return await GetLookupTableAsync(type); }).GetAwaiter().GetResult();
         }
