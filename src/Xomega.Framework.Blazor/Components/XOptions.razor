@@ -80,8 +80,8 @@
             if (!sel) val.Remove(value);
             else if (!val.Contains(value))
                 val.Add(value);
-            await UpdateProperty(val);
+            await UpdatePropertyAsync(val);
         }
-        else await UpdateProperty(e.Value);
+        else await UpdatePropertyAsync(e.Value);
     }
 }

@@ -44,7 +44,7 @@ namespace Xomega.Framework.Binding
             ((TextBox)element).TextChanged -= OnTextChanged;
         }
 
-        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (property == null) return;
             string curText = property.GetStringValue(property.Editable ? ValueFormat.EditString : ValueFormat.DisplayString, row);
@@ -52,7 +52,7 @@ namespace Xomega.Framework.Binding
             // Only update if the text really changed, since the event may not be user-triggered
             // and this may cause a value change (e.g. for time boxes where seconds are not displayed)
             // which would make the property modified.
-            if (newText != curText) UpdateProperty(newText);
+            if (newText != curText) await UpdatePropertyAsync(newText);
         }
 
         /// <summary>

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System.Collections;
-using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -50,22 +50,22 @@ namespace Xomega.Framework.Binding
             ((Selector)element).RemoveHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
         }
 
-        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PreventElementUpdate) return;
 
             if (element is ListBox lb && lb.SelectedItems.Count > 1)
-                UpdateProperty(lb.SelectedItems);
-            else UpdateProperty(((Selector)element).SelectedItem);
+                await UpdatePropertyAsync(lb.SelectedItems);
+            else await UpdatePropertyAsync(((Selector)element).SelectedItem);
         }
 
         /// <summary>
         /// For editable combo boxes updates the property value whenever the text is changed.
         /// </summary>
-        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (element is ComboBox cb && element == sender)
-                UpdateProperty(cb.Text);
+                await UpdatePropertyAsync(cb.Text);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Xomega.Framework.Binding
         /// and inserts a blank item for a combo box if the property is editable and not required.
         /// </summary>
         /// <param name="change">The property change.</param>
-        protected override void UpdateElement(PropertyChange change)
+        protected override async Task UpdateElementAsync(PropertyChange change)
         {
             base.UpdateElement(change);
 
@@ -149,7 +149,8 @@ namespace Xomega.Framework.Binding
                 sel.Items.Clear();
                 IEnumerable src = null;
                 if (lb != null && !property.Editable && lst != null) src = lst;
-                else if (property.ItemsProvider != null) src = property.ItemsProvider(null, row);
+                else if (property.AsyncItemsProvider != null)
+                    src = await property.AsyncItemsProvider(null, row, default);
 
                 // for non-required drop down lists add null string option
                 if (cb != null && !cb.IsEditable && !property.Required)

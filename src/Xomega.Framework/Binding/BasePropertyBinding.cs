@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -149,6 +148,21 @@ namespace Xomega.Framework
         {
         }
 
+        /// <summary>
+        /// Asyncronously updates the property with the given value from the element.
+        /// </summary>
+        /// <param name="value">The value to set on the data property.</param>
+        protected virtual async Task UpdatePropertyAsync(object value)
+        {
+            if (property != null && !PreventModelUpdate)
+            {
+                bool b = PreventElementUpdate;
+                PreventElementUpdate = true;
+                property.Editing = true;
+                await property.SetValueAsync(value, row);
+                PreventElementUpdate = b;
+            }
+        }
 
         /// <summary>
         /// Updates the property with the given value from the element.

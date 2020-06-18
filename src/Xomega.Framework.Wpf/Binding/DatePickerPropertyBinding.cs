@@ -36,11 +36,11 @@ namespace Xomega.Framework.Binding
             datePicker.SelectedDateChanged += OnSelectedDateChanged;
         }
 
-        private void OnSelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private async void OnSelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (property == null) return;
             DateTime? newDate = ((DatePicker)element).SelectedDate;
-            UpdateProperty(newDate);
+            await UpdatePropertyAsync(newDate);
         }
 
         /// <summary>

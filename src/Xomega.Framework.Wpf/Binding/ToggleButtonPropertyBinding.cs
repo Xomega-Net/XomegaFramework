@@ -53,9 +53,9 @@ namespace Xomega.Framework.Binding
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnStateChanged(object sender, RoutedEventArgs e)
+        private async void OnStateChanged(object sender, RoutedEventArgs e)
         {
-            UpdateProperty(((ToggleButton)element).IsChecked);
+            await UpdatePropertyAsync(((ToggleButton)element).IsChecked);
         }
 
         /// <summary>

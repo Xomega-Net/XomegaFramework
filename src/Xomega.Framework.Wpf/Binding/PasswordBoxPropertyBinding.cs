@@ -41,11 +41,11 @@ namespace Xomega.Framework.Binding
             ((PasswordBox)element).PasswordChanged -= OnPasswordChanged;
         }
 
-        private void OnPasswordChanged(object sender, RoutedEventArgs e)
+        private async void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             if (property == null) return;
             string newText = ((PasswordBox)element).Password;
-            UpdateProperty(newText);
+            await UpdatePropertyAsync(newText);
         }
 
         /// <summary>

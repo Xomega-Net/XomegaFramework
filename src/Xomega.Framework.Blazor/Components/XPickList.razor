@@ -56,10 +56,10 @@
 
     protected async Task AddAll(MouseEventArgs e)
     {
-        if (Property?.ItemsProvider == null) return;
+        if (Property?.AsyncItemsProvider == null) return;
         List<object> values = new List<object>();
         foreach (object val in AvailableItems) values.Add(val);
-        await UpdateProperty(values);
+        await UpdatePropertyAsync(values);
     }
 
     protected async Task Add(MouseEventArgs e)
@@ -68,7 +68,7 @@
         if (Property == null || HighlightedValues.Count() == 0) return;
 
         if (!IsMultiValue && IsNull)
-            await UpdateProperty(HighlightedValues[0]);
+            await UpdatePropertyAsync(HighlightedValues[0]);
         else if (IsMultiValue)
         {
             IList sel = Property.ResolveValue(HighlightedValues, ValueFormat.Internal) as IList;
@@ -76,7 +76,7 @@
             if (val != null && sel != null)
                 foreach (object v in val)
                     if (!sel.Contains(v)) sel.Add(v);
-            await UpdateProperty(sel);
+            await UpdatePropertyAsync(sel);
         }
     }
 
@@ -86,19 +86,19 @@
         if (Property == null || HighlightedValues.Count() == 0) return;
 
         if (!IsMultiValue && !IsNull)
-            await UpdateProperty(null);
+            await UpdatePropertyAsync(null);
         else if (IsMultiValue)
         {
             IList sel = Property.ResolveValue(HighlightedValues, ValueFormat.Internal) as IList;
             IList val = Property.InternalValue as IList;
             if (val != null && sel != null)
                 foreach (object v in sel) val.Remove(v);
-            await UpdateProperty(val);
+            await UpdatePropertyAsync(val);
         }
     }
 
     protected async Task RemoveAll(MouseEventArgs e)
     {
-        await UpdateProperty(null);
+        await UpdatePropertyAsync(null);
     }
 }

@@ -144,7 +144,7 @@ namespace Xomega.Framework.Blazor
         /// Updates the property with the specified value, and marks it as being edited.
         /// </summary>
         /// <param name="value">The new value for the property</param>
-        protected async Task UpdateProperty(object value)
+        protected async Task UpdatePropertyAsync(object value)
         {
             if (Property != null)
             {
@@ -160,7 +160,7 @@ namespace Xomega.Framework.Blazor
         /// <param name="e">Change event arguments.</param>
         protected virtual async Task OnValueChanged(ChangeEventArgs e)
         {
-            await UpdateProperty(e.Value);
+            await UpdatePropertyAsync(e.Value);
         }
 
         /// <summary>

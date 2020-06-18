@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -137,7 +138,7 @@ namespace Xomega.Framework
             {
                 bool b = PreventModelUpdate;
                 PreventModelUpdate = true;
-                element.Dispatcher.Invoke(() => UpdateElement(e.Change));
+                element.Dispatcher.InvokeAsync(async () => await UpdateElementAsync(e.Change));
                 PreventModelUpdate = b;
             }
         }
@@ -176,6 +177,17 @@ namespace Xomega.Framework
         private void OnLostFocus(object sender, RoutedEventArgs e)
         {
             if (property != null) property.Editing = false;
+        }
+
+        /// <summary>
+        /// Asyncronously updates the framework element based on the given property change.
+        /// Invokes the syncronous version by default, but subclasses can override this method.
+        /// </summary>
+        /// <param name="change">The property change.</param>
+        protected virtual async Task UpdateElementAsync(PropertyChange change)
+        {
+            UpdateElement(change);
+            await Task.CompletedTask;
         }
 
         /// <summary>
