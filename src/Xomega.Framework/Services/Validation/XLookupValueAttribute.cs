@@ -10,22 +10,6 @@ using Xomega.Framework.Lookup;
 namespace Xomega.Framework.Services
 {
     /// <summary>
-    /// Enumeration of different types of the lookup value validation.
-    /// </summary>
-    public enum LookupValidationType
-    {
-        /// <summary>
-        /// The value should be an active item of the enum.
-        /// </summary>
-        ActiveItem,
-
-        /// <summary>
-        /// The value should be any item of the enum (default).
-        /// </summary>
-        AnyItem
-    }
-
-    /// <summary>
     /// A validation attribute that validates a single value or a list of values agains the specified lookup table,
     /// and uses Xomega.Framework messages and a dependency-injected resource manager.
     /// </summary>
@@ -64,7 +48,7 @@ namespace Xomega.Framework.Services
         /// <returns><see cref="ValidationResult.Success"/> if the value is valid, and a <see cref="ValidationResult"/> with the localized error otherwise.</returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return value is ICollection ? IsValidList((ICollection)value, validationContext) : IsValidList(new[] { value }, validationContext);
+            return value is ICollection col ? IsValidList(col, validationContext) : IsValidList(new[] { value }, validationContext);
         }
 
         /// <summary>
@@ -76,6 +60,8 @@ namespace Xomega.Framework.Services
         /// and a <see cref="ValidationResult"/> with the localized error otherwise.</returns>
         protected ValidationResult IsValidList(ICollection values, ValidationContext validationContext)
         {
+            if (ValidationType == LookupValidationType.None) return ValidationResult.Success;
+
             IServiceProvider svcProvider = (validationContext?.GetService(typeof(ResourceManager)) != null) ? validationContext : DI.DefaultServiceProvider;
             ResourceManager rm = (ResourceManager)svcProvider?.GetService(typeof(ResourceManager)) ?? Messages.ResourceManager;
             LookupCache cache = LookupCache.Get(svcProvider, CacheType);

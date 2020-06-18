@@ -64,6 +64,7 @@ namespace Xomega.Framework.Properties
             AsyncItemsProvider = GetItemsAsync;
             FilterFunc = IsAllowed;
             SortField = DefaultSortField;
+            Validator += ValidateLookupValue;
         }
 
         /// <summary>
@@ -197,6 +198,22 @@ namespace Xomega.Framework.Properties
                 return new Header(EnumType, str);
             }
             return await base.ConvertValueAsync(value, format, token);
+        }
+
+        /// <summary>
+        /// A standard validation function that checks for null if the value is required.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        public static void ValidateLookupValue(DataProperty dp, object value)
+        {
+            if (dp is EnumProperty ep && ep.LookupValidation != LookupValidationType.None && value is Header hdr)
+            {
+                if (!hdr.IsValid)
+                    dp.ValidationErrors.AddValidationError(Messages.Validation_LookupValue, dp, ep.EnumType, hdr);
+                else if (ep.LookupValidation == LookupValidationType.ActiveItem && !hdr.IsActive)
+                    dp.ValidationErrors.AddValidationError(Messages.Validation_LookupValueActive, dp, hdr);
+            }
         }
 
         /// <summary>

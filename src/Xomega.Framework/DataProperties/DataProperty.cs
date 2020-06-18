@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Xomega.Framework.Lookup;
 
 namespace Xomega.Framework
 {
@@ -547,6 +548,12 @@ namespace Xomega.Framework
             if (dp != null && dp.Required && dp.IsValueNull(value, ValueFormat.Internal))
                 dp.ValidationErrors.AddValidationError(Messages.Validation_Required, dp);
         }
+
+        /// <summary>
+        /// The type of lookup table validation to perform, where applicable.
+        /// Defaults to <see cref="LookupValidationType.AnyItem"/>.
+        /// </summary>
+        public LookupValidationType LookupValidation { get; set; } = LookupValidationType.AnyItem;
 
         #endregion
 

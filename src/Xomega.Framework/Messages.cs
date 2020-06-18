@@ -67,6 +67,12 @@ namespace Xomega.Framework
         public const string Validation_LookupValue = "Validation_LookupValue";
 
         /// <summary>
+        /// The value '{1}' for {0} is not available for selection.
+        /// Where {0}=Property name, {1}=Value
+        /// </summary>
+        public const string Validation_LookupValueActive = "Validation_LookupValueActive";
+
+        /// <summary>
         /// The values '{2}' for {0} should be from the '{1}' lookup table.
         /// Where {0}=Property name, {1}=Lookup table name, {2}=Values
         /// </summary>
