@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace Xomega.Framework
         public BaseProperty(DataObject parent, string name)
         {
             this.parent = parent;
-            this.Name = name;
+            Name = name;
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace Xomega.Framework
             set
             {
                 bool oldValue = Editable;
-                this.editable = value;
+                editable = value;
                 if (Editable != oldValue) FirePropertyChange(
                     new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable, null));
             }
@@ -186,12 +187,38 @@ namespace Xomega.Framework
             set
             {
                 bool b = editing;
-                this.editing = value;
+                editing = value;
                 PropertyChange change = PropertyChange.Editing;
                 if (!editing) change += PropertyChange.Value;
                 if (editing != b) FirePropertyChange(
                     new PropertyChangeEventArgs(change, b, editing, null));
             }
+        }
+
+        private ComputedBinding editableBinding;
+
+        /// <summary>
+        /// Sets the expression to use for computing whether the property is editable.
+        /// </summary>
+        /// <param name="expression">Lambda expression used to compute the editability,
+        /// or null to make the editable flag non-computed.</param>
+        /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
+        public void SetComputedEditable(LambdaExpression expression, params object[] args)
+        {
+            if (editableBinding != null) editableBinding.Dispose();
+            editableBinding = expression == null ? null : new ComputedEditableBinding(this, expression, args);
+        }
+
+        /// <summary>
+        /// Manually updates the property editability with the computed result,
+        /// in addition to automatic updates when the underlying properties change.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the asynchronous operation.</returns>
+        public async Task UpdateComputedEditableAsync(CancellationToken token = default)
+        {
+            if (editableBinding != null)
+                await editableBinding.UpdateAsync(null, token);
         }
         #endregion
 
@@ -222,10 +249,36 @@ namespace Xomega.Framework
             set
             {
                 bool oldValue = Visible;
-                this.visible = value;
+                visible = value;
                 if (Visible != oldValue) FirePropertyChange(
                     new PropertyChangeEventArgs(PropertyChange.Visible, oldValue, Visible, null));
             }
+        }
+
+        private ComputedBinding visibleBinding;
+
+        /// <summary>
+        /// Sets the expression to use for computing whether the property is visible.
+        /// </summary>
+        /// <param name="expression">Lambda expression used to compute the visibility,
+        /// or null to make the visible flag non-computed.</param>
+        /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
+        public void SetComputedVisible(LambdaExpression expression, params object[] args)
+        {
+            if (visibleBinding != null) visibleBinding.Dispose();
+            visibleBinding = expression == null ? null : new ComputedVisibleBinding(this, expression, args);
+        }
+
+        /// <summary>
+        /// Manually updates the property visibility with the computed result,
+        /// in addition to automatic updates when the underlying properties change.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the asynchronous operation.</returns>
+        public async Task UpdateComputedVisibleAsync(CancellationToken token = default)
+        {
+            if (visibleBinding != null)
+                await visibleBinding.UpdateAsync(null, token);
         }
         #endregion
 
@@ -254,10 +307,36 @@ namespace Xomega.Framework
             set
             {
                 bool oldValue = Required;
-                this.required = value;
+                required = value;
                 if (Required != oldValue) FirePropertyChange(
                     new PropertyChangeEventArgs(PropertyChange.Required, oldValue, Required, null));
             }
+        }
+
+        private ComputedBinding requiredBinding;
+
+        /// <summary>
+        /// Sets the expression to use for computing whether the property is required.
+        /// </summary>
+        /// <param name="expression">Lambda expression used to compute the required flag,
+        /// or null to make the required flag non-computed.</param>
+        /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
+        public void SetComputedRequired(LambdaExpression expression, params object[] args)
+        {
+            if (requiredBinding != null) requiredBinding.Dispose();
+            requiredBinding = expression == null ? null : new ComputedRequiredBinding(this, expression, args);
+        }
+
+        /// <summary>
+        /// Manually updates the property required flag with the computed result,
+        /// in addition to automatic updates when the underlying properties change.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the asynchronous operation.</returns>
+        public async Task UpdateComputedRequiredAsync(CancellationToken token = default)
+        {
+            if (requiredBinding != null)
+                await requiredBinding.UpdateAsync(null, token);
         }
         #endregion
 

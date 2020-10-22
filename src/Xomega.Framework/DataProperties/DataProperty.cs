@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Lookup;
@@ -223,6 +224,44 @@ namespace Xomega.Framework
         /// based on the specified input and current row, where applicable.
         /// </summary>
         public Func<object, DataRow, CancellationToken, Task<IEnumerable>> AsyncItemsProvider;
+
+        #endregion
+
+        #region Computed value
+
+        private ComputedBinding valueBinding;
+
+        /// <summary>
+        /// Sets the expression to use for computing property value.
+        /// Makes the computed property non-editable and not required.
+        /// </summary>
+        /// <param name="expression">Lambda expression used to compute the value,
+        /// or null to make the value non-computed.</param>
+        /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
+        public void SetComputedValue(LambdaExpression expression, params object[] args)
+        {
+            if (valueBinding != null) valueBinding.Dispose();
+            if (expression != null)
+            {
+                valueBinding = new ComputedValueBinding(this, expression, args);
+                Editable = false;
+                Required = false;
+            }
+            else valueBinding = null;
+        }
+
+        /// <summary>
+        /// Manually updates the property value with the computed result,
+        /// in addition to automatic updates when the underlying properties change.
+        /// </summary>
+        /// <param name="row">The row in a data list to update, or null if the property is not in a data list.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the asynchronous operation.</returns>
+        public async Task UpdateComputedValueAsync(DataRow row = null, CancellationToken token = default)
+        {
+            if (valueBinding != null)
+                await valueBinding.UpdateAsync(row, token);
+        }
 
         #endregion
 
