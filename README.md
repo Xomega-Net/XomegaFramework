@@ -2,7 +2,7 @@
 
 A powerful .NET framework for building multi-tier data driven web and desktop applications backed by a service layer based on Entity Framework or any other ORM framework.
 
-The framework has been built from more than 15 years of experience, and is based on the approach that has been proven in many large scale applications. The primary goals of the framework are to:
+The framework has been built from more than 20 years of experience, and is based on the approach that has been proven in many large scale applications. The primary goals of the framework are to:
 
 - Enable rapid application development.
 - Promote reusability, which can significantly reduce development and maintenance costs.
@@ -14,7 +14,7 @@ The framework consists of the core package, as well as several additional packag
 
 - **Xomega.Framework** - the core package that contains reusable code for both web and desktop clients, as well as for the service layer.
 - **Xomega.Framework.Wpf** - implementation of views and data bindings for WPF.
-- **Xomega.Framework.Blazor** - implementation of views and property-bound components for Blazor Server.
+- **Xomega.Framework.Blazor** - implementation of views and property-bound components for Blazor Server and WebAssembly.
 - **Xomega.Framework.AspNetCore** - support for hosting and using business services via REST API.
 - **Xomega.Framework.Web** - implementation of views and data bindings for ASP.NET WebForms.
 - **Xomega.Framework.Wcf** - support for hosting and using business services in WCF.
@@ -23,7 +23,7 @@ The framework consists of the core package, as well as several additional packag
 
 Xomega framework provides rich base and utility classes for building presentation layer data objects that can be bound to Blazor components or the standard WPF and ASP.NET controls, and then used to build view models and views from those. Some of the important features that the framework supports are as follows.
 
-- **Data Properties** encapsulate a data value (or multiple values) and metadata, such as editability, visibility, security access, required flag, possible values, modification tracking, and also formatting, validation and conversion rules for the values. Properties can notify listeners about changes in the value or the metadata, and can be bound to UI controls, which would reflect any changes in the data properties, and update the property value from the user input.
+- **Data Properties** encapsulate a data value (or multiple values) and metadata, such as editability, visibility, security access, required flag, possible values, modification tracking, and also formatting, validation and conversion rules for the values. Properties can notify listeners about changes in the value or the metadata, and can be bound to UI controls, which would reflect any changes in the data properties, and update the property value from the user input. Property values or metadata can also be set to be automatically computed from the values/metadata of other properties using a lambda expression.
 
 - **Data Objects** contain data properties and nested child data objects, as well as its own overarching metadata, such as editability, security access level, modification tracking, and object-level validation rules. They also provide some CRUD support, and the ability to export/import its data to/from the service data contracts.
 
