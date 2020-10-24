@@ -10,7 +10,7 @@
     <Product>Xomega.Framework</Product>
     <Copyright>Copyright © Xomega.Net 2010-2020</Copyright>
     <Description>A powerful .NET framework for building multi-tier web or desktop applications using MVVM pattern.</Description>
-    <PackageTags>WPF ASP.NET MVC MVVM WCF EntityFramework</PackageTags>
+    <PackageTags>Blazor WPF ASP.NET MVC MVVM WCF EntityFramework</PackageTags>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

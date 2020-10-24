@@ -10,7 +10,7 @@
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
     <Copyright>Copyright © Xomega.Net 2020</Copyright>
-    <Description>Xomega framework for building server-side Blazor apps.</Description>
+    <Description>Xomega framework for building Blazor apps.</Description>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
     <PackageTags>ASP.NET Blazor Xomega</PackageTags>
