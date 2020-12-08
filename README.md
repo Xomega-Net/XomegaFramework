@@ -69,6 +69,7 @@ Below are some tutorials and articles that can help you ramp up with the framewo
 
 ### Articles
 
+- [Computed Properties in Xomega Framework](https://www.codeproject.com/Articles/5287909/Computed-properties-in-Xomega-Framework) - Basic Xomega Framework concepts, observable data model, and ways to implement computed properties with it.
 - [Take MVC to the Next Level in .Net](http://www.codeproject.com/KB/WPF/xomfwk.aspx) - in-depth run through framework's UI features with examples.
 - [How to Build Powerful Search Forms](http://www.codeproject.com/KB/usability/PowerSearch.aspx) - demonstrates application of the framework for building advanced search forms.
 - [Cascading Selection the MVC Way](http://www.codeproject.com/Articles/545906/Cascading-Selection-the-MVC-Way) - describes working with cached static data, selection controls, cascading selection, etc.
