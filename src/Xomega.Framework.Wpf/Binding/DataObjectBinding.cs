@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
 
 using System.Windows;
 using Xomega.Framework.Binding;

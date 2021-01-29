@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
+
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Threading.Tasks;
 
 namespace Xomega.Framework.Blazor

@@ -8,7 +8,7 @@
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
-    <Copyright>Copyright © Xomega.Net 2010-2020</Copyright>
+    <Copyright>Copyright © Xomega.Net 2010-2021</Copyright>
     <Description>Xomega.Framework WCF support for dependency injection, error handling and security.</Description>
     <PackageTags>WPF ASP.NET WCF Xomega</PackageTags>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>

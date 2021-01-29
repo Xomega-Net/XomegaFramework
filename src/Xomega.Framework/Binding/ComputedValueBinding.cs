@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
+
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
