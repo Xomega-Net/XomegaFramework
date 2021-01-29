@@ -2,13 +2,13 @@
 
 @using System.Collections
 
-@inherits XOptionsComponent
+@inherits XOptionsComponent<object>
 
 @if (IsVisible)
 {
     <div @attributes="AdditionalAttributes" class="@CssClass"
          disabled="@(!Property?.Editable)"
-         title="@Property?.ErrorsText">
+         title="@ErrorsText">
         @if (Property != null)
         {
             @if (ShowBlankOption && !IsMultiValue && !IsRequired && !IsNull)

@@ -55,7 +55,7 @@ namespace Xomega.Framework
         /// <returns></returns>
         public object GetValue(ValueFormat format, DataRow row = null)
         {
-            object val = Column < 0 ? InternalValue : row == null || row.List != parent || Column >= row.Count ? null : row[Column];
+            object val = Column < 0 ? InternalValue : row == null || row.List != parent ? null : row[Column];
             return format.IsString() ? ValueToString(val, format) : ResolveValue(val, format);
         }
 
@@ -102,18 +102,18 @@ namespace Xomega.Framework
         /// <param name="row">The data row context, if any.</param>
         public void SetValue(object val, DataRow row = null)
         {
-            object oldValue = InternalValue;
+            object oldValue = GetValue(ValueFormat.Internal, row);
             object newValue = ResolveValue(val, ValueFormat.Internal);
 
             if (Column < 0)
                 InternalValue = newValue;
-            else if (row != null && row.List == parent && Column < row.Count)
+            else if (row != null && row.List == parent)
                 row[Column] = newValue;
 
             // update Modified flag, make sure to not set it back from true to false
             if (!Modified.HasValue) Modified = false;
             else if (!Equals(oldValue, newValue)) Modified = true;
-            ResetValidation();
+            ResetValidation(row);
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row));
         }
 
@@ -127,18 +127,18 @@ namespace Xomega.Framework
         /// <param name="token">Cancellation token.</param>
         public async Task SetValueAsync(object val, DataRow row = null, CancellationToken token = default)
         {
-            object oldValue = InternalValue;
+            object oldValue = GetValue(ValueFormat.Internal, row);
             object newValue = await ResolveValueAsync(val, ValueFormat.Internal);
 
             if (Column < 0)
                 InternalValue = newValue;
-            else if (row != null && row.List == parent && Column < row.Count)
+            else if (row != null && row.List == parent)
                 row[Column] = newValue;
 
             // update Modified flag, make sure to not set it back from true to false
             if (!Modified.HasValue) Modified = false;
             else if (!Equals(oldValue, newValue)) Modified = true;
-            ResetValidation();
+            ResetValidation(row);
             await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row), token);
         }
 
@@ -338,7 +338,7 @@ namespace Xomega.Framework
                 return format.IsString() ? RestrictedString : value;
 
             if (IsValueNull(value, format))
-                return format.IsString() ? NullString : null;
+                return format == ValueFormat.DisplayString ? NullString : null;
 
             if (IsMultiValued)
             {
@@ -390,7 +390,7 @@ namespace Xomega.Framework
                 return format.IsString() ? RestrictedString : value;
 
             if (IsValueNull(value, format))
-                return format.IsString() ? NullString : null;
+                return format == ValueFormat.DisplayString ? NullString : null;
 
             if (IsMultiValued)
             {
@@ -498,67 +498,95 @@ namespace Xomega.Framework
         /// <param name="args">The callback arguments.</param>
         protected void ValidateOnStopEditing(object sender, PropertyChangeEventArgs args)
         {
-            if (this == sender && args.Change.IncludesEditing() && !Editing) Validate();
+            if (this == sender && args.Change.IncludesEditing() && !Editing) Validate(args.Row);
         }
 
         /// <summary>
-        /// Returns the list of validation errors for the property.
+        /// A list of validation errors for the property.
+        /// </summary>
+        protected ErrorList validationErrors;
+
+        /// <summary>
+        /// Gets validation errors for the value of the property or a specific data row.
         /// Null means that the validation has not been performed since the property value last changed.
         /// An empty list means that the validation has been performed and the value is valid.
         /// Non-empty list means that the value has been validated and is not valid if the list contains any errors.
         /// </summary>
-        public ErrorList ValidationErrors { get; private set; }
-
-        /// <summary>
-        /// Gets a combined error text by concatenating all validation error messages with a new line delimiter.
-        /// </summary>
-        public string ErrorsText => Editable && Visible ? ValidationErrors?.ErrorsText : "";
-
-        /// <summary>
-        /// Returns if the current property value has been validated and is valid, i.e. has no validation errors.
-        /// </summary>
-        /// <param name="validate">True to validate the property first if needed.</param>
-        /// <returns>True if the current property has been validated and is valid, otherwise false.</returns>
-        public bool IsValid(bool validate)
+        /// <param name="row">The data row to get validation errors for, or null to get it for the property value.</param>
+        public ErrorList GetValidationErrors(DataRow row)
         {
-            if (validate) Validate();
-            return ValidationErrors != null && !ValidationErrors.HasErrors();
+            if (row != null) return row.GetValidationErrors(this);
+            else return validationErrors;
         }
 
         /// <summary>
-        /// Resets the validation status of the property to be non-validated by setting the list of validation errors to null.
+        /// Adds the specified validation error with arguments to the property or data row, if one is specified.
+        /// </summary>
+        /// <param name="row">The data row to add validation error to, or null to add to the property directly.</param>
+        /// <param name="error">The error code.</param>
+        /// <param name="args">Error message parameters, if any.</param>
+        public void AddValidationError(DataRow row, string error, params object[] args)
+        {
+            if (row != null) row.AddValidationError(this, error, args);
+            else validationErrors.AddValidationError(error, args);
+        }
+
+        /// <summary>
+        /// Returns if the current property value in the specified row, if provided, has been validated and is valid,
+        /// i.e. has no validation errors.
+        /// </summary>
+        /// <param name="validate">True to validate the property first if needed.</param>
+        /// <param name="row">The row for the value, or null for the property value.</param>
+        /// <returns>True if the current property has been validated and is valid, otherwise false.</returns>
+        public bool IsValid(bool validate, DataRow row)
+        {
+            if (validate) Validate(row);
+            var errors = GetValidationErrors(row);
+            return errors != null && !errors.HasErrors();
+        }
+
+        /// <summary>
+        /// Resets the validation status to be non-validated for the current property or the specified row.
         /// Fires the validation property change event as well. The validation status is reset automatically
         /// whenever the property value changes and can also be reset manually if the validation depends on external factors that have changed.
         /// </summary>
-        public void ResetValidation()
+        /// <param name="row">The row to reset validation for, or null to reset for the current property.</param>
+        public void ResetValidation(DataRow row)
         {
-            ValidationErrors = null;
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, null));
+            if (row != null) row.ResetValidation(this);
+            else validationErrors = null;
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, row));
         }
 
         /// <summary>
         /// Validates the property if it hasn't been validated yet.
         /// </summary>
-        public void Validate() { Validate(false); }
+        /// <param name="row">The row to validate, or null to validate the property value</param>
+        public void Validate(DataRow row) { Validate(false, row); }
 
         /// <summary>
         /// Validates the property and fires a validation property change event.
         /// </summary>
         /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
-        public virtual void Validate(bool force)
+        /// <param name="row">The row to validate, or null to validate the property value</param>
+        public virtual void Validate(bool force, DataRow row)
         {
-            if (force) ResetValidation();
-            if (ValidationErrors != null) return;
+            if (force) ResetValidation(row);
 
-            ValidationErrors = parent?.NewErrorList() ?? new ErrorList();
+            var errors = GetValidationErrors(row);
+            if (errors != null) return;
+
+            if (row != null) row.AddValidationError(this, null);
+            else validationErrors = parent?.NewErrorList() ?? new ErrorList();
 
             if (Validator != null && Editable && Visible)
             {
-                if (InternalValue is IList lst && lst.Count > 0)
-                    foreach (object val in lst) Validator(this, val);
-                else Validator(this, InternalValue);
+                object curValue = GetValue(ValueFormat.Internal, row);
+                if (curValue is IList lst && lst.Count > 0)
+                    foreach (object val in lst) Validator(this, val, row);
+                else Validator(this, curValue, row);
             }
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, null));
+            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, row));
         }
 
         /// <summary>
@@ -569,7 +597,8 @@ namespace Xomega.Framework
         /// the property configuration for validation or error messages. Result of the validation
         /// should be added to the property's validation error list.</param>
         /// <param name="value">The value to validate.</param>
-        public delegate void ValueValidator(DataProperty prop, object value);
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public delegate void ValueValidator(DataProperty prop, object value, DataRow row);
 
         /// <summary>
         /// A list of property validation functions. Validation functions can be added to 
@@ -582,10 +611,11 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateRequired(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateRequired(DataProperty dp, object value, DataRow row)
         {
             if (dp != null && dp.Required && dp.IsValueNull(value, ValueFormat.Internal))
-                dp.ValidationErrors.AddValidationError(Messages.Validation_Required, dp);
+                dp.AddValidationError(row, Messages.Validation_Required, dp);
         }
 
         /// <summary>
@@ -608,34 +638,6 @@ namespace Xomega.Framework
             Required = p.Required;
             AccessLevel = p.AccessLevel;
             Visible = p.Visible;
-        }
-
-        /// <summary>
-        /// Space-delimited string with the property states.
-        /// It can be used as styles or CSS classes on property-bound controls.
-        /// </summary>
-        /// <param name="states">The combination of property states to return.</param>
-        public virtual string GetStateString(PropertyChange states)
-        {
-            var state = new HashSet<string>();
-            if (Visible)
-            {
-                if (Editable)
-                {
-                    if (Required && states.IncludesRequired())
-                        state.Add("required");
-                    if (Modified == true && states.IncludesValue())
-                        state.Add("modified");
-                    if (ValidationErrors != null && states.IncludesValidation())
-                        state.Add(IsValid(false) ? "valid" : "invalid");
-                }
-                else if (states.IncludesEditable())
-                    state.Add("readonly");
-            }
-            else if (states.IncludesVisible())
-                state.Add("hidden");
-
-            return string.Join(" ", state);
         }
     }
 }

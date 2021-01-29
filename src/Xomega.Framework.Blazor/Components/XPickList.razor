@@ -2,11 +2,11 @@
 
 @using System.Collections
 
-@inherits XOptionsComponent
+@inherits XOptionsComponent<object>
 
 @if (IsVisible)
 {
-    <div class="picklist" title="@Property?.ErrorsText" @attributes="@AdditionalAttributes">
+    <div class="picklist" title="@ErrorsText" @attributes="@AdditionalAttributes">
         @if (IsEditable)
         {
             <select @ref="AvailableList" multiple="@IsMultiValue" size="@Rows">

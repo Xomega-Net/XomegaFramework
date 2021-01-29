@@ -83,11 +83,12 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateDateTime(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateDateTime(DataProperty dp, object value, DataRow row)
         {
             DateTimeProperty dtp = dp as DateTimeProperty;
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is DateTime))
-                dp.ValidationErrors.AddValidationError(Messages.Validation_DateTimeFormat, dp, value, dtp != null ? dtp.Format : "N/A");
+                dp.AddValidationError(row, Messages.Validation_DateTimeFormat, dp, value, dtp != null ? dtp.Format : "N/A");
         }
     }
 

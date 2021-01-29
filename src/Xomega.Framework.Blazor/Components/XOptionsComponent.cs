@@ -13,7 +13,7 @@ namespace Xomega.Framework.Blazor
     /// <summary>
     /// Base class for components that have an associated list of options to select the value(s).
     /// </summary>
-    public class XOptionsComponent : XComponent
+    public class XOptionsComponent<T> : XComponent
     {
         /// <summary>
         /// Injected instance of JavaScript runtime for client-side calls.
@@ -57,9 +57,14 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// A list of selected/current value(s) of the property.
         /// </summary>
-        protected IList SelectedItems => (IsNull ? new ArrayList() :
-            IsMultiValue ? Property.InternalValue as IList :
-            new ArrayList() { Property.InternalValue }) ?? new ArrayList();
+        protected IList SelectedItems => GetSelectedItems(ValueFormat.Internal);
+
+        /// <summary>
+        /// A list of selected/current value(s) of the property in the specified format.
+        /// </summary>
+        protected IList GetSelectedItems(ValueFormat format) => (IsNull ? new ArrayList() :
+            IsMultiValue ? Property.GetValue(format, Row) as IList :
+            new ArrayList() { Property.GetValue(format, Row) }) ?? new ArrayList();
 
         /// <summary>
         /// Utility method to determin if the specified item should be selected in a list of options.
@@ -74,12 +79,12 @@ namespace Xomega.Framework.Blazor
         /// Custom template for displaying item options.
         /// </summary>
         [Parameter]
-        public RenderFragment<object> ItemDisplayTemplate { get; set; }
+        public RenderFragment<T> ItemDisplayTemplate { get; set; }
 
         /// <summary>
         /// Actual template for displaying item options, which could be custom or a default.
         /// </summary>
-        public RenderFragment<object> Template => ItemDisplayTemplate ?? RenderValue;
+        public RenderFragment<T> Template => ItemDisplayTemplate ?? RenderValue;
 
         /// <summary>
         /// Default template for displaying item optins, which shows items formatted
@@ -87,7 +92,7 @@ namespace Xomega.Framework.Blazor
         /// </summary>
         /// <param name="val">The item to render.</param>
         /// <returns>The render fragment.</returns>
-        protected RenderFragment RenderValue(object val) => (b) =>
+        protected RenderFragment RenderValue(T val) => (b) =>
         {
             b.AddContent(1, Property.ValueToString(val, ValueFormat.DisplayString));
         };

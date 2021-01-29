@@ -152,11 +152,7 @@ namespace Xomega.Framework.Properties
                     h = null;
                     if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str);
                     if (h == null) h = tbl.LookupById(str);
-                    if (h != null)
-                    {
-                        h.DefaultFormat = KeyFormat;
-                        return h;
-                    }
+                    if (h != null) return h;
                 }
                 return new Header(EnumType, str);
             }
@@ -189,11 +185,7 @@ namespace Xomega.Framework.Properties
                     h = null;
                     if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str);
                     if (h == null) h = tbl.LookupById(str);
-                    if (h != null)
-                    {
-                        h.DefaultFormat = KeyFormat;
-                        return h;
-                    }
+                    if (h != null) return h;
                 }
                 return new Header(EnumType, str);
             }
@@ -201,18 +193,19 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// A standard validation function that checks for null if the value is required.
+        /// A validation function that checks if the lookup value is valid based on the property's validation setting.
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateLookupValue(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateLookupValue(DataProperty dp, object value, DataRow row)
         {
             if (dp is EnumProperty ep && ep.LookupValidation != LookupValidationType.None && value is Header hdr)
             {
                 if (!hdr.IsValid)
-                    dp.ValidationErrors.AddValidationError(Messages.Validation_LookupValue, dp, ep.EnumType, hdr);
+                    dp.AddValidationError(row, Messages.Validation_LookupValue, dp, ep.EnumType, hdr);
                 else if (ep.LookupValidation == LookupValidationType.ActiveItem && !hdr.IsActive)
-                    dp.ValidationErrors.AddValidationError(Messages.Validation_LookupValueActive, dp, hdr);
+                    dp.AddValidationError(row, Messages.Validation_LookupValueActive, dp, hdr);
             }
         }
 
@@ -429,7 +422,7 @@ namespace Xomega.Framework.Properties
         {
             if (!e.Change.IncludesValue() || Equals(e.OldValue, e.NewValue)) return;
 
-            if (!IsNull() && FilterFunc != null)
+            if (!IsNull(e.Row) && FilterFunc != null)
             {
                 if (IsMultiValued) Values = Values.Where(h => FilterFunc(h, e.Row)).ToList();
                 else if (!FilterFunc(Value, e.Row)) Value = null;
@@ -470,7 +463,7 @@ namespace Xomega.Framework.Properties
                 object pv = p.GetValue(ValueFormat.Internal, row);
                 object hv = p.ResolveValue(h[attr], ValueFormat.Internal);
 
-                if (p.IsNull() && !CascadingMatchNulls) continue;
+                if (p.IsNull(row) && !CascadingMatchNulls) continue;
 
                 IList<object> pvl = pv as IList<object>;
 

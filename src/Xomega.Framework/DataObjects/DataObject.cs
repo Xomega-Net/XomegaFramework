@@ -541,7 +541,7 @@ namespace Xomega.Framework
                 DataProperty dp = this[pi.Name];
                 if (dp != null)
                 {
-                    if (dp.IsValid(true))
+                    if (dp.IsValid(true, row))
                     {
                         if (dp.IsMultiValued)
                         {
@@ -569,7 +569,7 @@ namespace Xomega.Framework
                     foreach (PropertyInfo cpi in pi.PropertyType.GetProperties())
                     {
                         DataProperty cdp = this[pi.Name + "_" + cpi.Name];
-                        if (cdp != null && cdp.IsValid(true)) cpi.SetValue(obj, cdp.GetValue(ValueFormat.Transport, row), null);
+                        if (cdp != null && cdp.IsValid(true, row)) cpi.SetValue(obj, cdp.GetValue(ValueFormat.Transport, row), null);
                     }
                 }
                 pi.SetValue(dataContract, obj, null);
@@ -650,7 +650,7 @@ namespace Xomega.Framework
         {
             ErrorList errLst = NewErrorList();
             if (validationErrorList != null) errLst.MergeWith(validationErrorList);
-            foreach (DataProperty p in properties.Values) errLst.MergeWith(p.ValidationErrors);
+            foreach (DataProperty p in properties.Values) errLst.MergeWith(p.GetValidationErrors(null));
             foreach (DataObject obj in childObjects.Values) errLst.MergeWith(obj.GetValidationErrors());
             return errLst;
         }
@@ -671,7 +671,7 @@ namespace Xomega.Framework
         public virtual void ResetAllValidation()
         {
             ResetValidation();
-            foreach (DataProperty p in properties.Values) p.ResetValidation();
+            foreach (DataProperty p in properties.Values) p.ResetValidation(null);
             foreach (DataObject obj in childObjects.Values) obj.ResetAllValidation();
         }
 
@@ -681,7 +681,7 @@ namespace Xomega.Framework
         /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
         public virtual void Validate(bool force)
         {
-            foreach (DataProperty p in properties.Values) p.Validate(force);
+            foreach (DataProperty p in properties.Values) p.Validate(force, null);
             foreach (DataObject obj in childObjects.Values) obj.Validate(force);
 
             if (force) ResetValidation();

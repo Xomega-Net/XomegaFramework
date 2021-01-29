@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -22,7 +24,7 @@ namespace Xomega.Framework
     /// </remarks>
     [DataContract]
     [KnownType(typeof(List<object>))]
-    public class Header : IComparable
+    public class Header : DynamicObject, IComparable
     {
         /// <summary>
         /// A constant that represents the ID field when used as part of the display format.
@@ -52,6 +54,14 @@ namespace Xomega.Framework
         /// See https://github.com/dotnet/runtime/issues/29743
         /// </summary>
         public Dictionary<string, object> Attributes { get => attributes; set => attributes = value; }
+
+        /// <summary>
+        /// Dummy parameterless constructor to satisfy creation by Activator.
+        /// </summary>
+        public Header()
+        {
+            IsValid = false;
+        }
 
         /// <summary>
         /// Constructs an invalid header of the given type with just an ID.
@@ -137,10 +147,10 @@ namespace Xomega.Framework
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Default format to use when converting the header to a string. By default, it displays the header ID.
+        /// Default format to use when converting the header to a string. By default, it displays the header text.
         /// </summary>
         [DataMember]
-        public string DefaultFormat { get; set; } = FieldId;
+        public string DefaultFormat { get; set; } = FieldText;
 
         /// <summary>
         /// Returns a value of the given named attribute.
@@ -278,5 +288,60 @@ namespace Xomega.Framework
             if (h != null) return string.Compare(Text, h.Text);
             return 0;
         }
+
+        #region Dynamic object
+
+        /// <inheritdoc/>
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            var members = attributes.Keys.ToList();
+            members.Add("Id");
+            members.Add("Text");
+            return members;
+        }
+
+        /// <inheritdoc/>
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            if (binder.Name == "Id")
+            {
+                result = Id;
+                return true;
+            }
+            if (binder.Name == "Text")
+            {
+                result = Text;
+                return true;
+            }
+            if (attributes.ContainsKey(binder.Name))
+            {
+                result = this[binder.Name];
+                return true;
+            }
+            return base.TryGetMember(binder, out result);
+        }
+
+        /// <inheritdoc/>
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            if (binder.Name == "Id")
+            {
+                Id = value?.ToString();
+                return true;
+            }
+            if (binder.Name == "Text")
+            {
+                Text = value?.ToString();
+                return true;
+            }
+            if (attributes.ContainsKey(binder.Name))
+            {
+                this[binder.Name] = value;
+                return true;
+            }
+            return base.TrySetMember(binder, value);
+        }
+
+        #endregion
     }
 }

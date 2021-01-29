@@ -76,11 +76,12 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateInteger(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateInteger(DataProperty dp, object value, DataRow row)
         {
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal)
                 && !(value is int) && !(value is short) && !(value is byte))
-                dp.ValidationErrors.AddValidationError(Messages.Validation_IntegerFormat, dp);
+                dp.AddValidationError(row, Messages.Validation_IntegerFormat, dp);
         }
 
         /// <summary>
@@ -89,11 +90,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateMinimum(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
         {
-            IntegerProperty idp = dp as IntegerProperty;
-            if (idp != null && (value is int?) && ((int?)value).Value < idp.MinimumValue)
-                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
+            if (dp is IntegerProperty idp && (value is int?) && ((int?)value).Value < idp.MinimumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
         }
 
         /// <summary>
@@ -102,11 +103,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateMaximum(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
         {
-            IntegerProperty idp = dp as IntegerProperty;
-            if (idp != null && (value is int?) && ((int?)value).Value > idp.MaximumValue)
-                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
+            if (dp is IntegerProperty idp && (value is int?) && ((int?)value).Value > idp.MaximumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
         }
     }
 

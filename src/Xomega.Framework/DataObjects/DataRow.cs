@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 
 namespace Xomega.Framework
 {
@@ -9,7 +11,7 @@ namespace Xomega.Framework
     /// Data row is a class that is used to store data for individual rows in the <see cref="DataListObject"/>.
     /// It provides ability to compare rows using the list's sort criteria and some other utility functions.
     /// </summary>
-    public class DataRow : List<object>, IComparable<DataRow>
+    public class DataRow : DynamicObject, IComparable<DataRow>
     {
         #region Utility methods for getting property values from a data row
 
@@ -65,9 +67,19 @@ namespace Xomega.Framework
         public DataListObject List { get; private set; }
 
         /// <summary>
+        /// The data for the row
+        /// </summary>
+        private readonly List<object> data = new List<object>();
+
+        /// <summary>
         /// A flag indicating if the current row is selected
         /// </summary>
-        public bool Selected { get; internal set; }
+        public bool Selected { get; set; }
+
+        /// <summary>
+        /// Dummy parameterless constructor to satisfy creation by Activator.
+        /// </summary>
+        public DataRow() {}
 
         /// <summary>
         /// Constructs a new data row for the specified data list object.
@@ -75,8 +87,37 @@ namespace Xomega.Framework
         /// <param name="dataList">Data list object that contains this row.</param>
         public DataRow(DataListObject dataList)
         {
-            this.List = dataList;
-            for (int i = 0; i < dataList.ColumnCount; i++) Add(null); // pre-create columns
+            List = dataList;
+            for (int i = 0; i < dataList.ColumnCount; i++) data.Add(null); // pre-create columns
+        }
+
+        #region Edit row
+
+        /// <summary>
+        /// Constructs a new edit row for the specified data row.
+        /// </summary>
+        public DataRow(DataRow orignalRow) : this(orignalRow.List)
+        {
+            OriginalRow = orignalRow;
+            CopyFrom(orignalRow);
+        }
+
+        /// <summary>
+        /// The original data row this row is editing, if any.
+        /// </summary>
+        public DataRow OriginalRow { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        /// Internal access to the row data by column index for properties.
+        /// </summary>
+        /// <param name="column">The column index.</param>
+        /// <returns>The row's value at the specified column.</returns>
+        internal object this[int column]
+        {
+            get => column >= 0 && column < data.Count ? data[column] : null;
+            set { if (column >= 0 && column < data.Count) data[column] = value; }
         }
 
         /// <summary>
@@ -85,8 +126,91 @@ namespace Xomega.Framework
         /// <param name="otherRow">Another row to copy from.</param>
         public void CopyFrom(DataRow otherRow)
         {
-            for (int i = 0; i < otherRow.Count; i++) this[i] = otherRow[i];
+            for (int i = 0; i < otherRow.data.Count; i++) data[i] = otherRow.data[i];
         }
+
+        #region Dynamic object
+
+        /// <inheritdoc/>
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            if (List == null) return new string[0];
+            return List.Properties.Select(p => p.Name);
+        }
+
+        /// <inheritdoc/>
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            var prop = List?[binder.Name];
+            if (prop != null)
+            {
+                result = prop.GetValue(ValueFormat.Internal, this);
+                return true;
+            }
+            return base.TryGetMember(binder, out result);
+        }
+
+        /// <inheritdoc/>
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            var prop = List?[binder.Name];
+            if (prop != null)
+            {
+                prop.SetValue(value, this);
+                return true;
+            }
+            return base.TrySetMember(binder, value);
+        }
+
+        #endregion
+
+        #region Validation
+
+        private Dictionary<string, ErrorList> ValidationErrors = new Dictionary<string, ErrorList>();
+
+        /// <summary>
+        /// Adds the specified validation error with arguments to the data row.
+        /// </summary>
+        /// <param name="property">Invalid data property, or null if the error is not property-specific.</param>
+        /// <param name="error">The error code. Null value indicates the validation happened and succeeded.</param>
+        /// <param name="args">Error message parameters, if any.</param>
+        internal void AddValidationError(DataProperty property, string error, params object[] args)
+        {
+            string key = property?.Name ?? "";
+            if (!ValidationErrors.TryGetValue(key, out ErrorList errorList))
+                ValidationErrors[key] = errorList = List.NewErrorList();
+            if (error != null)
+                errorList.AddValidationError(error, args);
+        }
+
+        /// <summary>
+        /// Resets the validation errors for this row for the specified property, or for the entire row.
+        /// </summary>
+        /// <param name="property">The property to reset validation for, or null to reset for the entire row.</param>
+        internal void ResetValidation(DataProperty property)
+        {
+            if (property == null) ValidationErrors.Clear();
+            else ValidationErrors.Remove(property.Name);
+        }
+
+        /// <summary>
+        /// Gets validation errors for a specific property in the data row, or non-property specific errors,
+        /// if the specified property is null.
+        /// </summary>
+        /// <param name="property">The property to get validation errors for, or null for row-level errors.</param>
+        /// <returns>Null, if the property or row were never validated. Otherwise the a list of validation errors
+        /// for the specified property or for the entire row.</returns>
+        internal ErrorList GetValidationErrors(DataProperty property)
+        {
+            string key = property?.Name ?? "";
+            if (ValidationErrors.TryGetValue(key, out ErrorList errorList))
+                return errorList;
+            else return null;
+        }
+
+        #endregion
+
+        #region Row comparison
 
         /// <summary>
         /// Implementation of the IComparable interface for DataRow classes. Compares this row
@@ -138,5 +262,7 @@ namespace Xomega.Framework
             }
             return res;
         }
+
+        #endregion
     }
 }

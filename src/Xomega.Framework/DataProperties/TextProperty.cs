@@ -42,10 +42,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateSize(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateSize(DataProperty dp, object value, DataRow row)
         {
             if (dp != null && dp.Size > 0 && Convert.ToString(value).Length > dp.Size)
-                dp.ValidationErrors.AddValidationError(Messages.Validation_MaxLength, dp, dp.Size, value);
+                dp.AddValidationError(row, Messages.Validation_MaxLength, dp, dp.Size, value);
         }
     }
 }

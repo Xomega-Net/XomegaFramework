@@ -214,7 +214,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="idx">Index of the row to check</param>
         /// <returns>True if the row is selected, false otherwise</returns>
-        public bool IsRowSelected(int idx) => (idx >= 0 && idx < data.Count) ? data[idx].Selected : false;
+        public bool IsRowSelected(int idx) => (idx >= 0 && idx < data.Count) && data[idx].Selected;
 
         /// <summary>
         /// Single-select data row with a specified index.
@@ -242,11 +242,18 @@ namespace Xomega.Framework
         /// Toggles selection for the specified row.
         /// </summary>
         /// <param name="row">The row index.</param>
-        public void ToggleSelection(DataRow row)
+        public void ToggleSelection(DataRow row) => SetRowSelected(row, !row.Selected);
+
+        /// <summary>
+        /// Sets selection on the specified row.
+        /// </summary>
+        /// <param name="row">The row to set selection on.</param>
+        /// <param name="selected">True to set the row selected, false otherwise.</param>
+        public void SetRowSelected(DataRow row, bool selected)
         {
             if (!row.Selected && RowSelectionMode == SelectionModeSingle)
                 ClearSelectedRows();
-            row.Selected = !row.Selected;
+            row.Selected = selected;
             FireSelectionChanged();
         }
 
@@ -321,6 +328,7 @@ namespace Xomega.Framework
         {
             ResetValidation();
             if (CriteriaObject != null) CriteriaObject.ResetAllValidation();
+            foreach (DataRow row in data) row.ResetValidation(null);
         }
 
         /// <summary>
@@ -368,20 +376,42 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        public void Insert(int index, DataRow row)
+        public virtual async Task Insert(int index, DataRow row)
         {
             if (row.List != this || index < 0 || index > data.Count) return;
             data.Insert(index, row);
+            await Task.CompletedTask;
         }
 
         /// <summary>
         /// Remove a data row at the specified index.
         /// </summary>
         /// <param name="index">Index to remove a data row at.</param>
-        public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
             if (index < 0 || index >= data.Count) return;
             data.RemoveAt(index);
+        }
+
+        /// <summary>
+        /// Remove the specified data rows from the list.
+        /// </summary>
+        /// <param name="rows">A list of data rows to remove.</param>
+        public virtual async Task RemoveRows(IEnumerable<DataRow> rows)
+        {
+            data.RemoveRows(rows.Where(r => r.List == this));
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Replaces data in the specified row with data in the new row.
+        /// </summary>
+        /// <param name="row">The row to replace.</param>
+        /// <param name="newRow">The new row to use.</param>
+        public virtual async Task UpdateRow(DataRow row, DataRow newRow)
+        {
+            data.ReplaceRow(newRow, row);
+            await Task.CompletedTask;
         }
 
         #endregion
@@ -513,6 +543,32 @@ namespace Xomega.Framework
                 foreach (var row in source) Add(row);
                 suppressNotification = false;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+            /// <summary>
+            /// Replaces data in the original row with the data from the specified row.
+            /// </summary>
+            /// <param name="editRow">The edit row to replace the original row.</param>
+            /// <param name="originalRow">The original row to replace, or null to use the original row from the specified row.</param>
+            public void ReplaceRow(DataRow editRow, DataRow originalRow = null)
+            {
+                var row = originalRow ?? editRow?.OriginalRow;
+                if (row == null || editRow == null) return;
+                row.CopyFrom(editRow);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, editRow, row));
+            }
+
+            /// <summary>
+            /// Remove the specified data rows from the collection with a single change notification.
+            /// </summary>
+            /// <param name="rows">A list of data rows to remove.</param>
+            public void RemoveRows(IEnumerable<DataRow> rows)
+            {
+                suppressNotification = true;
+                foreach (var row in rows)
+                    Remove(row);
+                suppressNotification = false;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, rows.ToList()));
             }
 
             /// <summary>

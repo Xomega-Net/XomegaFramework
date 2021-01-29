@@ -132,7 +132,7 @@ namespace Xomega.Framework.Web
             protected override void UpdateValidation()
             {
                 var lbxSelection = (control as BasePickListControl).lbx_Selection;
-                ErrorList errors = property.ValidationErrors;
+                ErrorList errors = property.GetValidationErrors(null);
                 bool markAsInvalid = errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable;
                 lbxSelection.CssClass = WebUtil.AddOrRemoveClass(lbxSelection.CssClass, "invalid", markAsInvalid);
                 lbxSelection.ToolTip = markAsInvalid ? errors.ErrorsText : null;

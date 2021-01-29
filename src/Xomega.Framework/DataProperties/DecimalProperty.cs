@@ -92,10 +92,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateDecimal(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateDecimal(DataProperty dp, object value, DataRow row)
         {
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is decimal))
-                dp.ValidationErrors.AddValidationError(Messages.Validation_DecimalFormat, dp);
+                dp.AddValidationError(row, Messages.Validation_DecimalFormat, dp);
         }
 
         /// <summary>
@@ -104,11 +105,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateMinimum(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
         {
-            DecimalProperty ddp = dp as DecimalProperty;
-            if (ddp != null && (value is decimal?) && ((decimal?)value).Value < ddp.MinimumValue)
-                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMinimum, dp, ddp.MinimumValue);
+            if (dp is DecimalProperty ddp && (value is decimal?) && ((decimal?)value).Value < ddp.MinimumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, ddp.MinimumValue);
         }
 
         /// <summary>
@@ -117,11 +118,11 @@ namespace Xomega.Framework.Properties
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
-        public static void ValidateMaximum(DataProperty dp, object value)
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
         {
-            DecimalProperty ddp = dp as DecimalProperty;
-            if (ddp != null && (value is decimal?) && ((decimal?)value).Value > ddp.MaximumValue)
-                dp.ValidationErrors.AddValidationError(Messages.Validation_NumberMaximum, dp, ddp.MaximumValue);
+            if (dp is DecimalProperty ddp && (value is decimal?) && ((decimal?)value).Value > ddp.MaximumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, ddp.MaximumValue);
         }
     }
 

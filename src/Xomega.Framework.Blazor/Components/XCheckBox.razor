@@ -9,7 +9,7 @@
                class="@CssClass"
                disabled="@(!IsEditable)"
                checked="@Value" @onchange="@OnValueChanged" @onfocus="@OnFocus" @onblur="OnBlur"
-               title="@Property?.ErrorsText" />
+               title="@ErrorsText" />
         @GetLabel(Label)
     </label>
 }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,12 @@ namespace Xomega.Framework.Blazor
         /// </summary>
         [CascadingParameter]
         public DataRow Row { get; set; }
+
+        /// <summary>
+        /// Blazor edit context associated with the current component.
+        /// </summary>
+        [CascadingParameter]
+        public EditContext EditContext { get; set; }
 
         /// <summary>
         /// Access key mnemonic to use for the component.
@@ -68,7 +75,12 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// Shorthand to determine if the value of the property is null.
         /// </summary>
-        protected bool IsNull => Property != null && Property.IsNull();
+        protected bool IsNull => Property != null && Property.IsNull(Row);
+
+        /// <summary>
+        /// Shorthand to get the text for property's validation errors.
+        /// </summary>
+        protected string ErrorsText => IsEditable && IsVisible ? Property?.GetValidationErrors(Row)?.ErrorsText : "";
 
         /// <summary>
         /// Constructs a new property bound component.
@@ -79,6 +91,11 @@ namespace Xomega.Framework.Blazor
         }
 
         /// <summary>
+        /// The property state descriptions used to generate component's CSS classes.
+        /// </summary>
+        protected PropertyStateDescription StateDescriptions = new PropertyStateDescription();
+
+        /// <summary>
         /// Gets a CSS class string that combines the <c>class</c> attribute and property state.
         /// Derived components should typically use this value for the primary HTML element's 'class' attribute.
         /// </summary>
@@ -86,7 +103,7 @@ namespace Xomega.Framework.Blazor
         {
             get
             {
-                string propertyState = Property?.GetStateString(ObservedChanges);
+                string propertyState = StateDescriptions.GetStateDescription(Property, ObservedChanges, Row);
                 if (AdditionalAttributes != null &&
                     AdditionalAttributes.TryGetValue("class", out var cls) &&
                     !string.IsNullOrEmpty(Convert.ToString(cls)))
@@ -138,6 +155,10 @@ namespace Xomega.Framework.Blazor
                     StateHasChanged();
                 });
             }
+            if (e.Change.IncludesValidation() && EditContext != null)
+                EditContext.NotifyValidationStateChanged();
+            if (e.Change.IncludesValue() && EditContext != null)
+                EditContext.NotifyFieldChanged(EditContext.Field(Property.Name));
         }
 
         /// <summary>
@@ -149,7 +170,7 @@ namespace Xomega.Framework.Blazor
             if (Property != null)
             {
                 Property.Editing = true;
-                await Property.SetValueAsync(value);
+                await Property.SetValueAsync(value, Row);
             }
         }
 

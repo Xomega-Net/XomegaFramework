@@ -233,7 +233,7 @@ namespace Xomega.Framework
         /// </summary>
         protected override void UpdateValidation()
         {
-            ErrorList errors = property?.ValidationErrors;
+            ErrorList errors = property?.GetValidationErrors(null);
             BindingExpression exp = GetValidationExpression();
             element.SetValue(Property.ValidationProperty, new Property.ValidationResults() { Errors = errors });
             Validation.ClearInvalid(exp);

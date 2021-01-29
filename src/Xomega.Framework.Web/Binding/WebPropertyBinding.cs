@@ -287,9 +287,8 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void UpdateValidation()
         {
-            var ctl = control as WebControl;
-            if (ctl == null) return;
-            ErrorList errors = property.ValidationErrors == null ? null : property.ValidationErrors;
+            if (!(control is WebControl ctl)) return;
+            ErrorList errors = property?.GetValidationErrors(null);
             ctl.CssClass = WebUtil.AddOrRemoveClass(ctl.CssClass, "invalid", false);
             ctl.ToolTip = null;
             if (errors != null && errors.Errors.Count > 0 && property.Visible && property.Editable)
