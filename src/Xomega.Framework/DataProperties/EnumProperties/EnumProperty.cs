@@ -307,10 +307,21 @@ namespace Xomega.Framework.Properties
 
         #region Local Cache Loader
 
+        private LocalLookupCacheLoader localCacheLoader;
+
         /// <summary>
         /// Cache loader with a local cache to use as a list of possible values for this property.
         /// </summary>
-        public LocalLookupCacheLoader LocalCacheLoader { get; set; }
+        public LocalLookupCacheLoader LocalCacheLoader
+        {
+            get => localCacheLoader;
+            set
+            {
+                localCacheLoader = value;
+                if (localCacheLoader != null)
+                    EnumType = localCacheLoader.TableType;
+            }
+        }
 
         /// <summary>
         /// A list of source data properties for the values of the local cache loader input parameters.
