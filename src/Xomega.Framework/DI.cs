@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using Xomega.Framework.Lookup;
-using Xomega.Framework.Services;
+using Xomega.Framework.Operators;
 
 namespace Xomega.Framework
 {

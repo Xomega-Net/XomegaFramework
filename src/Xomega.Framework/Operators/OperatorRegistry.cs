@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// A registry of all known operators.

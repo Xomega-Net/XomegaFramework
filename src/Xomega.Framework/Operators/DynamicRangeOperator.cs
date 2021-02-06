@@ -3,7 +3,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// Dynamically constructed operator for filtering a property by the specified range,
@@ -48,13 +48,7 @@ namespace Xomega.Framework.Services
             this.includeTo = includeTo;
         }
 
-        /// <summary>
-        /// Builds the base predicate expression for the current operator using the specified property accessor.
-        /// </summary>
-        /// <typeparam name="TElement">The type of the element.</typeparam> 
-        /// <typeparam name="TValue">The type of the values.</typeparam> 
-        /// <param name="prop">Expression for the property accessor.</param>
-        /// <returns>The base predicate expression for the specified property and values accessors.</returns>
+        /// <inheritdoc/>
         protected override Expression BuildUnaryExpression<TElement, TValue>(Expression<Func<TElement, TValue>> prop)
         {
             // create new expressions to access members that hold the values
@@ -74,6 +68,14 @@ namespace Xomega.Framework.Services
             return (lower == null && upper == null) ? Expression.Constant(true) :
                                     (lower == null) ? upper : 
                                     (upper == null) ? lower : Expression.AndAlso(lower, upper);
+        }
+
+        /// <inheritdoc/>
+        protected override bool Match(object value, params object[] criteria)
+        {
+            if (!(value is IComparable cv)) return false;
+            return (includeFrom == null || cv.CompareTo(from) > 0 || includeFrom.Value && Equals(value, from))
+                && (includeTo == null || cv.CompareTo(to) < 0 || includeTo.Value && Equals(value, to));
         }
     }
 }

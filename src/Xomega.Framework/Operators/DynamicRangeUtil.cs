@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// Utility class that helps construct a new dynamic range operator for date/time or numeric types

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// Operators for whether or not a property value is in the specified range.
@@ -31,25 +31,12 @@ namespace Xomega.Framework.Services
         {
         }
 
-        /// <summary>
-        /// Gets all known names and aliases for the current operator.
-        /// </summary>
-        /// <returns>An array of operator names.</returns>
-        public override string[] GetNames()
-        {
-            return Negate ? new [] { "NBW", "NotBetween" }
-                          : new [] { "BW", DefaultName };
-        }
+        /// <inheritdoc/>
+        public override string[] GetNames() =>
+            Negate ? new [] { "NBW", "NotBetween" }
+                   : new [] { "BW", DefaultName };
 
-        /// <summary>
-        /// Builds the base predicate expression for the current operator
-        /// using the specified property and values accessors.
-        /// </summary>
-        /// <typeparam name="TElement">The type of the element.</typeparam> 
-        /// <typeparam name="TValue">The type of the values.</typeparam> 
-        /// <param name="prop">Expression for the property accessor.</param>
-        /// <param name="vals">Expressions for the value accessors.</param>
-        /// <returns>The base predicate expression for the specified property and values accessors.</returns>
+        /// <inheritdoc/>
         protected override Expression BuildExpression<TElement, TValue>(
             Expression<Func<TElement, TValue>> prop, params Expression<Func<TValue>>[] vals)
         {
@@ -58,5 +45,9 @@ namespace Xomega.Framework.Services
             Expression upper = Expression.LessThanOrEqual(prop.Body, vals[1].Body);
             return (values[0] == null) ? upper : (values[1] == null) ? lower : Expression.AndAlso(lower, upper);
         }
+
+        /// <inheritdoc/>
+        protected override bool Match(object value, params object[] criteria)
+            => (value is IComparable c) && c.CompareTo(criteria[0]) >= 0 && c.CompareTo(criteria[1]) <= 0;
     }
 }

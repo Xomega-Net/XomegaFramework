@@ -1,11 +1,10 @@
 ﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// Base class for operators that help construct logical predicates for filtering.
@@ -53,8 +52,7 @@ namespace Xomega.Framework.Services
             Expression<Func<TElement, TValue>> prop, params TValue[] vals)
         {
             // validate values length upfront
-            if (vals.Length < NumberOfValues) throw new ArgumentException(
-                $"Operator {GetType().Name} expects {NumberOfValues} value(s), but only {vals.Length} were provided.");
+            ValidateNumberOfValues(vals);
 
             // skip operator if all values are blank
             if (NumberOfValues != 0 && vals.Length > 0)
@@ -84,5 +82,33 @@ namespace Xomega.Framework.Services
         /// <returns>The base predicate expression for the specified property and values accessors.</returns>
         protected abstract Expression BuildExpression<TElement, TValue>(
             Expression<Func<TElement, TValue>> prop, params Expression<Func<TValue>>[] vals);
+
+        private void ValidateNumberOfValues<TValue>(TValue[] vals)
+        {
+            if (vals.Length < NumberOfValues) throw new ArgumentException(
+                $"Operator {GetType().Name} expects {NumberOfValues} value(s), but only {vals.Length} were provided.");
+        }
+
+        /// <summary>
+        /// Checks if the specified value matches the supplied criteria using the current comparison operator.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="criteria">The criteria values to check against.</param>
+        /// <returns>True if the given value matches the specified criteria, false otherwise.</returns>
+        public bool Matches(object value, params object[] criteria)
+        {
+            ValidateNumberOfValues(criteria);
+            bool match = Match(value, criteria);
+            if (Negate) match = !match;
+            return match;
+        }
+
+        /// <summary>
+        /// Concrete implementation of the value matching logic for the operator by subclasses.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="criteria">The criteria values to check against.</param>
+        /// <returns>True if the given value matches the specified criteria, false otherwise.</returns>
+        protected abstract bool Match(object value, params object[] criteria);
     }
 }

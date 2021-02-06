@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Xomega.Framework.Operators;
 
 namespace Xomega.Framework
 {
@@ -89,6 +90,33 @@ namespace Xomega.Framework
         {
             Clear();
             modified = null;
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// A filtering function that determines if the value of the specified property in the given row
+        /// matches the specified criteria value using supplied operator.
+        /// </summary>
+        /// <param name="property">The data property of the object to match.</param>
+        /// <param name="row">The data row to get the value from.</param>
+        /// <param name="oper">Comparison operator to use.</param>
+        /// <param name="criteria">The value to compare to.</param>
+        /// <param name="caseSensitive">True to perform case-sensitive string matching, false otherwise.</param>
+        /// <returns>True if the property value in the given row matches the specified criteria, false otherwise.</returns>
+        public virtual bool PropertyValueMatches(DataProperty property, DataRow row, Operator oper, object criteria, bool caseSensitive)
+        {
+            ValueFormat format = criteria?.GetType() == typeof(string) ? ValueFormat.DisplayString : ValueFormat.Internal;
+            object value = property.GetValue(format, row);
+            criteria = property.ResolveValue(criteria, format);
+            if (format.IsString() && !caseSensitive)
+            {
+                value = value?.ToString()?.ToLower();
+                criteria = criteria?.ToString()?.ToLower();
+            }
+            return oper.Matches(value, criteria);
         }
 
         #endregion

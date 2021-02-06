@@ -3,7 +3,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Operators
 {
     /// <summary>
     /// Operators for wheter or not a property value is in the specified range.
@@ -22,25 +22,12 @@ namespace Xomega.Framework.Services
             this.name = name;
         }
 
-        /// <summary>
-        /// Gets all known names and aliases for the current operator.
-        /// </summary>
-        /// <returns>An array of operator names.</returns>
-        public override string[] GetNames() { return new[] { name }; }
+        /// <inheritdoc/>
+        public override string[] GetNames() => new[] { name };
 
-        /// <summary>
-        /// Builds the base predicate expression for the current operator
-        /// using the specified property and values accessors.
-        /// </summary>
-        /// <typeparam name="TElement">The type of the element.</typeparam> 
-        /// <typeparam name="TValue">The type of the values.</typeparam> 
-        /// <param name="prop">Expression for the property accessor.</param>
-        /// <param name="vals">Expressions for the value accessors.</param>
-        /// <returns>The base predicate expression for the specified property and values accessors.</returns>
+        /// <inheritdoc/>
         protected override Expression BuildExpression<TElement, TValue>(Expression<Func<TElement, TValue>> prop, params Expression<Func<TValue>>[] vals)
-        {
-            return BuildUnaryExpression(prop);
-        }
+            => BuildUnaryExpression(prop);
 
         /// <summary>
         /// Builds the base predicate expression for the current operator using the specified property accessor.
