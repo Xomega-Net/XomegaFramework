@@ -7,6 +7,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Blazor.Components;
@@ -109,38 +110,34 @@ namespace Xomega.Framework.Blazor.Views
             }
         }
 
-        #endregion
-
-        #region Selection support
-
         /// <summary>
-        /// Helper function returning the class for selected rows.
+        /// Utility method to allow adding the specified name-value collection
+        /// to the given URI as a query string.
         /// </summary>
-        /// <param name="list">List object of the row.</param>
-        /// <param name="row">The data row.</param>
-        /// <returns>Row's CSS class based on whether or not the row is selected.</returns>
-        protected virtual string SelectedClass(DataListObject list, DataRow row) => row.Selected ? "selected" : "";
-
-        /// <summary>
-        /// Helper function returning the class for selectable lists.
-        /// </summary>
-        /// <param name="list">List object to check.</param>
-        /// <returns>Row's CSS class based on whether or not the list allows selection.</returns>
-        protected virtual string SelectableClass(DataListObject list)
-            => list?.RowSelectionMode != null ? "selectable" : "";
-
-        /// <summary>
-        /// Handles row selection on click for the specified list object, if the latter is selectable.
-        /// </summary>
-        /// <param name="list">The context list object.</param>
-        /// <param name="row">The row that was clicked.</param>
-        protected virtual void RowClicked(DataListObject list, DataRow row)
+        /// <param name="uri">The URI to add to.</param>
+        /// <param name="nvc">The names/values to add to the URI as a query string.</param>
+        /// <returns>The URI with the query string added to it.</returns>
+        public static string AddQueryString(string uri, NameValueCollection nvc)
         {
-            if (SelectableClass(list) != "")
-                list.ToggleSelection(row);
+            string res = uri;
+            foreach (var key in nvc.AllKeys)
+            {
+                var vals = nvc.GetValues(key);
+                if (vals == null) continue;
+                foreach (string v in vals)
+                    res = QueryHelpers.AddQueryString(res, key, v);
+            }
+            return res;
         }
 
         #endregion
+
+        /// <summary>
+        /// Utility shorthand method to retun disabled class for a given state.
+        /// </summary>
+        /// <param name="enabled">True for enabled state, false for disabled.</param>
+        /// <returns>The disabled class, if not enabled, empty string otherwise.</returns>
+        public static string DisabledIfNot(bool? enabled) => enabled ?? false ? "" : "disabled";
 
         #region Show/Close
 
@@ -154,10 +151,44 @@ namespace Xomega.Framework.Blazor.Views
         protected virtual string Mode => Model?.Params?[ViewParams.Mode.Param];
 
         /// <summary>
+        /// The outer class to be used for the view, which usually defines the view layout within a parent container.
+        /// </summary>
+        [Parameter] public string Class { get; set; }
+
+        /// <summary>
+        /// The Bootstrap size of the modal dialog for this view, where applicable, which can be overridden in subclasses.
+        /// </summary>
+        protected virtual string ModalSize => "modal-xl";
+
+        /// <summary>
+        /// The class to use for the view's main div.
+        /// </summary>
+        protected virtual string UpperClass => Mode == ViewParams.Mode.Popup ? "modal" : Mode == ViewParams.Mode.Inline ? $"d-flex border-start {Class}" : "d-flex";
+
+        /// <summary>
+        /// The class to use for the view's middle main div.
+        /// </summary>
+        protected virtual string MiddleClass => Mode == ViewParams.Mode.Popup ? $"modal-dialog {ModalSize}" : "d-flex";
+
+        /// <summary>
+        /// The class to use for the view's inner main div.
+        /// </summary>
+        protected virtual string LowerClass => Mode == ViewParams.Mode.Popup ? $"modal-content" : "flex-column";
+
+        /// <summary>
+        /// The class to use for the view's footer, if applicable.
+        /// </summary>
+        protected virtual string FooterClass => FooterVisible ? "modal-footer" : "d-none";
+
+        /// <summary>
+        /// Returns whether or not to show the footer.
+        /// </summary>
+        protected virtual bool FooterVisible => (Model?.CloseAction?.Visible ?? false);
+
+        /// <summary>
         /// Indicates if the view is visible.
         /// </summary>
-        [Parameter]
-        public bool Visible { get; set; } = true;
+        [Parameter] public bool Visible { get; set; }
 
         /// <inheritdoc/>
         public virtual async Task<bool> ShowAsync(CancellationToken token = default)
@@ -180,17 +211,6 @@ namespace Xomega.Framework.Blazor.Views
         public virtual async Task<bool> CanCloseAsync(CancellationToken token = default)
             => await Task.FromResult(true);
 
-        /// <summary>
-        /// Text for the Close button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string CloseText => "Close";
-
-        /// <summary>
-        /// Determines whether or not the Select button is visible, which can be overridden in subclasses.
-        /// Displays Close button only if the view is activated as a child (popup or inline).
-        /// </summary>
-        protected virtual bool CloseVisible => Mode != null;
-
         /// <inheritdoc/>
         public virtual async Task CloseAsync(CancellationToken token = default)
         {
@@ -206,38 +226,31 @@ namespace Xomega.Framework.Blazor.Views
             }
             if (Model != null)
                 await Model.FireEventAsync(ViewEvent.Closed, token);
-            Dispose();
+            await DisposeAsync(token);
         }
 
         /// <summary>
         /// Utility function to show/hide the view as a popup window.
-        /// Invokes a corresponding JavaScript function from the XomegaJS package, which can be overridden in subclasses.
+        /// Invokes a corresponding JavaScript function, which can be overridden in subclasses.
         /// </summary>
         /// <param name="show">True to show the view, false to hide it.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>Asynchrounous task for the function.</returns>
         protected virtual async Task Popup(bool show, CancellationToken token = default)
-            => await JSRuntime.InvokeVoidAsync("xomegaControls._modalViewPopup", token, show ? "show" : "hide", MainPanel);
-
+        {
+            // this requires importing xfk-blazor.js in the Host.cshtml.
+            // We could use modules from net50 instead, but we target netstandard2.1 for backward compatibility.
+            await JSRuntime.InvokeVoidAsync("xfk.modalViewPopup", token, show, MainPanel);
+        }
 
         /// <summary>
         /// Utility function to show/hide the view as an inline panel in the master-detail layout.
-        /// Invokes a corresponding JavaScript function from the XomegaJS package, which can be overridden in subclasses.
+        /// Does nothing by default, but can be overridden in subclasses.
         /// </summary>
         /// <param name="show">True to show the view, false to hide it.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>Asynchrounous task for the function.</returns>
-        protected virtual async Task Inline(bool show, CancellationToken token = default)
-            => await JSRuntime.InvokeVoidAsync("xomegaControls.vSplitViewVisibilityChange", token, MainPanel, null, show);
-
-        /// <summary>
-        /// Sets up a splitter to split the view for master-details layout.
-        /// Invokes a corresponding JavaScript function from the XomegaJS package, which can be overridden in subclasses.
-        /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>Asynchrounous task for the function.</returns>
-        public virtual async Task Split(CancellationToken token = default)
-            => await JSRuntime.InvokeVoidAsync("xomegaControls.vSplitViewPanel", token, MainPanel);
+        protected virtual async Task Inline(bool show, CancellationToken token = default) => await Task.CompletedTask;
 
         /// <summary>
         /// Default handler for closing the view.
@@ -250,7 +263,12 @@ namespace Xomega.Framework.Blazor.Views
         }
 
         /// <inheritdoc/>
-        public virtual void Dispose() => BindTo(null);
+        public virtual async Task DisposeAsync(CancellationToken token)
+        {
+            BindTo(null);
+            foreach (var cv in ChildViews)
+                await cv.CloseAsync(token);
+        }
 
         #endregion
 
@@ -263,7 +281,11 @@ namespace Xomega.Framework.Blazor.Views
         /// <param name="e">View event</param>
         /// <param name="token">Cancellation token.</param>
         protected virtual async Task OnViewEventsAsync(object sender, ViewEvent e, CancellationToken token = default)
-            => await InvokeAsync(() => StateHasChanged());
+        {
+            if (e.IsChild() && (e.IsOpened(false) || e.IsClosed(false)))
+                Model.OpenInlineViews = OpenInlineViews;
+            await InvokeAsync(() => StateHasChanged());
+        }
 
         /// <summary>
         /// Handles property change for errors to update the Errors panel
@@ -278,6 +300,119 @@ namespace Xomega.Framework.Blazor.Views
                 await TitleComponent.Update();
             }
         }
+
+        #endregion
+
+        #region Child views and Layout
+
+        /// <summary>
+        ///  An array of child views for the current view that are used to properly layout this view.
+        /// </summary>
+        protected virtual BlazorView[] ChildViews => new BlazorView[0];
+
+        /// <summary>
+        /// The number of open inline child views and the current view.
+        /// </summary>
+        protected int OpenInlineViews => (Visible ? 1 : 0) + ChildViews.Where(v => v?.Mode == ViewParams.Mode.Inline).Sum(v => v.OpenInlineViews);
+
+        /// <summary>
+        /// Breakpoint widths for the view and all its open inline children
+        /// </summary>
+        protected BreakpointWidths bpWidths;
+
+        /// <summary>
+        /// Breakpoint widths for the view only
+        /// </summary>
+        protected BreakpointWidths selfWidths;
+
+        /// <summary>
+        /// Gets a string of Bootstrap column classes for various breakpoints that would allow to properly display
+        /// the given child view at each breakpoint given the current number of open inline views.
+        /// </summary>
+        /// <param name="childView">The child view, for which to return the column classes.</param>
+        /// <returns>A string of Bootstrap column classes for various breakpoints for this view.</returns>
+        protected string GetViewCol(BlazorView childView)
+        {
+            if (bpWidths == null)
+            {
+                bpWidths = new BreakpointWidths(Mode == ViewParams.Mode.Popup ?
+                    BreakpointWidths.ModalDefaults : BreakpointWidths.GridDefaults);
+            }
+            selfWidths = new BreakpointWidths(bpWidths);
+
+            int totalViews = OpenInlineViews;
+            if (totalViews <= 1) return "d-flex"; // no visible children
+
+            int currentView = childView?.OpenInlineViews ?? 1;
+
+            int mainCol = (12 / totalViews);
+            // calculate the point to hide the main view based on its column width
+            Breakpoint hidePt = mainCol < 4 ? Breakpoint.xxl : mainCol < 6 ? Breakpoint.xl : Breakpoint.lg;
+
+            int col = 12 * currentView / totalViews;
+            string res = $"col-{hidePt}-{col} ";
+
+            if (childView == null)
+            {
+                res += $"d-none d-{hidePt}-flex";
+                selfWidths.ApplyColumns(hidePt, 0, col);
+            }
+            else
+            {
+                int bkCol = 12 * currentView / (totalViews - 1);
+                res += $"col-{bkCol}";
+                BreakpointWidths childWidths = new BreakpointWidths(bpWidths);
+                childWidths.ApplyColumns(hidePt, bkCol, col);
+                childView.bpWidths = childWidths;
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Default field width used for calculating the optimal number of columns to layout the view panel at each breakpoint.
+        /// </summary>
+        protected int DefaultFieldWidth = 150;
+
+        /// <summary>
+        /// Gets a string of Bootstrap classes for various breakpoints that lays out the fields of this view
+        /// in the optimal number of columns at each breakpoint, taking into account the specified maximum number of columns
+        /// to lay out fields in, and the default width of the fields.
+        /// </summary>
+        /// <param name="maxCol">The specified maximum number of columns to lay out fields.</param>
+        /// <returns>A string of Bootstrap classes for various breakpoints for the view's field columns.</returns>
+        protected string GetRowCol(int maxCol) => GetRowCol(maxCol, DefaultFieldWidth);
+
+        /// <summary>
+        /// Gets a string of Bootstrap classes for various breakpoints that lays out the fields of this view
+        /// in the optimal number of columns at each breakpoint, taking into account the specified maximum number of columns
+        /// to lay out fields in and the preferred width of the fields.
+        /// </summary>
+        /// <param name="maxCol">The specified maximum number of columns to lay out fields.</param>
+        /// <param name="fldWidth">The preferred width of the fields.</param>
+        /// <returns>A string of Bootstrap classes for various breakpoints for the view's field columns.</returns>
+        protected string GetRowCol(int maxCol, int fldWidth) => selfWidths?.GetCols(maxCol, fldWidth)?.ToRowColsClass();
+
+        /// <summary>
+        /// Gets a string of Bootstrap column classes for various breakpoints that lays out this view in the parent panel,
+        /// taking into account the specified maximum number of columns for the parent panel, the number of columns used
+        /// for this view, and the default width of the fields in this view.
+        /// </summary>
+        /// <param name="maxCol">Maximum number of columns for the parent panel.</param>
+        /// <param name="fldCol">The number of columns used for fields in this view.</param>
+        /// <returns>A string of Bootstrap column classes for various breakpoints that lays out this view in the parent panel.</returns>
+        protected string GetPanelCol(int maxCol, int fldCol) => GetPanelCol(maxCol, fldCol, DefaultFieldWidth);
+
+        /// <summary>
+        /// Gets a string of Bootstrap column classes for various breakpoints that lays out this view in the parent panel,
+        /// taking into account the specified maximum number of columns for the parent panel, the number of columns used
+        /// for this view, and the preferred width of the fields in this view.
+        /// </summary>
+        /// <param name="maxCol">Maximum number of columns for the parent panel.</param>
+        /// <param name="fldCol">The number of columns used for fields in this view.</param>
+        /// <param name="fldWidth">The preferred width of the fields in this view.</param>
+        /// <returns>A string of Bootstrap column classes for various breakpoints that lays out this view in the parent panel.</returns>
+        protected string GetPanelCol(int maxCol, int fldCol, int fldWidth) => selfWidths?.GetCols(maxCol, fldCol * fldWidth)?.ToColClass();
 
         #endregion
     }

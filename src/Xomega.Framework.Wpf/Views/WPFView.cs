@@ -384,6 +384,20 @@ namespace Xomega.Framework.Views
             }
         }
 
+        /// <summary>
+        /// Asyncrounsly disposes the view by unbinding it from the model
+        /// </summary>
+        public async Task DisposeAsync(CancellationToken token = default)
+        {
+            BindTo(null); // unbind model to get it garbage collected in case of weak refs on this view
+            foreach (var v in ChildViews)
+            {
+                // close any child views without asking, since we should've asked before disposing
+                v.canCloseChecked = true;
+                await v.CloseAsync(token);
+            }
+        }
+
         #endregion
 
         #region IAsyncView implementation

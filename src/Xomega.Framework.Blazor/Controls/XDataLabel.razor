@@ -1,0 +1,22 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label">@GetLabel(Label)</label>
+        }
+        <input type="text" readonly class="form-control-plaintext"
+               value="@(Property?.GetStringValue(ValueFormat.DisplayString, Row))" />
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        ObservedChanges = PropertyChange.Value + PropertyChange.Visible;
+    }
+}

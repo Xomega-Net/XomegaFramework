@@ -158,7 +158,7 @@ namespace Xomega.Framework
             {
                 bool b = PreventElementUpdate;
                 PreventElementUpdate = true;
-                property.Editing = true;
+                property.SetEditing(true, row);
                 await property.SetValueAsync(value, row);
                 PreventElementUpdate = b;
             }
@@ -174,7 +174,7 @@ namespace Xomega.Framework
             {
                 bool b = PreventElementUpdate;
                 PreventElementUpdate = true;
-                property.Editing = true;
+                property.SetEditing(true, row);
                 property.SetValue(value, row);
                 PreventElementUpdate = b;
             }

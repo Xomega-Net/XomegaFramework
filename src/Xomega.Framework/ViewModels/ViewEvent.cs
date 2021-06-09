@@ -26,7 +26,7 @@ namespace Xomega.Framework
         public static readonly ViewEvent All = new ViewEvent(0xFFFF);
 
         /// <summary>
-        /// A static constant representing a Closed event
+        /// A static constant representing an Opened event
         /// </summary>
         public static readonly ViewEvent Opened = new ViewEvent(1 << 0);
 

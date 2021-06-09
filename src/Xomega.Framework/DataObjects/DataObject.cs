@@ -6,10 +6,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.Serialization;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Services;
@@ -69,6 +71,19 @@ namespace Xomega.Framework
         {
             properties = new Dictionary<string, DataProperty>();
             childObjects = new Dictionary<string, DataObject>();
+            actions = new Dictionary<string, ActionProperty>();
+
+            // add save action, and make it enabled only when the object is modified or doesn't track modificaitons
+            SaveAction = new ActionProperty(this, Messages.Action_Save);
+            Expression<Func<DataObject, bool>> saveEnabled = (obj) => obj != null && (obj.Modified || !obj.TrackModifications);
+            SaveAction.SetComputedEnabled(saveEnabled, this);
+
+            // add delete action, and make it enabled only when the object is not new
+            DeleteAction = new ActionProperty(this, Messages.Action_Delete);
+            Expression<Func<DataObject, bool>> deleteEnabled = (obj) => obj != null && !obj.IsNew;
+            DeleteAction.SetComputedEnabled(deleteEnabled, this);
+
+            ResetAction = new ActionProperty(this, Messages.Action_Reset);
 
             // call subclass initialization in a separate method
             // to make sure base initialization is always called
@@ -111,6 +126,12 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// The criteria/list reset action associated with this list object,
+        /// which allows controlling the state of the button bound to it.
+        /// </summary>
+        public ActionProperty ResetAction { get; private set; }
+
+        /// <summary>
         /// Resets data object to initial values
         /// </summary>
         public virtual void ResetData()
@@ -121,6 +142,46 @@ namespace Xomega.Framework
                 childObjects[chName].ResetData();
             modified = null;
         }
+
+        /// <summary>
+        /// Recursively updates computed values for object's actions and editable flag.
+        /// </summary>
+        /// <param name="token">Cancellation token.</param>
+        public async Task UpdateComputedAsync(CancellationToken token)
+        {
+            foreach (var a in actions.Values)
+            {
+                await a.UpdateComputedEnabedAsync(token);
+                await a.UpdateComputedVisibleAsync(token);
+            }
+            
+            foreach (var obj in childObjects.Values)
+                await obj.UpdateComputedAsync(token);
+
+            if (editableBinding != null)
+                await editableBinding.UpdateAsync(null, token);
+        }
+
+        /// <summary>
+        /// Gets a key for the current object that is used to look up localized resources
+        /// (e.g. labels) for object's properties.
+        /// </summary>
+        /// <returns>The resource key for the object.</returns>
+        public virtual string GetResourceKey()
+        {
+            var t = GetType();
+            if (t.Name.StartsWith(t.BaseType.Name))
+                t = t.BaseType; // use base class for customized objects
+            return t.Name;
+        }
+
+        /// <summary>
+        /// Utility function to convert Pascal-case string to words
+        /// </summary>
+        /// <param name="str">The string to convert.</param>
+        /// <returns>String converted from Pascal-case to words.</returns>
+        public static string StringToWords(string str) => Regex.Replace(Regex.Replace(str,
+            "([a-z])([A-Z])", "$1 $2"), "([A-Z][A-Z])([A-Z])([a-z])", "$1 $2$3");
 
         #endregion
 
@@ -144,7 +205,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="name">The property name to check for existence.</param>
         /// <returns>True if the data object contains a property with the given name, false otherwise.</returns>
-        public bool HasProperty(string name) => name == null ? false : properties.ContainsKey(name);
+        public bool HasProperty(string name) => name != null && properties.ContainsKey(name);
 
         /// <summary>
         /// Returns an enumeration of the data object properties.
@@ -181,6 +242,17 @@ namespace Xomega.Framework
             return parent == null || parent.IsPropertyVisible(p);
         }
 
+        private Dictionary<string, ActionProperty> actions;
+
+        /// <summary>
+        /// Adds the specified action to the data object.
+        /// </summary>
+        /// <param name="action">The action to add to the data object.</param>
+        internal void AddAction(ActionProperty action)
+        {
+            actions[action.Name] = action;
+        }
+
         #endregion
 
         #region Object hierarchy
@@ -196,7 +268,11 @@ namespace Xomega.Framework
         public virtual DataObject Parent
         {
             get { return parent; }
-            set { parent = value; }
+            set
+            {
+                parent = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Parent)));
+            }
         }
 
         /// <summary>
@@ -215,8 +291,8 @@ namespace Xomega.Framework
             childObjects[name] = obj;
             obj.Parent = this;
             obj.PropertyChanged += (s, e) => {
-                if (e.PropertyName == ModifiedProperty)
-                  OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
+                if (e.PropertyName == nameof(Modified))
+                  OnPropertyChanged(new PropertyChangedEventArgs(nameof(Modified)));
             };
         }
 
@@ -237,6 +313,46 @@ namespace Xomega.Framework
             return childObjects.ContainsKey(name) ? childObjects[name] : null;
         }
 
+        /// <summary>
+        /// Gets a localized title for the current object.
+        /// </summary>
+        /// <returns>Localized title, or null if no resource is found.</returns>
+        public virtual string GetTitle()
+        {
+            var resMgr = ServiceProvider?.GetService<ResourceManager>();
+            return resMgr.GetString("_Title", GetResourceKey());
+        }
+
+        /// <summary>
+        /// Gets a localized title for the specified child object. If no title text is available
+        /// uses the child name to generate a title.
+        /// </summary>
+        /// <param name="name">The name of the child.</param>
+        /// <returns>A localized title for the given child.</returns>
+        public virtual string GetChildTitle(string name)
+        {
+            var resMgr = ServiceProvider?.GetService<ResourceManager>();
+            string title;
+            title = resMgr?.GetString($"{GetResourceKey()}-{name}_Title");
+            if (title == null) title = StringToWords(name);
+            return title;
+        }
+
+        /// <summary>
+        /// Gets a localized title for the specified link. If no title text is available
+        /// uses the link name to generate a title.
+        /// </summary>
+        /// <param name="name">The name of the link.</param>
+        /// <returns>A localized title for the given link.</returns>
+        public virtual string GetLinkTitle(string name)
+        {
+            var resMgr = ServiceProvider?.GetService<ResourceManager>();
+            string title;
+            title = resMgr?.GetString($"{GetResourceKey()}_Link-{name}_Title");
+            if (title == null) title = StringToWords(name);
+            return title;
+        }
+
         #endregion
 
         #region Property change events
@@ -248,7 +364,10 @@ namespace Xomega.Framework
         protected void FireDataPropertyChange(PropertyChangeEventArgs args)
         {
             foreach (DataProperty p in properties.Values) p.FirePropertyChange(args);
+            foreach (ActionProperty a in actions.Values) a.FirePropertyChange(args);
             foreach (DataObject obj in childObjects.Values) obj.FireDataPropertyChange(args);
+            if (args.Change.IncludesEditable())
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Editable)));
         }
 
         /// <summary>
@@ -260,7 +379,7 @@ namespace Xomega.Framework
         protected virtual void OnDataPropertyChange(object sender, PropertyChangeEventArgs e)
         {
             if (e.Change.IncludesValue())
-                OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Modified)));
         }
 
         /// <summary>
@@ -322,6 +441,20 @@ namespace Xomega.Framework
         public virtual bool IsPropertyEditable(BaseProperty p)
         {
             return Editable && (parent == null || parent.IsPropertyEditable(p));
+        }
+
+        private ComputedBinding editableBinding;
+
+        /// <summary>
+        /// Sets the expression to use for computing whether the data object is editable.
+        /// </summary>
+        /// <param name="expression">Lambda expression used to compute the editability,
+        /// or null to make the editable flag non-computed.</param>
+        /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
+        public void SetComputedEditable(LambdaExpression expression, params object[] args)
+        {
+            if (editableBinding != null) editableBinding.Dispose();
+            editableBinding = expression == null ? null : new ComputedEditableObjectBinding(this, expression, args);
         }
 
         #endregion
@@ -611,6 +744,16 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Sets property values from NameValueCollection object asynchronously.
+        /// </summary>
+        public virtual async Task SetValuesAsync(NameValueCollection nvc, CancellationToken token)
+        {
+            foreach (string p in nvc.Keys)
+                if (HasProperty(p))
+                    await this[p].SetValueAsync(nvc[p], null, token);
+        }
+
+        /// <summary>
         /// Returns NameValueCollection object with property values.
         /// </summary>
         public virtual NameValueCollection ToNameValueCollection(bool includeNullValues = false)
@@ -695,11 +838,6 @@ namespace Xomega.Framework
         #region Modification support
 
         /// <summary>
-        /// The name of the property that stores modification state.
-        /// </summary>
-        public const string ModifiedProperty = "Modified";
-
-        /// <summary>
         /// A flag indicating if the object is tracking modifications
         /// </summary>
         public bool TrackModifications = true;
@@ -713,13 +851,18 @@ namespace Xomega.Framework
         protected bool? modified;
 
         /// <summary>
+        /// Gets or (non-recursively) sets modification state of the object.
+        /// </summary>
+        public bool Modified { get => IsModified() ?? false; set => SetModified(value, false); }
+
+        /// <summary>
         /// Returns the modification state of the data object.
         /// </summary>
         /// <returns>The modification state of the data object.
         /// Null means the data object has never been initialized with data.
         /// False means the data object has been initialized, but has not been changed since then.
         /// True means that the data object has been modified since it was initialized.</returns>
-        public bool? IsModified()
+        public virtual bool? IsModified()
         {
             bool? res = modified;
             foreach (DataProperty prop in properties.Values)
@@ -741,7 +884,7 @@ namespace Xomega.Framework
         /// True means that the data object has been modified since it was initialized.</param>
         /// <param name="recursive">True to propagate the modification state
         /// to all properties and child objects, false otherwise.</param>
-        public void SetModified(bool? modified, bool recursive)
+        public virtual void SetModified(bool? modified, bool recursive)
         {
             this.modified = modified;
             if (recursive)
@@ -749,7 +892,7 @@ namespace Xomega.Framework
                 foreach (DataProperty prop in properties.Values) prop.Modified = modified;
                 foreach (DataObject child in childObjects.Values) child.SetModified(modified, true);
             }
-            OnPropertyChanged(new PropertyChangedEventArgs(ModifiedProperty));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Modified)));
         }
 
         #endregion
@@ -782,11 +925,6 @@ namespace Xomega.Framework
             public bool PreserveSelection = false;
         }
 
-        /// <summary>
-        /// The name of the IsNew observable property.
-        /// </summary>
-        public const string IsNewProperty = "IsNew";
-
         private bool isNew = true;
 
         /// <summary>
@@ -798,7 +936,7 @@ namespace Xomega.Framework
             set
             {
                 isNew = value;
-                OnPropertyChanged(new PropertyChangedEventArgs(IsNewProperty));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNew)));
             }
         }
 
@@ -873,6 +1011,12 @@ namespace Xomega.Framework
         {
             return await Task.FromResult(DoRead(options));
         }
+
+        /// <summary>
+        /// Save action for the data object that can be bound to a Save button
+        /// and control whether it is visible or enabled.
+        /// </summary>
+        public ActionProperty SaveAction { get; private set; }
 
         /// <summary>
         /// Saves the data object.
@@ -951,6 +1095,12 @@ namespace Xomega.Framework
         {
             return await Task.FromResult(DoSave(options));
         }
+
+        /// <summary>
+        /// Delete action for the data object that can be bound to a Delete button
+        /// and control whether it is visible or enabled.
+        /// </summary>
+        public ActionProperty DeleteAction { get; private set; }
 
         /// <summary>
         /// Deletes the data object.

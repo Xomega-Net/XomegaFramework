@@ -4,9 +4,9 @@
 
 @if (IsVisible)
 {
-    <span @attributes="AdditionalAttributes" class="@CssClass">
+    <span @attributes="AdditionalAttributes" class="@StateClass">
         @(Property == null ? "" : Property.GetStringValue(ValueFormat.DisplayString, Row))
-</span>
+    </span>
 }
 
 @code {

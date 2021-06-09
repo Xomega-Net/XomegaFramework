@@ -29,25 +29,16 @@ namespace Xomega.Framework.Blazor.Views
         /// <returns>True if the view is modified, false otherwise.</returns>
         public bool IsModified() => DetailsObject?.IsModified() ?? false;
 
-        /// <summary>
-        /// Text for the Save button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string SaveText => "Save";
+        /// <inheritdoc/>
+        protected override string UpperClass => Mode == null ? "container d-flex align-items-center justify-content-center" : base.UpperClass;
 
-        /// <summary>
-        /// Determines whether or not the Save button is enabled, which can be overridden in subclasses.
-        /// </summary>
-        protected virtual bool SaveEnabled => (Model as DetailsViewModel)?.SaveEnabled() ?? false;
+        /// <inheritdoc/>
+        protected override string LowerClass => Mode == null ? "modal-content" :base.LowerClass;
 
-        /// <summary>
-        /// Text for the Delete button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string DeleteText => "Delete";
-
-        /// <summary>
-        /// Determines whether or not the Delete button is enabled, which can be overridden in subclasses.
-        /// </summary>
-        protected virtual bool DeleteEnabled => (Model as DetailsViewModel)?.DeleteEnabled() ?? false;
+        /// <inheritdoc/>
+        protected override bool FooterVisible => base.FooterVisible || 
+            (DetailsObject?.SaveAction?.Visible ?? false) ||
+            (DetailsObject?.DeleteAction?.Visible ?? false);
 
         /// <inheritdoc/>
         public override async Task<bool> CanDeleteAsync(CancellationToken token = default)

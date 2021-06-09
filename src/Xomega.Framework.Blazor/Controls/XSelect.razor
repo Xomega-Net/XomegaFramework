@@ -1,0 +1,75 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using System.Collections
+@using System.Resources
+
+@inherits XOptionsComponent<object>
+
+@inject ResourceManager resMgr
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+        }
+        <select @ref="SelectList" id="@ControlId"
+                class="form-select @StateClass"
+                disabled="@(!IsEditable)"
+                multiple="@IsMultiValue"
+                @onchange="@OnSelectionChanged"
+                @onfocus="OnFocus"
+                @onblur="OnBlur">
+            @if (Property != null)
+            {
+                @if (!IsMultiValue && (IsNull || !IsRequired))
+                {
+                    <option selected="@IsNull" disabled="@IsRequired" value="">@(IsRequired ? DefaultSelectOption : Property.NullString)</option>
+                }
+
+                var value = Property.ResolveValue(Property.InternalValue, ValueFormat.EditString);
+                var itemValues = new ArrayList();
+                @foreach (var i in Items)
+                {
+                    var val = Property.ValueToString(i, ValueFormat.EditString);
+                    itemValues.Add(val);
+                    <option selected="@IsSelected(value, val)" value="@val">@Template(i)</option>
+                }
+
+                if (!IsNull)
+                {
+                    var values = value as IList;
+                    foreach (var v in values ?? new ArrayList() { value })
+                    {
+                        {
+                            if (!itemValues.Contains(v))
+                            {
+                                <option selected="selected" disabled="disabled" value="@v">@Template(v)</option>
+                            }
+                        }
+                    }
+                }
+            }
+        </select>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}
+
+@code {
+
+    protected string DefaultSelectOption => string.Format((resMgr ?? Messages.ResourceManager)
+        .GetString(Messages.Select_RequiredOption), Label);
+
+    protected ElementReference SelectList { get; set; }
+
+    protected async Task OnSelectionChanged(ChangeEventArgs e)
+    {
+        if (IsMultiValue)
+        {
+            var value = await GetSelectedValues(SelectList);
+            await UpdatePropertyAsync(value);
+        }
+        else await UpdatePropertyAsync(e.Value);
+    }
+}

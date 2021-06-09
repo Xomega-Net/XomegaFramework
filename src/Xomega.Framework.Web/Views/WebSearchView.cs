@@ -127,7 +127,7 @@ namespace Xomega.Framework.Web
                         svm.List.PropertyChanged -= OnListPropertyChanged;
                 }
                 OnModelPropertyChanged(svm, new PropertyChangedEventArgs(SearchViewModel.CriteriaCollapsedProperty));
-                OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(DataListObject.AppliedCriteriaProperty));
+                OnListPropertyChanged(bind ? svm.List : null, new PropertyChangedEventArgs(nameof(DataListObject.AppliedCriteria)));
 
                 if (svm.List != null && grd_Results != null)
                 {
@@ -170,7 +170,7 @@ namespace Xomega.Framework.Web
         /// <param name="e">Event arguments</param>
         protected virtual void OnListPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (ucl_AppliedCriteria != null && DataListObject.AppliedCriteriaProperty.Equals(e.PropertyName))
+            if (ucl_AppliedCriteria != null && nameof(DataListObject.AppliedCriteria).Equals(e.PropertyName))
             {
                 ucl_AppliedCriteria.BindTo((sender is DataListObject list) ? list.AppliedCriteria : null);
             }

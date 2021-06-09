@@ -1,0 +1,28 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+<li class="nav-item">
+    <a role="button" class="nav-link @ActiveClass" @onclick="@(() => Parent.ActivateTab(this))">@Title</a>
+</li>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [CascadingParameter]
+    public TabSet Parent { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    string ActiveClass => Parent?.ActiveTab == this ? "active" : null;
+
+    protected override void OnInitialized()
+    {
+        if (Parent == null)
+            throw new ArgumentNullException(nameof(Parent), "TabPage must exist within a TabSet");
+        base.OnInitialized();
+
+        if (Parent.ActiveTab == null)
+            Parent.ActivateTab(this);
+    }
+}

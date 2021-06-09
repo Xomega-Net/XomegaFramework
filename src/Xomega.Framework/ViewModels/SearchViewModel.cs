@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -22,7 +23,11 @@ namespace Xomega.Framework.Views
         /// <param name="svcProvider">Service provider for the model</param>
         public SearchViewModel(IServiceProvider svcProvider) : base(svcProvider)
         {
-
+            PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(OpenInlineViews))
+                    UpdateColumnVisibility();
+            };
         }
 
         /// <inheritdoc/>
@@ -55,10 +60,14 @@ namespace Xomega.Framework.Views
 
             // set list selection mode from the parameters if passed
             if (Params[ViewParams.SelectionMode.Param] != null)
+            {
                 List.RowSelectionMode = Params[ViewParams.SelectionMode.Param];
+                List.SelectAction.Visible = true;
+            }
+            else List.SelectAction.Visible = false;
 
             // set criteria from the parameters
-            if (List.CriteriaObject != null) List.CriteriaObject.SetValues(Params);
+            if (List.CriteriaObject != null) await List.CriteriaObject.SetValuesAsync(Params, token);
 
             // auto-run search if specified so in parameters, or if there are no criteria to set
             if (Params[ViewParams.Action.Param] == ViewParams.Action.Search || List.CriteriaObject == null)
@@ -314,6 +323,31 @@ namespace Xomega.Framework.Views
 
             await base.OnChildEventAsync(childViewModel, e, token);
         }
+
+        /// <summary>
+        /// Update column visibility based on the number of open inline views,
+        /// in order to hide less relevant columns when child views are open
+        /// to make list columns fit into smaller space.
+        /// </summary>
+        protected virtual void UpdateColumnVisibility()
+        {
+            int inlineViews = OpenInlineViews;
+            if (List == null || inlineViews == 0) return;
+
+            var props = RankedProperties;
+            int propCnt = props.Count();
+            int i = 0;
+            foreach (var p in props)
+            {
+                p.Visible = (i++ < propCnt / inlineViews);
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of properties ordered by their importance.
+        /// It uses the natural order by default, but subclasses can override it as needed.
+        /// </summary>
+        protected virtual IEnumerable<DataProperty> RankedProperties => List.Properties;
 
         #endregion
     }

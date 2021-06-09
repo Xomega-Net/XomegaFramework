@@ -1,0 +1,40 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+<nav class="row g-0 align-items-start">
+    @if (MaxPage > 0)
+    {
+        <div class="col">@GetSummaryText()</div>
+        @if (MaxPage > 1)
+        {
+            <ul class="pagination col justify-content-center mb-0">
+                <li class="page-item @DisabledIf(CurrentPage <= 1)" title="@(Resources.GetString(Messages.Pager_First, ResourceKey))">
+                    <a role="button" class="page-link bi-chevron-bar-left" @onclick="@(async () => await SetCurrentPage(1))"></a>
+                </li>
+                <li class="page-item @DisabledIf(CurrentPage <= 1)" title="@(Resources.GetString(Messages.Pager_Prev, ResourceKey))">
+                    <a role="button" class="page-link bi-chevron-left" @onclick="@(async () => await SetCurrentPage(CurrentPage - 1))"></a>
+                </li>
+                @foreach (var p in GetPagesRange())
+                {
+                <li class="page-item @(p == CurrentPage ? "active" : "")">
+                    <a role="button" class="page-link" @onclick="@(async () => await SetCurrentPage(p))">@p</a>
+                </li>
+                }
+                <li class="page-item @DisabledIf(CurrentPage >= MaxPage)" title="@(Resources.GetString(Messages.Pager_Next, ResourceKey))">
+                    <a role="button" class="page-link bi-chevron-right" @onclick="@(async () => await SetCurrentPage(CurrentPage + 1))"></a>
+                </li>
+                <li class="page-item @DisabledIf(CurrentPage >= MaxPage)" title="@(Resources.GetString(Messages.Pager_Last, ResourceKey))">
+                    <a role="button" class="page-link bi-chevron-bar-right" @onclick="@(async () => await SetCurrentPage(MaxPage))"></a>
+                </li>
+            </ul>
+        }
+        <div class="col d-flex align-items-center">
+            <span class="ms-auto me-2">@(Resources?.GetString(Messages.Pager_PageSize, ResourceKey))</span>
+            <select class="form-select w-auto" @onchange="@OnPageSizeChanged">
+                @foreach (var ps in PageSizes)
+                {
+                    <option value="@ps" selected="@(ps == PageSize)">@ps</option>
+                }
+            </select>
+        </div>
+    }
+</nav>

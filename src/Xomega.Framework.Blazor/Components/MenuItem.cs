@@ -12,14 +12,24 @@ namespace Xomega.Framework.Blazor.Components
     public class MenuItem
     {
         /// <summary>
-        /// The text of the menu item.
+        /// The text for the menu item, overriding any localized resources.
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Resource key for the localized menu item's text.
+        /// </summary>
+        public string ResourceKey { get; set; }
 
         /// <summary>
         /// Hyperlink reference for the menu item.
         /// </summary>
         public string Href { get; set; }
+
+        /// <summary>
+        /// Icon class for the menu item.
+        /// </summary>
+        public string IconClass { get; set; }
 
         /// <summary>
         /// A list of child menu items contained within the current item.

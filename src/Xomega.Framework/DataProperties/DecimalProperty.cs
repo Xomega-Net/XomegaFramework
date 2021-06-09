@@ -19,9 +19,19 @@ namespace Xomega.Framework.Properties
         public decimal MinimumValue { get; set; }
 
         /// <summary>
+        /// Whether or not the minimum value is allowed.
+        /// </summary>
+        public bool MinimumAllowed { get; set; }
+
+        /// <summary>
         /// The maximum valid value for the property.
         /// </summary>
         public decimal MaximumValue { get; set; }
+
+        /// <summary>
+        /// Whether or not the maximum value is allowed.
+        /// </summary>
+        public bool MaximumAllowed { get; set; }
 
         /// <summary>
         /// A combination of styles for parsing the decimal number.
@@ -100,16 +110,21 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// A validation function that checks if the value is a decimal that is not less
-        /// than the property minimum and reports a validation error if it is.
+        /// A validation function that checks if the value is a decimal that is greater than
+        /// the property minimum and reports a validation error if it is.
         /// </summary>
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
         /// <param name="row">The row in a list object or null for regular data objects.</param>
         public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
         {
-            if (dp is DecimalProperty ddp && (value is decimal?) && ((decimal?)value).Value < ddp.MinimumValue)
-                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, ddp.MinimumValue);
+            if (dp is DecimalProperty ddp && (value is decimal?))
+            {
+                if (ddp.MinimumAllowed && ((decimal?)value).Value < ddp.MinimumValue)
+                    dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, ddp.MinimumValue);
+                else if (!ddp.MinimumAllowed && ((decimal?)value).Value <= ddp.MinimumValue)
+                    dp.AddValidationError(row, Messages.Validation_NumberMinimumExcl, dp, ddp.MinimumValue);
+            }
         }
 
         /// <summary>
@@ -121,8 +136,13 @@ namespace Xomega.Framework.Properties
         /// <param name="row">The row in a list object or null for regular data objects.</param>
         public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
         {
-            if (dp is DecimalProperty ddp && (value is decimal?) && ((decimal?)value).Value > ddp.MaximumValue)
-                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, ddp.MaximumValue);
+            if (dp is DecimalProperty ddp && (value is decimal?))
+            {
+                if (ddp.MaximumAllowed && ((decimal?)value).Value > ddp.MaximumValue)
+                    dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, ddp.MaximumValue);
+                else if (!ddp.MaximumAllowed && ((decimal?)value).Value >= ddp.MaximumValue)
+                    dp.AddValidationError(row, Messages.Validation_NumberMaximumExcl, dp, ddp.MaximumValue);
+            }
         }
     }
 

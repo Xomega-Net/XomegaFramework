@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -18,7 +19,12 @@ namespace Xomega.Framework
     {
         private readonly Dictionary<string, object> namedArgs = new Dictionary<string, object>();
         private readonly Dictionary<BaseProperty, PropertyChange> properties = new Dictionary<BaseProperty, PropertyChange>();
+        private readonly Dictionary<INotifyPropertyChanged, HashSet<string>> objects = new Dictionary<INotifyPropertyChanged, HashSet<string>>();
+        private readonly HashSet<DataListObject> selectionLists = new HashSet<DataListObject>();
         private readonly Delegate compiledExpression;
+        private readonly string rowArg = null;
+
+        private static bool IsRowParam(ParameterExpression pe) => pe.Type == typeof(DataRow);
 
         /// <summary>
         /// The property to update based on the computed result.
@@ -33,16 +39,26 @@ namespace Xomega.Framework
         /// <param name="args">Arguments for the specified expression to use for evaluation.</param>
         public ComputedBinding(BaseProperty property, LambdaExpression expression, params object[] args)
         {
-            this.property = property ?? throw new ArgumentException("Property cannot be null", nameof(property));
+            this.property = property;
 
             compiledExpression = expression.Compile();
-            if (expression.Parameters.Count != args.Length)
+
+            IEnumerable<ParameterExpression> parameters = expression.Parameters;
+            // last parameter can be dynamic data row not provided in the args
+            if (parameters.Count() == args.Length + 1 && parameters.Last().Type == typeof(DataRow))
+            {
+                rowArg = parameters.Last().Name;
+                parameters = parameters.Take(parameters.Count() - 1);
+            }
+            if (parameters.Count() != args.Length)
                 throw new ArgumentException($"The number of arguments should match the number of expression parameters", nameof(args));
-            for (int i = 0; i < expression.Parameters.Count; i++)
+            for (int i = 0; i < args.Length; i++)
                 namedArgs[expression.Parameters[i].Name] = args[i];
 
             Visit(expression);
             foreach (var p in properties.Keys) p.AsyncChange += RecomputeAsync;
+            foreach (var o in objects.Keys) o.PropertyChanged += RecomputeAsync;
+            foreach (var s in selectionLists) s.SelectionChanged += RecomputeOnSelectionAsync;
         }
 
         /// <summary>
@@ -51,6 +67,8 @@ namespace Xomega.Framework
         public void Dispose()
         {
             foreach (var p in properties.Keys) p.AsyncChange -= RecomputeAsync;
+            foreach (var o in objects.Keys) o.PropertyChanged -= RecomputeAsync;
+            foreach (var s in selectionLists) s.SelectionChanged -= RecomputeOnSelectionAsync;
         }
 
         private async Task RecomputeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
@@ -61,10 +79,28 @@ namespace Xomega.Framework
             }
         }
 
+        private async void RecomputeAsync(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is INotifyPropertyChanged inpc && objects.TryGetValue(inpc, out HashSet<string> props) && props.Contains(e.PropertyName))
+            {
+                await UpdateAsync(null, default);
+            }
+        }
+
+        private async void RecomputeOnSelectionAsync(object sender, EventArgs e)
+        {
+            await UpdateAsync(null, default);
+        }
+
         /// <summary>
         /// Returns evaluated computed value based on the binding's expression and arguments.
         /// </summary>
-        protected object ComputedValue => compiledExpression.DynamicInvoke(namedArgs.Values.ToArray());
+        protected object GetComputedValue(DataRow row)
+        {
+            List<object> vals = new List<object>(namedArgs.Values);
+            if (rowArg != null) vals.Add(row);
+            return compiledExpression.DynamicInvoke(vals.ToArray());
+        }
 
         /// <summary>
         /// Updates the property with the computed result, as implemented by the subclasses.
@@ -111,6 +147,32 @@ namespace Xomega.Framework
             if (properties.ContainsKey(prop))
                 properties[prop] = properties[prop] + change;
             else properties[prop] = change;
+        }
+
+        /// <summary>
+        /// Stores specified INotifyPropertyChanged object and the member
+        /// to listen to the changes of.
+        /// </summary>
+        /// <param name="obj">The INotifyPropertyChanged to subscribe to.</param>
+        /// <param name="member">The member to listen for the changes of.</param>
+        protected void AddPropertyChange(INotifyPropertyChanged obj, string member)
+        {
+            if (!objects.TryGetValue(obj, out HashSet<string> members))
+            {
+                members = new HashSet<string>();
+                objects[obj] = members;
+            }
+            members.Add(member);
+        }
+
+        /// <summary>
+        /// Adds specified list object to subscribe to selection change events.
+        /// </summary>
+        /// <param name="list">The list object to listen for selection chang events.</param>
+        protected void AddSelectionChange(DataListObject list)
+        {
+            if (list != null)
+                selectionLists.Add(list);
         }
 
         /// <summary>
@@ -182,6 +244,18 @@ namespace Xomega.Framework
                     var prop = EvaluateProperty(node.Expression) as BaseProperty;
                     AddPropertyChange(prop, change);
                 }
+            }
+            else if (typeof(INotifyPropertyChanged).IsAssignableFrom(node.Member.ReflectedType))
+            {
+                var obj = EvaluateProperty(node.Expression) as INotifyPropertyChanged;
+                AddPropertyChange(obj, node.Member.Name);
+            }
+            if (typeof(DataListObject).IsAssignableFrom(node.Member.ReflectedType) &&
+                (node.Member.Name == nameof(DataListObject.SelectedRows) ||
+                 node.Member.Name == nameof(DataListObject.SelectedRowIndexes)))
+            {
+                var list = EvaluateProperty(node.Expression) as DataListObject;
+                AddSelectionChange(list);
             }
             return base.VisitMember(node);
         }

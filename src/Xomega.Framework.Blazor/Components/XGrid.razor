@@ -1,0 +1,54 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+<CascadingValue Value="@this" IsFixed="true">
+    @GridColumns
+</CascadingValue>
+
+@* the table markup must be wrapped in the cascading value of @this
+   for the columns to be initialized before the first render *@
+<CascadingValue Value="@this" IsFixed="true">
+    <table class="table @SelectableClass" style="table-layout: fixed">
+        <thead class="table-light">
+            <tr>
+                @foreach (var col in VisibleColumns)
+                {
+                <th class="@col.AlignmentClass @col.WrapClass" style="@col.GetHeaderStyle()"
+                    title="@col.GetHeaderText()" role="@(col.IsSortable ? "button" : null)"
+                    @onclick="@((e) => OnHeaderClicked(col, e))">
+                    @if (col.SortField != null)
+                    {
+                        <i class='@col.GetSortClass()' aria-hidden='true' />
+                        @if (col.SortCriteria?.Count > 1)
+                        {
+                            <span class="badge bg-secondary sort-index">@col.SortIndex</span>
+                        }
+                    }
+                    @col.GetHeaderText()
+                </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in VisibleRows)
+            {
+                <CascadingValue Value="row">
+                    <tr class="@SelectedClass(row)" @onclick="@(() => RowClickedAsync(row))">
+                        @foreach (var col in VisibleColumns)
+                        {
+                            <td class="@col.AlignmentClass @col.WrapClass">
+                                @col?.DisplayTemplate(row)
+                            </td>
+                        }
+                    </tr>
+                </CascadingValue>
+            }
+        </tbody>
+    </table>
+    @if (AllowPaging)
+    { 
+        <Pager ItemsCount="List?.RowCount ?? 0" ResourceKey="@ResourceKey"
+               PageSizes="PageSizes" PagesToShow="PagesToShow"
+               PageSize="PageSize" PageSizeChanged="OnPagerPageSizeChanged"
+               CurrentPage="CurrentPage" CurrentPageChanged="OnPagerCurrentPageChanged"/>
+    }
+</CascadingValue>

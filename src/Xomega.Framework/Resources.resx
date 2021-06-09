@@ -117,6 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Action_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Action_Close_AccessKey" xml:space="preserve">
+    <value>C</value>
+  </data>
+  <data name="Action_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Action_Delete_AccessKey" xml:space="preserve">
+    <value>t</value>
+  </data>
+  <data name="Action_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Action_Reset_AccessKey" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="Action_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Action_Save_AccessKey" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="Action_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Action_Search_AccessKey" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="Action_Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Action_Select_AccessKey" xml:space="preserve">
+    <value>S</value>
+  </data>
   <data name="Exception_Unhandled" xml:space="preserve">
     <value>Unexpected system error occurred. Please see logs for details.</value>
   </data>
@@ -127,6 +163,49 @@
   <data name="Operator_NumberOfValues" xml:space="preserve">
     <value>Operator {0} expects {1} value(s), but only {2} were provided for {3}.</value>
     <comment>{0}=Operator, {1}=Expected number of valules, {2}=Supplied number of values, {3}=Field name</comment>
+  </data>
+  <data name="Pager_First" xml:space="preserve">
+    <value>First Page</value>
+  </data>
+  <data name="Pager_Last" xml:space="preserve">
+    <value>Last Page</value>
+  </data>
+  <data name="Pager_Next" xml:space="preserve">
+    <value>Next Page</value>
+  </data>
+  <data name="Pager_PageSize" xml:space="preserve">
+    <value>Items per page</value>
+  </data>
+  <data name="Pager_Prev" xml:space="preserve">
+    <value>Previous Page</value>
+  </data>
+  <data name="Pager_Summary" xml:space="preserve">
+    <value>Showing {0} to {1} of {2} items.</value>
+    <comment>{0}=Lower range boundary, {1}=Upper range boundary, {2}=Total number of items</comment>
+  </data>
+  <data name="PickList_Add" xml:space="preserve">
+    <value>Add Selected</value>
+  </data>
+  <data name="PickList_AddAll" xml:space="preserve">
+    <value>Add All</value>
+  </data>
+  <data name="PickList_Available" xml:space="preserve">
+    <value>Available {0}</value>
+    <comment>{0}=Property name</comment>
+  </data>
+  <data name="PickList_Remove" xml:space="preserve">
+    <value>Remove Selected</value>
+  </data>
+  <data name="PickList_RemoveAll" xml:space="preserve">
+    <value>Remove All</value>
+  </data>
+  <data name="PickList_Selected" xml:space="preserve">
+    <value>Selected {0}</value>
+    <comment>{0}=Property name</comment>
+  </data>
+  <data name="Select_RequiredOption" xml:space="preserve">
+    <value>Select {0}...</value>
+    <comment>{0}=Property name</comment>
   </data>
   <data name="Validation_DateTimeFormat" xml:space="preserve">
     <value>{0} has an invalid date/time: {1}. Please use the following format: {2}.</value>
@@ -168,13 +247,24 @@
     <value>{0} cannot be greater than {1}.</value>
     <comment>{0}=Property name, {1}=Maximum value</comment>
   </data>
+  <data name="Validation_NumberMaximumExcl" xml:space="preserve">
+    <value>{0} must be less than {1}.</value>
+    <comment>{0}=Property name, {1}=Maximum value</comment>
+  </data>
   <data name="Validation_NumberMinimum" xml:space="preserve">
     <value>{0} cannot be less than {1}.</value>
+    <comment>{0}=Property name, {1}=Minimum value</comment>
+  </data>
+  <data name="Validation_NumberMinimumExcl" xml:space="preserve">
+    <value>{0} must be greater than {1}.</value>
     <comment>{0}=Property name, {1}=Minimum value</comment>
   </data>
   <data name="Validation_Required" xml:space="preserve">
     <value>{0} is required.</value>
     <comment>{0}=Property name</comment>
+  </data>
+  <data name="View_Critiera" xml:space="preserve">
+    <value>Search Criteria</value>
   </data>
   <data name="View_DeleteMessage" xml:space="preserve">
     <value>Are you sure you want to delete this object?
@@ -182,6 +272,18 @@ This action cannot be undone.</value>
   </data>
   <data name="View_DeleteTitle" xml:space="preserve">
     <value>Delete Confirmation</value>
+  </data>
+  <data name="View_Error" xml:space="preserve">
+    <value>Please review the following error.</value>
+  </data>
+  <data name="View_Errors" xml:space="preserve">
+    <value>Please review the following errors.</value>
+  </data>
+  <data name="View_Message" xml:space="preserve">
+    <value>Please review the following message.</value>
+  </data>
+  <data name="View_Messages" xml:space="preserve">
+    <value>Please review the following messages.</value>
   </data>
   <data name="View_TitleNew" xml:space="preserve">
     <value>New {0}</value>
@@ -193,5 +295,11 @@ Do you want to discard them and close the view?</value>
   </data>
   <data name="View_UnsavedTitle" xml:space="preserve">
     <value>Unsaved Changes</value>
+  </data>
+  <data name="View_Warning" xml:space="preserve">
+    <value>Please review the following warning.</value>
+  </data>
+  <data name="View_Warnings" xml:space="preserve">
+    <value>Please review the following warnings.</value>
   </data>
 </root>

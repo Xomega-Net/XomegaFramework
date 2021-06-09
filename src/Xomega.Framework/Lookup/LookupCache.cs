@@ -85,8 +85,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="type">Cache type</param>
         public LookupCache(IServiceProvider serviceProvider, List<ILookupCacheLoader> cacheLoaders, string type)
         {
-            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-            this.cacheLoaders = cacheLoaders ?? serviceProvider.GetServices<ILookupCacheLoader>() ?? new List<ILookupCacheLoader>();
+            this.cacheLoaders = cacheLoaders ?? serviceProvider?.GetServices<ILookupCacheLoader>() ?? new List<ILookupCacheLoader>();
             CacheType = type;
         }
 

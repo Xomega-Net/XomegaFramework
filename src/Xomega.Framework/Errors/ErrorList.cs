@@ -37,6 +37,22 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Gets localized title for the error list based on the number and severity of the messages it contains.
+        /// </summary>
+        /// <param name="viewKey">The view resource key prefix to allow returning a title customized for a specifc view.</param>
+        /// <returns>Localized title for the error list.</returns>
+        public string GetTitle(string viewKey = null)
+        {
+            bool plural = Errors.Count > 1;
+            string key = Errors.Any(e => e.Severity > ErrorSeverity.Warning) ? 
+                    (plural ? Messages.View_Errors : Messages.View_Error) :
+                Errors.Any(e => e.Severity > ErrorSeverity.Info) ?
+                    (plural ? Messages.View_Warnings : Messages.View_Warning) :
+                    (plural ? Messages.View_Messages: Messages.View_Message);
+            return resources.GetString(key, viewKey);
+        }
+
+        /// <summary>
         /// Gets the text message based on the given error code and parameters.
         /// Uses the resource manager if set to look up the localized message by the error code.
         /// </summary>

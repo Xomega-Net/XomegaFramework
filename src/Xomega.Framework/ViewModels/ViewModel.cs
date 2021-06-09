@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +37,7 @@ namespace Xomega.Framework.Views
             Params = new NameValueCollection();
 
             ErrorParser = svcProvider.GetRequiredService<ErrorParser>();
+            CloseAction = new ActionProperty(svcProvider, Messages.Action_Close);
 
             Initialize();
         }
@@ -66,6 +68,7 @@ namespace Xomega.Framework.Views
         {
             Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
             Activated = true;
+            CloseAction.Visible = Params[ViewParams.Mode.Param] != null;
             return true;
         }
 
@@ -80,6 +83,8 @@ namespace Xomega.Framework.Views
             if (Activated) return false;
             Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
             Activated = true;
+            // make Close visible only for child views
+            CloseAction.Visible = Params[ViewParams.Mode.Param] != null;
             return await Task.FromResult(true);
         }
 
@@ -94,7 +99,7 @@ namespace Xomega.Framework.Views
         /// Base title of the view to be overridden in subclasses.
         /// The override can include additional data from the object.
         /// </summary>
-        public virtual string BaseTitle => GetString("View");
+        public virtual string BaseTitle => GetString("View_Title") ?? DataObject.StringToWords(GetResourceKey());
 
         /// <summary> Property name for the view title. </summary>
         public const string ViewTitleProperty = "ViewTitle";
@@ -106,17 +111,29 @@ namespace Xomega.Framework.Views
         public virtual string ViewTitle => BaseTitle;
 
         /// <summary>
+        /// Gets a key for the current view that is used to look up localized resources.
+        /// </summary>
+        /// <returns>The resource key for the view.</returns>
+        public virtual string GetResourceKey()
+        {
+            var t = GetType();
+            if (t.Name.StartsWith(t.BaseType.Name))
+                t = t.BaseType; // use base class for customized view models
+            return Regex.Replace(t.Name, "ViewModel$", ""); // trim Model off the end
+        }
+
+        /// <summary>
         /// Gets localized string using the specified key and parameters.
-        /// If no resource is defined for the key, the key text will be used.
+        /// If no view-specific resource is defined for the key, a generic resource for the key will be used, if available.
         /// </summary>
         /// <param name="key">The resource key or the actual text.</param>
         /// <param name="values">Values to substitute into any placeholders in the text.</param>
-        /// <returns></returns>
+        /// <returns>The localized view-specific or generic string for the key, if available, or null.</returns>
         public string GetString(string key, params object[] values)
         {
             var resources = ServiceProvider.GetService<ResourceManager>() ?? Messages.ResourceManager;
-            var text = resources.GetString(key) ?? key;
-            return string.Format(text, values);
+            var text = resources.GetString(key, GetResourceKey());
+            return text == null ? null : string.Format(text, values);
         }
 
         #endregion
@@ -235,7 +252,7 @@ namespace Xomega.Framework.Views
                 else curView.Dispose();
             }
             tgtView.BindTo(tgtViewModel);
-            if (tgtView != curView) tgtView.Show();
+            tgtView.Show(); // always show even for the same view, in case mode has changed
 
             tgtViewModel.FireEvent(ViewEvent.Opened);
 
@@ -268,16 +285,21 @@ namespace Xomega.Framework.Views
             { // close the current view, or dispose if reusing it
                 if (curView != tgtView)
                     await curView.CloseAsync(token);
-                else curView.Dispose();
+                else await curView.DisposeAsync(token);
             }
             tgtView.BindTo(tgtViewModel);
-            if (tgtView != curView)
-                await tgtView.ShowAsync(token);
+            await tgtView.ShowAsync(token); // always show even for the same view, in case mode has changed
 
             await tgtViewModel.FireEventAsync(ViewEvent.Opened);
 
             return true;
         }
+
+        /// <summary>
+        /// The action to close the view that can be bound to close buttons,
+        /// which allows controlling when such buttons are visible or enabled.
+        /// </summary>
+        public ActionProperty CloseAction { get; private set; }
 
         /// <summary>
         /// Performs model level checks if the view can be closed
@@ -362,6 +384,22 @@ namespace Xomega.Framework.Views
                 return true;
             }
             return false;
+        }
+
+        private int openInlineViews = 1; // default to current view only
+
+        /// <summary>
+        /// The number of open inline child views plus the current view, if open.
+        /// </summary>
+        public int OpenInlineViews
+        {
+            get => openInlineViews;
+            set
+            {
+                if (openInlineViews == value) return;
+                openInlineViews = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(OpenInlineViews)));
+            }
         }
 
         #endregion

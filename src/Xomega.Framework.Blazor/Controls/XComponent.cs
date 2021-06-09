@@ -16,28 +16,44 @@ namespace Xomega.Framework.Blazor
     public class XComponent : ComponentBase, IDisposable
     {
         /// <summary>
+        /// The base property for the component.
+        /// </summary>
+        protected BaseProperty property;
+
+        /// <summary>
         /// The data property the component is bound to.
         /// </summary>
-        [Parameter]
-        public DataProperty Property { get; set; }
+        [Parameter] public DataProperty Property { get => property as DataProperty; set => property = value; }
 
         /// <summary>
         /// The row in a data list object that the component is bound to when used in a list.
         /// </summary>
-        [CascadingParameter]
-        public DataRow Row { get; set; }
+        [CascadingParameter] public DataRow Row { get; set; }
 
         /// <summary>
         /// Blazor edit context associated with the current component.
         /// </summary>
-        [CascadingParameter]
-        public EditContext EditContext { get; set; }
+        [CascadingParameter] public EditContext EditContext { get; set; }
+
+        /// <summary>
+        /// Whether or not to show component label.
+        /// </summary>
+        [Parameter] public bool ShowLabel { get; set; } = true;
+
+        /// <summary>
+        /// Custom placeholder for the component.
+        /// </summary>
+        [Parameter] public string Placeholder { get; set; }
+
+        /// <summary>
+        /// Placeholder text to use based on the custom placeholder or label, if applicable.
+        /// </summary>
+        protected string PlaceholderText => Placeholder ?? (ShowLabel ? Label : Property?.NullString);
 
         /// <summary>
         /// Access key mnemonic to use for the component.
         /// </summary>
-        [Parameter]
-        public string AccessKey { get; set; }
+        [Parameter] public string AccessKey { get; set; }
 
         /// <summary>
         /// Additional attributes with their values to be specified on the component.
@@ -65,12 +81,12 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// Shorthand to determine if the property is editable.
         /// </summary>
-        protected bool IsEditable => Property != null && Property.Editable;
+        protected bool IsEditable => property != null && property.GetEditable(Row);
 
         /// <summary>
         /// Shorthand to determine if the property is visible.
         /// </summary>
-        protected bool IsVisible => Property != null && Property.Visible;
+        protected bool IsVisible => property != null && property.Visible;
 
         /// <summary>
         /// Shorthand to determine if the value of the property is null.
@@ -78,9 +94,19 @@ namespace Xomega.Framework.Blazor
         protected bool IsNull => Property != null && Property.IsNull(Row);
 
         /// <summary>
+        /// Shorthand to get the text for property label.
+        /// </summary>
+        protected virtual string Label => property?.Label;
+
+        /// <summary>
         /// Shorthand to get the text for property's validation errors.
         /// </summary>
-        protected string ErrorsText => IsEditable && IsVisible ? Property?.GetValidationErrors(Row)?.ErrorsText : "";
+        public string ErrorsText => IsEditable && IsVisible ? Property?.GetValidationErrors(Row)?.ErrorsText : "";
+
+        /// <summary>
+        /// The Bootstrap class for the component error.
+        /// </summary>
+        public string ErrorsClass => string.IsNullOrEmpty(ErrorsText) ? "" : "invalid-feedback";
 
         /// <summary>
         /// Constructs a new property bound component.
@@ -93,27 +119,21 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// The property state descriptions used to generate component's CSS classes.
         /// </summary>
-        protected PropertyStateDescription StateDescriptions = new PropertyStateDescription();
+        protected PropertyStateDescription StateDescriptions = new PropertyStateDescription()
+        {
+            Valid = "is-valid",
+            Invalid = "is-invalid",
+        };
 
         /// <summary>
-        /// Gets a CSS class string that combines the <c>class</c> attribute and property state.
-        /// Derived components should typically use this value for the primary HTML element's 'class' attribute.
+        /// The top-level class to use for the component, usually defining its layout in the parent container.
         /// </summary>
-        protected string CssClass
-        {
-            get
-            {
-                string propertyState = StateDescriptions.GetStateDescription(Property, ObservedChanges, Row);
-                if (AdditionalAttributes != null &&
-                    AdditionalAttributes.TryGetValue("class", out var cls) &&
-                    !string.IsNullOrEmpty(Convert.ToString(cls)))
-                {
-                    return $"{cls} {propertyState}";
-                }
+        [Parameter] public string Class { get; set; }
 
-                return propertyState;
-            }
-        }
+        /// <summary>
+        /// Gets a CSS class string for the property state based on the currently observed changes.
+        /// </summary>
+        protected string StateClass => StateDescriptions.GetStateDescription(Property, ObservedChanges, Row);
 
         /// <summary>
         /// Utility method to get a label for the markup based on the specified text,
@@ -129,13 +149,20 @@ namespace Xomega.Framework.Blazor
             return (MarkupString)text.Remove(idx, 1).Insert(idx, $"<u>{AccessKey}</u>");
         }
 
+        /// <summary>
+        /// Internal auto-generated ID that can be used to associate labels to controls.
+        /// </summary>
+        protected string ControlId { get; set; } = "xc_" + Guid.NewGuid().ToString("N");
+
         /// <inheritdoc/>
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            if (Property != null)
+            if (property != null)
             {
-                Property.AsyncChange += OnPropertyChangeAsync;
+                property.AsyncChange += OnPropertyChangeAsync;
+                if (AccessKey == null)
+                    AccessKey = property.AccessKey;
             }
         }
 
@@ -169,7 +196,7 @@ namespace Xomega.Framework.Blazor
         {
             if (Property != null)
             {
-                Property.Editing = true;
+                Property.SetEditing(true, Row);
                 await Property.SetValueAsync(value, Row);
             }
         }
@@ -192,7 +219,7 @@ namespace Xomega.Framework.Blazor
         protected void OnFocus(FocusEventArgs e)
         {
             if (Property != null)
-                Property.Editing = true;
+                Property.SetEditing(true, Row);
         }
 
         /// <summary>
@@ -203,7 +230,7 @@ namespace Xomega.Framework.Blazor
         protected void OnBlur(FocusEventArgs e)
         {
             if (Property != null)
-                Property.Editing = false;
+                Property.SetEditing(false, Row);
         }
 
         /// <summary>
@@ -211,8 +238,8 @@ namespace Xomega.Framework.Blazor
         /// </summary>
         public void Dispose()
         {
-            if (Property != null)
-                Property.AsyncChange -= OnPropertyChangeAsync;
+            if (property != null)
+                property.AsyncChange -= OnPropertyChangeAsync;
         }
     }
 }

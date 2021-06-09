@@ -1,0 +1,32 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XOptionsComponent<object>
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+        }
+        <div class="dropdown @StateClass">
+            <input @ref="Input" type="text" id="@ControlId"
+                   class="form-control dropdown-toggle @StateClass"
+                   disabled="@(!IsEditable)"
+                   maxlength="@MaxLength"
+                   value="@Value" @oninput="@OnInput" @onfocusout="OnFocusOut" @onkeydown="OnKeyDown" />
+            @if (DropDownVisible)
+            { 
+                <ul class="dropdown-menu show">
+                    @for (int i = 0; i < AvailableItems.Count; i++)
+                    {
+                        int idx = i;
+                        <li><a role="button" class="dropdown-item @(i == ActiveItemIndex ? "active" : "")"
+                               @onclick="@(async (e) => await SelectItem(idx))">@Template(AvailableItems[i])</a></li>
+                    }
+                </ul>
+            }
+        </div>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}

@@ -21,6 +21,7 @@ namespace Xomega.Framework
         public ComputedEditableBinding(BaseProperty property, LambdaExpression expression, params object[] args)
             : base(property, expression, args)
         {
+            if (property == null) throw new ArgumentException("Property cannot be null", nameof(property));
             if (expression.ReturnType != typeof(bool))
                 throw new Exception("Supplied expression should return a bool.");
         }
@@ -28,7 +29,7 @@ namespace Xomega.Framework
         /// <inheritdoc/>
         public override Task UpdateAsync(DataRow row, CancellationToken token)
         {
-            property.Editable = (bool)ComputedValue;
+            property.Editable = (bool)GetComputedValue(row);
             return Task.CompletedTask;
         }
     }

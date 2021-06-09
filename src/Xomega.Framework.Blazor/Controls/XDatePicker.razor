@@ -1,0 +1,51 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+        }
+        <input type="@InputType" id="@ControlId"
+               class="form-control @StateClass" placeholder="@Placeholder"
+               disabled="@(!IsEditable)"
+               value="@Value" @onchange="@OnValueChanged" @onblur="OnBlur" />
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public string Type { get; set; }
+
+    protected string Value
+    {
+        get
+        {
+            if (!IsMultiValue)
+            { 
+                if (Property is DateProperty dp)
+                    return dp.GetValue(Row)?.ToString("yyyy-MM-dd");
+                else if (Property is DateTimeProperty dtp)
+                    return dtp.GetValue(Row)?.ToString("yyyy-MM-ddTHH:mm");
+            }
+
+            return Property.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
+        }
+    }
+
+    protected string InputType
+    {
+        get
+        {
+            if (Type != null) return Type;
+            else if (IsMultiValue) return "text";
+            else if (Property is DateProperty) return "date";
+            else if (Property is DateTimeProperty) return "datetime-local";
+            else return "text";
+        }
+    }
+}

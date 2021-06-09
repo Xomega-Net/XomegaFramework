@@ -73,7 +73,7 @@ if (entry.Comment != null) { #>
         /// Where <#= entry.Comment #>
 <# } #>
         /// </summary>
-        public const string <#= entry.Name.Replace('.', '_') #> = "<#= entry.Name #>";
+        public const string <#= entry.Name.Replace('.', '_').Replace('-', '_') #> = "<#= entry.Name #>";
 <# } #>
     }
 }

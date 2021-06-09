@@ -124,7 +124,7 @@ namespace Xomega.Framework.Properties
         public PositiveIntegerProperty(DataObject parent, string name)
             : base(parent, name)
         {
-            MinimumValue = 0;
+            MinimumValue = 1;
         }
     }
 
@@ -185,7 +185,7 @@ namespace Xomega.Framework.Properties
         public PositiveSmallIntProperty(DataObject parent, string name)
             : base(parent, name)
         {
-            MinimumValue = 0;
+            MinimumValue = 1;
         }
     }
 

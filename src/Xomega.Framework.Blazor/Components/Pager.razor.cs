@@ -2,85 +2,93 @@
 
 using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
+using Xomega.Framework.Blazor.Views;
 
 namespace Xomega.Framework.Blazor.Components
 {
     /// <summary>
-    /// Base class for an index-based pager component.
+    /// Index-based pager component.
     /// </summary>
-    public class BasePager : ComponentBase
+    public partial class Pager : ComponentBase
     {
+        [Inject] private ResourceManager Resources { get; set; }
+
         /// <summary>
-        /// The content to display for the current page.
+        /// Customizable resource key prefix to use when looking up pager resources.
         /// </summary>
-        [Parameter]
-        public RenderFragment<IEnumerable<int>> ChildContent { get; set; }
+        [Parameter] public string ResourceKey { get; set; }
 
         /// <summary>
         /// An array of possible page sizes to select from.
         /// </summary>
-        [Parameter]
-        public int[] PageSizes { get; set; } = new[] { 10, 20, 50, 100 };
+        [Parameter] public int[] PageSizes { get; set; }
 
         /// <summary>
         /// The current size of the page. If not explicitly specified,
         /// will default to the second option in the list of page sizes,
         /// or first if there is only one option.
         /// </summary>
-        [Parameter]
-        public int PageSize { get; set; }
+        [Parameter] public int PageSize { get; set; }
 
         /// <summary>
         /// Event for when the size of the page changes.
         /// </summary>
-        [Parameter]
-        public EventCallback<int> PageSizeChanged { get; set; }
+        [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
 
         /// <summary>
         /// The maximum number of pages to show on the pager.
         /// </summary>
-        [Parameter]
-        public int PagesToShow { get; set; } = 5; // maximum number of pages to display
+        [Parameter] public int PagesToShow { get; set; }
 
         /// <summary>
         /// The index of the current page, where 1 indicates the first page.
         /// </summary>
-        [Parameter]
-        public int CurrentPage { get; set; } = 1;
+        [Parameter] public int CurrentPage { get; set; }
 
         /// <summary>
         /// Event for when the index of the current page changes.
         /// </summary>
-        [Parameter]
-        public EventCallback<int> CurrentPageChanged { get; set; }
+        [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
 
         /// <summary>
         /// The total number of items in the underlying list.
         /// </summary>
-        [Parameter]
-        public int ItemsCount { get; set; }
+        [Parameter] public int ItemsCount { get; set; }
 
         /// <summary>
         /// Index of the last page based on the total number of items and the current page size.
         /// </summary>
         protected virtual int MaxPage => (int)Math.Ceiling((double)ItemsCount / PageSize);
 
-        /// <summary>
-        /// Indexes of the items on the current page.
-        /// </summary>
-        protected virtual IEnumerable<int> Indexes => Enumerable.Range(PageSize * (CurrentPage - 1),
-                           Math.Max(0, Math.Min(PageSize, ItemsCount - PageSize * (CurrentPage - 1))));
+        private string GetSummaryText()
+        {
+            string text = Resources.GetString(Messages.Pager_Summary, ResourceKey);
+            return text == null ? null : string.Format(text, PageSize * (CurrentPage - 1) + 1,
+                Math.Min(PageSize * CurrentPage, ItemsCount), ItemsCount);
+        }
+
+        private string DisabledIf(bool condition) => BlazorView.DisabledIfNot(!condition);
 
         /// <inheritdoc/>
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            // if page size is not provided, default it to the second option (20)
+
+            // if page sizes are not provided, default it to the following list
+            if (PageSizes == null || PageSizes.Length == 0)
+                PageSizes = new[] { 7, 14, 25, 50, 100 };
+
+            // if page size is not provided, default it to the second option (14)
             if (PageSize == 0 && PageSizes?.Length > 0)
                 await SetPageSize(PageSizes[Math.Min(1, PageSizes.Length - 1)]);
+
+            if (PagesToShow == 0) PagesToShow = 7;
+
+            // set current page, if it's not set properly
+            if (CurrentPage < 1) await SetCurrentPage(1);
+            else if (CurrentPage > MaxPage) await SetCurrentPage(MaxPage);
         }
 
         /// <summary>

@@ -1,0 +1,49 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@inject IJSRuntime jsRuntime;
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        <div class="form-check @StateClass @(Switch ? " form-switch" : "")">
+            <input type="checkbox" id="@ControlId" @ref="CheckBox"
+                   class="form-check-input @StateClass"
+                   disabled="@(!IsEditable)"
+                   checked="@Value" @onchange="OnValueChanged" @onfocus="@OnFocus" @onblur="OnBlur" />
+            <label class="form-check-label" accesskey="@AccessKey" for="@ControlId">
+                @GetLabel(Label)
+            </label>
+        </div>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public bool Switch { get; set; }
+
+    protected bool? Value => (Property as BooleanProperty)?.Value;
+
+    protected ElementReference CheckBox { get; set; }
+
+    protected async override Task OnValueChanged(ChangeEventArgs e)
+    {
+        // if not required, reset to null when unchecking
+        object newVal = IsRequired ? e.Value : Value == null ? (object)false : Value.Value ? null : (object)true;
+        await UpdatePropertyAsync(newVal);
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (CheckBox.Id != null)
+        {
+            var val = Value;
+            await jsRuntime.InvokeVoidAsync("xfk.setProperty", CheckBox, "indeterminate", val == null);
+            await jsRuntime.InvokeVoidAsync("xfk.setProperty", CheckBox, "checked", val ?? false);
+        }
+    }
+}

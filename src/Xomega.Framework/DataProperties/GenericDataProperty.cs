@@ -54,11 +54,11 @@ namespace Xomega.Framework
         public virtual T GetValue(DataRow row = null)
         {
             object value = GetValue(ValueFormat.Internal, row);
-            if (value is T) return (T)value;
+            if (value is T val) return val;
             else
             {
-                if (value is IList lst && lst.Count > 0 && lst[0] is T)
-                    return (T)lst[0];
+                if (value is IList lst && lst.Count > 0 && lst[0] is T v0)
+                    return v0;
                 else return default;
             }
         }

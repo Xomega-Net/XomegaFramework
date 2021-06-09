@@ -1,9 +1,10 @@
 ﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +25,11 @@ namespace Xomega.Framework
         /// and therefore should be always checked for null.
         /// </summary>
         protected DataObject parent;
+
+        /// <summary>
+        /// The column index of the property when it is part of a data list object.
+        /// </summary>
+        internal int Column { get; set; } = -1;
 
         /// <summary>
         /// Constructs a base property with the given name and a parent data object.
@@ -66,25 +72,38 @@ namespace Xomega.Framework
         /// </summary>
         public string Name { get; private set; }
 
+        // externally set label to use
+        private string label;
+
         /// <summary>
         /// User-friendly property label that can be used in error messages and other places
         /// to identify the property for the user.
         /// </summary>
-        public string Label { get; set; }
+        public string Label { get => label ?? GetLabel(); set => label = value; }
 
         /// <summary>
         /// Returns a user-friendly string representation of the property.
         /// </summary>
-        /// <returns>The property label if it has been set, otherwise the property name
+        /// <returns>The property label if available, otherwise the property name
         /// converted to words if Pascal case is used.</returns>
-        public override string ToString()
+        public override string ToString() => Label;
+
+        /// <summary>
+        /// Gets a localized label for the current property. If no label text is available
+        /// uses the property name to generate a label.
+        /// </summary>
+        /// <returns>A localized label for the current property.</returns>
+        protected string GetLabel()
         {
-            if (Label != null) return Label;
-            // convert Pascal case to words
-            string res = Regex.Replace(Name, "([a-z])([A-Z])", "$1 $2");
-            res = Regex.Replace(res, "([A-Z][A-Z])([A-Z])([a-z])", "$1 $2$3");
-            return res;
+            var label = ResourceMgr?.GetString(ResourceKey, ParentResourceKey);
+            if (label == null) label = DataObject.StringToWords(Name);
+            return label;
         }
+
+        /// <summary>
+        /// Localized access key for the current property, or null if no access key is defined.
+        /// </summary>
+        public virtual string AccessKey => ResourceMgr?.GetString(ResourceKey + "_AccessKey", ParentResourceKey);
 
         /// <summary>
         /// Sets the property label text, replacing extraneous characters.
@@ -94,6 +113,22 @@ namespace Xomega.Framework
         {
             Label = text?.Replace("_", "")?.Trim()?.Trim(':');
         }
+
+        /// <summary>
+        /// Resource manager to be used for the property, which can be overridden in subclasses.
+        /// </summary>
+        protected virtual ResourceManager ResourceMgr => parent?.ServiceProvider?.GetService<ResourceManager>() ?? Messages.ResourceManager;
+
+        /// <summary>
+        /// Base resource key to be used for the property, which can be overridden in subclasses.
+        /// </summary>
+        protected virtual string ResourceKey => Name;
+
+        /// <summary>
+        /// Parent resource key for the property to qualify the base resource key.
+        /// </summary>
+        protected virtual string ParentResourceKey => parent?.GetResourceKey() + ".";
+
         #endregion
 
         #region Property Change support
@@ -141,7 +176,7 @@ namespace Xomega.Framework
         /// An internal flag to allow manually making the property uneditable.
         /// The default value is true.
         /// </summary>
-        private bool editable = true;
+        protected bool editable = true;
 
         /// <summary>
         /// Returns a value indicating whether or not the property is editable.
@@ -159,13 +194,29 @@ namespace Xomega.Framework
                 if (parent != null) b &= parent.IsPropertyEditable(this);
                 return b && AccessLevel > AccessLevel.ReadOnly;
             }
-            set
-            {
-                bool oldValue = Editable;
-                editable = value;
-                if (Editable != oldValue) FirePropertyChange(
-                    new PropertyChangeEventArgs(PropertyChange.Editable, oldValue, Editable, null));
-            }
+            set => SetEditable(value, null);
+        }
+
+        /// <summary>
+        /// Returns whether this property is editable for the given row or in general,
+        /// if the row is null or its editability is not set for this property.
+        /// </summary>
+        /// <param name="row">The row, for which to check property editability.</param>
+        /// <returns>True if the property is editable, false owtherwise.</returns>
+        public bool GetEditable(DataRow row = null) => Editable && (row?.GetEditable(this) ?? true);
+
+        /// <summary>
+        /// Sets the property editable for the specified row or in general, if the row is null.
+        /// </summary>
+        /// <param name="value">The value for the editable flag to set.</param>
+        /// <param name="row">The row to set editability of the property for, or null to set it for the entire property.</param>
+        public void SetEditable(bool value, DataRow row = null)
+        {
+            bool b = GetEditable(row);
+            if (row == null) editable = value;
+            else row.SetEditable(this, value);
+            if (GetEditable(row) != b) FirePropertyChange(
+                new PropertyChangeEventArgs(PropertyChange.Editable, b, value, row));
         }
 
         /// <summary>
@@ -178,21 +229,30 @@ namespace Xomega.Framework
         /// Controls that are bound to this property should set this value to true or false
         /// when they gain or lose focus respectively.
         /// </summary>
-        public bool Editing
+        public bool Editing { get => GetEditing(); set => SetEditing(value); }
+
+        /// <summary>
+        /// Returns whether or not the property is currently being edited by the user
+        /// at the specified row, if any.
+        /// </summary>
+        /// <param name="row">The row to check if the property is being edited, or null for the entire property.</param>
+        /// <returns>True if the property is being edited at the specified row, false otherwise.</returns>
+        public bool GetEditing(DataRow row = null) => row?.GetEditing(this) ?? editing;
+
+        /// <summary>
+        /// Sets whether or not the prperty is currently being edited at the spefied row, if any.
+        /// </summary>
+        /// <param name="value">True if the property is being edited, false otherwise.</param>
+        /// <param name="row">The row, for which the property is being edited, or null for the entire property.</param>
+        public void SetEditing(bool value, DataRow row = null)
         {
-            get
-            {
-                return editing;
-            }
-            set
-            {
-                bool b = editing;
-                editing = value;
-                PropertyChange change = PropertyChange.Editing;
-                if (!editing) change += PropertyChange.Value;
-                if (editing != b) FirePropertyChange(
-                    new PropertyChangeEventArgs(change, b, editing, null));
-            }
+            bool b = GetEditing(row);
+            if (row == null) editing = value;
+            else row.SetEditing(this, value);
+            PropertyChange change = PropertyChange.Editing;
+            if (!value) change += PropertyChange.Value;
+            if (value != b) FirePropertyChange(
+                new PropertyChangeEventArgs(change, b, value, row));
         }
 
         private ComputedBinding editableBinding;

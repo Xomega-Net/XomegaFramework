@@ -1,0 +1,50 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Popups
+@using Xomega.Framework
+@using Xomega.Framework.Properties
+
+@inherits XSfComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
+            <SfNumericTextBox @attributes="@AdditionalAttributes" CssClass="@StateClass"
+                              Min="@Min" Max="@Max" Step="@Step" Format="@Format"
+                              TValue="decimal?" Value="@GetDecimalValue()" ValueChanged="OnValueChanged"
+                              @onfocus="OnFocus" @onblur="OnBlur"
+                              Enabled="IsEditable" ShowClearButton="ShowClearButton"
+                              Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
+            </SfNumericTextBox>
+        </SfTooltip>
+    </div>
+}
+
+@code
+{
+    private decimal? Min => IsMultiValue ? null :
+        Property is IntegerProperty ip ? ip.MinimumValue :
+        Property is DecimalProperty dp ? dp.MinimumValue : (decimal?)null;
+
+    private decimal? Max => IsMultiValue ? null :
+        Property is IntegerProperty ip ? ip.MaximumValue :
+        Property is DecimalProperty dp ? dp.MaximumValue : (decimal?)null;
+
+    [Parameter] public decimal? Step { get; set; } = 1;
+
+    [Parameter] public string Format { get; set; }
+
+    [Parameter] public bool ShowClearButton { get; set; } = true;
+
+    protected decimal? GetDecimalValue()
+    {
+        var val = Property.GetValue(ValueFormat.Internal, Row);
+        if (val is decimal?) return (decimal?)val;
+        else if (val is int?) return (decimal?)(int?)val;
+        return null;
+    }
+
+    public async Task OnValueChanged(decimal? value) => await UpdatePropertyAsync(value);
+}

@@ -31,6 +31,6 @@ namespace Xomega.Framework.Blazor.Components
         /// <summary>
         /// Updates the title component.
         /// </summary>
-        public async Task Update() => await InvokeAsync(() => StateHasChanged());            
+        public async Task Update() => await InvokeAsync(() => StateHasChanged());
     }
 }

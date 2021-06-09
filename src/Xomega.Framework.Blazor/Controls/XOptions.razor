@@ -1,0 +1,101 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using System.Collections
+
+@inherits XOptionsComponent<object>
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+        }
+        <div class="@StateClass">
+            @if (Property != null)
+            {
+                int id = 0;
+                @if (ShowBlankOption && !IsMultiValue && !IsRequired && !string.IsNullOrEmpty(Property.NullString))
+                {
+                    <div class="@CheckClass">
+                        <input class="form-check-input" type="@InputType" name="@OptionName" id="@(OptionName + ++id)"
+                               value="" checked="@IsNull"
+                               @onchange="@OnValueChanged" disabled="@(!IsEditable)"
+                               @onfocus="@OnFocus" @onblur="@OnBlur" />
+                        <label class="form-check-label" for="@(OptionName + id)">
+                            @Property.NullString
+                        </label>
+                    </div>
+                }
+
+                // trick to get value as a list of edit strings (which is otherwise returned as csv)
+                var value = Property.ResolveValue(Property.GetValue(ValueFormat.Internal, Row), ValueFormat.EditString);
+                var itemValues = new ArrayList();
+                @foreach (var i in Items)
+                {
+                    var val = Property.ValueToString(i, ValueFormat.EditString);
+                    itemValues.Add(val);
+                    <div class="@CheckClass">
+                        <input class="form-check-input" type="@InputType" name="@OptionName" id="@(OptionName + ++id)"
+                               value="@val" checked="@IsSelected(value, val)"
+                               @onchange="@(e => OnSelected(e, val))" disabled="@(!IsEditable)"
+                               @onfocus="@OnFocus" @onblur="@OnBlur" />
+                        <label class="form-check-label" for="@(OptionName + id)">
+                            @Template(i)
+                        </label>
+                    </div>
+                }
+
+                if (!IsNull)
+                {
+                    var values = value as IList;
+                    foreach (var v in values ?? new ArrayList() { value })
+                    {
+                        if (!itemValues.Contains(v))
+                        {
+                            <div class="@CheckClass">
+                                <input class="form-check-input" type="@InputType" name="@OptionName" id="@(OptionName + ++id)"
+                                       value="@v" checked="checked" disabled="disabled" />
+                                <label class="form-check-label" for="@(OptionName + id)">
+                                    @Template(v)
+                                </label>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public string Name { get; set; }
+
+    [Parameter] public bool ShowBlankOption { get; set; } = true;
+
+    [Parameter] public bool Switches { get; set; }
+
+    [Parameter] public bool Inline { get; set; }
+
+    protected string OptionName => Name ?? Property?.Name;
+
+    protected string InputType => IsMultiValue ? "checkbox" : "radio";
+
+    protected string CheckClass => "form-check" + (Switches && IsMultiValue ? " form-switch" : "") + (Inline ? " form-check-inline" : "");
+
+    protected async Task OnSelected(ChangeEventArgs e, object value)
+    {
+        if (IsMultiValue)
+        {
+            var val = Property.ResolveValue(Property.InternalValue, ValueFormat.EditString) as IList ?? new ArrayList();
+            bool sel = (bool)e.Value;
+            if (!sel) val.Remove(value);
+            else if (!val.Contains(value))
+                val.Add(value);
+            await UpdatePropertyAsync(val);
+        }
+        else await UpdatePropertyAsync(e.Value);
+    }
+}

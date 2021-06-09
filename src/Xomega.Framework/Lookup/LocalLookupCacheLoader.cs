@@ -45,17 +45,18 @@ namespace Xomega.Framework.Lookup
         }
 
         /// <summary>
-        /// Sets input parameters for this cache loader and reloads the local cache based on the new parameters.
+        /// Sets input parameters for this cache loader and reloads the specified cache based on the new parameters.
         /// </summary>
         /// <param name="parameters">New input parameters for the cache loader.</param>
+        /// <param name="cache">The cache to reload.</param>
         /// <param name="token">Cancellation token.</param>
-        public async Task SetParametersAsync(Dictionary<string, object> parameters, CancellationToken token = default)
+        public async Task SetParametersAsync(Dictionary<string, object> parameters, LookupCache cache, CancellationToken token = default)
         {
             Parameters = parameters;
             foreach (var type in supportedTypes)
-                LocalCache.RemoveLookupTable(type);
+                cache.RemoveLookupTable(type);
             foreach (var type in supportedTypes)
-                await LocalCache.GetLookupTableAsync(type, token);
+                await cache.GetLookupTableAsync(type, token);
         }
     }
 }

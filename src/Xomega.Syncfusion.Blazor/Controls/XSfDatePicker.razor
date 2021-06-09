@@ -1,0 +1,61 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.Popups
+@using Xomega.Framework
+@using Xomega.Framework.Properties
+
+@inherits XSfComponent
+
+@if (IsVisible)
+{
+<div class="@Class">
+    <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
+        @if (Property is DateProperty)
+        {
+            <SfDatePicker TValue="DateTime?" @attributes="@AdditionalAttributes" CssClass="@StateClass"
+                          Value="@Value" Enabled="IsEditable" Format="@Format" Width="120px"
+                          @onfocus="OnFocus" @onblur="OnBlur"
+                          ShowClearButton="ShowClearButton"
+                          Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
+                <DatePickerEvents TValue="DateTime?" ValueChange="OnValueChange" />
+            </SfDatePicker>
+        }
+        else if (Property is DateTimeProperty)
+        {
+            <SfDateTimePicker TValue="DateTime?" @attributes="@AdditionalAttributes" CssClass="@StateClass"
+                              Value="@Value" Enabled="IsEditable"
+                              @onfocus="OnFocus" @onblur="OnBlur"
+                              ShowClearButton="ShowClearButton"
+                              Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
+                <DateTimePickerEvents TValue="DateTime?" ValueChange="OnValueChange" />
+            </SfDateTimePicker>
+        }
+        else
+        {
+            <XSfTextBox Property="Property" Placeholder="@Placeholder" ShowLabel="ShowLabel" ShowClearButton="ShowClearButton" />
+        }
+    </SfTooltip>
+</div>
+}
+
+@code
+{
+    [Parameter] public bool ShowClearButton { get; set; }
+
+    [Parameter] public string Format { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (string.IsNullOrEmpty(Format) && Property is DateTimeProperty dtp)
+            Format = dtp.Format;
+    }
+
+    protected DateTime? Value => Property.GetValue(ValueFormat.Internal, Row) as DateTime?;
+
+    public async Task OnValueChange(ChangedEventArgs<DateTime?> args)
+    {
+        await UpdatePropertyAsync(args.Value);
+    }
+}

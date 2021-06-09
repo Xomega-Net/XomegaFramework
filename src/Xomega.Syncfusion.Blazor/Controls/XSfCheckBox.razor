@@ -1,0 +1,27 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using Xomega.Framework.Properties
+
+@inherits XSfComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
+            <SfCheckBox CssClass="@StateClass" Disabled="@(!IsEditable)" EnableTriState="!IsRequired"
+                        TChecked="bool?" Checked="@Value" Indeterminate="@(Value == null)" CheckedChanged="OnValueChanged"
+                        @onfocus="OnFocus" @onblur="OnBlur"
+                        Label="@Label">
+            </SfCheckBox>
+        </SfTooltip>
+    </div>
+}
+
+@code
+{
+    protected bool? Value => (Property as BooleanProperty)?.Value;
+
+    public async Task OnValueChanged(bool? value) => await UpdatePropertyAsync(value);
+}

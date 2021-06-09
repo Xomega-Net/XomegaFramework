@@ -42,41 +42,20 @@ namespace Xomega.Framework.Blazor.Views
         /// The 1-based index of the currently displayed page.
         /// </summary>
         protected int CurrentPage { get; set; } = 1;
-        
+
         /// <summary>
         /// The size of the page to display.
         /// </summary>
         protected int CurrentPageSize { get; set; }
 
         /// <summary>
-        /// Text for the Search button that can be overridden in subclasses.
+        /// Localized text for the title of the search criteria bar.
         /// </summary>
-        protected virtual string SearchText => "Search";
+        protected virtual string CriteriaText => Model?.GetString(Messages.View_Critiera);
 
-        /// <summary>
-        /// Text for the Reset button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string ResetText => "Reset";
-
-        /// <summary>
-        /// Text for the Refresh button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string RefreshText => "Refresh";
-
-        /// <summary>
-        /// Text for the PermaLink button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string PermaLinkText => "PermaLink";
-
-        /// <summary>
-        /// Text for the Select button that can be overridden in subclasses.
-        /// </summary>
-        protected virtual string SelectText => "Select";
-
-        /// <summary>
-        /// Determines whether or not the Select button is visible, which can be overridden in subclasses.
-        /// </summary>
-        protected virtual bool SelectVisible => Model?.Params?[ViewParams.SelectionMode.Param] != null;
+        /// <inheritdoc/>
+        protected override bool FooterVisible => base.FooterVisible ||
+            (ListObject?.SelectAction?.Visible ?? false);
 
         /// <inheritdoc/>
         public override void BindTo(ViewModel viewModel)
@@ -97,13 +76,13 @@ namespace Xomega.Framework.Blazor.Views
         protected virtual async Task OnSearchAsync(MouseEventArgs e)
         {
             await SearchModel?.SearchAsync();
-            CurrentPage = 1;
+            CurrentPage = 1; // reset the current page for new searches
         }
 
         /// <summary>
         /// Default handler for refreshing that delegates the action to the view model.
         /// </summary>
-        protected virtual async Task OnRefreshClicked(MouseEventArgs e) => await OnSearchAsync(e);
+        protected virtual async Task OnRefreshAsync(MouseEventArgs e) => await SearchModel?.SearchAsync();
 
         /// <summary>
         /// Default handler for resetting that delegates the action to the view model.

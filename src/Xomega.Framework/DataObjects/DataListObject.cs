@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework.Operators;
@@ -70,8 +71,23 @@ namespace Xomega.Framework
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            SearchAction = new ActionProperty(this, Messages.Action_Search);
+            SelectAction = new ActionProperty(this, Messages.Action_Select);
+
+            Expression<Func<DataListObject, bool>> xSel = lst => lst.SelectedRows.Any();
+            SelectAction.SetComputedEnabled(xSel, this);
+
             foreach (DataProperty p in Properties) p.Column = ColumnCount++;
-            data.CollectionChanged += (s, e) => FireCollectionChange(e);
+            data.CollectionChanged += (s, e) =>
+            {
+                FireCollectionChange(e);
+                if (e.Action == NotifyCollectionChangedAction.Reset ||
+                    e.OldItems != null && e.OldItems.Cast<DataRow>().Any(r => r.Selected) ||
+                    e.NewItems.Cast<DataRow>().Any(r => r.Selected))
+                {
+                    FireSelectionChanged();
+                }
+            };
         }
 
         /// <summary>
@@ -91,6 +107,12 @@ namespace Xomega.Framework
             Clear();
             modified = null;
         }
+
+        /// <summary>
+        /// The search action associated with this list object,
+        /// which allows controlling the state of the button bound to it.
+        /// </summary>
+        public ActionProperty SearchAction { get; private set; }
 
         #endregion
 
@@ -285,6 +307,12 @@ namespace Xomega.Framework
             FireSelectionChanged();
         }
 
+        /// <summary>
+        /// Select aciton for the list object that can be bound to a select button.
+        /// By default select action is enabled only when the list has any row selected.
+        /// </summary>
+        public ActionProperty SelectAction { get; private set; }
+
         #endregion
 
         #region Applied criteria
@@ -293,11 +321,6 @@ namespace Xomega.Framework
         /// Criteria object assoicated with the current list object
         /// </summary>
         public CriteriaObject CriteriaObject { get; set; }
-
-        /// <summary>
-        /// The name of the property that stores applied criteria
-        /// </summary>
-        public const string AppliedCriteriaProperty = "AppliedCriteria";
 
         private List<FieldCriteriaSetting> appliedCriteria;
 
@@ -310,7 +333,7 @@ namespace Xomega.Framework
             set
             {
                 appliedCriteria = value;
-                OnPropertyChanged(new PropertyChangedEventArgs(AppliedCriteriaProperty));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(AppliedCriteria)));
             }
         }
 
@@ -392,7 +415,7 @@ namespace Xomega.Framework
         /// as well as the parent object on all objects that have been added or deleted.
         /// </summary>
         /// <param name="e">Collection change event arguments.</param>
-        protected void FireCollectionChange(NotifyCollectionChangedEventArgs e)
+        public void FireCollectionChange(NotifyCollectionChangedEventArgs e)
         {
             CollectionChangeFiring = true;
             CollectionChanged?.Invoke(this, e);
@@ -404,10 +427,21 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        public virtual async Task Insert(int index, DataRow row)
+        public virtual void Insert(int index, DataRow row)
         {
             if (row.List != this || index < 0 || index > data.Count) return;
             data.Insert(index, row);
+            SetModified(true, false);
+        }
+
+        /// <summary>
+        /// Insert a new data row at the specified index. The data row should have this list as a parent.
+        /// </summary>
+        /// <param name="index">Index at which to insert a new data row.</param>
+        /// <param name="row">The data row to insert.</param>
+        public virtual async Task InsertAsync(int index, DataRow row)
+        {
+            Insert(index, row);
             await Task.CompletedTask;
         }
 
@@ -418,6 +452,7 @@ namespace Xomega.Framework
         public virtual void RemoveAt(int index)
         {
             if (index < 0 || index >= data.Count) return;
+            SetModified(true, false);
             data.RemoveAt(index);
         }
 
@@ -428,6 +463,7 @@ namespace Xomega.Framework
         public virtual async Task RemoveRows(IEnumerable<DataRow> rows)
         {
             data.RemoveRows(rows.Where(r => r.List == this));
+            SetModified(true, false);
             await Task.CompletedTask;
         }
 
@@ -438,8 +474,38 @@ namespace Xomega.Framework
         /// <param name="newRow">The new row to use.</param>
         public virtual async Task UpdateRow(DataRow row, DataRow newRow)
         {
-            data.ReplaceRow(newRow, row);
-            await Task.CompletedTask;
+            await data.ReplaceRowAsync(newRow, row);
+            SetModified(true, false);
+        }
+
+        /// <summary>
+        /// Overrides the base method to check modification state of the list's rows
+        /// rather than properties or child objects.
+        /// </summary>
+        /// <returns>Modification state of the list object.</returns>
+        public override bool? IsModified()
+        {
+            bool? res = modified;
+            foreach (var row in data)
+            {
+                var rowmod = row.IsModified();
+                if (rowmod.HasValue) res |= rowmod;
+            }
+            return !TrackModifications && res != null ? false : res;
+        }
+
+        /// <summary>
+        /// Overrides the base method to set modification state of the list's rows
+        /// rather than properties or child objects.
+        /// </summary>
+        public override void SetModified(bool? modified, bool recursive)
+        {
+            this.modified = modified;
+            if (recursive)
+            {
+                foreach (var row in data) row.SetModified(modified);
+            }
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Modified)));
         }
 
         #endregion
@@ -474,7 +540,6 @@ namespace Xomega.Framework
             SetModified(false, false);
             data.ReplaceData(rows);
             if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
-            FireSelectionChanged();
         }
 
         /// <summary>
@@ -506,7 +571,6 @@ namespace Xomega.Framework
             SetModified(false, false);
             data.ReplaceData(rows);
             if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
-            FireSelectionChanged();
         }
 
         /// <summary>
@@ -578,11 +642,11 @@ namespace Xomega.Framework
             /// </summary>
             /// <param name="editRow">The edit row to replace the original row.</param>
             /// <param name="originalRow">The original row to replace, or null to use the original row from the specified row.</param>
-            public void ReplaceRow(DataRow editRow, DataRow originalRow = null)
+            public async Task ReplaceRowAsync(DataRow editRow, DataRow originalRow = null)
             {
                 var row = originalRow ?? editRow?.OriginalRow;
                 if (row == null || editRow == null) return;
-                row.CopyFrom(editRow);
+                await row.CopyFromAsync(editRow);
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, editRow, row));
             }
 

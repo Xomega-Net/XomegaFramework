@@ -3,65 +3,92 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Routing
+@using System.Resources
 
 @inject IAuthorizationPolicyProvider AuthPolicyProvider
 @inject IAuthorizationService AuthService
+@inject ResourceManager resources
 
 @if (VisibleItems?.Count() > 0)
 {
-  <ul>
-    @foreach (var mi in VisibleItems)
-    {
-      <li>
-        @if (!string.IsNullOrEmpty(mi.Text))
+    <ul class="@Class list-unstyled" id="@Id">
+        @foreach (var mi in VisibleItems)
         {
-          <NavLink href="@mi.Href">@mi.Text</NavLink>
+        <li class="nav-item">
+            @if (mi.Items?.Count() > 0)
+            {
+                @if (string.IsNullOrEmpty(mi.Href))
+                {
+                    string id = GetId(mi);
+                    string idRef = "#" + id;
+                    <NavLink class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="@idRef"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
+                    <NavMenu Items="@mi.Items" Id="@id" Class="collapse" />
+                }
+                else
+                {
+                    <NavLink class="nav-link" href="@mi.Href" Match="NavLinkMatch.All"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
+                    <NavMenu Items="@mi.Items" />
+                }
+            }
+            else
+            {
+                <NavLink class="nav-link" href="@mi.Href" Match="NavLinkMatch.All"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
+            }
+        </li>
         }
-        <NavMenu Items="@mi.Items" />
-      </li>
-    }
-  </ul>
+    </ul>
 }
 
 @code {
-  [Parameter]
-  public List<MenuItem> Items { get; set; }
 
-  [CascadingParameter]
-  public Task<AuthenticationState> AuthState { get; set; }
+    [Parameter]
+    public string Class { get; set; }
 
-  protected List<MenuItem> VisibleItems;
+    [Parameter]
+    public string Id { get; set; }
 
-  protected override async Task OnParametersSetAsync()
-  {
-    await base.OnParametersSetAsync();
-    VisibleItems = new List<MenuItem>();
-    if (Items != null)
+    protected virtual string GetId(MenuItem mi) => "mi_" + Guid.NewGuid().ToString("N");
+
+    protected virtual string GetText(MenuItem mi) => mi.Text ?? resources.GetString(mi.ResourceKey);
+
+    [Parameter]
+    public List<MenuItem> Items { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    protected List<MenuItem> VisibleItems;
+
+    protected override async Task OnParametersSetAsync()
     {
-      foreach (var mi in Items)
-      {
-        if (await IsAuthorized(mi))
-          VisibleItems.Add(mi);
-      }
+        await base.OnParametersSetAsync();
+        VisibleItems = new List<MenuItem>();
+        if (Items != null)
+        {
+            foreach (var mi in Items)
+            {
+                if (await IsAuthorized(mi))
+                    VisibleItems.Add(mi);
+            }
+        }
     }
-  }
 
-  protected async Task<bool> IsAuthorized(MenuItem mi)
-  {
-    bool authorized = true;
-    if (mi.AuthorizeData != null && AuthState != null)
+    protected async Task<bool> IsAuthorized(MenuItem mi)
     {
-      var curAuthState = await AuthState;
-      var policy = await AuthorizationPolicy.CombineAsync(AuthPolicyProvider, new[] { mi.AuthorizeData });
-      var res = await AuthService.AuthorizeAsync(curAuthState.User, mi, policy);
-      if (!res.Succeeded) authorized = false;
+        bool authorized = true;
+        if (mi.AuthorizeData != null && AuthState != null)
+        {
+            var curAuthState = await AuthState;
+            var policy = await AuthorizationPolicy.CombineAsync(AuthPolicyProvider, new[] { mi.AuthorizeData });
+            var res = await AuthService.AuthorizeAsync(curAuthState.User, mi, policy);
+            if (!res.Succeeded) authorized = false;
+        }
+        if (!authorized || !string.IsNullOrEmpty(mi.Href) || mi.Items == null || mi.Items.Count == 0)
+            return authorized;
+
+        foreach (var i in mi.Items)
+            if (await IsAuthorized(i)) return true;
+
+        return false;
     }
-    if (!authorized || !string.IsNullOrEmpty(mi.Href) || mi.Items == null || mi.Items.Count == 0)
-      return authorized;
-
-    foreach (var i in mi.Items)
-      if (await IsAuthorized(i)) return true;
-
-    return false;
-  }
 }

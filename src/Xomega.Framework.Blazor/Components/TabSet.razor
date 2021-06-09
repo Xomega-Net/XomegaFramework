@@ -1,0 +1,28 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+<div>
+    <CascadingValue Value="this">
+        <ul class="nav nav-tabs">
+            @ChildContent
+        </ul>
+    </CascadingValue>
+    <div>
+        @ActiveTab?.ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public TabPage ActiveTab { get; private set; }
+
+    public void ActivateTab(TabPage tab)
+    {
+        ActiveTab = tab;
+        StateHasChanged();
+    }
+}

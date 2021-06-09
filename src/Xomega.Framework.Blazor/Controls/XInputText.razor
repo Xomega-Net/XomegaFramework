@@ -1,0 +1,31 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+        }
+        <input type="@InputType" id="@ControlId"
+               class="form-control @StateClass" placeholder="@Placeholder"
+               disabled="@(!IsEditable)"
+               maxlength="@MaxLength"
+               value="@Value" @onchange="@OnValueChanged" @onblur="OnBlur"/>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}
+
+@code {
+
+    protected int? MaxLength => IsMultiValue ? null : Property?.Size;
+
+    [Parameter] public string Type { get; set; }
+
+    protected string Value => Property?.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
+
+    protected virtual string InputType => Type ?? "text";
+
+}

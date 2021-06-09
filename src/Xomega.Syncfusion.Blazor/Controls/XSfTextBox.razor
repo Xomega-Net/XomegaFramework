@@ -1,0 +1,35 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Popups
+@using Xomega.Framework
+
+@inherits XSfComponent
+
+@if (IsVisible)
+{
+<div class="@Class">
+    <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
+        <SfTextBox @attributes="@AdditionalAttributes" CssClass="@StateClass" maxlength="@MaxLength" Type="@Type"
+                   Value="@Value" ValueChanged="OnValueChanged" @onfocus="OnFocus" @onblur="OnBlur"
+                   Enabled="IsEditable" ShowClearButton="ShowClearButton" Multiline="Multiline"
+                   Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
+        </SfTextBox>
+    </SfTooltip>
+</div>
+}
+
+@code
+{
+    [Parameter] public bool ShowClearButton { get; set; } = true;
+
+    [Parameter] public bool Multiline { get; set; }
+
+    [Parameter] public InputType Type { get; set; }
+
+    protected string Value => Property.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
+
+    public async Task OnValueChanged(string value) => await UpdatePropertyAsync(value);
+
+    protected int? MaxLength => IsMultiValue ? null : Property?.Size;
+}

@@ -1,0 +1,28 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using System.Text
+
+@inherits XActionComponent
+
+@if (IsVisible)
+{
+    <button type="button" class="@GetButtonClass()" @onclick="OnClick" accesskey="@AccessKey"
+            disabled="@(!IsEnabed)" aria-label="@Label" title="@Label">
+        @if (!NoText)
+            @GetLabel(Label)
+    </button>
+}
+
+@code
+{
+    private string GetButtonClass()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("btn btn");
+        if (Outline) sb.Append("-outline");
+        sb.Append("-").Append(IsPrimary ? "primary" : "secondary");
+        if (!string.IsNullOrEmpty(Class))
+            sb.Append(" ").Append(Class);
+        return sb.ToString();
+    }
+}

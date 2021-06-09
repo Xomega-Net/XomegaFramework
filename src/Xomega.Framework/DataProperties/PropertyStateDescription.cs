@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Xomega.Framework.Properties;
 
 namespace Xomega.Framework
 {
@@ -70,7 +71,10 @@ namespace Xomega.Framework
                                 state.Add(Invalid);
                             else if (err.Errors.Any(e => e.Severity == ErrorSeverity.Warning))
                                 state.Add(Warning);
-                            else state.Add(Valid);
+                            else if (err.Errors.Any() || // info?
+                                // don't mark as valid blank or enum and bool properties, since it's not helpful
+                                !property.IsNull(row) && !(property is EnumProperty) && !(property is BooleanProperty))
+                                state.Add(Valid);
                         }
                     }
                 }

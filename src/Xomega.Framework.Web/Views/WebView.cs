@@ -301,7 +301,7 @@ namespace Xomega.Framework.Web
         {
             DoClose();
             await Model.FireEventAsync(ViewEvent.Closed, token);
-            Dispose();
+            await DisposeAsync(token);
         }
 
         /// <summary>
@@ -319,6 +319,15 @@ namespace Xomega.Framework.Web
         public override void Dispose()
         {
             BindTo(null);
+        }
+
+        /// <summary>
+        /// Asyncrounsly disposes the view by unbinding it from the model
+        /// </summary>
+        public async Task DisposeAsync(CancellationToken token = default)
+        {
+            BindTo(null);
+            await Task.CompletedTask;
         }
 
         /// <summary>

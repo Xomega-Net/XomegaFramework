@@ -9,7 +9,7 @@ namespace Xomega.Framework.Views
     /// <summary>
     /// Base view interface
     /// </summary>
-    public interface IAsyncView : IDisposable
+    public interface IAsyncView
     {
         /// <summary>
         /// Binds the view to its model, or unbinds the current model if null is passed.
@@ -38,5 +38,10 @@ namespace Xomega.Framework.Views
         /// </summary>
         /// <returns>True if the view can be deleted, False otherwise</returns>
         Task<bool> CanDeleteAsync(CancellationToken token = default);
+
+        /// <summary>
+        /// Disposes the view without closing.
+        /// </summary>
+        Task DisposeAsync(CancellationToken token = default);
     }
 }

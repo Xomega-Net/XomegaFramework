@@ -1,9 +1,13 @@
 ﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
+using Xomega.Framework.Lookup;
+using Xomega.Framework.Properties;
 
 namespace Xomega.Framework
 {
@@ -77,11 +81,6 @@ namespace Xomega.Framework
         public bool Selected { get; set; }
 
         /// <summary>
-        /// Dummy parameterless constructor to satisfy creation by Activator.
-        /// </summary>
-        public DataRow() {}
-
-        /// <summary>
         /// Constructs a new data row for the specified data list object.
         /// </summary>
         /// <param name="dataList">Data list object that contains this row.</param>
@@ -89,9 +88,12 @@ namespace Xomega.Framework
         {
             List = dataList;
             for (int i = 0; i < dataList.ColumnCount; i++) data.Add(null); // pre-create columns
+            Editable = new List<bool?>(List.ColumnCount);
+            Editing = new BitArray(List.ColumnCount);
+            Modified = new List<bool?>(List.ColumnCount);
         }
 
-        #region Edit row
+        #region Editing
 
         /// <summary>
         /// Constructs a new edit row for the specified data row.
@@ -99,13 +101,73 @@ namespace Xomega.Framework
         public DataRow(DataRow orignalRow) : this(orignalRow.List)
         {
             OriginalRow = orignalRow;
-            CopyFrom(orignalRow);
         }
 
         /// <summary>
         /// The original data row this row is editing, if any.
         /// </summary>
         public DataRow OriginalRow { get; private set; }
+
+        internal List<bool?> Editable;
+
+        internal bool? GetEditable(BaseProperty property)
+        {
+            var col = property?.Column ?? -1;
+            return col >= 0 && col < Editable.Count ? Editable[col] : null;
+        }
+
+        internal void SetEditable(BaseProperty property, bool? value)
+        {
+            var col = property?.Column ?? -1;
+            if (col >= 0 && col < Editable.Count) Editable[col] = value;
+        }
+
+        internal BitArray Editing;
+
+        internal bool GetEditing(BaseProperty property)
+        {
+            var col = property?.Column ?? -1;
+            return col >= 0 && col < Editing.Length && Editing[col];
+        }
+
+        internal void SetEditing(BaseProperty property, bool value)
+        {
+            var col = property?.Column ?? -1;
+            if (col >= 0 && col < Editing.Length) Editing[col] = value;
+        }
+
+        internal List<bool?> Modified;
+
+        internal bool? GetModified(BaseProperty property)
+        {
+            var col = property?.Column ?? -1;
+            return col >= 0 && col < Modified.Count ? Modified[col] : null;
+        }
+
+        internal void SetModified(BaseProperty property, bool? value)
+        {
+            var col = property?.Column ?? -1;
+            if (col >= 0 && col < Modified.Count) Modified[col] = value;
+        }
+
+        internal void SetModified(bool? value)
+        {
+            for (int i = 0; i < Modified.Count; i++)
+                Modified[i] = value;
+        }
+
+        /// <summary>
+        /// Returns whether or not the row has been modified.
+        /// Null means that the row was just created or cloned, but no properties have been changed.
+        /// </summary>
+        /// <returns>True if the row is modified, false otherwise.</returns>
+        public bool? IsModified()
+        {
+            bool? res = null;
+            foreach (var m in Modified)
+                if (m.HasValue) res |= m;
+            return res;
+        }
 
         #endregion
 
@@ -121,12 +183,32 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Copy of a row from another row.
+        /// Copy data properties' values from another row.
         /// </summary>
         /// <param name="otherRow">Another row to copy from.</param>
+        /// <returns>The task for the operation.</returns>
         public void CopyFrom(DataRow otherRow)
         {
-            for (int i = 0; i < otherRow.data.Count; i++) data[i] = otherRow.data[i];
+            foreach (var prop in List.Properties)
+            {
+                var val = prop.GetValue(ValueFormat.Internal, otherRow);
+                prop.SetValue(val, this);
+            }
+        }
+
+        /// <summary>
+        /// Asyncronously copy data properties' values from another row.
+        /// </summary>
+        /// <param name="otherRow">Another row to copy from.</param>
+        /// <returns>The task for the operation.</returns>
+        public async Task CopyFromAsync(DataRow otherRow)
+        {
+            foreach (var prop in List.Properties)
+            {
+                var val = prop.GetValue(ValueFormat.Internal, otherRow);
+                // call async set to trigger any lookup cache refreshes
+                await prop.SetValueAsync(val, this);
+            }
         }
 
         #region Dynamic object
@@ -164,9 +246,28 @@ namespace Xomega.Framework
 
         #endregion
 
+        #region Lookup Caches
+
+        private readonly Dictionary<string, LookupCache> LookupCaches = new Dictionary<string, LookupCache>();
+
+        internal LookupCache GetLookupCache(EnumProperty property)
+        {
+            string key = property?.Name ?? "";
+            if (LookupCaches.TryGetValue(key, out LookupCache cache)) return cache;
+            if (property.LocalCacheLoader != null)
+            {
+                var newCache = new LookupCache(null, new List<ILookupCacheLoader>() { property.LocalCacheLoader }, LookupCache.Local);
+                LookupCaches[key] = newCache;
+                return newCache;
+            }
+            return null;
+        }
+
+        #endregion
+
         #region Validation
 
-        private Dictionary<string, ErrorList> ValidationErrors = new Dictionary<string, ErrorList>();
+        private readonly Dictionary<string, ErrorList> ValidationErrors = new Dictionary<string, ErrorList>();
 
         /// <summary>
         /// Adds the specified validation error with arguments to the data row.
@@ -251,8 +352,8 @@ namespace Xomega.Framework
                     if (val1 == val2) res = 0;
                     else if (val1 == null && val2 != null) res = -1;
                     else if (val1 != null && val2 == null) res = 1;
-                    else if (val1 is IComparable) res = ((IComparable)val1).CompareTo(val2);
-                    else if (val2 is IComparable) res = -((IComparable)val2).CompareTo(val1);
+                    else if (val1 is IComparable cmp1) res = cmp1.CompareTo(val2);
+                    else if (val2 is IComparable cmp2) res = -cmp2.CompareTo(val1);
                     else res = string.Compare(
                         "" + p.ResolveValue(val1, ValueFormat.DisplayString),
                         "" + p.ResolveValue(val2, ValueFormat.DisplayString));

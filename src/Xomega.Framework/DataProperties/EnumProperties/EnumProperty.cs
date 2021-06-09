@@ -63,6 +63,7 @@ namespace Xomega.Framework.Properties
             ItemsProvider = GetItems;
             AsyncItemsProvider = GetItemsAsync;
             FilterFunc = IsAllowed;
+            FilterTermFunc = MatchesTerm;
             SortField = DefaultSortField;
             Validator += ValidateLookupValue;
         }
@@ -81,11 +82,13 @@ namespace Xomega.Framework.Properties
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
         /// </summary>
-        /// <param name="cachedOnly">True to return only the cached lookup table, False to try to load the it, if it's not cached.</param>
+        /// <param name="cachedOnly">True to return only the cached lookup table, False to try to load it, if it's not cached.</param>
+        /// <param name="row">Data row for which to get the lookup table, or null if the property is not in a data list object.</param>
         /// <returns>The lookup table to be used for the property.</returns>
-        protected virtual LookupTable GetLookupTable(bool cachedOnly = false)
+        protected virtual LookupTable GetLookupTable(bool cachedOnly = false, DataRow row = null)
         {
-            LookupCache cache = LocalCacheLoader?.LocalCache ?? LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
+            LookupCache cache = row?.GetLookupCache(this) ?? LocalCacheLoader?.LocalCache ?? 
+                LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
             string tableType = LocalCacheLoader?.TableType ?? EnumType;
             return cache?.GetLookupTable(tableType, cachedOnly);
         }
@@ -94,11 +97,13 @@ namespace Xomega.Framework.Properties
         /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
         /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
         /// </summary>
+        /// <param name="row">Data row for which to get the lookup table, or null if the property is not in a data list object.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The lookup table to be used for the property.</returns>
-        protected async virtual Task<LookupTable> GetLookupTableAsync(CancellationToken token = default)
+        protected async virtual Task<LookupTable> GetLookupTableAsync(DataRow row = null, CancellationToken token = default)
         {
-            LookupCache cache = LocalCacheLoader?.LocalCache ?? LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
+            LookupCache cache = row?.GetLookupCache(this) ?? LocalCacheLoader?.LocalCache ?? 
+                LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
             string tableType = LocalCacheLoader?.TableType ?? EnumType;
             return await cache?.GetLookupTableAsync(tableType, token);
         }
@@ -115,7 +120,7 @@ namespace Xomega.Framework.Properties
             // If the value is a header with blank id (default format) then the base will return true, which is wrong here.
             if (value is Header) return false;
             // Consider empty string as non-null values if there is a list item with a blank id.
-            if (value is string && ((string)value).Trim().Length == 0)
+            if (value is string vstr && vstr.Trim().Length == 0)
             {
                 Header h = ConvertValue(value, ValueFormat.Internal) as Header;
                 if (h != null && h.IsValid) return false;
@@ -166,7 +171,7 @@ namespace Xomega.Framework.Properties
         }
 
         /// <inheritdoc/>
-        protected override async Task<object> ConvertValueAsync(object value, ValueFormat format, CancellationToken token = default)
+        protected override async Task<object> ConvertValueAsync(object value, ValueFormat format, DataRow row, CancellationToken token = default)
         {
             Header h = value as Header;
             if (format == ValueFormat.Internal)
@@ -179,7 +184,7 @@ namespace Xomega.Framework.Properties
                     if (trimmed.Length > 0)
                         str = trimmed;
                 }
-                LookupTable tbl = await GetLookupTableAsync(token);
+                LookupTable tbl = await GetLookupTableAsync(row, token);
                 if (tbl != null)
                 {
                     h = null;
@@ -189,7 +194,7 @@ namespace Xomega.Framework.Properties
                 }
                 return new Header(EnumType, str);
             }
-            return await base.ConvertValueAsync(value, format, token);
+            return await base.ConvertValueAsync(value, format, row, token);
         }
 
         /// <summary>
@@ -220,7 +225,7 @@ namespace Xomega.Framework.Properties
         /// <returns>A list of possible values.</returns>
         protected virtual IEnumerable GetItems(object input, DataRow row)
         {
-            LookupTable tbl = GetLookupTable();
+            LookupTable tbl = GetLookupTable(false, row);
             if (tbl != null)
             {
                 IEnumerable<Header> res = tbl.GetValues(FilterFunc, row);
@@ -248,10 +253,13 @@ namespace Xomega.Framework.Properties
         /// <returns>A list of possible values.</returns>
         protected async virtual Task<IEnumerable> GetItemsAsync(object input, DataRow row, CancellationToken token = default)
         {
-            LookupTable tbl = await GetLookupTableAsync(token);
+            LookupTable tbl = await GetLookupTableAsync(row, token);
             if (tbl != null)
             {
-                IEnumerable<Header> res = tbl.GetValues(FilterFunc, row);
+                Func<Header, DataRow, bool> filter = FilterFunc;
+                if (input != null && FilterTermFunc != null)
+                    filter = (h, r) => (FilterFunc?.Invoke(h, r) ?? true) && FilterTermFunc(input, h, r);
+                IEnumerable<Header> res = tbl.GetValues(filter, row);
                 if (SortField != null) res = res.OrderBy(SortField);
                 foreach (Header h in res)
                 {
@@ -266,7 +274,7 @@ namespace Xomega.Framework.Properties
 
         /// <summary>
         /// Checks if the given header is an allowed possible value.
-        /// By default all active headers are allowed.
+        /// By default current property values or all active headers are allowed.
         /// This is the default filter function.
         /// </summary>
         /// <param name="h">The header to check.</param>
@@ -274,7 +282,38 @@ namespace Xomega.Framework.Properties
         /// <returns>True if the header value is allowed, false otherwise.</returns>
         public virtual bool IsAllowed(Header h, DataRow row = null)
         {
-            return h != null && h.IsActive && MatchesCascadingProperties(h, row);
+            return h != null && (h.IsActive || MatchesCurrentValue(h, row)) && MatchesCascadingProperties(h, row);
+        }
+
+        /// <summary>
+        /// Checks if the provided value matches any of the current property values.
+        /// </summary>
+        /// <param name="h">The header to check.</param>
+        /// <param name="row">The data row context, if any.</param>
+        /// <returns>True if the header value matches current property value(s), false otherwise.</returns>
+        public virtual bool MatchesCurrentValue(Header h, DataRow row = null)
+        {
+            if (IsNull(row)) return false;
+            object v = GetValue(ValueFormat.Internal, row);
+            if (v is IList<object> vl) return vl.Contains(h);
+            else return v.Equals(h);
+        }
+
+        /// <summary>
+        /// Checks if the provided value matches the specified input term.
+        /// </summary>
+        /// <param name="inputTerm">Intput term to match the value against.</param>
+        /// <param name="h">The header to check.</param>
+        /// <param name="row">The data row context, if any.</param>
+        /// <returns>True if the header value matches the input term, false otherwise.</returns>
+        public virtual bool MatchesTerm(object inputTerm, Header h, DataRow row = null)
+        {
+            string s = inputTerm?.ToString();
+            string edit = ConvertValue(h, ValueFormat.EditString)?.ToString();
+            string disp = ConvertValue(h, ValueFormat.DisplayString)?.ToString();
+            return string.IsNullOrEmpty(s) || 
+                edit != null && edit.IndexOf(s, 0, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                disp != null && disp.IndexOf(s, 0, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         /// <summary>
@@ -282,6 +321,12 @@ namespace Xomega.Framework.Properties
         /// By default only active items are allowed.
         /// </summary>
         public Func<Header, DataRow, bool> FilterFunc;
+
+        /// <summary>
+        /// A function to filter allowed items based on the specified term.
+        /// By default only active items are allowed.
+        /// </summary>
+        public Func<object, Header, DataRow, bool> FilterTermFunc;
 
         /// <summary>
         /// A function that extracts an item field to be used for sorting.
@@ -362,13 +407,25 @@ namespace Xomega.Framework.Properties
         {
             if (!e.Change.IncludesValue() || LocalCacheLoader == null || Equals(e.OldValue, e.NewValue)) return;
 
-            var newParams = new Dictionary<string, object>();
-            foreach (string key in cacheLoaderSources.Keys)
-                newParams[key] = cacheLoaderSources[key].TransportValue;
-            await LocalCacheLoader.SetParametersAsync(newParams, token);
+            await RefreshLocalCache(e.Row, token);
             await ClearInvalidValues(e.Row, token);
 
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
+        }
+
+        /// <summary>
+        /// A method to allow manually refreshing the local cache as opposed to automatic refreshes
+        /// based on the dependent properties' changes.
+        /// </summary>
+        /// <param name="row">The row for which to refresh the local cache, or null to refresh it for the property.</param>
+        /// <param name="token">Cancellation token.</param>
+        public virtual async Task RefreshLocalCache(DataRow row = null, CancellationToken token = default)
+        {
+            var newParams = new Dictionary<string, object>();
+            foreach (string key in cacheLoaderSources.Keys)
+                newParams[key] = cacheLoaderSources[key].GetValue(ValueFormat.Transport, row);
+            var cache = row?.GetLookupCache(this) ?? LocalCacheLoader.LocalCache;
+            await LocalCacheLoader.SetParametersAsync(newParams, cache, token);
         }
 
         /// <summary>

@@ -1,0 +1,63 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@inherits XOptionsComponent<object>
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        <div class="row g-0 @StateClass">
+            @if (IsEditable)
+            {
+                <div class="col">
+                    <label class="form-label">@AvailableLabel</label>
+                    <select class="form-select" @ref="AvailableList" multiple="@IsMultiValue" size="@Rows">
+                        @if (Property != null)
+                        {
+                            var selected = SelectedItems;
+                            @foreach (var i in AvailableItems)
+                            {
+                                if (selected.Contains(i)) continue;
+                                var val = Property.ValueToString(i, ValueFormat.EditString);
+                                <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-auto d-flex flex-column justify-content-center mx-3" style="margin-top: 28px">
+                    <div class="btn-group-vertical">
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="@AddAll" title="@GetString(Messages.PickList_AddAll)">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="@Add" title="@GetString(Messages.PickList_Add)">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="@Remove" title="@GetString(Messages.PickList_Remove)">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="@RemoveAll" title="@GetString(Messages.PickList_RemoveAll)">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+            <div class="col">
+                <label class="form-label col @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(SelectedLabel)</label>
+                <select class="form-select col @StateClass" id="@ControlId" @ref="SelectedList" multiple="@IsMultiValue" size="@Rows">
+                    @if (Property != null)
+                    {
+                        @foreach (var i in SelectedItems)
+                        {
+                            var val = Property.ValueToString(i, ValueFormat.EditString);
+                            <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="@ErrorsClass">@ErrorsText</div>
+    </div>
+}

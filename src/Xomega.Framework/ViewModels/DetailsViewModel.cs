@@ -42,7 +42,7 @@ namespace Xomega.Framework.Views
         {
             if (!await base.ActivateAsync(parameters, token) || DetailsObject == null) return false;
 
-            InitializeObject();
+            await InitializeObjectAsync(token);
 
             if (ViewParams.Action.Create != Params[ViewParams.Action.Param])
                 await LoadDataAsync(false, token);
@@ -56,6 +56,18 @@ namespace Xomega.Framework.Views
         protected virtual void InitializeObject()
         {
             DetailsObject.SetValues(Params);
+
+            if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
+                DetailsObject.SetModified(false, true);
+        }
+
+        /// <summary>
+        /// Initializes view model's details object asynchronously.
+        /// </summary>
+        protected virtual async Task InitializeObjectAsync(CancellationToken token)
+        {
+            await DetailsObject.UpdateComputedAsync(token);
+            await DetailsObject.SetValuesAsync(Params, token);
 
             if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
                 DetailsObject.SetModified(false, true);
@@ -87,8 +99,8 @@ namespace Xomega.Framework.Views
         /// <param name="e">Property chang event arguments.</param>
         protected virtual void OnDetailsObjectChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == DataObject.ModifiedProperty ||
-                e.PropertyName == DataObject.IsNewProperty)
+            if (e.PropertyName == nameof(DataObject.Modified) ||
+                e.PropertyName == nameof(DataObject.IsNew))
                 OnPropertyChanged(new PropertyChangedEventArgs(ViewTitleProperty));
         }
 
@@ -251,7 +263,7 @@ namespace Xomega.Framework.Views
         /// A function that determines if the current object can be saved.
         /// </summary>
         /// <returns></returns>
-        public virtual bool SaveEnabled() => true;
+        public virtual bool SaveEnabled() => DetailsObject != null && (!DetailsObject.TrackModifications || (DetailsObject.IsModified() ?? false));
 
         /// <summary>
         /// Handler for deleting the object displayed in the current view.

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>3.2.1</Version>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <PackageId>Xomega.Syncfusion.Blazor</PackageId>
+    <Authors>Xomega Team</Authors>
+    <Company>Xomega.Net</Company>
+    <Product>Xomega.Framework</Product>
+    <Copyright>Copyright © Xomega.Net 2021</Copyright>
+    <Description>Xomega framework for building Blazor apps with Syncfusion components.</Description>
+    <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
+    <PackageTags>ASP.NET Blazor Xomega Syncfusion</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>../pkg/$(PackageId).$(Version)</PackageOutputPath>
+    <DocumentationFile>bin/Xomega.Syncfusion.Blazor.xml</DocumentationFile>
+    <PackageIcon>Logo.png</PackageIcon>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RootNamespace>Xomega._Syncfusion.Blazor</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="19.1.0.59" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xomega.Framework.Blazor\Xomega.Framework.Blazor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

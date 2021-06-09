@@ -1,0 +1,31 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Popups
+@using Xomega.Framework
+
+@inherits XSfOptionsComponent<Header>
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
+            <SfAutoComplete TValue="string" TItem="Header" Enabled="@(IsEditable)" AllowCustom="AllowCustom"
+                            @attributes="@AdditionalAttributes" CssClass="@StateClass"
+                            Value="GetStringValue()" ShowClearButton="@(!IsRequired)"
+                            DataSource="AvailableItems" AllowFiltering="AllowFiltering"
+                            Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
+                <AutoCompleteEvents TValue="string" TItem="Header"
+                                    Focus="() => OnFocus(null)" Blur="() => OnBlur(null)"
+                                    ValueChange="OnValueChanged" CustomValueSpecifier="OnCustomValue" />
+                <AutoCompleteFieldSettings Text="Text" Value="Id" GroupBy="@GroupByAttribute" />
+                <AutoCompleteTemplates GroupTemplate="GroupTemplate" ItemTemplate="ItemDisplayTemplate" />
+            </SfAutoComplete>
+        </SfTooltip>
+    </div>
+}
+
+@code
+{
+    [Parameter] public bool AllowCustom { get; set; }
+}

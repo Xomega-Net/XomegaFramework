@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,11 +35,6 @@ namespace Xomega.Framework
         }
 
         #region Property value(s) accessors
-
-        /// <summary>
-        /// The column index of the property when it is part of a data list object.
-        /// </summary>
-        internal int Column { get; set; } = -1;
 
         /// <summary>
         /// The property value as it is stored internally.
@@ -110,10 +106,11 @@ namespace Xomega.Framework
             else if (row != null && row.List == parent)
                 row[Column] = newValue;
 
+            bool sameValue = ValuesEqual(oldValue, newValue);
             // update Modified flag, make sure to not set it back from true to false
-            if (!Modified.HasValue) Modified = false;
-            else if (!Equals(oldValue, newValue)) Modified = true;
-            ResetValidation(row);
+            if (GetModified(row) == null) SetModified(false, row);
+            else if (!sameValue) SetModified(true, row);
+            if (!sameValue) ResetValidation(row);
             FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row));
         }
 
@@ -128,18 +125,32 @@ namespace Xomega.Framework
         public async Task SetValueAsync(object val, DataRow row = null, CancellationToken token = default)
         {
             object oldValue = GetValue(ValueFormat.Internal, row);
-            object newValue = await ResolveValueAsync(val, ValueFormat.Internal);
+            object newValue = await ResolveValueAsync(val, ValueFormat.Internal, row);
 
             if (Column < 0)
                 InternalValue = newValue;
             else if (row != null && row.List == parent)
                 row[Column] = newValue;
 
+            bool sameValue = ValuesEqual(oldValue, newValue);
             // update Modified flag, make sure to not set it back from true to false
-            if (!Modified.HasValue) Modified = false;
-            else if (!Equals(oldValue, newValue)) Modified = true;
-            ResetValidation(row);
+            if (GetModified(row) == null) SetModified(false, row);
+            else if (!sameValue) SetModified(true, row);
+            if (!sameValue) ResetValidation(row);
             await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row), token);
+        }
+
+        /// <summary>
+        /// Compares to values for equality, using SequenceEqual for comparing lists of values.
+        /// </summary>
+        /// <param name="val1">The first value to compare.</param>
+        /// <param name="val2">The second value to compare.</param>
+        /// <returns>True, if values are equal, false otherwise.</returns>
+        protected virtual bool ValuesEqual(object val1, object val2)
+        {
+            if (val1 is IList lst1 && val2 is IList lst2)
+                return lst1.Cast<object>().SequenceEqual(lst2.Cast<object>());
+            else return Equals(val1, val2);
         }
 
         /// <summary>
@@ -158,12 +169,39 @@ namespace Xomega.Framework
             Modified = null;
         }
 
+        #endregion
+
+        #region Modification support
+
+        private bool? modified;
+
         /// <summary>
         /// Tracks the modification state of the property. Null means the property value has never been set.
         /// False means the value has been set only once (initialized).
         /// True means that the value has been modified since it was initialized.
         /// </summary>
-        public bool? Modified { get; set; }
+        public bool? Modified { get => GetModified(null); set => SetModified(value, null); }
+
+        /// <summary>
+        /// Gets modification state of the current property for the specified row.
+        /// If the row is null or this property was not set in the row,
+        /// then it returns the modified flag for this property.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public bool? GetModified(DataRow row) => row?.GetModified(this) ?? modified;
+
+        /// <summary>
+        /// Sets the modification state of the current property for the specified row
+        /// or for the entire property, if the row is null.
+        /// </summary>
+        /// <param name="value">The modification state to set.</param>
+        /// <param name="row">The row, for which to set the value, or null to set it for the property.</param>
+        public void SetModified(bool? value, DataRow row)
+        {
+            if (row != null) row.SetModified(this, value);
+            else modified = value;
+        }
 
         #endregion
 
@@ -312,9 +350,9 @@ namespace Xomega.Framework
         {
             if (value == null) return true;
             if (value is IList lst && lst.Count == 0) return true;
-            if (value is string)
+            if (value is string vstr)
             {
-                string str = ((string)value).Trim();
+                string str = vstr.Trim();
                 return string.IsNullOrEmpty(str) || str == NullString;
             }
             return false; // non-null non-string
@@ -343,10 +381,10 @@ namespace Xomega.Framework
             if (IsMultiValued)
             {
                 IList lst = new List<object>();
-                if (value is IList) lst = (IList)value;
-                else if (value is string)
+                if (value is IList vlist) lst = vlist;
+                else if (value is string vstr)
                 {
-                    string[] vals = ((string)value).Split(
+                    string[] vals = vstr.Split(
                         ParseListSeparators, StringSplitOptions.None);
                     foreach (string val in vals)
                         if (!IsValueNull(val, format)) lst.Add(val.Trim());
@@ -382,9 +420,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="value">The value or list of values to resolve to the given format.</param>
         /// <param name="format">The format to convert the value to.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>A value or a list of values resolved to the given format based on the property configuration.</returns>
-        public async Task<object> ResolveValueAsync(object value, ValueFormat format, CancellationToken token = default)
+        public async Task<object> ResolveValueAsync(object value, ValueFormat format, DataRow row, CancellationToken token = default)
         {
             if (IsRestricted())
                 return format.IsString() ? RestrictedString : value;
@@ -409,7 +448,7 @@ namespace Xomega.Framework
                 {
                     object cval = val;
                     if (AsyncValueConverter == null || !await AsyncValueConverter(ref cval, format, token))
-                        cval = await ConvertValueAsync(cval, format, token);
+                        cval = await ConvertValueAsync(cval, format, row, token);
                     if (!IsValueNull(cval, format)) resLst.Add(cval);
                 }
                 return resLst;
@@ -418,7 +457,7 @@ namespace Xomega.Framework
             {
                 object cval = value;
                 if (AsyncValueConverter == null || !await AsyncValueConverter(ref cval, format, token))
-                    cval = await ConvertValueAsync(cval, format, token);
+                    cval = await ConvertValueAsync(cval, format, row, token);
                 return cval;
             }
         }
@@ -482,9 +521,10 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="value">A single value to convert to the given format.</param>
         /// <param name="format">The value format to convert the value to.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The value converted to the given format.</returns>
-        protected virtual async Task<object> ConvertValueAsync(object value, ValueFormat format, CancellationToken token = default) => 
+        protected virtual async Task<object> ConvertValueAsync(object value, ValueFormat format, DataRow row, CancellationToken token = default) =>
             await Task.FromResult(ConvertValue(value, format));
 
         #endregion
@@ -498,7 +538,7 @@ namespace Xomega.Framework
         /// <param name="args">The callback arguments.</param>
         protected void ValidateOnStopEditing(object sender, PropertyChangeEventArgs args)
         {
-            if (this == sender && args.Change.IncludesEditing() && !Editing) Validate(args.Row);
+            if (this == sender && args.Change.IncludesEditing() && !GetEditing(args.Row)) Validate(args.Row);
         }
 
         /// <summary>
@@ -574,7 +614,11 @@ namespace Xomega.Framework
             if (force) ResetValidation(row);
 
             var errors = GetValidationErrors(row);
-            if (errors != null) return;
+            if (errors != null)
+            {
+                FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Validation, null, null, row));
+                return;
+            }
 
             if (row != null) row.AddValidationError(this, null);
             else validationErrors = parent?.NewErrorList() ?? new ErrorList();

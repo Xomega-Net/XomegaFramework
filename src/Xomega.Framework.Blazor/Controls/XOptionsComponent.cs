@@ -23,41 +23,45 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// Items for the list of options based on the current property values.
         /// </summary>
-        protected IEnumerable Items => IsEditable ? AvailableItems : SelectedItems;
+        protected IEnumerable<T> Items => IsEditable ? AvailableItems : SelectedItems;
 
         /// <summary>
         /// A list of possible values for the property.
         /// </summary>
-        protected IEnumerable AvailableItems { get; set; } = new ArrayList();
+        protected IList<T> AvailableItems { get; set; } = new List<T>();
 
         /// <summary>
         /// Get a list of possible values for the property.
         /// </summary>
-        protected async Task GetAvailableItems(CancellationToken token = default)
+        protected async Task GetAvailableItems(object arg, CancellationToken token = default)
         {
             if (Property?.AsyncItemsProvider != null)
-                AvailableItems = await Property.AsyncItemsProvider(null, Row, token);
+            {
+                var items = await Property.AsyncItemsProvider(arg, Row, token);
+                if (items != null)
+                    AvailableItems = items.Cast<T>().ToList();
+            }
         }
 
         /// <inheritdoc/>
         protected async override Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            await GetAvailableItems();
+            await GetAvailableItems(null);
         }
 
         /// <inheritdoc/>
         protected async override Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
         {
-            if (e.Change.IncludesItems())
-                await GetAvailableItems(token);
+            if (e.Change.IncludesItems() && Equals(Row, e.Row))
+                await GetAvailableItems(null, token);
             await base.OnPropertyChangeAsync(sender, e, token);
         }
 
         /// <summary>
         /// A list of selected/current value(s) of the property.
         /// </summary>
-        protected IList SelectedItems => GetSelectedItems(ValueFormat.Internal);
+        protected IList<T> SelectedItems => GetSelectedItems(ValueFormat.Internal).Cast<T>().ToList();
 
         /// <summary>
         /// A list of selected/current value(s) of the property in the specified format.
@@ -78,8 +82,7 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// Custom template for displaying item options.
         /// </summary>
-        [Parameter]
-        public RenderFragment<T> ItemDisplayTemplate { get; set; }
+        [Parameter] public RenderFragment<T> ItemDisplayTemplate { get; set; }
 
         /// <summary>
         /// Actual template for displaying item options, which could be custom or a default.
@@ -106,6 +109,6 @@ namespace Xomega.Framework.Blazor
         /// <param name="selectElement">Select element to get the values from.</param>
         /// <returns>A list of selected values for the specified element.</returns>
         protected virtual async Task<List<string>> GetSelectedValues(ElementReference selectElement)
-            => (await JSRuntime.InvokeAsync<List<string>>("xomegaControls.getSelectedValues", selectElement)).ToList();
+            => (await JSRuntime.InvokeAsync<List<string>>("xfk.getSelectedValues", selectElement)).ToList();
     }
 }

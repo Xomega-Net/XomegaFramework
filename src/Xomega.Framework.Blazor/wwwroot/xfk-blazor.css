@@ -1,0 +1,44 @@
+﻿/* Copyright (c) 2021 Xomega.Net. All rights reserved. */
+
+/* criteria summary styles */
+.cs-field {
+  text-decoration: underline
+}
+
+.cs-value {
+  font-weight: 700
+}
+
+/* grid styles */
+
+.table th .sort-index {
+  font-size: x-small;
+}
+
+.form-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* make labels for invalid fields red */
+.form-label.is-invalid {
+  color: #dc3545;
+}
+
+/* mark labels for required fields with a leading red asterisk */
+.form-label.required:before {
+  content: "* ";
+  color: #dc3545;
+}
+
+.form-control-plaintext {
+  outline: none;
+}
+
+/* fix form auto-complete to show feedback, since it needs to be wrapped in a dropdown div */
+.dropdown.is-invalid~.invalid-feedback {
+  display: block;
+}

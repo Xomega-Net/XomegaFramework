@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Xomega.Framework.Properties;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Xomega.Framework
 {
@@ -13,7 +15,6 @@ namespace Xomega.Framework
     /// </summary>
     public abstract class CriteriaObject : DataObject
     {
-
         /// <summary>
         /// Constructs a new criteria object
         /// </summary>
@@ -35,6 +36,18 @@ namespace Xomega.Framework
         public override void SetValues(NameValueCollection nvc)
         {
             base.SetValues(nvc);
+            AdjustOperators();
+        }
+
+        /// <inheritdoc/>
+        public async override Task SetValuesAsync(NameValueCollection nvc, CancellationToken token)
+        {
+            await base.SetValuesAsync(nvc, token);
+            AdjustOperators();
+        }
+
+        private void AdjustOperators()
+        {
             // clear operators, for which associated properties are blank
             foreach (DataProperty p in Properties.Where(p => p is OperatorProperty).ToList())
             {

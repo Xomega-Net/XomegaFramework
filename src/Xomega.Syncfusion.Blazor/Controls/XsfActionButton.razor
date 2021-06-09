@@ -1,0 +1,27 @@
+﻿@* Copyright (c) 2021 Xomega.Net. All rights reserved. *@
+
+@using Syncfusion.Blazor.Buttons  
+@using System.Text
+@using Xomega.Framework.Blazor
+
+@inherits XActionComponent
+
+@if (IsVisible)
+{
+    <SfButton IsPrimary="IsPrimary" CssClass="@GetButtonClass()"
+              Disabled="@(!IsEnabed)" OnClick="OnClick">
+        @if (!NoText)@Label
+    </SfButton>
+}
+
+@code
+{
+    private string GetButtonClass()
+    {
+        StringBuilder sb = new StringBuilder();
+        if (Outline) sb.Append("e-outline");
+        if (!string.IsNullOrEmpty(Class))
+            sb.Append(" ").Append(Class);
+        return sb.ToString();
+    }
+}
