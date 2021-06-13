@@ -138,8 +138,11 @@ namespace Xomega.Framework
             {
                 bool b = PreventModelUpdate;
                 PreventModelUpdate = true;
-                element.Dispatcher.InvokeAsync(async () => await UpdateElementAsync(e.Change));
-                PreventModelUpdate = b;
+                element.Dispatcher.InvokeAsync(async () =>
+                {
+                    await UpdateElementAsync(e.Change);
+                    PreventModelUpdate = b;
+                });
             }
         }
 

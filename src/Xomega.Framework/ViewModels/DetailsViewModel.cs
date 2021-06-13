@@ -55,6 +55,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         protected virtual void InitializeObject()
         {
+            DetailsObject.UpdateComputed();
             DetailsObject.SetValues(Params);
 
             if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
@@ -66,7 +67,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         protected virtual async Task InitializeObjectAsync(CancellationToken token)
         {
-            await DetailsObject.UpdateComputedAsync(token);
+            DetailsObject.UpdateComputed();
             await DetailsObject.SetValuesAsync(Params, token);
 
             if (ViewParams.Action.Create == Params[ViewParams.Action.Param])
@@ -263,7 +264,7 @@ namespace Xomega.Framework.Views
         /// A function that determines if the current object can be saved.
         /// </summary>
         /// <returns></returns>
-        public virtual bool SaveEnabled() => DetailsObject != null && (!DetailsObject.TrackModifications || (DetailsObject.IsModified() ?? false));
+        public virtual bool SaveEnabled() => true;
 
         /// <summary>
         /// Handler for deleting the object displayed in the current view.

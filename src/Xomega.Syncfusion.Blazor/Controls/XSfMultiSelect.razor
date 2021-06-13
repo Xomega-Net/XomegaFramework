@@ -37,9 +37,9 @@
 
     private SfMultiSelect<string[], Header> sfMS;
 
-    protected async override Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+    protected override void OnPropertyChange(PropertyChangeEventArgs e)
     {
-        await base.OnPropertyChangeAsync(sender, e, token);
+        base.OnPropertyChange(e);
 
         if (sfMS == null || Property == null || !e.Change.IncludesValidation()) return;
 

@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using Xomega.Framework.Properties;
 
@@ -88,10 +89,32 @@ namespace Xomega.Framework.Web
                     if (internalValue is List<Header> Values)
                         value = Values.Where(h => enumProp.FilterFunc(h, row)).ToList();
                 }
-                else if (internalValue is Header && !enumProp.FilterFunc((Header)internalValue, row)) value = null;
+                else if (internalValue is Header hdr && !enumProp.FilterFunc(hdr, row)) value = null;
             }
 
             base.UpdateProperty(value);
+        }
+
+        /// <summary>
+        /// Updates the property with the given value from the element.
+        /// Overrides the base property to prevent setting values that are not in the list
+        /// similar to the EnumProperty.CascadingPropertyChange
+        /// </summary>
+        /// <param name="value">The value to set on the data property.</param>
+        protected override async Task UpdatePropertyAsync(object value)
+        {
+            if (property is EnumProperty enumProp && enumProp.FilterFunc != null)
+            {
+                object internalValue = await enumProp.ResolveValueAsync(value, ValueFormat.Internal, row);
+                if (enumProp.IsMultiValued)
+                {
+                    if (internalValue is List<Header> Values)
+                        value = Values.Where(h => enumProp.FilterFunc(h, row)).ToList();
+                }
+                else if (internalValue is Header hdr && !enumProp.FilterFunc(hdr, row)) value = null;
+            }
+
+            await base.UpdatePropertyAsync(value);
         }
 
         /// <summary>

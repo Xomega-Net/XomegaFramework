@@ -30,5 +30,12 @@ namespace Xomega.Framework
             if (property is DataProperty dp)
                 await dp.SetValueAsync(GetComputedValue(row), row);
         }
+
+        /// <inheritdoc/>
+        public override void Update(DataRow row)
+        {
+            if (property is DataProperty dp)
+                dp.SetValue(GetComputedValue(row), row);
+        }
     }
 }

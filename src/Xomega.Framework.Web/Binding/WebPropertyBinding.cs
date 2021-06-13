@@ -161,13 +161,27 @@ namespace Xomega.Framework.Web
         {
             control = ctl;
 
-            if (ctl.Page != null)
-                PostedValue = ctl.Page.Request.Form[control.UniqueID];
+            if (ctl.Page == null) return;
 
-            // defer posting value until all controls are property bound
-            ctl.Load += delegate {
-                if (property != null && PostedValue != null) UpdateProperty(PostedValue);
-            };
+            PostedValue = ctl.Page.Request.Form[control.UniqueID];
+
+            if (ctl.Page.IsAsync)
+            {
+                // defer posting value to the async phase
+                ctl.Page.RegisterAsyncTask(new PageAsyncTask(async () =>
+                {
+                    if (property != null && PostedValue != null)
+                        await UpdatePropertyAsync(PostedValue);
+                }));
+            }
+            else
+            {
+                // defer posting value until all controls are property bound
+                ctl.Load += delegate {
+                    if (property != null && PostedValue != null)
+                        UpdateProperty(PostedValue);
+                };
+            }
             ctl.Unload += delegate { Dispose(); };
         }
 

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.DropDowns;
 using Syncfusion.Blazor.Grids;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework;
 using Xomega.Framework.Properties;
@@ -72,16 +71,18 @@ namespace Xomega._Syncfusion.Blazor
                 HeaderText = prop.Label;
             else prop.Label = HeaderText;
 
-            prop.AsyncChange += OnPropertyChange;
+            prop.Change += OnPropertyChange;
         }
 
-        private async Task OnPropertyChange(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        private void OnPropertyChange(object sender, PropertyChangeEventArgs e)
         {
-            if (e.Change.IncludesVisible() && MainParent is XSfGrid grid)
-            {
-                if (Property.Visible) await grid.Show(new string[] { HeaderText });
-                else await grid.Hide(new string[] { HeaderText });
-            }
+            InvokeAsync(async () => {
+                if (e.Change.IncludesVisible() && MainParent is XSfGrid grid)
+                {
+                    if (Property.Visible) await grid.Show(new string[] { HeaderText });
+                    else await grid.Hide(new string[] { HeaderText });
+                }
+            });
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace Xomega._Syncfusion.Blazor
         {
             var prop = Property;
             if (prop != null)
-                prop.AsyncChange -= OnPropertyChange;
+                prop.Change -= OnPropertyChange;
             base.Dispose();
         }
 

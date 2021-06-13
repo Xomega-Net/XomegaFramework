@@ -36,7 +36,7 @@ namespace Xomega.Framework.Web
                 if (property != null && control.Page != null && !PreventModelUpdate)
                 {
                     PostedValue = control.Page.Request.Form[control.UniqueID];
-                    UpdateProperty(PostedValue == null ? false : true);
+                    UpdateProperty(PostedValue != null);
                 }
             };
         }
@@ -66,7 +66,7 @@ namespace Xomega.Framework.Web
             if (property == null) return;
 
             object val = property.GetValue(ValueFormat.Internal, row);
-            bool check =  val is bool && (bool)val;
+            bool check =  val is bool b && b;
             if (change.IncludesValue())
             {
                 ((CheckBox)control).Checked = check;

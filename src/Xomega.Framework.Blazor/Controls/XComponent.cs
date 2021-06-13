@@ -160,32 +160,38 @@ namespace Xomega.Framework.Blazor
             base.OnParametersSet();
             if (property != null)
             {
-                property.AsyncChange += OnPropertyChangeAsync;
+                property.Change += OnPropertyChange;
                 if (AccessKey == null)
                     AccessKey = property.AccessKey;
             }
         }
 
         /// <summary>
-        /// Handles async property change events by refreshing the component, if the change is
-        /// obsereved by the component.
+        /// Handles property change events.
         /// </summary>
         /// <param name="sender">Sender of the property change.</param>
         /// <param name="e">Property change details.</param>
-        /// <param name="token">Cancellation token.</param>
-        protected async virtual Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        protected void OnPropertyChange(object sender, PropertyChangeEventArgs e)
+        {
+            InvokeAsync(() => OnPropertyChange(e));
+        }
+
+        /// <summary>
+        /// Handles property change events by refreshing the component, if the change is obsereved by the component.
+        /// </summary>
+        /// <param name="e">Property change details.</param>
+        protected virtual void OnPropertyChange(PropertyChangeEventArgs e)
         {
             if (e.Change.IncludesChanges(ObservedChanges))
+                StateHasChanged();
+
+            if (EditContext != null)
             {
-                await InvokeAsync(() =>
-                {
-                    StateHasChanged();
-                });
+                if (e.Change.IncludesValidation())
+                    EditContext.NotifyValidationStateChanged();
+                if (e.Change.IncludesValue())
+                    EditContext.NotifyFieldChanged(EditContext.Field(Property.Name));
             }
-            if (e.Change.IncludesValidation() && EditContext != null)
-                EditContext.NotifyValidationStateChanged();
-            if (e.Change.IncludesValue() && EditContext != null)
-                EditContext.NotifyFieldChanged(EditContext.Field(Property.Name));
         }
 
         /// <summary>
@@ -236,10 +242,10 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// Disposes the component and unbinds from the property.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (property != null)
-                property.AsyncChange -= OnPropertyChangeAsync;
+                property.Change -= OnPropertyChange;
         }
     }
 }

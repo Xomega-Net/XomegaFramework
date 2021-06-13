@@ -27,10 +27,9 @@ namespace Xomega.Framework
         }
 
         /// <inheritdoc/>
-        public override Task UpdateAsync(DataRow row, CancellationToken token)
+        public override void Update(DataRow row)
         {
             property.Editable = (bool)GetComputedValue(row);
-            return Task.CompletedTask;
         }
     }
 }

@@ -410,7 +410,7 @@ namespace Xomega.Framework.Properties
             await RefreshLocalCache(e.Row, token);
             await ClearInvalidValues(e.Row, token);
 
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
+            await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Items, null, null, e.Row));
         }
 
         /// <summary>

@@ -4,8 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq.Expressions;
 using System.Resources;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -58,9 +56,7 @@ namespace Xomega.Framework
         /// Manually updates the property enabled (editable) flag with the computed result,
         /// in addition to automatic updates when the underlying properties change.
         /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>The task for the asynchronous operation.</returns>
-        public async Task UpdateComputedEnabedAsync(CancellationToken token = default) => await UpdateComputedEditableAsync(token);
+        public void UpdateComputedEnabed() => UpdateComputedEditable();
                 
         /// <summary>
         /// Overrides action's resource key to prepend the 'Action_' prefix as needed.

@@ -45,5 +45,10 @@ namespace Xomega.Framework
         /// The data row context for the property change event, if applicable.
         /// </summary>
         public DataRow Row { get; }
+
+        /// <summary>
+        /// Indicates if the the property change was fired as an async event.
+        /// </summary>
+        public bool IsAsync { get; set; }
     }
 }

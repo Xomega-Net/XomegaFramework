@@ -56,9 +56,14 @@ namespace Xomega.Framework
                 namedArgs[expression.Parameters[i].Name] = args[i];
 
             Visit(expression);
-            foreach (var p in properties.Keys) p.AsyncChange += RecomputeAsync;
-            foreach (var o in objects.Keys) o.PropertyChanged += RecomputeAsync;
-            foreach (var s in selectionLists) s.SelectionChanged += RecomputeOnSelectionAsync;
+            foreach (var p in properties.Keys)
+            {
+                // subscribe to both sync and async, so that we could update using appropriate mode based on IsAsyc of the event
+                p.Change += Recompute;
+                p.AsyncChange += RecomputeAsync;
+            }
+            foreach (var o in objects.Keys) o.PropertyChanged += Recompute;
+            foreach (var s in selectionLists) s.SelectionChanged += RecomputeOnSelection;
         }
 
         /// <summary>
@@ -66,31 +71,42 @@ namespace Xomega.Framework
         /// </summary>
         public void Dispose()
         {
-            foreach (var p in properties.Keys) p.AsyncChange -= RecomputeAsync;
-            foreach (var o in objects.Keys) o.PropertyChanged -= RecomputeAsync;
-            foreach (var s in selectionLists) s.SelectionChanged -= RecomputeOnSelectionAsync;
+            foreach (var p in properties.Keys)
+            {
+                p.Change -= Recompute;
+                p.AsyncChange -= RecomputeAsync;
+            }
+            foreach (var o in objects.Keys) o.PropertyChanged -= Recompute;
+            foreach (var s in selectionLists) s.SelectionChanged -= RecomputeOnSelection;
+        }
+
+        private void Recompute(object sender, PropertyChangeEventArgs e)
+        {
+            if (!e.IsAsync && sender is BaseProperty bp && properties.TryGetValue(bp, out PropertyChange chg)
+                && e.Change.IncludesChanges(chg))
+            {
+                Update(e.Row);
+            }
         }
 
         private async Task RecomputeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
         {
-            if (sender is BaseProperty bp && properties.TryGetValue(bp, out PropertyChange chg) && e.Change.IncludesChanges(chg))
+            if (e.IsAsync && sender is BaseProperty bp && properties.TryGetValue(bp, out PropertyChange chg)
+                && e.Change.IncludesChanges(chg))
             {
                 await UpdateAsync(e.Row, token);
             }
         }
 
-        private async void RecomputeAsync(object sender, PropertyChangedEventArgs e)
+        private void Recompute(object sender, PropertyChangedEventArgs e)
         {
             if (sender is INotifyPropertyChanged inpc && objects.TryGetValue(inpc, out HashSet<string> props) && props.Contains(e.PropertyName))
             {
-                await UpdateAsync(null, default);
+                Update(null);
             }
         }
 
-        private async void RecomputeOnSelectionAsync(object sender, EventArgs e)
-        {
-            await UpdateAsync(null, default);
-        }
+        private void RecomputeOnSelection(object sender, EventArgs e) => Update(null);
 
         /// <summary>
         /// Returns evaluated computed value based on the binding's expression and arguments.
@@ -106,9 +122,19 @@ namespace Xomega.Framework
         /// Updates the property with the computed result, as implemented by the subclasses.
         /// </summary>
         /// <param name="row">The row in a data list to update, or null if the property is not in a data list.</param>
+        public abstract void Update(DataRow row);
+
+        /// <summary>
+        /// Asynchronously updates the property with the computed result. Delegates to the synchronous method by default.
+        /// </summary>
+        /// <param name="row">The row in a data list to update, or null if the property is not in a data list.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The task for the asynchronous operation.</returns>
-        public abstract Task UpdateAsync(DataRow row, CancellationToken token);
+        public async virtual Task UpdateAsync(DataRow row, CancellationToken token)
+        {
+            Update(row);
+            await Task.CompletedTask;
+        }
 
         /// <summary>
         /// Evaluates a specific property for the given sub-expression.

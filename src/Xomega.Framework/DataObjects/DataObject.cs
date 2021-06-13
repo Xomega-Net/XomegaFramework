@@ -146,20 +146,19 @@ namespace Xomega.Framework
         /// <summary>
         /// Recursively updates computed values for object's actions and editable flag.
         /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        public async Task UpdateComputedAsync(CancellationToken token)
+        public void UpdateComputed()
         {
             foreach (var a in actions.Values)
             {
-                await a.UpdateComputedEnabedAsync(token);
-                await a.UpdateComputedVisibleAsync(token);
+                a.UpdateComputedEnabed();
+                a.UpdateComputedVisible();
             }
             
             foreach (var obj in childObjects.Values)
-                await obj.UpdateComputedAsync(token);
+                obj.UpdateComputed();
 
             if (editableBinding != null)
-                await editableBinding.UpdateAsync(null, token);
+                editableBinding.Update(null);
         }
 
         /// <summary>

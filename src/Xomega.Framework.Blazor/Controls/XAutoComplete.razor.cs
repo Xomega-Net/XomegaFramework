@@ -88,9 +88,9 @@ namespace Xomega.Framework.Blazor.Controls
         /// <summary>
         /// Sets the current text whenever the property value changes.
         /// </summary>
-        protected override async Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        protected override void OnPropertyChange(PropertyChangeEventArgs e)
         {
-            await base.OnPropertyChangeAsync(sender, e, token);
+            base.OnPropertyChange(e);
             if (e.Change.IncludesValue())
                 CurrentText = Property.GetStringValue(ValueFormat.EditString, Row);
         }

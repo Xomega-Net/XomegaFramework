@@ -48,14 +48,24 @@ namespace Xomega.Framework.Blazor
         {
             await base.OnParametersSetAsync();
             await GetAvailableItems(null);
+            if (Property != null)
+                Property.AsyncChange += OnPropertyChangeAsync;
         }
 
-        /// <inheritdoc/>
-        protected async override Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        private async Task OnPropertyChangeAsync(object sender, PropertyChangeEventArgs e, CancellationToken token)
+        {
+            await InvokeAsync(async () => await OnPropertyChangeAsync(e, token));
+        }
+
+        /// <summary>
+        /// Updates available items when those change on the property.
+        /// </summary>
+        /// <param name="e">Property change details.</param>
+        /// <param name="token">Cancellation token.</param>
+        protected virtual async Task OnPropertyChangeAsync(PropertyChangeEventArgs e, CancellationToken token)
         {
             if (e.Change.IncludesItems() && Equals(Row, e.Row))
                 await GetAvailableItems(null, token);
-            await base.OnPropertyChangeAsync(sender, e, token);
         }
 
         /// <summary>
@@ -110,5 +120,14 @@ namespace Xomega.Framework.Blazor
         /// <returns>A list of selected values for the specified element.</returns>
         protected virtual async Task<List<string>> GetSelectedValues(ElementReference selectElement)
             => (await JSRuntime.InvokeAsync<List<string>>("xfk.getSelectedValues", selectElement)).ToList();
+
+        /// <summary>
+        /// Disposes the component and unbinds from the property.
+        /// </summary>
+        public override void Dispose()
+        {
+            if (property != null)
+                property.AsyncChange -= OnPropertyChangeAsync;
+        }
     }
 }

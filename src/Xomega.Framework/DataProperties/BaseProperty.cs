@@ -139,7 +139,7 @@ namespace Xomega.Framework
         public event EventHandler<PropertyChangeEventArgs> Change;
 
         /// <summary>
-        /// Async property change event.
+        /// Async property change event, which allows waiting for all async handlers to complete.
         /// </summary>
         public event Func<object, PropertyChangeEventArgs, CancellationToken, Task> AsyncChange;
 
@@ -158,10 +158,11 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously fires the specified property change event.
+        /// Asyncronously fires the specified property change event, which allows waiting for all async handlers to complete.
         /// </summary>
         public async Task FirePropertyChangeAsync(PropertyChangeEventArgs args, CancellationToken token = default)
         {
+            args.IsAsync = true;
             Change?.Invoke(this, args);
             var tasks = AsyncChange?.GetInvocationList()?.Select(d => (Task)d.DynamicInvoke(this, args, token));
             if (tasks != null)
@@ -273,12 +274,10 @@ namespace Xomega.Framework
         /// Manually updates the property editability with the computed result,
         /// in addition to automatic updates when the underlying properties change.
         /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>The task for the asynchronous operation.</returns>
-        public async Task UpdateComputedEditableAsync(CancellationToken token = default)
+        public void UpdateComputedEditable()
         {
             if (editableBinding != null)
-                await editableBinding.UpdateAsync(null, token);
+                editableBinding.Update(null);
         }
         #endregion
 
@@ -333,12 +332,10 @@ namespace Xomega.Framework
         /// Manually updates the property visibility with the computed result,
         /// in addition to automatic updates when the underlying properties change.
         /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>The task for the asynchronous operation.</returns>
-        public async Task UpdateComputedVisibleAsync(CancellationToken token = default)
+        public void UpdateComputedVisible()
         {
             if (visibleBinding != null)
-                await visibleBinding.UpdateAsync(null, token);
+                visibleBinding.Update(null);
         }
         #endregion
 
