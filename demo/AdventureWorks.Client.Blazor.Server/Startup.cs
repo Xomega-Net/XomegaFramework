@@ -48,8 +48,6 @@ namespace AdventureWorks.Client.Blazor.Server
             services.AddSingletonLookupCacheProvider();
             services.AddXmlResourceCacheLoader(typeof(Operators).Assembly, ".enumerations.xres", false);
             services.AddOperators();
-            services.AddTransient<IPrincipalProvider, ContextPrincipalProvider>();
-            services.AddScoped<SignInManager>();
 
             // App services configuration
             services.AddSingleton<ResourceManager>(sp => new CompositeResourceManager(
