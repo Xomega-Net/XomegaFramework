@@ -427,11 +427,22 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        public virtual void Insert(int index, DataRow row)
+        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// which the caller needs to handle on their own, if desired. Default is false.</param>
+        public virtual void Insert(int index, DataRow row, bool suppressNotification = false)
         {
             if (row.List != this || index < 0 || index > data.Count) return;
-            data.Insert(index, row);
-            SetModified(true, false);
+            if (suppressNotification)
+            {
+                data.suppressNotification = true;
+                data.Insert(index, row);
+                data.suppressNotification = false;
+            }
+            else
+            {
+                data.Insert(index, row);
+                SetModified(true, false);
+            }
         }
 
         /// <summary>
@@ -439,9 +450,11 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        public virtual async Task InsertAsync(int index, DataRow row)
+        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// which the caller needs to handle on their own, if desired. Default is false.</param>
+        public virtual async Task InsertAsync(int index, DataRow row, bool suppressNotification = false)
         {
-            Insert(index, row);
+            Insert(index, row, suppressNotification);
             await Task.CompletedTask;
         }
 
@@ -460,10 +473,21 @@ namespace Xomega.Framework
         /// Remove the specified data rows from the list.
         /// </summary>
         /// <param name="rows">A list of data rows to remove.</param>
-        public virtual async Task RemoveRows(IEnumerable<DataRow> rows)
+        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// which the caller needs to handle on their own, if desired. Default is false.</param>
+        public virtual async Task RemoveRows(IEnumerable<DataRow> rows, bool suppressNotification = false)
         {
-            data.RemoveRows(rows.Where(r => r.List == this));
-            SetModified(true, false);
+            if (suppressNotification)
+            {
+                data.suppressNotification = true;
+                data.RemoveRows(rows.Where(r => r.List == this));
+                data.suppressNotification = false;
+            }
+            else
+            {
+                data.RemoveRows(rows.Where(r => r.List == this));
+                SetModified(true, false);
+            }
             await Task.CompletedTask;
         }
 
@@ -472,10 +496,21 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="row">The row to replace.</param>
         /// <param name="newRow">The new row to use.</param>
-        public virtual async Task UpdateRow(DataRow row, DataRow newRow)
+        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// which the caller needs to handle on their own, if desired. Default is false.</param>
+        public virtual async Task UpdateRow(DataRow row, DataRow newRow, bool suppressNotification = false)
         {
-            await data.ReplaceRowAsync(newRow, row);
-            SetModified(true, false);
+            if (suppressNotification)
+            {
+                data.suppressNotification = true;
+                await data.ReplaceRowAsync(newRow, row);
+                data.suppressNotification = false;
+            }
+            else
+            {
+                await data.ReplaceRowAsync(newRow, row);
+                SetModified(true, false);
+            }
         }
 
         /// <summary>
@@ -615,7 +650,7 @@ namespace Xomega.Framework
         /// </summary>
         public class DataRowCollection : ObservableCollection<DataRow>
         {
-            private bool suppressNotification;
+            internal bool suppressNotification;
 
             /// <inheritdoc/>
             protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
