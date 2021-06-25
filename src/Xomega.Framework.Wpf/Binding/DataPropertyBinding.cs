@@ -136,10 +136,10 @@ namespace Xomega.Framework
         {
             if (property == sender && !PreventElementUpdate)
             {
-                bool b = PreventModelUpdate;
-                PreventModelUpdate = true;
                 element.Dispatcher.InvokeAsync(async () =>
                 {
+                    bool b = PreventModelUpdate;
+                    PreventModelUpdate = true;
                     await UpdateElementAsync(e.Change);
                     PreventModelUpdate = b;
                 });

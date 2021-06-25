@@ -277,8 +277,9 @@ namespace Xomega.Framework.Web
         /// </summary>
         protected override void UpdateVisibility()
         {
-            control.Visible = property.Visible;
-            if (label != null) label.Visible = property.Visible;
+            WebUtil.SetControlVisible(control, property.Visible);
+            if (label != null)
+                WebUtil.SetControlVisible(label, property.Visible);
         }
 
         /// <summary>
