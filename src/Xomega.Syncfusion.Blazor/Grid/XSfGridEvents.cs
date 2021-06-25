@@ -31,6 +31,7 @@ namespace Xomega._Syncfusion.Blazor
             {
                 // reset event handlers to built-in callbacks
                 OnActionBegin = EventCallback.Factory.Create<ActionEventArgs<DataRow>>(this, InvokeOnActionBegin);
+                OnActionComplete = EventCallback.Factory.Create<ActionEventArgs<DataRow>>(this, InvokeOnActionComplete);
                 RowSelected = EventCallback.Factory.Create<RowSelectEventArgs<DataRow>>(this, OnRowSelected);
                 RowDeselected = EventCallback.Factory.Create<RowDeselectEventArgs<DataRow>>(this, OnRowDeselected);
             }
@@ -40,6 +41,10 @@ namespace Xomega._Syncfusion.Blazor
                 if (OnActionBegin.HasDelegate)
                     customActionBegin = OnActionBegin;
                 OnActionBegin = EventCallback.Factory.Create<ActionEventArgs<DataRow>>(this, InvokeOnActionBegin);
+
+                if (OnActionComplete.HasDelegate)
+                    customActionComplete = OnActionComplete;
+                OnActionComplete = EventCallback.Factory.Create<ActionEventArgs<DataRow>>(this, InvokeOnActionComplete);
 
                 if (RowSelected.HasDelegate)
                     customRowSelected = RowSelected;
@@ -131,6 +136,8 @@ namespace Xomega._Syncfusion.Blazor
         private readonly Dictionary<EditContext, ValidationMessageStore> validationStores = new Dictionary<EditContext, ValidationMessageStore>();
 
         private EventCallback<ActionEventArgs<DataRow>> customActionBegin;
+        
+        private EventCallback<ActionEventArgs<DataRow>> customActionComplete;
 
         private async Task InvokeOnActionBegin(ActionEventArgs<DataRow> args)
         {
@@ -154,6 +161,18 @@ namespace Xomega._Syncfusion.Blazor
             }
             if (customActionBegin.HasDelegate)
                 await customActionBegin.InvokeAsync(args);
+        }
+
+        private async Task InvokeOnActionComplete(ActionEventArgs<DataRow> args)
+        {
+            if (args.RequestType == Action.Save || args.RequestType == Action.Delete || args.RequestType == Action.BatchSave)
+            {
+                // deferred setting of modified flag to make sure resulting UI updates happen during OnComplete,
+                // since SfGrid cannot handle those while the data source is being updated.
+                List?.SetModified(true, false);
+            }
+            if (customActionComplete.HasDelegate)
+                await customActionComplete.InvokeAsync(args);
         }
 
         private void OnValidationRequested(object sender, ValidationRequestedEventArgs e)
