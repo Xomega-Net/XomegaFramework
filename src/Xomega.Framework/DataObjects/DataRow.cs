@@ -81,6 +81,11 @@ namespace Xomega.Framework
         public bool Selected { get; set; }
 
         /// <summary>
+        /// Dummy default constructor for frameworks that require it.
+        /// </summary>
+        public DataRow() { }
+
+        /// <summary>
         /// Constructs a new data row for the specified data list object.
         /// </summary>
         /// <param name="dataList">Data list object that contains this row.</param>
