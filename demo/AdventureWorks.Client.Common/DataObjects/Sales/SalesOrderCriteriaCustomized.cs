@@ -30,12 +30,6 @@ namespace AdventureWorks.Client.Objects
             SalesPersonIdProperty.SetCascadingProperty(Enumerations.SalesPerson.Attributes.TerritoryId, TerritoryIdProperty);
             SalesPersonIdProperty.NullsMatchAnyCascading = true;
             SalesPersonIdProperty.DisplayListSeparator = "; ";
-
-            if (CurrentPrincipal.IsStoreContact() || CurrentPrincipal.IsIndividualCustomer())
-            {
-                CustomerStoreOperatorProperty.AccessLevel = AccessLevel.None;
-                CustomerNameOperatorProperty.AccessLevel = AccessLevel.None;
-            }
         }
 
         public override void Validate(bool force)

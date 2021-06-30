@@ -167,16 +167,6 @@ namespace AdventureWorks.Services.Entities
                 }
 
                 // CUSTOM_CODE_START: add custom filter criteria to the source query for ReadList operation below
-                if (CurrentPrincipal.IsStoreContact())
-                {
-                    int? storeId = CurrentPrincipal.GetStoreId();
-                    src = src.Where(o => o.CustomerObject.StoreObject.BusinessEntityId == storeId);
-                }
-                if (CurrentPrincipal.IsIndividualCustomer())
-                {
-                    int? personId = CurrentPrincipal.GetPersonId();
-                    src = src.Where(o => o.CustomerObject.PersonObject.BusinessEntityId == personId);
-                }
                 // CUSTOM_CODE_END
 
                 var qry = from obj in src

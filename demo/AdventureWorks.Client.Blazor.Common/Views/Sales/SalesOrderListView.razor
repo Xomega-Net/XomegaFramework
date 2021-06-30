@@ -103,7 +103,7 @@
                          AppliedCriteria="@ListObject?.AppliedCriteria"
                          Title="@CriteriaText"
                          OnRefresh="@OnRefreshAsync"></CriteriaBar>
-            <XSfGrid List="@VM?.ListObj"
+            <XSfGrid List="@VM?.ListObj" AllowFiltering="true"
                      AllowSelection="true"
                      AllowPaging="true"
                      AllowReordering="true"
@@ -115,6 +115,7 @@
               <XSfGridEvents RowSelected="async (arg) => await LinkDetails_ClickAsync(arg.Data)"></XSfGridEvents>
               <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
               <GridSearchSettings IgnoreCase="true"></GridSearchSettings>
+              <GridFilterSettings Type="FilterType.CheckBox"></GridFilterSettings>
               <GridPageSettings PageSizes="true"></GridPageSettings>
               <GridColumns>
                 <XSfGridColumn Field="@SalesOrderList.SalesOrderNumber" Width="5%">
