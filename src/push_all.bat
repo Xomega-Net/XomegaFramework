@@ -13,5 +13,6 @@ call push_nuget.bat Xomega.Framework.Blazor %VER%
 call push_nuget.bat Xomega.Framework.Wcf %VER%
 call push_nuget.bat Xomega.Framework.Web %VER%
 call push_nuget.bat Xomega.Framework.Wpf %VER%
+call push_nuget.bat Xomega.Syncfusion.Blazor %VER%
 
 :end
