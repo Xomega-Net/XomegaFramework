@@ -73,7 +73,7 @@ namespace Xomega.Framework
             childObjects = new Dictionary<string, DataObject>();
             actions = new Dictionary<string, ActionProperty>();
 
-            // add save action, and make it enabled only when the object is modified or doesn't track modificaitons
+            // add save action, and make it enabled only when the object is modified or doesn't track modifications
             SaveAction = new ActionProperty(this, Messages.Action_Save);
             Expression<Func<DataObject, bool>> saveEnabled = (obj) => obj != null && (obj.Modified || !obj.TrackModifications);
             SaveAction.SetComputedEnabled(saveEnabled, this);
