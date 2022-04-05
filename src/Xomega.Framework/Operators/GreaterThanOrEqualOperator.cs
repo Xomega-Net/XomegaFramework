@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Xomega.Framework.Operators
 {
     /// <summary>
-    /// Operators for wheter a property value is greater than or equal to the specified value.
+    /// Operators for whether a property value is greater than or equal to the specified value.
     /// </summary>
     public class GreaterThanOrEqualOperator : Operator
     {

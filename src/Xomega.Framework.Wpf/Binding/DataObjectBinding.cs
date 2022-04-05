@@ -26,7 +26,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        ///  A static catch-all method to register DataPropertyBinding for all bindable WPF dependency objects.
+        ///  A static catch-all method to register DataPropertyBinding for all bind-able WPF dependency objects.
         /// </summary>
         private static void Register()
         {
@@ -38,11 +38,11 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Checks if a dependency object is data object bindable.
+        /// Checks if a dependency object is data object bind-able.
         /// Serves mainly as a trigger for static class registration.
         /// </summary>
         /// <param name="obj">Dependency object to check.</param>
-        /// <returns>Whether or not the dependency object is data object bindable.</returns>
+        /// <returns>Whether or not the dependency object is data object bind-able.</returns>
         public static bool IsBindable(DependencyObject obj)
         {
             return obj != null && Data.GetObjectBinding(obj) != null;

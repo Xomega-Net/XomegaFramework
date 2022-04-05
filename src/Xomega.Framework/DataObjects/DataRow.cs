@@ -23,7 +23,7 @@ namespace Xomega.Framework
         /// Gets internal value of the specified property from the given data row.
         /// </summary>
         /// <param name="dataItem">data row to get the data from.</param>
-        /// <param name="property">proprety name to retrieve.</param>
+        /// <param name="property">property name to retrieve.</param>
         public static object GetValue(object dataItem, string property)
         {
             return Get(dataItem, property, ValueFormat.Internal);
@@ -33,7 +33,7 @@ namespace Xomega.Framework
         /// Gets a string value of the specified property from the given data row.
         /// </summary>
         /// <param name="dataItem">data row to get the data from.</param>
-        /// <param name="property">proprety name to retrieve.</param>
+        /// <param name="property">property name to retrieve.</param>
         public static string GetString(object dataItem, string property)
         {
             object val = Get(dataItem, property, ValueFormat.DisplayString);
@@ -44,7 +44,7 @@ namespace Xomega.Framework
         /// Gets a string value of the specified property from the given data row.
         /// </summary>
         /// <param name="dataItem">data row to get the data from.</param>
-        /// <param name="property">proprety name to retrieve.</param>
+        /// <param name="property">property name to retrieve.</param>
         public static string GetEditString(object dataItem, string property)
         {
             object val = Get(dataItem, property, ValueFormat.EditString);
@@ -55,7 +55,7 @@ namespace Xomega.Framework
         /// Gets a value of the specified property from the given data row.
         /// </summary>
         /// <param name="dataItem">data row to get the data from.</param>
-        /// <param name="property">proprety name to retrieve.</param>
+        /// <param name="property">property name to retrieve.</param>
         /// <param name="format">value format to return.</param>
         /// <returns></returns>
         public static object Get(object dataItem, string property, ValueFormat format)
@@ -202,7 +202,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously copy data properties' values from another row.
+        /// Asynchronously copy data properties' values from another row.
         /// </summary>
         /// <param name="otherRow">Another row to copy from.</param>
         /// <returns>The task for the operation.</returns>

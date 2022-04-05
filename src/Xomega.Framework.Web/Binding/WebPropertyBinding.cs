@@ -37,7 +37,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        ///  A static catch-all method to register WebPropertyBinding for all bindable web controls.
+        ///  A static catch-all method to register WebPropertyBinding for all bind-able web controls.
         /// </summary>
         private static void Register()
         {
@@ -49,10 +49,10 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Checks if a control is property bindable.
+        /// Checks if a control is property bind-able.
         /// </summary>
         /// <param name="ctl">Control to check.</param>
-        /// <returns>Whether or not the control is property bindable.</returns>
+        /// <returns>Whether or not the control is property bind-able.</returns>
         public static bool IsBindable(Control ctl)
         {
             return ctl != null;
@@ -64,13 +64,13 @@ namespace Xomega.Framework.Web
 
         /// <summary>
         /// An attribute set on the web control to indicate the property name that it should be bound to.
-        /// It can be either hardcoded or databound to a static string for validation by ASP.NET compiler.
+        /// It can be either hardcoded or data-bound to a static string for validation by ASP.NET compiler.
         /// </summary>
         public static string AttrProperty = "Property";
 
         /// <summary>
         /// An attribute set on the web control to indicate a dot-delimited path to a child object.
-        /// It can be either hardcoded or databound to a static string for validation by ASP.NET compiler.
+        /// It can be either hardcoded or data-bound to a static string for validation by ASP.NET compiler.
         /// </summary>
         public static string AttrChildObject = "ChildObject";
 

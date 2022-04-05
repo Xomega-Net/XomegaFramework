@@ -17,7 +17,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Constructs a new exception from the current list of errors
         /// </summary>
-        /// <param name="message">Excetpion message</param>
+        /// <param name="message">Exception message</param>
         /// <param name="errors">The current list of errors</param>
         public ErrorAbortException(String message, ErrorList errors) : base(message)
         {

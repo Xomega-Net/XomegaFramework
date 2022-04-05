@@ -14,7 +14,7 @@ namespace Xomega.Framework.Properties
     /// Being a <see cref="DataProperty"/> itself it can be bound to labels and other read-only text controls,
     /// and it will automatically reflect any changes in the underlying component properties.
     /// For example, you can display an address composed of several individual components
-    /// like city, state and zipcode all in one field properly formatted.
+    /// like city, state and zip code all in one field properly formatted.
     /// If no address fields are set though, it will show a blank string or your choice of a null value
     /// instead of a bunch of commas that you would get from the String.Format.
     /// You can also control this behavior and hide unwanted formatting if your address is partially blank.

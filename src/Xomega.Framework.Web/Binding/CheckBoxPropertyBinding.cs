@@ -42,7 +42,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Overrides handling of the property change to provent posting value if property
+        /// Overrides handling of the property change to prevent posting value if property
         /// value got changed outside of the control.
         /// </summary>
         /// <param name="sender">Event sender.</param>

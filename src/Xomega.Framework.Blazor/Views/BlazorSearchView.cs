@@ -108,7 +108,7 @@ namespace Xomega.Framework.Blazor.Views
         }
 
         /// <summary>
-        /// Default handler for selectinging that delegates the action to the view model.
+        /// Default handler for selecting that delegates the action to the view model.
         /// </summary>
         protected virtual async Task OnSelectAsync(MouseEventArgs e)
             => await SearchModel?.SelectAsync();

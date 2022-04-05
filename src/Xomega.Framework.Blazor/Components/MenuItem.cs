@@ -54,7 +54,7 @@ namespace Xomega.Framework.Blazor.Components
             Policy == null && Roles == null ? null : new AuthData(this);
 
         /// <summary>
-        /// A helper method to run an action recursively against this item and all its decendants.
+        /// A helper method to run an action recursively against this item and all its descendants.
         /// Useful for setting up authorization data on the menus.
         /// </summary>
         /// <param name="action">The action to run.</param>

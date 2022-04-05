@@ -13,7 +13,7 @@ using Action = Syncfusion.Blazor.Grids.Action;
 namespace Xomega._Syncfusion.Blazor
 {
     /// <summary>
-    /// Enhancement of the standard Synfusion grid events to support editing and validation of data rows in the list object,
+    /// Enhancement of the standard Syncfusion grid events to support editing and validation of data rows in the list object,
     /// as well as to synchronize grid selection with the list object selection, as configured.
     /// </summary>
     public class XSfGridEvents : GridEvents<DataRow>

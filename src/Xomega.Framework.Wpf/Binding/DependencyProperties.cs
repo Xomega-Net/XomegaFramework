@@ -230,7 +230,7 @@ namespace Xomega.Framework
         /// <summary>
         /// A dependency property that stores a reference to the label associated with the current framework element.
         /// </summary>
-        /// <remarks>Recreates the property binding when a label is being set since the the former uses the label.</remarks>
+        /// <remarks>Recreates the property binding when a label is being set since the former uses the label.</remarks>
         public static readonly DependencyProperty LabelProperty = DependencyProperty.RegisterAttached(
             "Label", typeof(FrameworkElement), typeof(Property), new PropertyMetadata(SetupBinding));
 

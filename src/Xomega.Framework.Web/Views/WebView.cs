@@ -224,7 +224,7 @@ namespace Xomega.Framework.Web
         protected string Script_ModalDialog = @"if (xomegaControls && typeof xomegaControls._modalViewPopup === 'function')
             xomegaControls._modalViewPopup('{0}', '{1}', '{2}', {3});";
 
-        /// <summary>Script to udpate view visibility in a split panel.</summary>
+        /// <summary>Script to update view visibility in a split panel.</summary>
         protected string Script_Splitter_OnViewVisibilityChange = @"if (xomegaControls && typeof xomegaControls._vSplitViewVisibilityChange === 'function')
             xomegaControls._vSplitViewVisibilityChange('{0}');";
 
@@ -322,7 +322,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Asyncrounsly disposes the view by unbinding it from the model
+        /// Asynchronously disposes the view by unbinding it from the model
         /// </summary>
         public async Task DisposeAsync(CancellationToken token = default)
         {

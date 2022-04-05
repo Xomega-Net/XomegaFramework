@@ -89,9 +89,9 @@ namespace Xomega.Framework
         public bool IsDeleted(bool self = true) { return (self && !IsChild() || !self) && (events & Deleted.events) > 0; }
 
         /// <summary>
-        /// Returns if a child view event occured.
+        /// Returns if a child view event occurred.
         /// </summary>
-        /// <returns>True if a child view event occured, false otherwise.</returns>
+        /// <returns>True if a child view event occurred, false otherwise.</returns>
         public bool IsChild() { return (events & Child.events) > 0; }
 
         /// <summary>

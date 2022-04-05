@@ -92,7 +92,7 @@ namespace Xomega.Framework
 
         /// <summary>
         /// Operator {0} expects {1} value(s), but only {2} were provided for {3}.
-        /// Where {0}=Operator, {1}=Expected number of valules, {2}=Supplied number of values, {3}=Field name
+        /// Where {0}=Operator, {1}=Expected number of values, {2}=Supplied number of values, {3}=Field name
         /// </summary>
         public const string Operator_NumberOfValues = "Operator_NumberOfValues";
 

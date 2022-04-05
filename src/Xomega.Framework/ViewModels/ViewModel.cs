@@ -73,7 +73,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Asynchrounsly activates the view model and the view.
+        /// Asynchronously activates the view model and the view.
         /// </summary>
         /// <param name="parameters">Parameters to activate the view with</param>
         /// <param name="token">Cancellation token.</param>
@@ -164,13 +164,13 @@ namespace Xomega.Framework.Views
         public event AsyncViewEventHandler AsyncViewEvents;
 
         /// <summary>
-        /// Asyncronously fires the specified event.
+        /// Asynchronously fires the specified event.
         /// </summary>
         public async Task FireEventAsync(ViewEvent evt, CancellationToken token = default)
             => await FireEventAsync(this, evt, token);
 
         /// <summary>
-        /// Asyncronously fires the specified event using specific sender.
+        /// Asynchronously fires the specified event using specific sender.
         /// </summary>
         public async Task FireEventAsync(object sender, ViewEvent evt, CancellationToken token = default)
         {
@@ -260,7 +260,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Asynchrouns routine to activate a view model with given parameters either as a child or as standalone
+        /// Asynchronous routine to activate a view model with given parameters either as a child or as standalone
         /// and display it in a new view or an existing view, which will need to be successfully closed first.
         /// </summary>
         /// <param name="tgtViewModel">View model to activate</param>
@@ -369,7 +369,7 @@ namespace Xomega.Framework.Views
         /// </summary>
         /// <param name="list">Data list object to update.</param>
         /// <param name="keyChildProp">The key property on the child details view.</param>
-        /// <param name="e">Open/close event of the chilid details view.</param>
+        /// <param name="e">Open/close event of the child details view.</param>
         /// <returns></returns>
         protected virtual bool UpdateListSelection(DataListObject list, DataProperty keyChildProp, ViewEvent e)
         {

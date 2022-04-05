@@ -119,7 +119,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Perfroms the search with the current criteria and populates the list
+        /// Performs the search with the current criteria and populates the list
         /// </summary>
         /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
         /// <returns>True on success, false in case of errors.</returns>
@@ -143,7 +143,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Perfroms asynchronous search with the current criteria and populates the list.
+        /// Performs asynchronous search with the current criteria and populates the list.
         /// </summary>
         /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
         /// <param name="token">Cancellation token.</param>
@@ -256,7 +256,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Default handler for convirming selected records and closing the view.
+        /// Default handler for confirming selected records and closing the view.
         /// </summary>
         public virtual void Select(object sender, EventArgs e)
         {
@@ -268,7 +268,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Default async handler for convirming selected records and closing the view.
+        /// Default async handler for confirming selected records and closing the view.
         /// </summary>
         public virtual async Task SelectAsync(CancellationToken token = default)
         {

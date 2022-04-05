@@ -21,7 +21,7 @@ namespace Xomega.Framework.Services
         public XMaxLengthAttribute(int length) : base(length) { }
 
         /// <summary>
-        /// Validates the value of the memeber from the current <see cref="ValidationContext"/>
+        /// Validates the value of the member from the current <see cref="ValidationContext"/>
         /// by delegating it to the <see cref="IsValidList(ICollection, ValidationContext)"/> method.
         /// </summary>
         /// <param name="value">The value to validate.</param>

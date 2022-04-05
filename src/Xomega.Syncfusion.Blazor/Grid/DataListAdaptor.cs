@@ -15,7 +15,7 @@ using ListSortDirection = Xomega.Framework.ListSortDirection;
 namespace Xomega._Syncfusion.Blazor
 {
     /// <summary>
-    /// Custom Syncfusion data grid adaptor for working with Xomega data list objects.
+    /// Custom Syncfusion data grid adapter for working with Xomega data list objects.
     /// </summary>
     public class DataListAdaptor : DataAdaptor
     {
@@ -28,7 +28,7 @@ namespace Xomega._Syncfusion.Blazor
         private OperatorRegistry operatorRegistry;
 
         /// <summary>
-        /// Default constructor for the data list object adaptor
+        /// Default constructor for the data list object adapter
         /// </summary>
         public DataListAdaptor()
         {

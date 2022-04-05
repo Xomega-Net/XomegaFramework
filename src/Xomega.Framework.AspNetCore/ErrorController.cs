@@ -28,7 +28,7 @@ namespace Xomega.Framework.Services
         }
 
         /// <summary>
-        /// Outputs unhandle exception as an error list in the <see cref="Output"/> structure.
+        /// Outputs unhandled exception as an error list in the <see cref="Output"/> structure.
         /// </summary>
         /// <returns></returns>
         [Route(DefaultPath)]

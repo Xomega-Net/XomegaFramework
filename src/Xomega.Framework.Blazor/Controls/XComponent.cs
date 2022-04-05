@@ -177,7 +177,7 @@ namespace Xomega.Framework.Blazor
         }
 
         /// <summary>
-        /// Handles property change events by refreshing the component, if the change is obsereved by the component.
+        /// Handles property change events by refreshing the component, if the change is observed by the component.
         /// </summary>
         /// <param name="e">Property change details.</param>
         protected virtual void OnPropertyChange(PropertyChangeEventArgs e)

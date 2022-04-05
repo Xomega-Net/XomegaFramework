@@ -39,7 +39,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Gets localized title for the error list based on the number and severity of the messages it contains.
         /// </summary>
-        /// <param name="viewKey">The view resource key prefix to allow returning a title customized for a specifc view.</param>
+        /// <param name="viewKey">The view resource key prefix to allow returning a title customized for a specific view.</param>
         /// <returns>Localized title for the error list.</returns>
         public string GetTitle(string viewKey = null)
         {

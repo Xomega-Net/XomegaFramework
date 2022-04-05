@@ -51,7 +51,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Implements addtional logic after the property has been bound.
+        /// Implements additional logic after the property has been bound.
         /// Sets the property label from the associated label control (see <see cref="SetLabel"/>).
         /// </summary>
         protected virtual void OnPropertyBound()
@@ -149,7 +149,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously updates the property with the given value from the element.
+        /// Asynchronously updates the property with the given value from the element.
         /// </summary>
         /// <param name="value">The value to set on the data property.</param>
         protected virtual async Task UpdatePropertyAsync(object value)

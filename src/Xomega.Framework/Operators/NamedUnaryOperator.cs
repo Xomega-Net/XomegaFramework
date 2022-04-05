@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Xomega.Framework.Operators
 {
     /// <summary>
-    /// Operators for wheter or not a property value is in the specified range.
+    /// Operators for whether or not a property value is in the specified range.
     /// </summary>
     public abstract class NamedUnaryOperator : Operator
     {

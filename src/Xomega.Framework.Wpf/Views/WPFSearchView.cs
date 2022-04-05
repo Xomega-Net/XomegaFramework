@@ -142,7 +142,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Default handler for selectinging that delegates the action to the view model.
+        /// Default handler for selecting that delegates the action to the view model.
         /// </summary>
         protected virtual async void Select(object sender, EventArgs e)
         {

@@ -46,7 +46,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        ///  A static catch-all method to register DataPropertyBinding for all bindable WPF dependency objects.
+        ///  A static catch-all method to register DataPropertyBinding for all bind-able WPF dependency objects.
         /// </summary>
         private static void Register()
         {
@@ -58,11 +58,11 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Checks if a dependency object is property bindable by checking its 
+        /// Checks if a dependency object is property bind-able by checking its 
         /// dependency property for the property name (see <see cref="Property.NameProperty"/>).
         /// </summary>
         /// <param name="obj">Dependency object to check.</param>
-        /// <returns>Whether or not the dependency object is property bindable.</returns>
+        /// <returns>Whether or not the dependency object is property bind-able.</returns>
         public static bool IsBindable(DependencyObject obj)
         {
             return obj != null && Property.GetName(obj) != null;
@@ -183,8 +183,8 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously updates the framework element based on the given property change.
-        /// Invokes the syncronous version by default, but subclasses can override this method.
+        /// Asynchronously updates the framework element based on the given property change.
+        /// Invokes the synchronous version by default, but subclasses can override this method.
         /// </summary>
         /// <param name="change">The property change.</param>
         protected virtual async Task UpdateElementAsync(PropertyChange change)

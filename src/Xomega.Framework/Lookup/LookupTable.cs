@@ -12,7 +12,7 @@ namespace Xomega.Framework.Lookup
 
     /// <summary>
     /// A self-indexing lookup table. The data set for the table is based on a list of values of type <c>Header</c>.
-    /// The table allows looking up values based on any string represenation of the headers as defined 
+    /// The table allows looking up values based on any string representation of the headers as defined 
     /// by the format string that you pass in. If the data is not indexed by that format, the table will build
     /// and cache the index first.
     /// </summary>

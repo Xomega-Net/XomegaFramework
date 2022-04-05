@@ -10,12 +10,12 @@ using System.ServiceModel.Security;
 namespace Xomega.Framework.Wcf
 {
     /// <summary>
-    /// A service host factory based on pre-initalized DI.DefaultServiceProvider in Xomega Framework.
+    /// A service host factory based on pre-initialized DI.DefaultServiceProvider in Xomega Framework.
     /// </summary>
     public class DefaultServiceProviderHostFactory : ServiceHostFactory
     {
         /// <summary>
-        /// Constructs a new DefaultServiceProviderHostFactory and ensures the app is initalized
+        /// Constructs a new DefaultServiceProviderHostFactory and ensures the app is initialized
         /// </summary>
         public DefaultServiceProviderHostFactory()
         {

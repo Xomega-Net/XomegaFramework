@@ -51,7 +51,7 @@ namespace Xomega._Syncfusion.Blazor
         }
 
         /// <summary>
-        /// Get indexes in the grid of the unerlying data rows that are marked as selected.
+        /// Get indexes in the grid of the underlying data rows that are marked as selected.
         /// </summary>
         /// <returns>Array of indexes for selected data rows, or null if cannot get those.</returns>
         public double[] GetSelectedDataRowIndexes()

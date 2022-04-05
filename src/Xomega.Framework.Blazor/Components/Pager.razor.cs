@@ -107,7 +107,7 @@ namespace Xomega.Framework.Blazor.Components
         }
 
         /// <summary>
-        /// Sets the current page to the specified index asynchrounsly.
+        /// Sets the current page to the specified index asynchronously.
         /// </summary>
         /// <param name="page">The index of the page to set.</param>
         /// <returns>A task for this function.</returns>
@@ -122,7 +122,7 @@ namespace Xomega.Framework.Blazor.Components
         }
 
         /// <summary>
-        /// Sets the current page size to the specified value asynchrounsly.
+        /// Sets the current page size to the specified value asynchronously.
         /// </summary>
         /// <param name="pageSize">The size of the page to set.</param>
         /// <returns>A task for this function.</returns>
@@ -137,9 +137,9 @@ namespace Xomega.Framework.Blazor.Components
         }
 
         /// <summary>
-        /// Handles change of the page size asynchrounsly.
+        /// Handles change of the page size asynchronously.
         /// </summary>
-        /// <param name="e">The chang event.</param>
+        /// <param name="e">The change event.</param>
         /// <returns>A task for this function.</returns>
         protected virtual async Task OnPageSizeChanged(ChangeEventArgs e)
         {

@@ -10,7 +10,7 @@ using Xomega.Framework.Lookup;
 namespace Xomega.Framework.Services
 {
     /// <summary>
-    /// A validation attribute that validates a single value or a list of values agains the specified lookup table,
+    /// A validation attribute that validates a single value or a list of values against the specified lookup table,
     /// and uses Xomega.Framework messages and a dependency-injected resource manager.
     /// </summary>
     public class XLookupValueAttribute : ValidationAttribute
@@ -40,7 +40,7 @@ namespace Xomega.Framework.Services
         }
 
         /// <summary>
-        /// Validates the value of the memeber from the current <see cref="ValidationContext"/>
+        /// Validates the value of the member from the current <see cref="ValidationContext"/>
         /// by delegating it to the <see cref="IsValidList(ICollection, ValidationContext)"/> method.
         /// </summary>
         /// <param name="value">The value to validate.</param>

@@ -43,7 +43,7 @@ namespace Xomega.Framework
         public int RowCount { get { return data.Count; } }
 
         /// <summary>
-        /// A temporary variable to store a copy of a row before editing to allow cancelling edits.
+        /// A temporary variable to store a copy of a row before editing to allow canceling edits.
         /// </summary>
         public DataRow EditRow { get; set; }
 
@@ -308,7 +308,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Select aciton for the list object that can be bound to a select button.
+        /// Select action for the list object that can be bound to a select button.
         /// By default select action is enabled only when the list has any row selected.
         /// </summary>
         public ActionProperty SelectAction { get; private set; }
@@ -318,7 +318,7 @@ namespace Xomega.Framework
         #region Applied criteria
 
         /// <summary>
-        /// Criteria object assoicated with the current list object
+        /// Criteria object associated with the current list object
         /// </summary>
         public CriteriaObject CriteriaObject { get; set; }
 
@@ -427,7 +427,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// <param name="suppressNotification">True to suppress notifications and not mark as modified,
         /// which the caller needs to handle on their own, if desired. Default is false.</param>
         public virtual void Insert(int index, DataRow row, bool suppressNotification = false)
         {
@@ -450,7 +450,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="index">Index at which to insert a new data row.</param>
         /// <param name="row">The data row to insert.</param>
-        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// <param name="suppressNotification">True to suppress notifications and not mark as modified,
         /// which the caller needs to handle on their own, if desired. Default is false.</param>
         public virtual async Task InsertAsync(int index, DataRow row, bool suppressNotification = false)
         {
@@ -473,7 +473,7 @@ namespace Xomega.Framework
         /// Remove the specified data rows from the list.
         /// </summary>
         /// <param name="rows">A list of data rows to remove.</param>
-        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// <param name="suppressNotification">True to suppress notifications and not mark as modified,
         /// which the caller needs to handle on their own, if desired. Default is false.</param>
         public virtual async Task RemoveRows(IEnumerable<DataRow> rows, bool suppressNotification = false)
         {
@@ -496,7 +496,7 @@ namespace Xomega.Framework
         /// </summary>
         /// <param name="row">The row to replace.</param>
         /// <param name="newRow">The new row to use.</param>
-        /// <param name="suppressNotification">True to supporess notifications and not mark as modified,
+        /// <param name="suppressNotification">True to suppress notifications and not mark as modified,
         /// which the caller needs to handle on their own, if desired. Default is false.</param>
         public virtual async Task UpdateRow(DataRow row, DataRow newRow, bool suppressNotification = false)
         {
@@ -660,7 +660,7 @@ namespace Xomega.Framework
             }
 
             /// <summary>
-            /// Replaces collection data with the new data provided with a single collection change notificiation.
+            /// Replaces collection data with the new data provided with a single collection change notification.
             /// </summary>
             /// <param name="source">The new data to replace the current list data with.</param>
             public void ReplaceData(IEnumerable<DataRow> source)

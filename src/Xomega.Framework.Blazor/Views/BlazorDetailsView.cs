@@ -60,7 +60,7 @@ namespace Xomega.Framework.Blazor.Views
             => await DetailsModel?.DeleteAsync();
 
         /// <summary>
-        /// Asynchrounsly determines if the view can be closed. If the view is modified,
+        /// Asynchronously determines if the view can be closed. If the view is modified,
         /// then prompts the user to confirm discarding unsaved changes.
         /// The method can be overridden in subclasses to customize the confirmation prompt.
         /// </summary>

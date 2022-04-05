@@ -308,7 +308,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Event handler for the view's parent window closing, which allows cancelling the event.
+        /// Event handler for the view's parent window closing, which allows canceling the event.
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -378,21 +378,21 @@ namespace Xomega.Framework.Views
             BindTo(null); // unbind model to get it garbage collected in case of weak refs on this view
             foreach (var v in ChildViews)
             {
-                // close any child views without asking, since we should've asked before disposing
+                // close any child views without asking, since we should have asked before disposing
                 v.canCloseChecked = true;
                 v.Close();
             }
         }
 
         /// <summary>
-        /// Asyncrounsly disposes the view by unbinding it from the model
+        /// Asynchronously disposes the view by unbinding it from the model
         /// </summary>
         public async Task DisposeAsync(CancellationToken token = default)
         {
             BindTo(null); // unbind model to get it garbage collected in case of weak refs on this view
             foreach (var v in ChildViews)
             {
-                // close any child views without asking, since we should've asked before disposing
+                // close any child views without asking, since we should have asked before disposing
                 v.canCloseChecked = true;
                 await v.CloseAsync(token);
             }

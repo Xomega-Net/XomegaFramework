@@ -158,7 +158,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously fires the specified property change event, which allows waiting for all async handlers to complete.
+        /// Asynchronously fires the specified property change event, which allows waiting for all async handlers to complete.
         /// </summary>
         public async Task FirePropertyChangeAsync(PropertyChangeEventArgs args, CancellationToken token = default)
         {
@@ -203,7 +203,7 @@ namespace Xomega.Framework
         /// if the row is null or its editability is not set for this property.
         /// </summary>
         /// <param name="row">The row, for which to check property editability.</param>
-        /// <returns>True if the property is editable, false owtherwise.</returns>
+        /// <returns>True if the property is editable, false otherwise.</returns>
         public bool GetEditable(DataRow row = null) => Editable && (row?.GetEditable(this) ?? true);
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Xomega.Framework
         public bool GetEditing(DataRow row = null) => row?.GetEditing(this) ?? editing;
 
         /// <summary>
-        /// Sets whether or not the prperty is currently being edited at the spefied row, if any.
+        /// Sets whether or not the property is currently being edited at the specified row, if any.
         /// </summary>
         /// <param name="value">True if the property is being edited, false otherwise.</param>
         /// <param name="row">The row, for which the property is being edited, or null for the entire property.</param>

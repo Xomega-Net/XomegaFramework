@@ -12,7 +12,7 @@ namespace Xomega.Framework.Services
     public class XRequiredAttribute : RequiredAttribute
     {
         /// <summary>
-        /// Validates the value of the memeber from the current <see cref="ValidationContext"/>.
+        /// Validates the value of the member from the current <see cref="ValidationContext"/>.
         /// </summary>
         /// <param name="value">The value to validate.</param>
         /// <param name="validationContext">The validation context to use.</param>

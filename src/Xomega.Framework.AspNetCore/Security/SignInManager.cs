@@ -66,11 +66,11 @@ namespace Xomega.Framework.Services
         }
 
         /// <summary>
-        /// Gets an encrypted authentication ticket for the specified pricipal that expires in the specified number of seconds.
+        /// Gets an encrypted authentication ticket for the specified principal that expires in the specified number of seconds.
         /// </summary>
         /// <param name="principal">The authenticated claims principal.</param>
         /// <param name="expiresSeconds">The number of seconds for the ticket expiration. Defaults to 1 min, but cannot exceed 5 minutes.</param>
-        /// <returns>The encrypted authentication ticket for the specified pricipal.</returns>
+        /// <returns>The encrypted authentication ticket for the specified principal.</returns>
         public string GetSignInTicket(ClaimsPrincipal principal, int expiresSeconds = 60)
         {
             var props = new AuthenticationProperties

@@ -32,12 +32,12 @@ namespace Xomega.Framework
         public PropertyChange Change { get; }
 
         /// <summary>
-        /// For a single change, the old value before the change occured, where appliable.
+        /// For a single change, the old value before the change occurred, where applicable.
         /// </summary>
         public object OldValue { get; }
 
         /// <summary>
-        /// For a single change, the new value after the change occured, where appliable.
+        /// For a single change, the new value after the change occurred, where applicable.
         /// </summary>
         public object NewValue { get; }
 
@@ -47,7 +47,7 @@ namespace Xomega.Framework
         public DataRow Row { get; }
 
         /// <summary>
-        /// Indicates if the the property change was fired as an async event.
+        /// Indicates if the property change was fired as an async event.
         /// </summary>
         public bool IsAsync { get; set; }
     }

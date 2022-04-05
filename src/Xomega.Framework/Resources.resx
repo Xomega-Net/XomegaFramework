@@ -162,7 +162,7 @@
   </data>
   <data name="Operator_NumberOfValues" xml:space="preserve">
     <value>Operator {0} expects {1} value(s), but only {2} were provided for {3}.</value>
-    <comment>{0}=Operator, {1}=Expected number of valules, {2}=Supplied number of values, {3}=Field name</comment>
+    <comment>{0}=Operator, {1}=Expected number of values, {2}=Supplied number of values, {3}=Field name</comment>
   </data>
   <data name="Pager_First" xml:space="preserve">
     <value>First Page</value>

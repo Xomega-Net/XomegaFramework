@@ -14,7 +14,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Initializes the application
         /// </summary>
-        /// <param name="initalizer">Initalizer to use</param>
+        /// <param name="initalizer">Initializer to use</param>
         public static void Initalize(AppInitializer initalizer)
         {
             DI.DefaultServiceProvider = initalizer.ConfigureServices();

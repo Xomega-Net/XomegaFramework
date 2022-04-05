@@ -115,7 +115,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Asyncronously sets the value of the property and triggers a property change event.
+        /// Asynchronously sets the value of the property and triggers a property change event.
         /// The value is first converted to the internal format if possible.
         /// If data row is specified, sets the value of this property in that row.
         /// </summary>
@@ -258,7 +258,7 @@ namespace Xomega.Framework
         public GetValueList ItemsProvider;
 
         /// <summary>
-        /// A function to asyncronously provide a list of possible values for the property
+        /// A function to asynchronously provide a list of possible values for the property
         /// based on the specified input and current row, where applicable.
         /// </summary>
         public Func<object, DataRow, CancellationToken, Task<IEnumerable>> AsyncItemsProvider;
@@ -635,7 +635,7 @@ namespace Xomega.Framework
 
         /// <summary>
         /// A delegate to support custom validation functions.
-        /// The delegate is multicast to allow combining multiple validation functions.
+        /// The delegate is multi-cast to allow combining multiple validation functions.
         /// </summary>
         /// <param name="prop">The data property being validated. The function can use
         /// the property configuration for validation or error messages. Result of the validation

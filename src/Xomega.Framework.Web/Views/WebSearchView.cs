@@ -215,7 +215,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Default handler for selectinging that delegates the action to the view model.
+        /// Default handler for selecting that delegates the action to the view model.
         /// </summary>
         protected virtual void Select(object sender, EventArgs e)
         {
@@ -226,7 +226,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Default handler for selectinging that delegates the action to the view model.
+        /// Default handler for selecting that delegates the action to the view model.
         /// </summary>
         protected virtual async Task SelectAsync(CancellationToken token = default)
         {

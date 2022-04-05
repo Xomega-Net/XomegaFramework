@@ -57,7 +57,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Finds a parent udpate panel for the given control.
+        /// Finds a parent update panel for the given control.
         /// </summary>
         /// <param name="ctl">Control to find parent update panel for</param>
         /// <returns>Parent update panel</returns>

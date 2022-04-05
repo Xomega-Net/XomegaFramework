@@ -9,7 +9,7 @@ using System.ServiceModel.Channels;
 namespace Xomega.Framework.Wcf
 {
     /// <summary>
-    /// Self-registering instance context extnsion that stores the service scope for an instance context
+    /// Self-registering instance context extension that stores the service scope for an instance context
     /// </summary>
     public class InstanceContextServiceScope : IExtension<InstanceContext>, IInstanceContextInitializer
     {

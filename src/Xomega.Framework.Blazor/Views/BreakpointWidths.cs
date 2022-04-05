@@ -167,7 +167,7 @@ namespace Xomega.Framework.Blazor.Views
 
         /// <summary>
         /// For the current widths calculates breakpoints and a number of columns at those breakpoints
-        /// to accomodate fields of the specified width up to provided maximum number of columns.
+        /// to accommodate fields of the specified width up to provided maximum number of columns.
         /// </summary>
         /// <param name="maxCol">The maximum number of columns allowed.</param>
         /// <param name="width">The width of each field to use for calculating a number of columns.</param>

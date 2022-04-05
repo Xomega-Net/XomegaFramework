@@ -195,7 +195,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <summary>
         /// A template for rendering an editor of the specified type.
         /// </summary>
-        /// <typeparam name="T">The type of the edtior component.</typeparam>
+        /// <typeparam name="T">The type of the editor component.</typeparam>
         /// <param name="ctx">The current DataRow.</param>
         /// <returns>Render fragment for the editor of the specified type.</returns>
         protected RenderFragment RenderEditor<T>(object ctx) where T : IComponent

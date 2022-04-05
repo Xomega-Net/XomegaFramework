@@ -133,7 +133,7 @@ namespace Xomega.Framework.Blazor.Views
         #endregion
 
         /// <summary>
-        /// Utility shorthand method to retun disabled class for a given state.
+        /// Utility shorthand method to return disabled class for a given state.
         /// </summary>
         /// <param name="enabled">True for enabled state, false for disabled.</param>
         /// <returns>The disabled class, if not enabled, empty string otherwise.</returns>
@@ -235,7 +235,7 @@ namespace Xomega.Framework.Blazor.Views
         /// </summary>
         /// <param name="show">True to show the view, false to hide it.</param>
         /// <param name="token">Cancellation token.</param>
-        /// <returns>Asynchrounous task for the function.</returns>
+        /// <returns>Asynchronous task for the function.</returns>
         protected virtual async Task Popup(bool show, CancellationToken token = default)
         {
             // this requires importing xfk-blazor.js in the Host.cshtml.
@@ -249,7 +249,7 @@ namespace Xomega.Framework.Blazor.Views
         /// </summary>
         /// <param name="show">True to show the view, false to hide it.</param>
         /// <param name="token">Cancellation token.</param>
-        /// <returns>Asynchrounous task for the function.</returns>
+        /// <returns>Asynchronous task for the function.</returns>
         protected virtual async Task Inline(bool show, CancellationToken token = default) => await Task.CompletedTask;
 
         /// <summary>

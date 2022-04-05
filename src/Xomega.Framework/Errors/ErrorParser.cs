@@ -79,7 +79,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Helper method to construct an error list for the given exception messsage,
+        /// Helper method to construct an error list for the given exception message,
         /// taking into account parser's configuration for returning full exception details.
         /// </summary>
         /// <param name="exceptionMessage">Full exception message for the error list.</param>

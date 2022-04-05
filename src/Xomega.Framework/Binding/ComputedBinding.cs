@@ -194,7 +194,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Adds specified list object to subscribe to selection change events.
         /// </summary>
-        /// <param name="list">The list object to listen for selection chang events.</param>
+        /// <param name="list">The list object to listen for selection change events.</param>
         protected void AddSelectionChange(DataListObject list)
         {
             if (list != null)

@@ -38,7 +38,7 @@ namespace Xomega.Framework
         Validation,
 
         /// <summary>
-        /// Error resulting from functional validation.
+        /// Error resulting from a functional validation.
         /// </summary>
         Functional,
 

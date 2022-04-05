@@ -38,7 +38,7 @@ namespace Xomega.Framework.Services
         public SymmetricSecurityKey SymmetricSigningKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes((SigningKey)));
 
         /// <summary>
-        /// Signigng credentials for the token.
+        /// Signing credentials for the token.
         /// </summary>
         public SigningCredentials SigningCredentials => new SigningCredentials(SymmetricSigningKey, SecurityAlgorithms.HmacSha256);
 

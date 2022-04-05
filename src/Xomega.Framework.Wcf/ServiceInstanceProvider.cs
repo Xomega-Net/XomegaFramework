@@ -55,7 +55,7 @@ namespace Xomega.Framework.Wcf
             InstanceContextServiceScope ctxScope = instanceContext.Extensions.Find<InstanceContextServiceScope>();
             if (ctxScope == null)
             {
-                Trace.TraceError("InstanceContextServiceScope not registred for instance context. Using default service provider");
+                Trace.TraceError("InstanceContextServiceScope not registered for instance context. Using default service provider");
                 return serviceProvider.GetService(contractType);
             }
             IServiceScope scope = ctxScope.GetServiceScope(serviceProvider);

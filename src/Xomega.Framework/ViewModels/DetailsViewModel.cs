@@ -97,7 +97,7 @@ namespace Xomega.Framework.Views
         /// Handles changes in the Modified and IsNew properties of the data object to notify views of any view title updates.
         /// </summary>
         /// <param name="sender">Event sender.</param>
-        /// <param name="e">Property chang event arguments.</param>
+        /// <param name="e">Property change event arguments.</param>
         protected virtual void OnDetailsObjectChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(DataObject.Modified) ||

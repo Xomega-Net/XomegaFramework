@@ -105,7 +105,7 @@ namespace Xomega._Syncfusion.Blazor
         /// Async value change handler for the component that updates the property with the selected item.
         /// </summary>
         /// <typeparam name="TValue">The type of the item.</typeparam>
-        /// <param name="args">Change event arguements.</param>
+        /// <param name="args">Change event arguments.</param>
         protected async Task OnValueChanged<TValue>(ChangeEventArgs<TValue, T> args)
         {
             await UpdatePropertyAsync(args.ItemData);

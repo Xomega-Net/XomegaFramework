@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Xomega.Framework.Blazor.Controls
 {
     /// <summary>
-    /// Auto-compolete component that binds to a data property (usually <see cref="Properties.EnumProperty"/>)
+    /// Auto-complete component that binds to a data property (usually <see cref="Properties.EnumProperty"/>)
     /// and allows typing and selecting values using the property's <see cref="DataProperty.AsyncItemsProvider"/>.
     /// This component properly handles multi-value properties, allowing to select each individual value from a list.
     /// </summary>
@@ -223,7 +223,7 @@ namespace Xomega.Framework.Blazor.Controls
         }
 
         /// <summary>
-        /// Shows dropdwon if there are any suggestions.
+        /// Shows dropdown if there are any suggestions.
         /// </summary>
         protected void ShowDropDown()
         {

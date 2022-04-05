@@ -81,7 +81,7 @@ namespace Xomega.Framework.Blazor
             new ArrayList() { Property.GetValue(format, Row) }) ?? new ArrayList();
 
         /// <summary>
-        /// Utility method to determin if the specified item should be selected in a list of options.
+        /// Utility method to determine if the specified item should be selected in a list of options.
         /// </summary>
         /// <param name="value">Current value of the property.</param>
         /// <param name="item">The item to check.</param>
@@ -100,7 +100,7 @@ namespace Xomega.Framework.Blazor
         public RenderFragment<T> Template => ItemDisplayTemplate ?? RenderValue;
 
         /// <summary>
-        /// Default template for displaying item optins, which shows items formatted
+        /// Default template for displaying item options, which shows items formatted
         /// with the <see cref="ValueFormat.DisplayString"/> format.
         /// </summary>
         /// <param name="val">The item to render.</param>
