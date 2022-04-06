@@ -114,7 +114,7 @@ namespace Xomega.Framework
 
                 // Ideally we want to dispose the binding when the control is disposed,
                 // but we cannot rely on the Unloaded event, as it breaks for tab control, for example.
-                // Assuming lifecycle of the data objects is the same as that of the controls, it's not a big deal
+                // Assuming life-cycle of the data objects is the same as that of the controls, it's not a big deal
                 //el.Unloaded += delegate { Dispose(); }
             }
         }

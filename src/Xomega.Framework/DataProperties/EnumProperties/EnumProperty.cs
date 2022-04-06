@@ -302,7 +302,7 @@ namespace Xomega.Framework.Properties
         /// <summary>
         /// Checks if the provided value matches the specified input term.
         /// </summary>
-        /// <param name="inputTerm">Intput term to match the value against.</param>
+        /// <param name="inputTerm">Input term to match the value against.</param>
         /// <param name="h">The header to check.</param>
         /// <param name="row">The data row context, if any.</param>
         /// <returns>True if the header value matches the input term, false otherwise.</returns>

@@ -89,7 +89,7 @@ namespace Xomega.Framework.Blazor.Components
         /// </summary>
         [Parameter] public string ResourceKey { get; set; }
 
-        #region Pagingation support
+        #region Pagination support
 
         /// <summary>
         /// A flag specifying whether or not to allow paging.

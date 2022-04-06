@@ -71,7 +71,7 @@ namespace Xomega.Framework.Web
         /// Adds some time to the timer for the given category.
         /// </summary>
         /// <param name="category">Category name to add time to</param>
-        /// <param name="ms">Numer of millisecodns to add</param>
+        /// <param name="ms">Number of milliseconds to add</param>
         public static void AddTime(string category, double ms)
         {
             if (HttpContext.Current != null)
