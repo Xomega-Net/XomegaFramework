@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Xomega.Framework.Operators
 {
     /// <summary>
-    /// Operator for checking if a property value is null .
+    /// Operator for checking if a property value is null.
     /// </summary>
     public class IsNullOperator : Operator
     {

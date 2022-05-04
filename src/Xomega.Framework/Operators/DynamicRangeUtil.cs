@@ -14,7 +14,7 @@ namespace Xomega.Framework.Operators
     /// The bounds for numeric ranges are integer or decimal numbers as appropriate.
     /// The bounds for date/time ranges can be an absolute date formatted as yyyy-MM-dd,
     /// or a relative date, which specifies the base current time (ct) or a beginning or end of a time period,
-    /// e.g. 'boM' fo the beginning of the current month, or 'eod' for the end of the current day.
+    /// e.g. 'boM' for the beginning of the current month, or 'eod' for the end of the current day.
     /// You can then add or subtract any whole number of periods to/from the base time to get the relative date,
     /// e.g. 'ct-30d' for the date 30 days before the current time.
     /// </summary>
