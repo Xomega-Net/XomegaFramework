@@ -2,8 +2,6 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Xomega.Framework
 {
@@ -23,10 +21,9 @@ namespace Xomega.Framework
         public ComputedEditableObjectBinding(DataObject dataObject, LambdaExpression expression, params object[] args)
             : base(null, expression, args)
         {
-            if (dataObject == null) throw new ArgumentException("Data object cannot be null", nameof(dataObject));
             if (expression.ReturnType != typeof(bool))
                 throw new Exception("Supplied expression should return a bool.");
-            this.dataObject = dataObject;
+            this.dataObject = dataObject ?? throw new ArgumentException("Data object cannot be null", nameof(dataObject));
         }
 
         /// <inheritdoc/>

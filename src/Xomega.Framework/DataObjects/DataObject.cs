@@ -221,26 +221,6 @@ namespace Xomega.Framework
             property.Change += OnDataPropertyChange;
         }
 
-        /// <summary>
-        /// Allows controlling if the property is required on the data object level.
-        /// </summary>
-        /// <param name="p">The property being checked if it's required.</param>
-        /// <returns>True if the property should be required, false otherwise.</returns>
-        public virtual bool IsPropertyRequired(BaseProperty p)
-        {
-            return parent == null || parent.IsPropertyRequired(p);
-        }
-
-        /// <summary>
-        /// Allows controlling property visibility on the data object level.
-        /// </summary>
-        /// <param name="p">The property to check the visibility of.</param>
-        /// <returns>True if the property should be visible, false otherwise.</returns>
-        public virtual bool IsPropertyVisible(BaseProperty p)
-        {
-            return parent == null || parent.IsPropertyVisible(p);
-        }
-
         private Dictionary<string, ActionProperty> actions;
 
         /// <summary>

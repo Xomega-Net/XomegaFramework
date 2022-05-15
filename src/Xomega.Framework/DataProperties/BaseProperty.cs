@@ -299,12 +299,7 @@ namespace Xomega.Framework
         /// </summary>
         public bool Visible
         {
-            get
-            {
-                bool b = visible;
-                if (parent != null) b &= parent.IsPropertyVisible(this);
-                return b && AccessLevel > AccessLevel.None;
-            }
+            get => visible && AccessLevel > AccessLevel.None;
             set
             {
                 bool oldValue = Visible;
@@ -355,12 +350,7 @@ namespace Xomega.Framework
         /// </summary>
         public bool Required
         {
-            get
-            {
-                bool b = required;
-                if (parent != null) b &= parent.IsPropertyRequired(this);
-                return b;
-            }
+            get => required;
             set
             {
                 bool oldValue = Required;
@@ -421,12 +411,6 @@ namespace Xomega.Framework
                     PropertyChange.Editable + PropertyChange.Visible, oldValue, accessLevel, null));
             }
         }
-
-        /// <summary>
-        ///  Checks if the property is restricted, i.e. there is no access level.
-        /// </summary>
-        /// <returns>True if the access level is None, false otherwise.</returns>
-        public bool IsRestricted() { return AccessLevel == AccessLevel.None; }
 
         #endregion
     }

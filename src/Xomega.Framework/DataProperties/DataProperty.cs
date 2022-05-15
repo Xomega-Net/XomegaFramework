@@ -220,12 +220,6 @@ namespace Xomega.Framework
         public string NullString { get; set; } = "";
 
         /// <summary>
-        /// The string to display when the property value is restricted and not allowed to be viewed (e.g. N/A).
-        /// The default is empty string.
-        /// </summary>
-        public string RestrictedString { get; set; } = "";
-
-        /// <summary>
         /// The separators to use for multivalued properties to parse the list of values from the input string.
         /// The default is comma, semicolon and a new line.
         /// </summary>
@@ -360,8 +354,7 @@ namespace Xomega.Framework
 
         /// <summary>
         /// Resolves the given value or a list of values to the specified format based on the current property configuration.
-        /// If the property is restricted or the value is null and the format is string based,
-        /// the <c> RestrictedString</c> or <c>NullString</c> are returned respectively.
+        /// If the property value is null and the format is DisplayString, <c>NullString</c> is returned.
         /// If the property is multivalued it will try to convert the value to a list or parse it into a list if it's a string
         /// or just add it to a new list as is and then convert each value in the list into the given format.
         /// Otherwise it will try to convert the single value to the given format.
@@ -372,9 +365,6 @@ namespace Xomega.Framework
         /// <returns>A value or a list of values resolved to the given format based on the property configuration.</returns>
         public object ResolveValue(object value, ValueFormat format)
         {
-            if (IsRestricted())
-                return format.IsString() ? RestrictedString : value;
-
             if (IsValueNull(value, format))
                 return format == ValueFormat.DisplayString ? NullString : null;
 
@@ -411,8 +401,8 @@ namespace Xomega.Framework
 
         /// <summary>
         /// Asynchronously resolves the given value or a list of values to the specified format
-        /// based on the current property configuration. If the property is restricted or the value is null
-        /// and the format is string based, the <c> RestrictedString</c> or <c>NullString</c> are returned respectively.
+        /// based on the current property configuration.
+        /// If the property value is null and the format is DisplayString, <c>NullString</c> is returned.
         /// If the property is multivalued it will try to convert the value to a list or parse it into a list if it's a string
         /// or just add it to a new list as is and then convert each value in the list into the given format.
         /// Otherwise it will try to convert the single value to the given format.
@@ -425,9 +415,6 @@ namespace Xomega.Framework
         /// <returns>A value or a list of values resolved to the given format based on the property configuration.</returns>
         public async Task<object> ResolveValueAsync(object value, ValueFormat format, DataRow row, CancellationToken token = default)
         {
-            if (IsRestricted())
-                return format.IsString() ? RestrictedString : value;
-
             if (IsValueNull(value, format))
                 return format == ValueFormat.DisplayString ? NullString : null;
 
