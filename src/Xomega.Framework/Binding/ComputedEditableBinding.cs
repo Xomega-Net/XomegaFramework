@@ -27,7 +27,8 @@ namespace Xomega.Framework
         /// <inheritdoc/>
         public override void Update(DataRow row)
         {
-            property.Editable = (bool)GetComputedValue(row);
+            var computed = (bool)GetComputedValue(row);
+            property.SetEditable(computed, row);
         }
     }
 }

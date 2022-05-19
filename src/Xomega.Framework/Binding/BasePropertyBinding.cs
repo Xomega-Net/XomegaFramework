@@ -200,7 +200,7 @@ namespace Xomega.Framework
             if (string.IsNullOrEmpty(childPath) || obj == null) return obj;
             int idx = childPath.IndexOf(".");
             if (idx < 0) return obj.GetChildObject(childPath);
-            DataObject child = obj.GetChildObject(childPath.Substring(0, idx)) as DataObject;
+            DataObject child = obj.GetChildObject(childPath.Substring(0, idx));
             return FindChildObject(child, childPath.Substring(idx + 1));
         }
     }

@@ -274,10 +274,11 @@ namespace Xomega.Framework
         /// Manually updates the property editability with the computed result,
         /// in addition to automatic updates when the underlying properties change.
         /// </summary>
-        public void UpdateComputedEditable()
+        /// <param name="row">The row to update editability of the property for, or null to update it for the entire property.</param>
+        public void UpdateComputedEditable(DataRow row = null)
         {
             if (editableBinding != null)
-                editableBinding.Update(null);
+                editableBinding.Update(row);
         }
         #endregion
 
