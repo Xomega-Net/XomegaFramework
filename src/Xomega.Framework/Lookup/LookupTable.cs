@@ -75,12 +75,6 @@ namespace Xomega.Framework.Lookup
         public string Type { get; set; }
 
         /// <summary>
-        /// Temporarily exposed raw data for (de)serializing by System.Text.Json, which needs public properties.
-        /// See https://github.com/dotnet/runtime/issues/29743
-        /// </summary>
-        public IEnumerable<Header> Data { get => data; set => data = value; }
-
-        /// <summary>
         /// Enumerates all values in the table.
         /// </summary>
         /// <returns>An enumeration that contains a copy each value in the table.</returns>

@@ -50,12 +50,6 @@ namespace Xomega.Framework
         private Dictionary<string, object> attributes = new Dictionary<string, object>();
 
         /// <summary>
-        /// Temporarily exposed attributes for (de)serializing by System.Text.Json, which needs public properties.
-        /// See https://github.com/dotnet/runtime/issues/29743
-        /// </summary>
-        public Dictionary<string, object> Attributes { get => attributes; set => attributes = value; }
-
-        /// <summary>
         /// Dummy parameterless constructor to satisfy creation by Activator.
         /// </summary>
         public Header()
