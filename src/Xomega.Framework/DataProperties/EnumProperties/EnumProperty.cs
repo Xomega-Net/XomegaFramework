@@ -79,8 +79,12 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
-        /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
+        /// Effective type of the lookup table
+        /// </summary>
+        public string TableType => LocalCacheLoader?.TableType ?? EnumType;
+
+        /// <summary>
+        /// Gets the lookup table for the property from a lookup cache using <see cref="TableType"/>.
         /// </summary>
         /// <param name="cachedOnly">True to return only the cached lookup table, False to try to load it, if it's not cached.</param>
         /// <param name="row">Data row for which to get the lookup table, or null if the property is not in a data list object.</param>
@@ -89,13 +93,11 @@ namespace Xomega.Framework.Properties
         {
             LookupCache cache = row?.GetLookupCache(this) ?? LocalCacheLoader?.LocalCache ?? 
                 LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
-            string tableType = LocalCacheLoader?.TableType ?? EnumType;
-            return cache?.GetLookupTable(tableType, cachedOnly);
+            return cache?.GetLookupTable(TableType, cachedOnly);
         }
 
         /// <summary>
-        /// Gets the lookup table for the property. The default implementation uses the <see cref="EnumType"/>
-        /// to find the lookup table in the lookup cache specified by the <see cref="CacheType"/>.
+        /// Gets the lookup table for the property from a lookup cache using <see cref="TableType"/>, and loads it asynchronously as needed.
         /// </summary>
         /// <param name="row">Data row for which to get the lookup table, or null if the property is not in a data list object.</param>
         /// <param name="token">Cancellation token.</param>
@@ -104,8 +106,7 @@ namespace Xomega.Framework.Properties
         {
             LookupCache cache = row?.GetLookupCache(this) ?? LocalCacheLoader?.LocalCache ?? 
                 LookupCache.Get(parent?.ServiceProvider ?? DI.DefaultServiceProvider, CacheType);
-            string tableType = LocalCacheLoader?.TableType ?? EnumType;
-            return await cache?.GetLookupTableAsync(tableType, token);
+            return await cache?.GetLookupTableAsync(TableType, token);
         }
 
         /// <summary>
@@ -143,8 +144,8 @@ namespace Xomega.Framework.Properties
             Header h = value as Header;
             if (format == ValueFormat.Internal)
             {
-                if (h != null && h.Type == EnumType) return value;
-                string str = Convert.ToString(value);
+                if (h != null && h.Type == TableType) return value;
+                string str = h?.Id ?? Convert.ToString(value);
                 if (str != null)
                 {
                     string trimmed = str.Trim();
@@ -159,7 +160,7 @@ namespace Xomega.Framework.Properties
                     if (h == null) h = tbl.LookupById(str);
                     if (h != null) return h;
                 }
-                return new Header(EnumType, str);
+                return new Header(TableType, str);
             }
             else if (h != null)
             {
@@ -176,8 +177,8 @@ namespace Xomega.Framework.Properties
             Header h = value as Header;
             if (format == ValueFormat.Internal)
             {
-                if (h != null && h.Type == EnumType) return value;
-                string str = Convert.ToString(value);
+                if (h != null && h.Type == TableType) return value;
+                string str = h?.Id ?? Convert.ToString(value);
                 if (str != null)
                 {
                     string trimmed = str.Trim();
@@ -192,7 +193,7 @@ namespace Xomega.Framework.Properties
                     if (h == null) h = tbl.LookupById(str);
                     if (h != null) return h;
                 }
-                return new Header(EnumType, str);
+                return new Header(TableType, str);
             }
             return await base.ConvertValueAsync(value, format, row, token);
         }
@@ -208,7 +209,7 @@ namespace Xomega.Framework.Properties
             if (dp is EnumProperty ep && ep.LookupValidation != LookupValidationType.None && value is Header hdr)
             {
                 if (!hdr.IsValid)
-                    dp.AddValidationError(row, Messages.Validation_LookupValue, dp, ep.EnumType, hdr);
+                    dp.AddValidationError(row, Messages.Validation_LookupValue, dp, ep.TableType, hdr);
                 else if (ep.LookupValidation == LookupValidationType.ActiveItem && !hdr.IsActive)
                     dp.AddValidationError(row, Messages.Validation_LookupValueActive, dp, hdr);
             }
