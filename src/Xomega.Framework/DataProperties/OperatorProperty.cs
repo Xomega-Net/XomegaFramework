@@ -19,7 +19,7 @@ namespace Xomega.Framework.Properties
     {
         /// <summary>
         /// The name of the operator attribute that stores the number of additional
-        /// properties of the operator requires: 0, 1 or 2.
+        /// properties that the operator requires: 0, 1 or 2.
         /// </summary>
         public const string AttributeAddlProps = "addl props";
 
