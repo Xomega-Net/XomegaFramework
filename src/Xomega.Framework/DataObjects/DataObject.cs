@@ -881,7 +881,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Options for calling CRUD operations
         /// </summary>
-        public class CrudOpions
+        public class CrudOptions
         {
             /// <summary>
             /// Indicates if the operation should call child objects recursively.
@@ -925,7 +925,7 @@ namespace Xomega.Framework
         public virtual ErrorList Read(object options)
         {
             ErrorList msgList = DoRead(options) ?? NewErrorList();
-            CrudOpions crudOpts = options as CrudOpions;
+            CrudOptions crudOpts = options as CrudOptions;
             if (crudOpts?.Recursive ?? true)
                 foreach (DataObject child in childObjects.Values)
                 {
@@ -955,7 +955,7 @@ namespace Xomega.Framework
             {
                 DoReadAsync(options, token)
             };
-            CrudOpions crudOpts = options as CrudOpions;
+            CrudOptions crudOpts = options as CrudOptions;
             if (crudOpts?.Recursive ?? true)
                 foreach (DataObject child in childObjects.Values)
                     readTasks.Add(child.ReadAsync(options, token));
@@ -1006,7 +1006,7 @@ namespace Xomega.Framework
             ErrorList msgList = GetValidationErrors();
             msgList.AbortIfHasErrors();
             msgList.MergeWith(DoSave(options));
-            if (!(options is CrudOpions crudOpts) || crudOpts.Recursive)
+            if (!(options is CrudOptions crudOpts) || crudOpts.Recursive)
                 foreach (DataObject child in childObjects.Values)
                 {
                     msgList.AbortIfHasErrors();
@@ -1039,7 +1039,7 @@ namespace Xomega.Framework
             {
                 DoSaveAsync(options, token)
             };
-            CrudOpions crudOpts = options as CrudOpions;
+            CrudOptions crudOpts = options as CrudOptions;
             if (crudOpts?.Recursive ?? true)
                 foreach (DataObject child in childObjects.Values)
                     saveTasks.Add(child.SaveAsync(options, token));

@@ -558,7 +558,7 @@ namespace Xomega.Framework
             if (!(dataContract is IEnumerable list)) return;
             List<DataRow> sel = new List<DataRow>();
             ListSortCriteria keys = new ListSortCriteria();
-            if (options is CrudOpions opts && opts.PreserveSelection)
+            if (options is CrudOptions opts && opts.PreserveSelection)
             {
                 sel = SelectedRows;
                 keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));
@@ -589,7 +589,7 @@ namespace Xomega.Framework
             if (!(dataContract is IEnumerable list)) return;
             List<DataRow> sel = new List<DataRow>();
             ListSortCriteria keys = new ListSortCriteria();
-            if (options is CrudOpions opts && opts.PreserveSelection)
+            if (options is CrudOptions opts && opts.PreserveSelection)
             {
                 sel = SelectedRows;
                 keys.AddRange(Properties.Where(p => p.IsKey).Select(p => new ListSortField() { PropertyName = p.Name }));

@@ -131,7 +131,7 @@ namespace Xomega.Framework.Views
                 List.Validate(true);
                 ErrorList msgList = List.GetValidationErrors();
                 msgList.AbortIfHasErrors();
-                msgList.MergeWith(List.Read(new DataObject.CrudOpions { PreserveSelection = preserveSelection }));
+                msgList.MergeWith(List.Read(new DataObject.CrudOptions { PreserveSelection = preserveSelection }));
                 Errors = msgList;
                 return !msgList.HasErrors();
             }
@@ -156,7 +156,7 @@ namespace Xomega.Framework.Views
                 List.Validate(true);
                 ErrorList msgList = List.GetValidationErrors();
                 msgList.AbortIfHasErrors();
-                var res = await List.ReadAsync(new DataObject.CrudOpions { PreserveSelection = preserveSelection }, token);
+                var res = await List.ReadAsync(new DataObject.CrudOptions { PreserveSelection = preserveSelection }, token);
                 msgList.MergeWith(res);
                 Errors = msgList;
                 return !msgList.HasErrors();
