@@ -6,14 +6,16 @@ using System.Collections.Generic;
 namespace Xomega.Framework
 {
     /// <summary>
-    /// A struct for field criteria setting in display format.
+    /// A structure for field criteria setting in display format.
     /// </summary>
     public struct FieldCriteriaSetting
     {
         /// <summary>Field label</summary>
         public string Label { get; set; }
+
         /// <summary>Operator</summary>
         public string Operator { get; set; }
+        
         /// <summary>Field value in display format</summary>
         public string[] Value { get; set; }
 
