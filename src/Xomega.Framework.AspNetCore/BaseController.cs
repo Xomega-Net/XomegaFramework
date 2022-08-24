@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Mvc;
 
