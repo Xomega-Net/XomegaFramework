@@ -140,6 +140,10 @@ namespace Xomega.Framework.Properties
                 "0".Equals(multiVal) && additionalProperty.IsMultiValued ||
                 "1".Equals(multiVal) && !additionalProperty.IsMultiValued)) return false;
 
+            int.TryParse("" + oper[AttributeAddlProps], out int depCnt);
+            if (depCnt > 0 && additionalProperty == null || depCnt > 1 && additionalProperty2 == null)
+                return false;
+
             object nullCheck = oper[AttributeNullCheck];
             if ("1".Equals(nullCheck) && !HasNullCheck) return false;
 
