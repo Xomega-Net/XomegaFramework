@@ -166,6 +166,12 @@ namespace Xomega.Framework
         public const string Select_RequiredOption = "Select_RequiredOption";
 
         /// <summary>
+        /// The service returned an empty response with the following status: {0} - {1}
+        /// Where {0}=Status code, {1}=Status description
+        /// </summary>
+        public const string Service_EmptyResponse = "Service_EmptyResponse";
+
+        /// <summary>
         /// {0} has an invalid date/time: {1}. Please use the following format: {2}.
         /// Where {0}=Property name, {1}=Invalid value, {2}=Valid format
         /// </summary>

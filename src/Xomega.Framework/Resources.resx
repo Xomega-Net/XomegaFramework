@@ -207,6 +207,10 @@
     <value>Select {0}...</value>
     <comment>{0}=Property name</comment>
   </data>
+  <data name="Service_EmptyResponse" xml:space="preserve">
+    <value>The service returned an empty response with the following status: {0} - {1}</value>
+    <comment>{0}=Status code, {1}=Status description</comment>
+  </data>
   <data name="Validation_DateTimeFormat" xml:space="preserve">
     <value>{0} has an invalid date/time: {1}. Please use the following format: {2}.</value>
     <comment>{0}=Property name, {1}=Invalid value, {2}=Valid format</comment>
