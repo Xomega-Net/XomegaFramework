@@ -156,7 +156,7 @@ namespace Xomega.Framework.Properties
                 if (tbl != null)
                 {
                     h = null;
-                    if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str);
+                    if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str, ResourceMgr);
                     if (h == null) h = tbl.LookupById(str);
                     if (h != null) return h;
                 }
@@ -165,8 +165,8 @@ namespace Xomega.Framework.Properties
             else if (h != null)
             {
                 if (format == ValueFormat.Transport) return h.Id;
-                if (format == ValueFormat.EditString) return h.ToString(KeyFormat);
-                if (format == ValueFormat.DisplayString) return h.ToString(DisplayFormat);
+                if (format == ValueFormat.EditString) return h.ToString(KeyFormat, ResourceMgr);
+                if (format == ValueFormat.DisplayString) return h.ToString(DisplayFormat, ResourceMgr);
             }
             return base.ConvertValue(value, format);
         }
@@ -189,7 +189,7 @@ namespace Xomega.Framework.Properties
                 if (tbl != null)
                 {
                     h = null;
-                    if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str);
+                    if (KeyFormat != Header.FieldId) h = tbl.LookupByFormat(KeyFormat, str, ResourceMgr);
                     if (h == null) h = tbl.LookupById(str);
                     if (h != null) return h;
                 }

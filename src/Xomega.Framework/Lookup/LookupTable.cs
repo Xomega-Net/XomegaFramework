@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Runtime.Serialization;
 using System.Threading;
 
@@ -101,7 +102,7 @@ namespace Xomega.Framework.Lookup
         /// <returns>A copy of the Header with the specified ID.</returns>
         public Header LookupById(string id)
         {
-            return LookupByFormat(Header.FieldId, id);
+            return LookupByFormat(Header.FieldId, id, null);
         }
 
         /// <summary>
@@ -114,15 +115,16 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="format">The format used to evaluate a string value for each item.</param>
         /// <param name="value">The value to look up by.</param>
+        /// <param name="resMgr">Resource manager for text lookup.</param>
         /// <returns>A copy of the Header item, for which evaluation of the given format
         /// matches the value provided. If no match is found a <c>null</c> value is returned.</returns>
-        public Header LookupByFormat(string format, string value)
+        public Header LookupByFormat(string format, string value, ResourceManager resMgr)
         {
             rwLock.EnterUpgradeableReadLock();
             try
             {
                 if (!indexedData.TryGetValue(format, out IndexedTable tbl))
-                    tbl = BuildIndexedTable(format);
+                    tbl = BuildIndexedTable(format, resMgr);
                 if (tbl.TryGetValue(value, out Header res)) return res;
                 return res;
             }
@@ -172,8 +174,9 @@ namespace Xomega.Framework.Lookup
         /// Builds an index for the specified format.
         /// </summary>
         /// <param name="format">Format string.</param>
+        /// <param name="resMgr">Resource manager for text lookup.</param>
         /// <returns>An indexed table for the specified format.</returns>
-        protected IndexedTable BuildIndexedTable(string format)
+        protected IndexedTable BuildIndexedTable(string format, ResourceManager resMgr)
         {
             rwLock.EnterWriteLock();
             try
@@ -182,7 +185,7 @@ namespace Xomega.Framework.Lookup
                 foreach (Header h in data)
                 {
                     if (h == null) continue;
-                    string key = h.ToString(format);
+                    string key = h.ToString(format, resMgr);
                     if (tbl.TryGetValue(key, out Header h1))
                         h1.AddToAttribute(GroupAttrPrefix + format, h);
                     else tbl[key] = h;

@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -216,12 +218,27 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// Gets the header's localized text using the specified resource manager and any language attribtes.
+        /// </summary>
+        /// <param name="resMgr">Resource manager to use for static resource localization.</param>
+        /// <returns>Localized text for the header.</returns>
+        public virtual string GetText(ResourceManager resMgr)
+        {
+            var attr = this[$"lang-{CultureInfo.CurrentCulture.Name}"] ??
+                this[$"lang-{CultureInfo.CurrentCulture.Parent.Name}"];
+            if (attr != null) return Convert.ToString(attr);
+
+            string resKey = $"Enum_{Type}.{Id}";
+            return resMgr?.GetString(resKey) ?? Text;
+        }
+
+        /// <summary>
         /// Returns a string representation of the header based on the default format.
         /// </summary>
         /// <returns>A string representation of the header based on the default format.</returns>
         public override string ToString()
         {
-            return ToString(DefaultFormat);
+            return ToString(DefaultFormat, null);
         }
 
         /// <summary>
@@ -230,14 +247,15 @@ namespace Xomega.Framework
         /// to refer to the value of ID, Text or any named attribute of the header respectively.
         /// </summary>
         /// <param name="format">The format string to use.</param>
+        /// <param name="resMgr">Resource manager for text lookup.</param>
         /// <returns>A string representation of the header formatted according to the given format.</returns>
-        public string ToString(string format)
+        public string ToString(string format, ResourceManager resMgr)
         {
             // for performance purposes check standard fields first
             if (format == FieldId || !IsValid) return Id;
-            if (format == FieldText) return Text;
+            if (format == FieldText) return GetText(resMgr);
 
-            return Regex.Replace(format, @"\[(i|t|a:)(.*?)\]", EvaluateMatch);
+            return Regex.Replace(format, @"\[(i|t|a:)(.*?)\]", m => EvaluateMatch(m, resMgr));
         }
 
         /// <summary>
@@ -246,15 +264,16 @@ namespace Xomega.Framework
         /// with the corresponding value of ID, Text or the named attribute of the header respectively.
         /// </summary>
         /// <param name="m">The match to evaluate.</param>
+        /// <param name="resMgr">Resource manager for text lookup.</param>
         /// <returns>The result of the evaluation.</returns>
-        private string EvaluateMatch(Match m)
+        private string EvaluateMatch(Match m, ResourceManager resMgr)
         {
             string field = m.Result("$1");
             string attrName = m.Result("$2");
             if (string.IsNullOrEmpty(attrName))
             {
                 if (field == "i") return Id;
-                if (field == "t") return Text;
+                if (field == "t") return GetText(resMgr);
             }
             else if (field == "a:")
             {
