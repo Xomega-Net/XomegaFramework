@@ -224,8 +224,8 @@ namespace Xomega.Framework
         /// <returns>Localized text for the header.</returns>
         public virtual string GetText(ResourceManager resMgr)
         {
-            var attr = this[$"lang-{CultureInfo.CurrentCulture.Name}"] ??
-                this[$"lang-{CultureInfo.CurrentCulture.Parent.Name}"];
+            var attr = this[$"lang-{CultureInfo.CurrentUICulture.Name}"] ??
+                this[$"lang-{CultureInfo.CurrentUICulture.Parent.Name}"];
             if (attr != null) return Convert.ToString(attr);
 
             string resKey = $"Enum_{Type}.{Id}";
