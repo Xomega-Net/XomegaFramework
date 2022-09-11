@@ -1,5 +1,7 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
+using System.Resources;
+
 namespace Xomega.Framework
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace Xomega.Framework
         /// <summary>
         /// The string format in which the value is displayed to the user when it's not editable.
         /// When internal value is an object such as <c>Header</c>, the display string may
-        /// consist of a combination of several of its parts (see <see cref="Header.ToString(string)"/>).
+        /// consist of a combination of several of its parts (see <see cref="Header.ToString(string, ResourceManager)"/>).
         /// </summary>
         public static readonly ValueFormat DisplayString = new ValueFormat();
 
