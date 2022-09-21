@@ -46,12 +46,6 @@ namespace Xomega.Framework
         public const string AttrPattern = "[a:{0}]";
 
         /// <summary>
-        /// Internal dictionary for named attributes.
-        /// </summary>
-        [DataMember]
-        private Dictionary<string, object> attributes = new Dictionary<string, object>();
-
-        /// <summary>
         /// Dummy parameterless constructor to satisfy creation by Activator.
         /// </summary>
         public Header()
@@ -99,7 +93,7 @@ namespace Xomega.Framework
             IsActive = hdr.IsActive;
             DefaultFormat = hdr.DefaultFormat;
 
-            foreach (string attr in hdr.attributes.Keys)
+            foreach (string attr in hdr.Attributes.Keys)
                 this[attr] = hdr[attr];
         }
 
@@ -149,14 +143,20 @@ namespace Xomega.Framework
         public string DefaultFormat { get; set; } = FieldText;
 
         /// <summary>
+        /// Internal dictionary for named attributes, but made public for Json serialization.
+        /// </summary>
+        [DataMember]
+        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
+
+        /// <summary>
         /// Returns a value of the given named attribute.
         /// </summary>
         /// <param name="attribute">Attribute name.</param>
         /// <returns>The value of the attribute.</returns>
         public object this[string attribute]
         {
-            get { return attributes.ContainsKey(attribute) ? attributes[attribute] : null; }
-            set { attributes[attribute] = value; }
+            get { return Attributes.ContainsKey(attribute) ? Attributes[attribute] : null; }
+            set { Attributes[attribute] = value; }
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace Xomega.Framework
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            var members = attributes.Keys.ToList();
+            var members = Attributes.Keys.ToList();
             members.Add("Id");
             members.Add("Text");
             return members;
@@ -326,7 +326,7 @@ namespace Xomega.Framework
                 result = Text;
                 return true;
             }
-            if (attributes.ContainsKey(binder.Name))
+            if (Attributes.ContainsKey(binder.Name))
             {
                 result = this[binder.Name];
                 return true;
@@ -347,7 +347,7 @@ namespace Xomega.Framework
                 Text = value?.ToString();
                 return true;
             }
-            if (attributes.ContainsKey(binder.Name))
+            if (Attributes.ContainsKey(binder.Name))
             {
                 this[binder.Name] = value;
                 return true;

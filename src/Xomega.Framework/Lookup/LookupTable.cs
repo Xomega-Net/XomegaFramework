@@ -34,12 +34,6 @@ namespace Xomega.Framework.Lookup
         public const string GroupAttrPrefix = "Group:";
 
         /// <summary>
-        /// Raw data as a list.
-        /// </summary>
-        [DataMember]
-        protected IEnumerable<Header> data;
-
-        /// <summary>
         /// Indexed data by key format that is used to get the key.
         /// </summary> 
         protected Dictionary<string, IndexedTable> indexedData = new Dictionary<string, IndexedTable>();
@@ -64,7 +58,7 @@ namespace Xomega.Framework.Lookup
         public LookupTable(string type, IEnumerable<Header> data, bool caseSensitive)
         {
             Type = type;
-            this.data = data;
+            this.Data = data;
             CaseSensitive = caseSensitive;
             foreach (Header h in data) if (h != null) h.Type = type;
         }
@@ -74,6 +68,12 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         [DataMember]
         public string Type { get; set; }
+
+        /// <summary>
+        /// Raw data as a list. Made public for Json serialization.
+        /// </summary>
+        [DataMember]
+        public IEnumerable<Header> Data { get; set; }
 
         /// <summary>
         /// Enumerates all values in the table.
@@ -90,7 +90,7 @@ namespace Xomega.Framework.Lookup
         /// <returns>A filtered enumeration that contains copies of each value matching the filter.</returns>
         public IEnumerable<Header> GetValues(Func<Header, DataRow, bool> filterFunc, DataRow row = null)
         {
-            IEnumerable<Header> lst = data;
+            IEnumerable<Header> lst = Data;
             if (filterFunc != null) lst = lst.Where(h => filterFunc(h, row));
             return lst.Where(h => h != null).Select(h => h.Clone()).AsEnumerable();
         }
@@ -182,7 +182,7 @@ namespace Xomega.Framework.Lookup
             try
             {
                 IndexedTable tbl = new IndexedTable(this);
-                foreach (Header h in data)
+                foreach (Header h in Data)
                 {
                     if (h == null) continue;
                     string key = h.ToString(format, resMgr);
