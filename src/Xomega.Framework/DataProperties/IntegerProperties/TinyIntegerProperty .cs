@@ -1,16 +1,27 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Xomega.Framework.Properties
 {
     /// <summary>
-    /// An integer property for numbers in the range defined by the <c>byte</c> CLR type.
-    /// The <c>byte</c> type is used for the transport value format.
+    /// An integer property for numbers of the <c>byte</c> CLR type.
     /// </summary>
-    public class TinyIntegerProperty : IntegerProperty
+    public class TinyIntegerProperty : DataProperty<byte?>
     {
+        /// <summary>
+        /// The minimum valid value for the property.
+        /// </summary>
+        public byte MinimumValue { get; set; }
+
+        /// <summary>
+        /// The maximum valid value for the property.
+        /// </summary>
+        public byte MaximumValue { get; set; }
+
         /// <summary>
         ///  Constructs a TinyIntegerProperty with a given name and adds it to the parent data object under this name.
         /// </summary>
@@ -22,6 +33,10 @@ namespace Xomega.Framework.Properties
         {
             MinimumValue = byte.MinValue;
             MaximumValue = byte.MaxValue;
+
+            Validator += ValidateByte;
+            Validator += ValidateMinimum;
+            Validator += ValidateMaximum;
         }
 
         /// <summary>
@@ -44,9 +59,54 @@ namespace Xomega.Framework.Properties
         /// <returns>The value converted to the given format.</returns>
         protected override object ConvertValue(object value, ValueFormat format)
         {
-            if (format == ValueFormat.Transport && value is long?)
-                return (byte?)(long?)value;
+            if (format.IsTyped())
+            {
+                if (value is byte?) return value;
+                if (value is byte) return (byte?)value;
+                if (value is double d) return (byte?)d;
+                if (IsValueNull(value, format)) return null;
+                if (byte.TryParse(Convert.ToString(value), NumberStyles.Number, null, out byte i)) return i;
+                if (format == ValueFormat.Transport) return null;
+            }
             return base.ConvertValue(value, format);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a byte and reports a validation error if not.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateByte(DataProperty dp, object value, DataRow row)
+        {
+            if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal) && !(value is byte))
+                dp.AddValidationError(row, Messages.Validation_IntegerFormat, dp);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a byte that is not less
+        /// than the property minimum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is TinyIntegerProperty idp && (value is byte?) && ((byte?)value).Value < idp.MinimumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a byte that is not greater
+        /// than the property maximum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is TinyIntegerProperty idp && (value is byte?) && ((byte?)value).Value > idp.MaximumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
         }
     }
 

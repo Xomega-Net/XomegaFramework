@@ -1,16 +1,27 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Xomega.Framework.Properties
 {
     /// <summary>
-    /// An integer property for numbers in the range defined by the <c>short</c> CLR type.
-    /// The <c>short</c> type is used for the transport value format.
+    /// An integer property for numbers of the <c>short</c> CLR type.
     /// </summary>
-    public class SmallIntegerProperty : IntegerProperty
+    public class SmallIntegerProperty : DataProperty<short?>
     {
+        /// <summary>
+        /// The minimum valid value for the property.
+        /// </summary>
+        public short MinimumValue { get; set; }
+
+        /// <summary>
+        /// The maximum valid value for the property.
+        /// </summary>
+        public short MaximumValue { get; set; }
+
         /// <summary>
         ///  Constructs a SmallIntegerProperty with a given name and adds it to the parent data object under this name.
         /// </summary>
@@ -21,6 +32,10 @@ namespace Xomega.Framework.Properties
         {
             MinimumValue = short.MinValue;
             MaximumValue = short.MaxValue;
+
+            Validator += ValidateShort;
+            Validator += ValidateMinimum;
+            Validator += ValidateMaximum;
         }
 
         /// <summary>
@@ -35,17 +50,63 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// Converts a single value to a given format. For the transport format
-        /// the value is converted to a <c>short</c> type.
+        /// Converts a single value to a given format. For typed formats
+        /// this method tries to convert various types of values to a nullable short.
         /// </summary>
         /// <param name="value">A single value to convert to the given format.</param>
         /// <param name="format">The value format to convert the value to.</param>
         /// <returns>The value converted to the given format.</returns>
         protected override object ConvertValue(object value, ValueFormat format)
         {
-            if (format == ValueFormat.Transport && value is long?)
-                return (short?)(long?)value;
+            if (format.IsTyped())
+            {
+                if (value is short?) return value;
+                if (value is short) return (short?)value;
+                if (value is double d) return (short?)d;
+                if (IsValueNull(value, format)) return null;
+                if (short.TryParse(Convert.ToString(value), NumberStyles.Number, null, out short i)) return i;
+                if (format == ValueFormat.Transport) return null;
+            }
             return base.ConvertValue(value, format);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a short and reports a validation error if not.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateShort(DataProperty dp, object value, DataRow row)
+        {
+            if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal)
+                && !(value is short) && !(value is byte))
+                dp.AddValidationError(row, Messages.Validation_IntegerFormat, dp);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a short that is not less
+        /// than the property minimum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is SmallIntegerProperty idp && (value is short?) && ((short?)value).Value < idp.MinimumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is a short that is not greater
+        /// than the property maximum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is SmallIntegerProperty idp && (value is short?) && ((short?)value).Value > idp.MaximumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
         }
     }
 

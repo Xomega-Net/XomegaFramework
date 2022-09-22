@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Xomega.Framework.Properties
 {
     /// <summary>
-    /// A data property that holds big integer values (long), and serves as a base class for other integer properties.
+    /// A data property that holds big integer values (long).
     /// </summary>
     public class BigIntegerProperty : DataProperty<long?>
     {
@@ -33,7 +33,7 @@ namespace Xomega.Framework.Properties
             MinimumValue = long.MinValue;
             MaximumValue = long.MaxValue;
 
-            Validator += ValidateInteger;
+            Validator += ValidateLong;
             Validator += ValidateMinimum;
             Validator += ValidateMaximum;
         }
@@ -76,7 +76,7 @@ namespace Xomega.Framework.Properties
         /// <param name="dp">Data property being validated.</param>
         /// <param name="value">The value to validate.</param>
         /// <param name="row">The row in a list object or null for regular data objects.</param>
-        public static void ValidateInteger(DataProperty dp, object value, DataRow row)
+        public static void ValidateLong(DataProperty dp, object value, DataRow row)
         {
             if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal)
                 && !(value is long) && !(value is int) && !(value is short) && !(value is byte))

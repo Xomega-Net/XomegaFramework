@@ -1,18 +1,29 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Xomega.Framework.Properties
 {
     /// <summary>
-    /// An integer property for numbers in the range defined by the <c>int</c> CLR type.
-    /// The <c>int</c> type is used for the transport value format.
+    /// An integer property for numbers of the <c>int</c> CLR type.
     /// </summary>
-    public class IntegerProperty : BigIntegerProperty
+    public class IntegerProperty : DataProperty<int?>
     {
         /// <summary>
-        ///  Constructs a BigIntegerProperty with a given name and adds it to the parent data object under this name.
+        /// The minimum valid value for the property.
+        /// </summary>
+        public int MinimumValue { get; set; }
+
+        /// <summary>
+        /// The maximum valid value for the property.
+        /// </summary>
+        public int MaximumValue { get; set; }
+
+        /// <summary>
+        ///  Constructs an IntegerProperty with a given name and adds it to the parent data object under this name.
         /// </summary>
         /// <param name="parent">The parent data object to add the property to if applicable.</param>
         /// <param name="name">The property name that should be unique within the parent data object.</param>
@@ -22,6 +33,10 @@ namespace Xomega.Framework.Properties
         {
             MinimumValue = int.MinValue;
             MaximumValue = int.MaxValue;
+
+            Validator += ValidateInteger;
+            Validator += ValidateMinimum;
+            Validator += ValidateMaximum;
         }
 
         /// <summary>
@@ -36,17 +51,63 @@ namespace Xomega.Framework.Properties
         }
 
         /// <summary>
-        /// Converts a single value to a given format. For the transport format
-        /// the value is converted to an <c>int</c> type.
+        /// Converts a single value to a given format. For typed formats
+        /// this method tries to convert various types of values to a nullable int.
         /// </summary>
         /// <param name="value">A single value to convert to the given format.</param>
         /// <param name="format">The value format to convert the value to.</param>
         /// <returns>The value converted to the given format.</returns>
         protected override object ConvertValue(object value, ValueFormat format)
         {
-            if (format == ValueFormat.Transport && value is long?)
-                return (int?)(long?)value;
+            if (format.IsTyped())
+            {
+                if (value is int?) return value;
+                if (value is int) return (int?)value;
+                if (value is double d) return (int?)d;
+                if (IsValueNull(value, format)) return null;
+                if (int.TryParse(Convert.ToString(value), NumberStyles.Number, null, out int i)) return i;
+                if (format == ValueFormat.Transport) return null;
+            }
             return base.ConvertValue(value, format);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is an int and reports a validation error if not.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateInteger(DataProperty dp, object value, DataRow row)
+        {
+            if (dp != null && !dp.IsValueNull(value, ValueFormat.Internal)
+                && !(value is int) && !(value is short) && !(value is byte))
+                dp.AddValidationError(row, Messages.Validation_IntegerFormat, dp);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is an int that is not less
+        /// than the property minimum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMinimum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is IntegerProperty idp && (value is int?) && ((int?)value).Value < idp.MinimumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMinimum, dp, idp.MinimumValue);
+        }
+
+        /// <summary>
+        /// A validation function that checks if the value is an int that is not greater
+        /// than the property maximum and reports a validation error if it is.
+        /// </summary>
+        /// <param name="dp">Data property being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        /// <param name="row">The row in a list object or null for regular data objects.</param>
+        public static void ValidateMaximum(DataProperty dp, object value, DataRow row)
+        {
+            if (dp is IntegerProperty idp && (value is int?) && ((int?)value).Value > idp.MaximumValue)
+                dp.AddValidationError(row, Messages.Validation_NumberMaximum, dp, idp.MaximumValue);
         }
     }
 
