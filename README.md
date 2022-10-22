@@ -54,7 +54,7 @@ The generic MVVM architecture of the presentation layer built with Xomega Framew
 
 ![UI architecture](../../../Xomega.Docs/blob/master/docs/framework/common-ui/img/ui_arch.png)
 
-Communication between the presentation layer and your business services will depend on the overall architecture of your app and the specific technologies that you use for its layers, as illustrated on the following diagram.
+Communication between the presentation layer and your business services will depend on the overall architecture of your app and the specific technologies that you use for its layers, as illustrated by the following diagram.
 
 ![Services architecture](../../../Xomega.Docs/blob/master/docs/framework/services/img/services.png?raw=true)
 
@@ -68,7 +68,7 @@ If you find any incorrect or missing documentation, please browse existing [Docu
 
 ### VS solution wizard
 
-The easiest and fastest way to get started with Xomega Framework is to [download and install our free VS extension](https://xomega.net/System/Download.aspx) Xomega.Net for Visual Studio. It provides a *New Project* template with a solution wizard, where you can configure a new solution for any supported architecture, such as Blazor, WPF, ASP.NET or SPA, or even pick multiple architectures that will share the same code.
+The easiest and fastest way to get started with Xomega Framework is to [download and install our free VS extension](https://xomega.net/System/Download.aspx) **Xomega.Net for Visual Studio**. It provides a *New Project* template with a solution wizard, where you can configure a new solution for any supported architecture, such as Blazor, WPF, ASP.NET or SPA, or even pick multiple architectures that will share the same code.
 
 ### Xomega low-code platform
 
