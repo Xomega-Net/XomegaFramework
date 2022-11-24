@@ -17,7 +17,7 @@
         <select @ref="SelectList" id="@ControlId"
                 class="form-select @StateClass"
                 disabled="@(!IsEditable)"
-                multiple="@IsMultiValue"
+                multiple="@IsMultiValue" size="@Rows"
                 @onchange="@OnSelectionChanged"
                 @onfocus="OnFocus"
                 @onblur="OnBlur">
@@ -62,6 +62,8 @@
         .GetString(Messages.Select_RequiredOption), Label);
 
     protected ElementReference SelectList { get; set; }
+
+    [Parameter] public int? Rows { get; set; }
 
     protected async Task OnSelectionChanged(ChangeEventArgs e)
     {
