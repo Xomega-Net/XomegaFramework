@@ -7,9 +7,9 @@
     <div class="@Class">
         @if (ShowLabel)
         {
-            <label class="form-label">@GetLabel(Label)</label>
+            <label class="form-label" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
         }
-        <input type="text" readonly class="form-control-plaintext"
+        <input type="text" id="@ControlId" readonly class="form-control-plaintext"
                value="@(Property?.GetStringValue(ValueFormat.DisplayString, Row))" />
     </div>
 }
