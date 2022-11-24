@@ -60,7 +60,8 @@ namespace Xomega.Framework.Blazor.Components
             if (ParentGrid != null)
                 ParentGrid.AddColumn(this);
 
-            if (TextAlign == null && (Property is IntegerProperty || 
+            if (TextAlign == null && (Property is BigIntegerProperty || Property is IntegerProperty ||
+                Property is SmallIntegerProperty || Property is TinyIntegerProperty ||
                 Property is DecimalProperty || Property is DateTimeProperty))
                 TextAlign = Alignment.End;
 
@@ -92,7 +93,7 @@ namespace Xomega.Framework.Blazor.Components
         /// <summary>
         /// Returns whether or not the grid column is currently visible based on the visibility of the underlying property.
         /// </summary>
-        public bool IsVisible => Property?.Visible ?? false;
+        public bool IsVisible => Property?.Visible ?? true;
 
         /// <summary>
         /// The width of the column with CSS units (px, rem, %, etc).
@@ -154,7 +155,7 @@ namespace Xomega.Framework.Blazor.Components
         /// </summary>
         protected DataListObject List => Property?.GetParent() as DataListObject;
 
-        internal bool IsSortable => Sortable && (ParentGrid?.AllowSorting ?? false);
+        internal bool IsSortable => Sortable && (ParentGrid?.AllowSorting ?? false) && Property != null;
         
         internal ListSortField SortField => Property == null ? null :
             SortCriteria?.Find(sf => sf.PropertyName == Property.Name);
