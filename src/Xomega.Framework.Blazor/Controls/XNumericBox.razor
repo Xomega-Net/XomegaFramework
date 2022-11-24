@@ -10,7 +10,7 @@
             <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
         }
         <input type="@InputType" id="@ControlId"
-               class="form-control @StateClass" placeholder="@Placeholder"
+               class="@ControlClass @StateClass" placeholder="@Placeholder"
                min="@Min" max="@Max" step="@Step"
                disabled="@(!IsEditable)"
                value="@Value" @onchange="@OnValueChanged" @onblur="OnBlur" />
@@ -22,13 +22,21 @@
 
     private decimal? Min => IsMultiValue ? null :
         Property is IntegerProperty ip ? ip.MinimumValue :
+        Property is BigIntegerProperty bip ? bip.MinimumValue :
+        Property is SmallIntegerProperty sip ? sip.MinimumValue :
+        Property is TinyIntegerProperty tip ? tip.MinimumValue :
         Property is DecimalProperty dp ? dp.MinimumValue : (decimal?)null;
 
     private decimal? Max => IsMultiValue ? null :
         Property is IntegerProperty ip ? ip.MaximumValue:
+        Property is BigIntegerProperty bip ? bip.MaximumValue :
+        Property is SmallIntegerProperty sip ? sip.MaximumValue :
+        Property is TinyIntegerProperty tip ? tip.MaximumValue :
         Property is DecimalProperty dp ? dp.MaximumValue : (decimal?)null;
 
     [Parameter] public decimal? Step { get; set; }
 
     protected override string InputType => Type ?? (IsMultiValue ? "text" : "number");
+    
+    protected string ControlClass => InputType == "range" ? "form-range" : "form-control";
 }
