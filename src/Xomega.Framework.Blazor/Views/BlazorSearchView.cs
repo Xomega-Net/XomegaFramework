@@ -51,7 +51,7 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// Localized text for the title of the search criteria bar.
         /// </summary>
-        protected virtual string CriteriaText => Model?.GetString(Messages.View_Critiera);
+        protected virtual string CriteriaText => Model?.GetString(Messages.View_Criteria);
 
         /// <inheritdoc/>
         protected override bool FooterVisible => base.FooterVisible ||

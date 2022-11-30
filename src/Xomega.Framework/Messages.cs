@@ -258,7 +258,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Search Criteria
         /// </summary>
-        public const string View_Critiera = "View_Critiera";
+        public const string View_Criteria = "View_Criteria";
 
         /// <summary>
         /// Are you sure you want to delete this object?
