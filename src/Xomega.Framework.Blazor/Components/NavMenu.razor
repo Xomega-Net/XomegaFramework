@@ -11,29 +11,39 @@
 
 @if (VisibleItems?.Count() > 0)
 {
-    <ul class="@Class list-unstyled" id="@Id">
+    <ul class="@ListClass list-unstyled" id="@Id">
         @foreach (var mi in VisibleItems)
         {
-        <li class="nav-item">
-            @if (mi.Items?.Count() > 0)
-            {
-                @if (string.IsNullOrEmpty(mi.Href))
+            <li class="nav-item @ItemClass @ButtonGroup(mi)">
+                @if (!string.IsNullOrEmpty(mi.Href))
+                {
+                    <NavLink class="@LinkClass(mi)" href="@mi.Href" Match="NavLinkMatch.All">
+                        <i class="@GetIconClass(mi)"></i>@GetText(mi)</NavLink>
+                }
+                @if (mi.Items?.Count() > 0)
                 {
                     string id = GetId(mi);
                     string idRef = "#" + id;
-                    <NavLink class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="@idRef"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
-                    <NavMenu Items="@mi.Items" Id="@id" Class="collapse" />
+                    @if (IsSubmenu && string.IsNullOrEmpty(mi.Href))
+                    {
+                        <a class="nav-link submenu-toggle">
+                            <i class="@GetIconClass(mi)"></i>@GetText(mi)
+                        </a>
+                    }
+                    else if (string.IsNullOrEmpty(mi.Href))
+                    {
+                        <NavLink class="nav-link dropdown-toggle" data-bs-toggle="@Toggle" href="@idRef">
+                            <i class="@GetIconClass(mi)"></i>@GetText(mi)</NavLink>
+                    }
+                    else if (!IsSubmenu)
+                    {
+                        <a class="nav-link dropdown-toggle dropdown-toggle-split @ToggleCol" href="@idRef"
+                                data-bs-toggle="@Toggle" data-bs-reference="parent">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </a>
+                    }
+                    <NavMenu Items="@mi.Items" Id="@id" Class="@ChildMenuClass" IsDropdown="@IsDropdown" DropdownClass="@DropdownClass"/>
                 }
-                else
-                {
-                    <NavLink class="nav-link" href="@mi.Href" Match="NavLinkMatch.All"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
-                    <NavMenu Items="@mi.Items" />
-                }
-            }
-            else
-            {
-                <NavLink class="nav-link" href="@mi.Href" Match="NavLinkMatch.All"><i class="@mi.IconClass"></i>@GetText(mi)</NavLink>
-            }
         </li>
         }
     </ul>
@@ -47,9 +57,36 @@
     [Parameter]
     public string Id { get; set; }
 
+    [Parameter]
+    public bool IsDropdown { get; set; }
+
+    [Parameter]
+    public string DropdownClass { get; set; }
+
+    protected string ListClass => Class + (IsDropdown ? " navmenu-dropdown" : " navmenu");
+
+    protected string ItemClass => IsDropdown ? "dropdown" : "";
+
+    protected string ButtonGroup(MenuItem mi) => string.IsNullOrEmpty(mi.Href) || mi.Items?.Count() == 0 ? "" :
+        IsDropdown ? "btn-group" : "row g-0";
+
+    protected string Toggle => IsDropdown ? "dropdown" : "collapse";
+    
+    protected string ToggleCol => IsDropdown ? "" : "col"; // for sidebar split-menu
+
+    protected string LinkClass(MenuItem mi) => "nav-link" + 
+        (IsSubmenu && mi.Items?.Count() > 0 ? " submenu-toggle" : "") +
+        (IsDropdown || mi.Items?.Count() == 0 ? "" : " col-auto"); // for sidebar split-menu
+
+    protected string ChildMenuClass => IsDropdown ? "dropdown-menu " + (IsSubmenu ? "dropdown-submenu " : "") +  DropdownClass : "collapse";
+
+    protected bool IsSubmenu => Class?.Contains("dropdown-menu") ?? false;
+
     protected virtual string GetId(MenuItem mi) => "mi_" + Guid.NewGuid().ToString("N");
 
     protected virtual string GetText(MenuItem mi) => mi.Text ?? resources.GetString(mi.ResourceKey);
+    
+    protected virtual string GetIconClass(MenuItem mi) => string.IsNullOrEmpty(mi.IconClass) ? "" : mi.IconClass + " me-2";
 
     [Parameter]
     public List<MenuItem> Items { get; set; }
