@@ -127,13 +127,14 @@ namespace Xomega.Framework
         /// <param name="oper">Comparison operator to use.</param>
         /// <param name="criteria">The value to compare to.</param>
         /// <param name="caseSensitive">True to perform case-sensitive string matching, false otherwise.</param>
+        /// <param name="displayFormat">True to perform matching based on the display format, false to match based on internal format.</param>
         /// <returns>True if the property value in the given row matches the specified criteria, false otherwise.</returns>
-        public virtual bool PropertyValueMatches(DataProperty property, DataRow row, Operator oper, object criteria, bool caseSensitive)
+        public virtual bool PropertyValueMatches(DataProperty property, DataRow row, Operator oper, object criteria, bool caseSensitive, bool displayFormat)
         {
-            ValueFormat format = criteria?.GetType() == typeof(string) ? ValueFormat.DisplayString : ValueFormat.Internal;
+            ValueFormat format = displayFormat ? ValueFormat.DisplayString : ValueFormat.Internal;
             object value = property.GetValue(format, row);
             criteria = property.ResolveValue(criteria, format);
-            if (format.IsString() && !caseSensitive)
+            if ((displayFormat || value is string)  && !caseSensitive)
             {
                 value = value?.ToString()?.ToLower();
                 criteria = criteria?.ToString()?.ToLower();

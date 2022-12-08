@@ -54,9 +54,9 @@ namespace Xomega._Syncfusion.Blazor
 
             IEnumerable<DataRow> data = list.GetData();
             if (dm.Where != null && dm.Where.Count > 0)
-                data = data.Where(r => Matches(r, "and", dm.Where));
+                data = data.Where(r => Matches(r, "and", dm.Where, false));
             if (dm.Search != null && dm.Search.Count > 0)
-                data = data.Where(r => Matches(r, "and", SearchToWhere(dm.Search)));
+                data = data.Where(r => Matches(r, "and", SearchToWhere(dm.Search), true));
 
             data = data.ToList(); // run the search before sorting and counting
             if (dm.Sorted != null && dm.Sorted.Count > 0)
@@ -84,20 +84,20 @@ namespace Xomega._Syncfusion.Blazor
             return await Task.FromResult(res);
         }
 
-        private bool Matches(DataRow row, string condition, IEnumerable<WhereFilter> criteria)
+        private bool Matches(DataRow row, string condition, IEnumerable<WhereFilter> criteria, bool displayFormat)
         {
             bool isOr = condition == "or";
             foreach (var c in criteria)
             {
                 bool m;
                 if (c.IsComplex)
-                    m = Matches(row, c.Condition, c.predicates);
+                    m = Matches(row, c.Condition, c.predicates, displayFormat);
                 else
                 {
                     var prop = row.List[c.Field];
                     if (prop == null) continue;
                     var op = GetOperator(c.Operator);
-                    m = row.List.PropertyValueMatches(prop, row, op, c.value, !c.IgnoreCase);
+                    m = row.List.PropertyValueMatches(prop, row, op, c.value, !c.IgnoreCase, displayFormat);
                 }
                 if (isOr == m) return m; // no need to evaluate further
             }
@@ -131,7 +131,10 @@ namespace Xomega._Syncfusion.Blazor
             var list = DataManager?.List;
             // insert data row, but suppress any notifications, since SfGrid cannot handle any UI updates at this point
             if (list != null && data is DataRow row)
-                await list.InsertAsync(0, row, true);
+            {
+                int idx = DataManager?.GetNewRowIndex() ?? 0;
+                await list.InsertAsync(idx, row, true);
+            }
             return data;
         }
 
