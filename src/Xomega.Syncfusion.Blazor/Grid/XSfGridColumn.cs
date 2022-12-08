@@ -1,12 +1,16 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Components;
+using Syncfusion.Blazor;
 using Syncfusion.Blazor.DropDowns;
 using Syncfusion.Blazor.Grids;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xomega._Syncfusion.Blazor.Controls;
 using Xomega.Framework;
+using Xomega.Framework.Blazor.Controls;
 using Xomega.Framework.Properties;
+using FilterType = Syncfusion.Blazor.Grids.FilterType;
 
 namespace Xomega._Syncfusion.Blazor
 {
@@ -20,40 +24,60 @@ namespace Xomega._Syncfusion.Blazor
         /// </summary>
         protected DataProperty Property => (MainParent as XSfGrid)?.List?[Field];
 
+        /// <summary>
+        ///  Flag tracking if the grid column is already initialized
+        /// </summary>
+        protected bool initialized = false;
+
         /// <inheritdoc/>
         protected override async Task OnParametersSetAsync()
         {
             base.OnParametersSet();
             var prop = Property;
-            if (prop == null) return;
+            var grid = MainParent as XSfGrid;
+            if (prop == null || initialized || grid == null) return;
 
-            if (prop is IntegerProperty || prop is DecimalProperty || prop is DateTimeProperty)
+            if (DecimalProperty.IsPropertyNumeric(prop) || prop is DateTimeProperty)
                 TextAlign = TextAlign.Right;
 
             if (Template == null)
                 Template = RenderRowValue;
+
+            if (AllowEditing && !prop.Editable)
+                AllowEditing = false;
 
             if (prop is EnumProperty)
             {
                 await GetFilterItems();
                 if (FilterTemplate == null)
                     FilterTemplate = RenderFilterDropDown;
-                if (FilterItemTemplate == null)
-                    FilterItemTemplate = RenderValue;
-                if (EditTemplate == null)
+                
+                if (FilterSettings == null)
+                    FilterSettings = new FilterSettings() { Operator = Operator.Equal };
+                else if (FilterSettings.Operator == null)
+                    FilterSettings.Operator = Operator.Equal;
+
+                if (EditTemplate == null && AllowEditing)
                     EditTemplate = RenderEditDropDown;
             }
 
-            if (prop is TextProperty || prop is IntegerProperty || prop is DecimalProperty)
+            if (DecimalProperty.IsPropertyNumeric(prop) || prop is TextProperty)
             {
-                if (EditTemplate == null)
-                    EditTemplate = RenderEditor<Controls.XSfTextBox>;
+                if (EditTemplate == null && AllowEditing)
+                    EditTemplate = RenderEditor<XSfTextBox>;
             }
 
             if (prop is DateTimeProperty)
             {
-                if (EditTemplate == null)
-                    EditTemplate = RenderEditor<Controls.XSfDatePicker>;
+                if (EditTemplate == null && AllowEditing)
+                    EditTemplate = RenderEditor<XSfDatePicker>;
+            }
+
+            if (EditTemplate == null && !AllowEditing)
+            {
+                if (grid.EditSettings.Mode == EditMode.Dialog)
+                    EditTemplate = RenderEditor<XSfDataLabel>;
+                else EditTemplate = RenderEditor<XDataText>;
             }
 
             if (string.IsNullOrEmpty(Format))
@@ -72,15 +96,17 @@ namespace Xomega._Syncfusion.Blazor
             else prop.Label = HeaderText;
 
             prop.Change += OnPropertyChange;
+            initialized = true;
         }
 
         private void OnPropertyChange(object sender, PropertyChangeEventArgs e)
         {
-            InvokeAsync(async () => {
+            InvokeAsync(async () =>
+            {
                 if (e.Change.IncludesVisible() && MainParent is XSfGrid grid)
                 {
-                    if (Property.Visible) await grid.Show(new string[] { HeaderText });
-                    else await grid.Hide(new string[] { HeaderText });
+                    if (Property.Visible) await grid.ShowColumnAsync(HeaderText);
+                    else await grid.HideColumnAsync(HeaderText);
                 }
             });
         }
@@ -88,12 +114,12 @@ namespace Xomega._Syncfusion.Blazor
         /// <summary>
         /// Disposes the class and unsubscribes from property change events.
         /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             var prop = Property;
             if (prop != null)
                 prop.Change -= OnPropertyChange;
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -115,17 +141,18 @@ namespace Xomega._Syncfusion.Blazor
         /// </summary>
         [Parameter] public string FilterAllText { get; set; } = "All";
 
-        private List<object> FilterItems;
+        private List<Header> FilterItems;
+
+        private bool IsFilterBarType => FilterSettings?.Type == FilterType.FilterBar ||
+            FilterSettings?.Type == null && (MainParent as XSfGrid)?.FilterSettings?.Type == FilterType.FilterBar;
 
         /// <summary>
         /// Default renderer of a single value for this column based on the property's DisplayString format.        /// 
         /// </summary>
         /// <param name="val">The value being rendered.</param>
         /// <returns>The render fragment for the value.</returns>
-        protected RenderFragment RenderValue(object val) => (b) =>
+        protected RenderFragment RenderValue(Header val) => (b) =>
         {
-            if (val is FilterItemTemplateContext ctx)
-                val = ctx.Value;
             var prop = Property;
             if (prop != null)
                 b.AddContent(1, prop.ValueToString(val, ValueFormat.DisplayString));
@@ -140,38 +167,48 @@ namespace Xomega._Syncfusion.Blazor
         {
             RenderFragment childContent = (cb) =>
             {
-                cb.OpenComponent<DropDownListEvents<object, object>>(1);
-                cb.AddAttribute(2, "ValueChange", EventCallback.Factory.Create<ChangeEventArgs<object, object>>(this, OnFilterChanged));
+                cb.OpenComponent<DropDownListEvents<string, Header>>(1);
+                cb.AddAttribute(2, "ValueChange", EventCallback.Factory.Create<ChangeEventArgs<string, Header>>(this, OnFilterChangedAsync));
+                cb.CloseComponent();
+                cb.OpenComponent<DropDownListFieldSettings>(1);
+                cb.AddAttribute(2, "Text", "Text");
+                cb.AddAttribute(3, "Value", "Id");
                 cb.CloseComponent();
             };
 
-            b.OpenComponent<SfDropDownList<object, object>>(1);
+            var grid = MainParent as XSfGrid;
+            b.OpenComponent<SfDropDownList<string, Header>>(1);
             b.AddAttribute(2, "ChildContent", childContent);
             b.AddAttribute(3, "PlaceHolder", FilterAllText);
             b.AddAttribute(4, "DataSource", FilterItems);
-            b.AddAttribute(5, "Value", (ctx as PredicateModel)?.Value);
-            b.AddAttribute(6, "ItemTemplate", FilterItemTemplate);
+            var value = (ctx as PredicateModel)?.Value ?? (ctx as PredicateModel<Header>)?.Value?.Id;
+            b.AddAttribute(5, "Value", value);
+            RenderFragment<Header> itemTemplate = RenderValue;
+            b.AddAttribute(6, "ItemTemplate", itemTemplate);
             b.CloseComponent();
         };
 
         private async Task GetFilterItems()
         {
-            FilterItems = new List<object>();
+            FilterItems = new List<Header>();
             var prop = Property;
             if (prop != null)
             {
-                FilterItems.Add(FilterAllText);
-                FilterItems.AddRange((IEnumerable<object>) await prop.AsyncItemsProvider(null, null, default));
+                if (IsFilterBarType)
+                    FilterItems.Add(new Header("", "", FilterAllText));
+                FilterItems.AddRange((IEnumerable<Header>) await prop.AsyncItemsProvider(null, null, default));
             }
         }
 
-        private void OnFilterChanged(ChangeEventArgs<object, object> args)
+        private async void OnFilterChangedAsync(ChangeEventArgs<string, Header> args)
         {
+            if (args.ItemData == null || !IsFilterBarType) return;
+
+            // auto-apply for FilterBar type only
             var grid = MainParent as XSfGrid;
-            if (FilterAllText != null && FilterAllText.Equals(args.ItemData))
-                grid.ClearFiltering(Field);
-            else if (args.ItemData != null)
-                grid.FilterByColumn(Field, "equal", args.ItemData);
+            if (string.IsNullOrEmpty(args.ItemData.Id))
+                await grid.ClearFilteringAsync(Field);
+            else await grid.FilterByColumnAsync(Field, "equal", args.ItemData.Id);
         }
 
         #endregion
@@ -217,7 +254,7 @@ namespace Xomega._Syncfusion.Blazor
         {
             var editorParams = (EditorSettings as DropDownEditCellParams)?.Params;
 
-            b.OpenComponent<Controls.XSfDropDownList>(1);
+            b.OpenComponent<XSfDropDownList>(1);
             b.AddAttribute(3, "ID", Property?.Name);
             b.AddAttribute(4, "Property", Property);
             b.AddAttribute(5, "AllowFiltering", editorParams?.AllowFiltering ?? false);
