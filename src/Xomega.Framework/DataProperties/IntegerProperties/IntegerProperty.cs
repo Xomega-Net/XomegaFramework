@@ -13,6 +13,16 @@ namespace Xomega.Framework.Properties
     public class IntegerProperty : DataProperty<int?>
     {
         /// <summary>
+        /// Utility function to determine if the given property is based on one of the integer data types,
+        /// since integer properties do not have the same integer base class.
+        /// </summary>
+        /// <param name="prop">The data property to check.</param>
+        /// <returns>True if the property is one of the integer properties, false otherwise</returns>
+        public static bool IsPropertyInteger(DataProperty prop) => 
+            prop is BigIntegerProperty   || prop is IntegerProperty ||
+            prop is SmallIntegerProperty || prop is TinyIntegerProperty;
+
+        /// <summary>
         /// The minimum valid value for the property.
         /// </summary>
         public int MinimumValue { get; set; }

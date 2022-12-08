@@ -60,9 +60,7 @@ namespace Xomega.Framework.Blazor.Components
             if (ParentGrid != null)
                 ParentGrid.AddColumn(this);
 
-            if (TextAlign == null && (Property is BigIntegerProperty || Property is IntegerProperty ||
-                Property is SmallIntegerProperty || Property is TinyIntegerProperty ||
-                Property is DecimalProperty || Property is DateTimeProperty))
+            if (TextAlign == null && (DecimalProperty.IsPropertyNumeric(Property) || Property is DateTimeProperty))
                 TextAlign = Alignment.End;
 
             base.OnInitialized();

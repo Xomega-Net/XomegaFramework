@@ -26,10 +26,16 @@
 {
     private decimal? Min => IsMultiValue ? null :
         Property is IntegerProperty ip ? ip.MinimumValue :
+        Property is BigIntegerProperty bip ? bip.MinimumValue :
+        Property is SmallIntegerProperty sip ? sip.MinimumValue :
+        Property is TinyIntegerProperty tip ? tip.MinimumValue :
         Property is DecimalProperty dp ? dp.MinimumValue : (decimal?)null;
 
     private decimal? Max => IsMultiValue ? null :
         Property is IntegerProperty ip ? ip.MaximumValue :
+        Property is BigIntegerProperty bip ? bip.MaximumValue :
+        Property is SmallIntegerProperty sip ? sip.MaximumValue :
+        Property is TinyIntegerProperty tip ? tip.MaximumValue :
         Property is DecimalProperty dp ? dp.MaximumValue : (decimal?)null;
 
     [Parameter] public decimal? Step { get; set; } = 1;
@@ -42,7 +48,10 @@
     {
         var val = Property.GetValue(ValueFormat.Internal, Row);
         if (val is decimal?) return (decimal?)val;
+        else if (val is long?) return (decimal?)(long?)val;
         else if (val is int?) return (decimal?)(int?)val;
+        else if (val is short?) return (decimal?)(short?)val;
+        else if (val is byte?) return (decimal?)(byte?)val;
         return null;
     }
 
