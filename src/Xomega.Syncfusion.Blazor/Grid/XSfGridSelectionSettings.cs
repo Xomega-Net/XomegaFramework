@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.Grids;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xomega.Framework;
 
@@ -26,7 +27,10 @@ namespace Xomega._Syncfusion.Blazor
         protected async override Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            var list = (MainParent as XSfGrid)?.List;
+            
+            // accessible MainParent property has been removed with only internal Parent available
+            var parentGridProperty = GetType().GetProperty("Parent", BindingFlags.NonPublic | BindingFlags.Instance);
+            DataListObject list = (parentGridProperty?.GetValue(this) as XSfGrid)?.List;
 
             if (list != null && Mode == SelectionMode.Row)
             {
