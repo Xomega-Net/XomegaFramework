@@ -8,9 +8,9 @@
 
 @if (IsVisible)
 {
-    <SfButton IsPrimary="IsPrimary" CssClass="@GetButtonClass()"
+    <SfButton IsPrimary="IsPrimary" CssClass="@GetButtonClass()" HtmlAttributes="@Attributes"
               Disabled="@(!IsEnabed)" OnClick="OnClick">
-        @if (!NoText)@Label
+        @if (!NoText)@GetLabel(Label)
     </SfButton>
 }
 
@@ -24,4 +24,9 @@
             sb.Append(" ").Append(Class);
         return sb.ToString();
     }
+
+    private Dictionary<string, object> Attributes => new Dictionary<string, object>()
+    {
+        { "accesskey", AccessKey }
+    };
 }
