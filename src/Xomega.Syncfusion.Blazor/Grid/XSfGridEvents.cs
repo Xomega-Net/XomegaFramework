@@ -65,12 +65,12 @@ namespace Xomega._Syncfusion.Blazor
         #region Selection support
 
         /// <inheritdoc/>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             var list = List;
             if (list != null)
                 list.SelectionChanged -= OnListSelectionChanged;
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         private bool suppressGridSelectionUpdate = false;
@@ -89,7 +89,7 @@ namespace Xomega._Syncfusion.Blazor
                 suppressGridSelectionUpdate = true; // to avoid recursion
                 var selIndexes = grid.GetSelectedDataRowIndexes();
                 if (selIndexes != null)
-                    await grid.SelectRows(selIndexes.ToArray());
+                    await grid.SelectRowsAsync(selIndexes.ToArray());
                 suppressListSelectionUpdate = false;
                 suppressGridSelectionUpdate = false;
             }
