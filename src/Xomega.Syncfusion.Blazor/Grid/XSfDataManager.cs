@@ -2,6 +2,7 @@
 
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;
+using Syncfusion.Blazor.Grids;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xomega.Framework;
@@ -32,5 +33,14 @@ namespace Xomega._Syncfusion.Blazor
         /// Helps access selected rows of the grid.
         /// </summary>
         public List<DataRow> SelectedRows => (Parent as XSfGrid)?.SelectedRecords;
+
+        /// <summary>
+        /// Get the index of the row being inserted in the grid.
+        /// </summary>
+        public int GetNewRowIndex()
+        {
+            // TODO: figure out how to get the index of the row being inserted
+            return 0;
+        }
     }
 }
