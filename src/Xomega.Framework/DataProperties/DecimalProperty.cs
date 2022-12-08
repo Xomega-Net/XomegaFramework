@@ -14,6 +14,14 @@ namespace Xomega.Framework.Properties
     public class DecimalProperty : DataProperty<decimal?>
     {
         /// <summary>
+        /// Utility function to determine if the given property is based on one of the numeric data types.
+        /// </summary>
+        /// <param name="prop">The data property to check.</param>
+        /// <returns>True if the property is one of the numeric properties, false otherwise</returns>
+        public static bool IsPropertyNumeric(DataProperty prop) => 
+            prop is DecimalProperty || IntegerProperty.IsPropertyInteger(prop);
+
+        /// <summary>
         /// The minimum valid value for the property.
         /// </summary>
         public decimal MinimumValue { get; set; }
