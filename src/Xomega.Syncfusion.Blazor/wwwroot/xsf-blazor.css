@@ -16,3 +16,13 @@
   content: "* ";
   color: #dc3545;
 }
+
+.e-ddl .e-input-value {
+    display: inline-flex;
+    align-items: center;
+    padding-left: .5em;
+}
+
+.e-float-input .e-multi-select-wrapper input[type=text] {
+    background: none;
+}

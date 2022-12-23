@@ -1,5 +1,6 @@
 ﻿@* Copyright (c) 2022 Xomega.Net. All rights reserved. *@
 
+@using Syncfusion.Blazor.Data
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Popups
 @using System.Reflection
@@ -13,14 +14,15 @@
 <div class="@Class">
     <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
         <SfMultiSelect TValue="string[]" TItem="Header" Enabled="@(IsEditable)"
-                       @ref="sfMS" @attributes="@AdditionalAttributes"
-                       DataSource="AvailableItems" AllowFiltering="AllowFiltering" AllowCustomValue="AllowCustom"
-                       Value="Values" ValueChanged="async (args) => await UpdatePropertyAsync(args)"
+                       @ref="sfMS" @attributes="@AdditionalAttributes" CssClass="@StateClass"
+                       DataSource="AvailableItems" AllowFiltering="AllowFiltering" AllowCustomValue="AllowCustomValue"
+                       Value="Values" ValueChanged="OnValueChanged" Mode="Mode" ShowDropDownIcon="ShowDropDownIcon"
+                       ShowSelectAll="ShowSelectAll" ShowClearButton="@(!IsRequired)" EnableGroupCheckBox="EnableGroupCheckBox"
                        Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType" DelimiterChar="@Delimiter">
-            <MultiSelectEvents TValue="string[]" TItem="Header"
-                               Focus="() => OnFocus(null)" Blur="() => OnBlur(null)" />
+            <MultiSelectEvents TValue="string[]" TItem="Header" OnActionComplete="OnActionComplete"
+                               Focus="() => OnFocus(null)" Blur="() => OnBlur(null)" CustomValueSpecifier="OnCustomValue" />
             <MultiSelectFieldSettings Text="Text" Value="Id" GroupBy="@GroupByAttribute" />
-            <MultiSelectTemplates GroupTemplate="GroupTemplate" ItemTemplate="ItemDisplayTemplate" />
+            <MultiSelectTemplates GroupTemplate="GroupTemplate" ItemTemplate="Template" ValueTemplate="ValueTemplate" />
         </SfMultiSelect>
     </SfTooltip>
 </div>
@@ -28,14 +30,30 @@
 
 @code
 {
-    [Parameter]
-    public bool AllowCustom { get; set; }
-
     protected string[] Values => GetSelectedItems(ValueFormat.Transport).Cast<object>().Select(o => o.ToString()).ToArray();
 
     protected string Delimiter => Property?.DisplayListSeparator?.Trim() ?? ",";
 
+    [Parameter] public VisualMode Mode { get; set; }
+
+    [Parameter] public bool ShowSelectAll { get; set; }
+
+    [Parameter] public bool ShowDropDownIcon { get; set; }
+    
+    [Parameter] public bool EnableGroupCheckBox { get; set; }
+
     private SfMultiSelect<string[], Header> sfMS;
+
+    protected async Task OnValueChanged(string[] args)
+    {
+        await UpdatePropertyAsync(args);
+    }
+
+    protected async Task OnCustomValue(CustomValueEventArgs<Header> args)
+    {
+        var val = await Property.ResolveValueAsync(args.Text, ValueFormat.Internal, Row);
+        if (val is Header item) args.NewData = item;
+    }
 
     protected override void OnPropertyChange(PropertyChangeEventArgs e)
     {
@@ -44,8 +62,8 @@
         if (sfMS == null || Property == null || !e.Change.IncludesValidation()) return;
 
         // a hack to update validation class caused by SfMultiSelect's failure to properly update the set CssClass
-        var cClassProp = sfMS.GetType().GetProperty("containerClass", BindingFlags.NonPublic | BindingFlags.Instance);
-        string cClass = Convert.ToString(cClassProp.GetValue(sfMS));
+        var cClassProp = sfMS.GetType().GetProperty("ContainerClass", BindingFlags.NonPublic | BindingFlags.Instance);
+        string cClass = Convert.ToString(cClassProp?.GetValue(sfMS));
         cClass = cClass.Replace(StateDescriptions.Valid, "");
         cClass = cClass.Replace(StateDescriptions.Invalid, "");
         cClass += " " + StateDescriptions.GetStateDescription(Property, PropertyChange.Validation, Row);

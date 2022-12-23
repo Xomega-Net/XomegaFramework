@@ -11,7 +11,7 @@
 {
 <div class="@Class">
     <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
-        @if (Property is DateProperty)
+        @if (Property is DateProperty && !IsMultiValue)
         {
             <SfDatePicker TValue="DateTime?" @attributes="@AdditionalAttributes" CssClass="@StateClass"
                           Value="@Value" Enabled="IsEditable" Format="@Format" Width="120px"
@@ -21,10 +21,10 @@
                 <DatePickerEvents TValue="DateTime?" ValueChange="OnValueChange" />
             </SfDatePicker>
         }
-        else if (Property is DateTimeProperty)
+        else if (Property is DateTimeProperty && !IsMultiValue)
         {
             <SfDateTimePicker TValue="DateTime?" @attributes="@AdditionalAttributes" CssClass="@StateClass"
-                              Value="@Value" Enabled="IsEditable"
+                              Value="@Value" Enabled="IsEditable" Format="@Format"
                               @onfocus="OnFocus" @onblur="OnBlur"
                               ShowClearButton="ShowClearButton"
                               Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">

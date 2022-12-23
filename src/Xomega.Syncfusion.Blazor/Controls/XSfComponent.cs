@@ -16,7 +16,12 @@ namespace Xomega._Syncfusion.Blazor
         /// <summary>
         /// Gets the type of float label to use, if any.
         /// </summary>
-        public FloatLabelType FloatLabelType => ShowLabel ? FloatLabelType.Always : FloatLabelType.Never;
+        public FloatLabelType FloatLabelType => ShowLabel ? FloatLabel ? FloatLabelType.Auto : FloatLabelType.Always : FloatLabelType.Never;
+
+        /// <summary>
+        /// Indicates whether the label floats above the control on focus or always stays above the control.
+        /// </summary>
+        [Parameter] public bool FloatLabel { get; set; }
 
         /// <summary>
         /// Gets Syncfusion-specific classes for various property validation state.

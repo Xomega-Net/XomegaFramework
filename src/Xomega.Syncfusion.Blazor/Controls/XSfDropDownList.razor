@@ -15,10 +15,10 @@
                             Value="GetStringValue()" ShowClearButton="@(!IsRequired)"
                             DataSource="AvailableItems" AllowFiltering="AllowFiltering"
                             Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
-                <DropDownListEvents TValue="string" TItem="Header"
+                <DropDownListEvents TValue="string" TItem="Header" OnActionComplete="OnActionComplete"
                                     Focus="() => OnFocus(null)" Blur="() => OnBlur(null)" ValueChange="OnValueChanged" />
                 <DropDownListFieldSettings Text="Text" Value="Id" GroupBy="@GroupByAttribute" />
-                <DropDownListTemplates GroupTemplate="GroupTemplate" ItemTemplate="ItemDisplayTemplate" />
+                <DropDownListTemplates GroupTemplate="GroupTemplate" ItemTemplate="Template" ValueTemplate="ValueTemplate" />
             </SfDropDownList>
         </SfTooltip>
     </div>
