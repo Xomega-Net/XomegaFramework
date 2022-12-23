@@ -10,16 +10,16 @@
 {
 <div class="@Class">
     <SfTooltip Content="@ErrorsText" CssClass="@ErrorClass" OnOpen="OnTooltipOpen" Position="@TooltipPosition">
-        <SfComboBox TValue="string" TItem="Header" Enabled="@(IsEditable)" AllowCustom="AllowCustom"
+        <SfComboBox TValue="string" TItem="Header" Enabled="@(IsEditable)"
                     @attributes="@AdditionalAttributes" CssClass="@StateClass"
-                    Value="GetStringValue()" ShowClearButton="@(!IsRequired)"
+                    Value="GetStringValue()" ShowClearButton="@(!IsRequired)" AllowCustom="AllowCustomValue"
                     DataSource="AvailableItems" AllowFiltering="AllowFiltering"
                     Placeholder="@PlaceholderText" FloatLabelType="@FloatLabelType">
-            <ComboBoxEvents TValue="string" TItem="Header"
+            <ComboBoxEvents TValue="string" TItem="Header" OnActionComplete="OnActionComplete"
                             Focus="() => OnFocus(null)" Blur="() => OnBlur(null)"
                             ValueChange="OnValueChanged" CustomValueSpecifier="OnCustomValue" />
             <ComboBoxFieldSettings Text="Text" Value="Id" GroupBy="@GroupByAttribute" />
-            <ComboBoxTemplates GroupTemplate="GroupTemplate" ItemTemplate="ItemDisplayTemplate" />
+            <ComboBoxTemplates GroupTemplate="GroupTemplate" ItemTemplate="Template" />
         </SfComboBox>
     </SfTooltip>
 </div>
@@ -27,5 +27,7 @@
 
 @code
 {
-    [Parameter] public bool AllowCustom { get; set; }
+    // always update on custom value selection, since it's reported as not interacted.
+    protected override bool ShouldUpdateValue<TValue>(ChangeEventArgs<TValue, Header> args) =>
+        AllowCustomValue || base.ShouldUpdateValue(args);
 }
