@@ -1,15 +1,4 @@
-﻿
-/* XsfDataLabel styling */
-
-.e-data-label {
-  border-width: 0px !important;
-  box-shadow: none !important;
-}
-
-.e-data-label input {
-  background: none !important;
-  padding: 0px !important;
-}
+﻿/* Copyright (c) 2022 Xomega.Net. All rights reserved. */
 
 /* mark labels for required fields with a leading red asterisk */
 .e-input-group.required label:before {
@@ -17,12 +6,9 @@
   color: #dc3545;
 }
 
+/* vertically align and space content form the dropdown's value template */
 .e-ddl .e-input-value {
     display: inline-flex;
     align-items: center;
     padding-left: .5em;
-}
-
-.e-float-input .e-multi-select-wrapper input[type=text] {
-    background: none;
 }
