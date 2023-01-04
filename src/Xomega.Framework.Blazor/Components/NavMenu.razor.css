@@ -34,7 +34,7 @@
     display: block;
 }
 
-.navmenu-dropdown .submenu-toggle::after {
+.navmenu-dropdown ::deep .submenu-toggle::after {
     display: inline-block;
     margin-left: .5em;
     content: "";
