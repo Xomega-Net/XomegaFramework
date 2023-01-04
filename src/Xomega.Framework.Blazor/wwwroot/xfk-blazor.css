@@ -1,64 +1,5 @@
 ﻿/* Copyright (c) 2022 Xomega.Net. All rights reserved. */
 
-/* navmenu styles */
-.navmenu {
-    padding-left: 1rem;
-}
-
-.navmenu a[data-bs-toggle="collapse"] {
-    position: relative;
-}
-
-/* right-align the toggle on collapsible sidebar menus */
-.navmenu .dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-}
-
-.navmenu-dropdown .dropdown-submenu {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -7px;
-}
-
-.navmenu-dropdown .dropdown-menu .dropdown-submenu-left {
-    right: 100%;
-    left: auto;
-}
-
-.navmenu-dropdown .dropdown-menu > li:hover > .dropdown-submenu {
-    display: block;
-}
-
-.navmenu-dropdown .submenu-toggle::after {
-    display: inline-block;
-    margin-left: .5em;
-    content: "";
-    border-left: .3em solid;
-    border-top: .3em solid transparent;
-    border-right: 0;
-    border-bottom: .3em solid transparent;
-}
-
-/* criteria summary styles */
-.cs-field {
-  text-decoration: underline
-}
-
-.cs-value {
-  font-weight: 700
-}
-
-/* grid styles */
-
-.table th .sort-index {
-  font-size: x-small;
-}
-
 .form-label {
   white-space: nowrap;
   overflow: hidden;
@@ -76,13 +17,4 @@
 .form-label.required:before {
   content: "* ";
   color: #dc3545;
-}
-
-.form-control-plaintext {
-  outline: none;
-}
-
-/* fix form auto-complete to show feedback, since it needs to be wrapped in a dropdown div */
-.dropdown.is-invalid~.invalid-feedback {
-  display: block;
 }

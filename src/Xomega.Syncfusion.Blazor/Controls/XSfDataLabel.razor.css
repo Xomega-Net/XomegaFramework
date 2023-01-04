@@ -1,0 +1,13 @@
+﻿/* Copyright (c) 2022 Xomega.Net. All rights reserved. */
+
+/* XsfDataLabel styling */
+
+.e-data-label {
+    border-width: 0px !important;
+    box-shadow: none !important;
+}
+
+    .e-data-label input {
+        background: none !important;
+        padding: 0px !important;
+    }
