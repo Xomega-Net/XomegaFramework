@@ -18,6 +18,11 @@
         transform: translateY(-50%);
     }
 
+.navmenu-dropdown li {
+    /* override display set by btn-group */
+    display: list-item;
+}
+
 .navmenu-dropdown .dropdown-submenu {
     display: none;
     position: absolute;

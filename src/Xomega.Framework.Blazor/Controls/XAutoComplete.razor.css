@@ -1,6 +1,0 @@
-﻿/* Copyright (c) 2022 Xomega.Net. All rights reserved. */
-
-/* fix form auto-complete to show feedback, since it needs to be wrapped in a dropdown div */
-.dropdown.is-invalid ~ .invalid-feedback {
-    display: block;
-}
