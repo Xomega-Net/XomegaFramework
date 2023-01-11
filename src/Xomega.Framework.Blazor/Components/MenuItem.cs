@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
 
 namespace Xomega.Framework.Blazor.Components
 {

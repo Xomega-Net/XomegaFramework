@@ -1,9 +1,5 @@
 ﻿// Copyright (c) 2022 Xomega.Net. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Xomega.Framework.Blazor.Views
 {
     /// <summary>

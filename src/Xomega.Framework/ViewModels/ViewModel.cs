@@ -330,7 +330,7 @@ namespace Xomega.Framework.Views
         #region Handling child view updates
 
         /// <summary>
-        /// Subscribes to child view's events
+        /// Subscribes to child view's events.
         /// </summary>
         /// <param name="child">Child view</param>
         public virtual void SubscribeToChildEvents(ViewModel child)
@@ -339,8 +339,20 @@ namespace Xomega.Framework.Views
             {
                 child.ViewEvents += OnChildEvent;
                 child.AsyncViewEvents += OnChildEventAsync;
+                child.PropertyChanged += OnChildPropertyChanged;
             }
         }
+
+        /// <summary>
+        /// Event handler for property change events on child view models,
+        /// which propagages that event to this model's property change listeners.
+        /// </summary>
+        /// <param name="sender">The original view model that raised the event.</param>
+        /// <param name="e">Property change event arguments.</param>
+        protected virtual void OnChildPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
+		}
 
         /// <summary>
         /// Default handler for child events, which just re-publishes them.

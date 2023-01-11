@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
-using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Xomega.Framework.Blazor.Components;
 using Xomega.Framework.Views;
 
@@ -207,9 +203,29 @@ namespace Xomega.Framework.Blazor.Views
             return true;
         }
 
-        /// <inheritdoc/>
-        public virtual async Task<bool> CanCloseAsync(CancellationToken token = default)
-            => await Task.FromResult(true);
+		/// <summary>
+		/// Determines if the view or any of its child views are modified.
+		/// </summary>
+		/// <returns>True if the view is modified, false otherwise.</returns>
+		public virtual bool IsModified() => ChildViews.Any(v => v != null && v.IsModified());
+
+
+		/// <summary>
+		/// Asynchronously determines if the view can be closed. If the view is modified,
+		/// then prompts the user to confirm discarding unsaved changes.
+		/// The method can be overridden in subclasses to customize the confirmation prompt.
+		/// </summary>
+		/// <param name="token">Cancellation token.</param>
+		/// <returns>True, if the view can be closed, false otherwise.</returns>
+		public virtual async Task<bool> CanCloseAsync(CancellationToken token = default)
+		{
+			if (IsModified())
+			{
+				var msg = Model.GetString(Messages.View_UnsavedMessage);
+				return await JSRuntime.InvokeAsync<bool>("confirm", token, msg);
+			}
+			return true;
+		}
 
         /// <inheritdoc/>
         public virtual async Task CloseAsync(CancellationToken token = default)
@@ -294,21 +310,21 @@ namespace Xomega.Framework.Blazor.Views
         /// <param name="e">Event arguments</param>
         protected virtual async void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null && sender is ViewModel vm)
+            if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null)
             {
-                TitleComponent.SetTitle(vm.ViewTitle);
+                TitleComponent.SetTitle(Model.ViewTitle);
                 await TitleComponent.Update();
             }
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Child views and Layout
+		#region Child views and Layout
 
-        /// <summary>
-        ///  An array of child views for the current view that are used to properly layout this view.
-        /// </summary>
-        protected virtual BlazorView[] ChildViews => new BlazorView[0];
+		/// <summary>
+		///  An array of child views for the current view that are used to properly layout this view.
+		/// </summary>
+		protected virtual BlazorView[] ChildViews => new BlazorView[0];
 
         /// <summary>
         /// The number of open inline child views and the current view.

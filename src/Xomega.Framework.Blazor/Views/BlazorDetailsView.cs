@@ -2,8 +2,6 @@
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using System.Threading;
-using System.Threading.Tasks;
 using Xomega.Framework.Views;
 
 namespace Xomega.Framework.Blazor.Views
@@ -27,7 +25,7 @@ namespace Xomega.Framework.Blazor.Views
         /// Determines if the view is modified.
         /// </summary>
         /// <returns>True if the view is modified, false otherwise.</returns>
-        public bool IsModified() => DetailsObject?.IsModified() ?? false;
+        public override bool IsModified() => DetailsObject?.IsModified() ?? false || base.IsModified();
 
         /// <inheritdoc/>
         protected override string UpperClass => Mode == null ? "container d-flex align-items-center justify-content-center" : base.UpperClass;
@@ -58,22 +56,5 @@ namespace Xomega.Framework.Blazor.Views
         /// </summary>
         protected virtual async Task OnDeleteAsync(MouseEventArgs e)
             => await DetailsModel?.DeleteAsync();
-
-        /// <summary>
-        /// Asynchronously determines if the view can be closed. If the view is modified,
-        /// then prompts the user to confirm discarding unsaved changes.
-        /// The method can be overridden in subclasses to customize the confirmation prompt.
-        /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>True, if the view can be closed, false otherwise.</returns>
-        public override async Task<bool> CanCloseAsync(CancellationToken token = default)
-        {
-            if (IsModified())
-            {
-                var msg = Model.GetString(Messages.View_UnsavedMessage);
-                return await JSRuntime.InvokeAsync<bool>("confirm", token, msg);
-            }
-            return await base.CanCloseAsync(token);
-        }
     }
 }

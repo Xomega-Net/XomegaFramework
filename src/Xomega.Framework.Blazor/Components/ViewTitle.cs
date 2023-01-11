@@ -2,14 +2,13 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using System.Threading.Tasks;
 
 namespace Xomega.Framework.Blazor.Components
 {
-    /// <summary>
-    /// Component that displays view title.
-    /// </summary>
-    public class ViewTitle : ComponentBase
+	/// <summary>
+	/// Component that displays the view title.
+	/// </summary>
+	public class ViewTitle : Fragment
     {
         /// <summary>
         /// The title of the view.
@@ -27,10 +26,5 @@ namespace Xomega.Framework.Blazor.Components
 
         /// <inheritdoc/>
         protected override void BuildRenderTree(RenderTreeBuilder builder) => builder.AddContent(0, Title);
-
-        /// <summary>
-        /// Updates the title component.
-        /// </summary>
-        public async Task Update() => await InvokeAsync(() => StateHasChanged());
     }
 }

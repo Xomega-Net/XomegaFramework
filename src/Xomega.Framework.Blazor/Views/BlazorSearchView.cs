@@ -2,10 +2,7 @@
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
 using Xomega.Framework.Views;
 
 namespace Xomega.Framework.Blazor.Views
