@@ -12,10 +12,15 @@ namespace Xomega.Framework.Blazor.Views
 	/// </summary>
 	public class BlazorPage : ComponentBase
     {
+        /// <summary>
+        /// Injected instance of the navigation service.
+        /// </summary>
+        [Inject] protected NavigationManager Navigation { get; set; }
+        
 		/// <summary>
-		/// Main view for the page.
-		/// </summary>
-		protected BlazorView MainView { get; set; }
+        /// Main view for the page.
+        /// </summary>
+        protected BlazorView MainView { get; set; }
 
 		/// <summary>
 		/// The fragment that should be refreshed whenever the view is modified.
@@ -54,7 +59,8 @@ namespace Xomega.Framework.Blazor.Views
 		/// <param name="ctx">Location changing context</param>
 		protected async Task ConfirmNavigation(Microsoft.AspNetCore.Components.Routing.LocationChangingContext ctx)
 		{
-			if (MainView != null && !await MainView.CanCloseAsync())
+			if (Navigation.Uri != ctx.TargetLocation && MainView != null && 
+				!await MainView.CanCloseAsync())
 			{
 				ctx.PreventNavigation();
 			}

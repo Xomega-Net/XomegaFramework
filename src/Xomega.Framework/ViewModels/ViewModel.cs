@@ -189,7 +189,7 @@ namespace Xomega.Framework.Views
         /// Raises property changed event
         /// </summary>
         /// <param name="e">Event arguments with property name</param>
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -345,7 +345,7 @@ namespace Xomega.Framework.Views
 
         /// <summary>
         /// Event handler for property change events on child view models,
-        /// which propagages that event to this model's property change listeners.
+        /// which propagates that event to this model's property change listeners.
         /// </summary>
         /// <param name="sender">The original view model that raised the event.</param>
         /// <param name="e">Property change event arguments.</param>

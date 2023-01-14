@@ -60,11 +60,14 @@ namespace Xomega.Framework.Blazor.Views
                     vm.PropertyChanged -= OnModelPropertyChanged;
                     vm.View = null;
                 }
-                OnModelPropertyChanged(bind ? vm : null, new PropertyChangedEventArgs(ViewModel.ViewTitleProperty));
             }
             Model = viewModel;
             // refresh the view if binding to a different model (e.g. master-details)
-            if (Model != null) StateHasChanged();
+            if (Model != null)
+            {
+                Model.OnPropertyChanged(new PropertyChangedEventArgs(ViewModel.ViewTitleProperty));
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -310,9 +313,9 @@ namespace Xomega.Framework.Blazor.Views
         /// <param name="e">Event arguments</param>
         protected virtual async void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null)
+            if (e.PropertyName == ViewModel.ViewTitleProperty && TitleComponent != null && Model == sender)
             {
-                TitleComponent.SetTitle(Model.ViewTitle);
+                TitleComponent.SetTitle(Model?.ViewTitle);
                 await TitleComponent.Update();
             }
 		}
