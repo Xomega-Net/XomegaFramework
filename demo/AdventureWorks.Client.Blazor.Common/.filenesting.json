@@ -1,0 +1,19 @@
+{
+  "help": "https://go.microsoft.com/fwlink/?linkid=866610",
+  "root": false,
+
+  "dependentFileProviders": {
+    "add": {
+      "fileSuffixToExtension": {
+        "add": {
+          "Base.cs": [
+            ".razor"
+          ],
+          "Customized.cs": [
+            ".razor"
+          ]
+        }
+      }
+    }
+  }
+}

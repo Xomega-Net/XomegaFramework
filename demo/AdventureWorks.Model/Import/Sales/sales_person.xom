@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="sales person" base="employee">
+      <config>
+        <xfk:property class="EnumIntProperty" namespace="Xomega.Framework.Properties" tsModule="xomega"/>
+        <ui:display-config typical-length="20"/>
+        <ui:blazor-control>
+          <XSelect />
+        </ui:blazor-control>
+        <ui:blazor-control multi-value="true">
+          <XSelect />
+        </ui:blazor-control>
+        <ui:sf-blazor-control>
+          <XSfDropDownList />
+        </ui:sf-blazor-control>
+        <ui:sf-blazor-control multi-value="true">
+          <XSfMultiSelect />
+        </ui:sf-blazor-control>
+      </config>
+      <enum ref="sales person"/>
+    </type>
+  </types>
+  <objects>
+    <object name="sales person">
+      <fields>
+        <field name="business entity id" type="sales person" key="supplied" required="true">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+        </field>
+        <field name="territory id" type="sales territory">
+          <config>
+            <sql:column name="TerritoryID"/>
+          </config>
+          <doc>
+            <summary>Territory currently assigned to. Foreign key to SalesTerritory.SalesTerritoryID.</summary>
+          </doc>
+        </field>
+        <field name="sales quota" type="money">
+          <config>
+            <sql:column name="SalesQuota"/>
+          </config>
+          <doc>
+            <summary>Projected yearly sales.</summary>
+          </doc>
+        </field>
+        <field name="bonus" type="money" required="true">
+          <config>
+            <sql:column name="Bonus" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Bonus due if quota is met.</summary>
+          </doc>
+        </field>
+        <field name="commission pct" type="small money" required="true">
+          <config>
+            <sql:column name="CommissionPct" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Commision percent received per sale.</summary>
+          </doc>
+        </field>
+        <field name="sales ytd" type="money" required="true">
+          <config>
+            <sql:column name="SalesYTD" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales total year to date.</summary>
+          </doc>
+        </field>
+        <field name="sales last year" type="money" required="true">
+          <config>
+            <sql:column name="SalesLastYear" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales total of previous year.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <operations>
+        <operation name="read enum">
+          <output list="true">
+            <param name="business entity id"/>
+            <param name="description" type="string"/>
+            <param name="is-current" type="boolean" required="true"/>
+            <param name="territory id"/>
+          </output>
+          <config>
+            <rest:method verb="GET" uri-template="sales-person/enum"/>
+            <xfk:enum-cache enum-name="sales person" id-param="business entity id" desc-param="description"
+                            is-active-param="is-current"/>
+          </config>
+          <doc>
+            <summary>Reads enumeration data for Sales Person.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for querying and managing Sales Person objects.</summary>
+        </doc>
+      </operations>
+      <config>
+        <sql:table name="Sales.SalesPerson"/>
+        <svc:customize preserve-on-clean="true"/>
+      </config>
+      <doc>
+        <summary>Sales representative current information.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

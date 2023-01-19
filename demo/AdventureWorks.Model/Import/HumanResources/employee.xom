@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="human resources">
+  <types>
+    <type name="employee" base="person"/>
+  </types>
+  <objects>
+    <object name="employee">
+      <fields>
+        <field name="business entity id" type="employee" key="supplied" required="true">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+        </field>
+        <field name="national id number" type="string15" required="true">
+          <config>
+            <sql:column name="NationalIDNumber"/>
+          </config>
+          <doc>
+            <summary>Unique national identification number such as a social security number.</summary>
+          </doc>
+        </field>
+        <field name="login id" type="string256" required="true">
+          <config>
+            <sql:column name="LoginID"/>
+          </config>
+          <doc>
+            <summary>Network login.</summary>
+          </doc>
+        </field>
+        <field name="organization node" type="hierarchy id">
+          <config>
+            <sql:column name="OrganizationNode"/>
+          </config>
+          <doc>
+            <summary>Where the employee is located in corporate hierarchy.</summary>
+          </doc>
+        </field>
+        <field name="organization level" type="small int">
+          <config>
+            <sql:column name="OrganizationLevel" computed="([OrganizationNode].[GetLevel]())"/>
+          </config>
+          <doc>
+            <summary>The depth of the employee in the corporate hierarchy.</summary>
+          </doc>
+        </field>
+        <field name="job title" type="name" required="true">
+          <config>
+            <sql:column name="JobTitle"/>
+          </config>
+          <doc>
+            <summary>Work title such as Buyer or Sales Representative.</summary>
+          </doc>
+        </field>
+        <field name="birth date" type="date" required="true">
+          <config>
+            <sql:column name="BirthDate"/>
+          </config>
+          <doc>
+            <summary>Date of birth.</summary>
+          </doc>
+        </field>
+        <field name="marital status" type="code1" required="true">
+          <config>
+            <sql:column name="MaritalStatus"/>
+          </config>
+          <doc>
+            <summary>M = Married, S = Single</summary>
+          </doc>
+        </field>
+        <field name="gender" type="code1" required="true">
+          <config>
+            <sql:column name="Gender"/>
+          </config>
+          <doc>
+            <summary>M = Male, F = Female</summary>
+          </doc>
+        </field>
+        <field name="hire date" type="date" required="true">
+          <config>
+            <sql:column name="HireDate"/>
+          </config>
+          <doc>
+            <summary>Employee hired on this date.</summary>
+          </doc>
+        </field>
+        <field name="salaried flag" type="boolean" required="true">
+          <config>
+            <sql:column name="SalariedFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.</summary>
+          </doc>
+        </field>
+        <field name="vacation hours" type="small int" required="true">
+          <config>
+            <sql:column name="VacationHours" default="((0))"/>
+          </config>
+          <doc>
+            <summary>Number of available vacation hours.</summary>
+          </doc>
+        </field>
+        <field name="sick leave hours" type="small int" required="true">
+          <config>
+            <sql:column name="SickLeaveHours" default="((0))"/>
+          </config>
+          <doc>
+            <summary>Number of available sick leave hours.</summary>
+          </doc>
+        </field>
+        <field name="current flag" type="boolean" required="true">
+          <config>
+            <sql:column name="CurrentFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>0 = Inactive, 1 = Active</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="HumanResources.Employee"/>
+      </config>
+      <doc>
+        <summary>Employee information such as salary, department, and title.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

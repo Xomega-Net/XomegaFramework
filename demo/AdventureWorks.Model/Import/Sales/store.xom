@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="store" base="business entity"/>
+  </types>
+  <objects>
+    <object name="store">
+      <fields>
+        <field name="business entity id" type="store" key="supplied" required="true">
+          <config>
+            <sql:column name="BusinessEntityID"/>
+          </config>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Name of the store.</summary>
+          </doc>
+        </field>
+        <field name="sales person id" type="sales person">
+          <config>
+            <sql:column name="SalesPersonID"/>
+          </config>
+          <doc>
+            <summary>ID of the sales person assigned to the customer. Foreign key to SalesPerson.BusinessEntityID.</summary>
+          </doc>
+        </field>
+        <field name="demographics" type="xml">
+          <config>
+            <sql:column name="Demographics"/>
+          </config>
+          <doc>
+            <summary>Demographic informationg about the store such as the number of employees, annual sales and store type.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Sales.Store"/>
+      </config>
+      <doc>
+        <summary>Customers (resellers) of Adventure Works products.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

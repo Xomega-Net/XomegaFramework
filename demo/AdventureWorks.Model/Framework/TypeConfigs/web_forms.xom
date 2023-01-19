@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel"
+        xmlns:uc="UserControl"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:ui="http://www.xomega.net/ui"
+        name="framework">
+  <!-- Configuration of ASP.NET WebForms controls for logical types. -->
+  <types>
+    <type-config type="boolean">
+      <ui:web-control use-in-grid="true">
+        <asp:CheckBox runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="integer">
+      <ui:web-control>
+        <asp:TextBox runat="server" CssClass="integer"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="date time">
+      <ui:web-control>
+        <uc:DateTimeControl TextCssClass="datetime" runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="date">
+      <ui:web-control>
+        <uc:DateTimeControl TextCssClass="date" runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="decimal">
+      <ui:web-control>
+        <asp:TextBox runat="server" CssClass="decimal"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="string">
+      <ui:web-control>
+        <asp:TextBox runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="selection">
+      <ui:web-control>
+        <asp:DropDownList runat="server"/>
+      </ui:web-control>
+      <ui:web-control multi-value="true">
+        <asp:ListBox runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="integer enumeration">
+      <ui:web-control multi-value="true">
+        <uc:PickListControl Rows="5" runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="suggest string">
+      <ui:web-control>
+        <asp:TextBox runat="server"/>
+      </ui:web-control>
+      <ui:web-control multi-value="true">
+        <asp:TextBox runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="guid">
+      <ui:web-control>
+        <asp:TextBox runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="plain password">
+      <ui:web-control>
+        <asp:TextBox TextMode="Password" runat="server"/>
+      </ui:web-control>
+    </type-config>
+    <type-config type="operator">
+      <ui:web-control>
+        <asp:DropDownList runat="server" AutoPostBack="true" CssClass="operator"/>
+      </ui:web-control>
+    </type-config>
+  </types>
+</module>

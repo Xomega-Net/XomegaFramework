@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="person">
+  <types>
+    <type name="state province" base="integer key"/>
+  </types>
+  <objects>
+    <object name="state province">
+      <fields>
+        <field name="state province id" type="state province" key="serial" required="true">
+          <config>
+            <sql:column name="StateProvinceID"/>
+          </config>
+        </field>
+        <field name="state province code" type="state province code" required="true">
+          <config>
+            <sql:column name="StateProvinceCode"/>
+          </config>
+          <doc>
+            <summary>ISO standard state or province code.</summary>
+          </doc>
+        </field>
+        <field name="country region code" type="country region" required="true">
+          <config>
+            <sql:column name="CountryRegionCode"/>
+          </config>
+          <doc>
+            <summary>ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode. </summary>
+          </doc>
+        </field>
+        <field name="is only state province flag" type="boolean" required="true">
+          <config>
+            <sql:column name="IsOnlyStateProvinceFlag" default="((1))"/>
+          </config>
+          <doc>
+            <summary>0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.</summary>
+          </doc>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>State or province description.</summary>
+          </doc>
+        </field>
+        <field name="territory id" type="sales territory" required="true">
+          <config>
+            <sql:column name="TerritoryID"/>
+          </config>
+          <doc>
+            <summary>ID of the territory in which the state or province is located. Foreign key to SalesTerritory.SalesTerritoryID.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Person.StateProvince"/>
+      </config>
+      <doc>
+        <summary>State and province lookup table.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

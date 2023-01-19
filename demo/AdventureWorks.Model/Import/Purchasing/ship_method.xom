@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="purchasing">
+  <types>
+    <type name="ship method" base="integer enumeration">
+      <enum ref="ship method"/>
+    </type>
+  </types>
+  <objects>
+    <object name="ship method">
+      <fields>
+        <field name="ship method id" type="ship method" key="serial" required="true">
+          <config>
+            <sql:column name="ShipMethodID"/>
+          </config>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Shipping company name.</summary>
+          </doc>
+        </field>
+        <field name="ship base" type="money" required="true">
+          <config>
+            <sql:column name="ShipBase" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Minimum shipping charge.</summary>
+          </doc>
+        </field>
+        <field name="ship rate" type="money" required="true">
+          <config>
+            <sql:column name="ShipRate" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Shipping charge per pound.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <operations>
+        <operation name="read enum">
+          <output list="true">
+            <param name="ship method id"/>
+            <param name="name"/>
+          </output>
+          <config>
+            <rest:method verb="GET" uri-template="ship-method/enum"/>
+            <xfk:enum-cache enum-name="ship method" id-param="ship method id" desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads enumeration data for Ship Method.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for querying and managing Ship Method objects.</summary>
+        </doc>
+      </operations>
+      <config>
+        <sql:table name="Purchasing.ShipMethod"/>
+      </config>
+      <doc>
+        <summary>Shipping company lookup table.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

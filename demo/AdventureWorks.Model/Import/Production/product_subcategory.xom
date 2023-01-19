@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="product subcategory" base="integer enumeration">
+      <enum ref="product subcategory"/>
+    </type>
+  </types>
+  <objects>
+    <object name="product subcategory">
+      <fields>
+        <field name="product subcategory id" type="product subcategory" key="serial"
+               required="true">
+          <config>
+            <sql:column name="ProductSubcategoryID"/>
+          </config>
+        </field>
+        <field name="product category id" type="product category" required="true">
+          <config>
+            <sql:column name="ProductCategoryID"/>
+          </config>
+          <doc>
+            <summary>Product category identification number. Foreign key to ProductCategory.ProductCategoryID.</summary>
+          </doc>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Subcategory description.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <operations>
+        <operation name="read enum">
+          <output list="true">
+            <param name="product subcategory id"/>
+            <param name="product category id"/>
+            <param name="name"/>
+          </output>
+          <config>
+            <rest:method verb="GET" uri-template="product-subcategory/enum"/>
+            <xfk:enum-cache enum-name="product subcategory" id-param="product subcategory id"
+                            desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads enumeration data for Product Subcategory.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for querying and managing Product Subcategory objects.</summary>
+        </doc>
+      </operations>
+      <config>
+        <sql:table name="Production.ProductSubcategory"/>
+      </config>
+      <doc>
+        <summary>Product subcategories. See ProductCategory table.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

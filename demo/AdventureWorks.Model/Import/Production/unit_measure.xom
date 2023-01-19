@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="production">
+  <types>
+    <type name="unit measure" base="code" size="3"/>
+  </types>
+  <objects>
+    <object name="unit measure">
+      <fields>
+        <field name="unit measure code" type="unit measure" key="supplied" required="true">
+          <config>
+            <sql:column name="UnitMeasureCode"/>
+          </config>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Unit of measure description.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="Production.UnitMeasure"/>
+      </config>
+      <doc>
+        <summary>Unit of measure lookup table.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>
