@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel"
+        xmlns:ui="http://www.xomega.net/ui"
+        name="framework">
+  <!-- Configuration of Xomega Syncfusion Blazor controls for logical types. -->
+  <types>
+    <type-config type="boolean">
+      <ui:sf-blazor-control>
+        <XSfCheckBox/>
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="integer">
+      <ui:sf-blazor-control>
+        <XSfNumericTextBox/>
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="date">
+      <ui:sf-blazor-control>
+        <XSfDatePicker />
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="date time">
+      <ui:sf-blazor-control>
+        <XSfDatePicker />
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="decimal">
+      <ui:sf-blazor-control>
+        <XSfNumericTextBox/>
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="string">
+      <ui:sf-blazor-control>
+        <XSfTextBox />
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="selection">
+      <ui:sf-blazor-control>
+        <XSfDropDownList />
+      </ui:sf-blazor-control>
+      <ui:sf-blazor-control multi-value="true">
+        <XSfMultiSelect />
+      </ui:sf-blazor-control>
+    </type-config>
+    <type-config type="suggest string">
+      <ui:blazor-control>
+        <XSfAutoComplete />
+      </ui:blazor-control>
+      <ui:blazor-control multi-value="true">
+        <XSfMultiSelect />
+      </ui:blazor-control>
+    </type-config>
+    <type-config type="plain password">
+      <ui:sf-blazor-control>
+        <XSfTextBox Type="InputType.Password"/>
+      </ui:sf-blazor-control>
+    </type-config>
+  </types>
+</module>

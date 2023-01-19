@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.xomega.net/omodel"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:wcf="http://www.xomega.net/wcf"
+        xmlns:ui="http://www.xomega.net/ui">
+
+  <svc:services-config async="true"
+                       cancellation="true"
+                       namespace="AdventureWorks.Services.Common"
+                       implNamespace="AdventureWorks.Services.Entities"
+                       tsOutputPath="../AdventureWorks.Client.Spa/ServiceContracts/{Module/}{File}"/>
+
+
+  <!-- configuration for generation of UI data objects -->
+  <xfk:data-objects-config namespace="AdventureWorks.Client.Common.DataObjects" assembly="AdventureWorks.Client.Common"
+                           tsOutputPath="../AdventureWorks.Client.Spa/DataObjects/{Module/}{File}"/>
+
+  <!-- configuration for generation of UI views -->
+  <ui:views-config modelsNamespace="AdventureWorks.Client.Common.ViewModels"/>
+
+  <!-- view layout configurations -->
+  <ui:layout-config>
+    <ui:layout name="standard" default="true">
+      <ui:list details-mode="popup">
+        <ui:criteria>
+          <ui:fields columns="2" flow="vertical"/>
+          <ui:errors position="bottom"/>
+        </ui:criteria>
+      </ui:list>
+      <ui:details>
+        <ui:fields columns="2" flow="vertical"/>
+        <ui:errors position="top"/>
+        <ui:children layout="tabs"/>
+      </ui:details>
+      <ui:description>Standard layout for list view with popup details</ui:description>
+    </ui:layout>
+    <ui:layout name="master-details" base="standard">
+      <ui:list details-mode="inline"/>
+      <ui:description>Display of list view with a side details panel</ui:description>
+    </ui:layout>
+  </ui:layout-config>
+
+  <!-- UI controls configuration -->
+  <ui:controls-config>
+    <ui:blazor-controls>
+      <ui:XGrid/>
+    </ui:blazor-controls>
+    <ui:user-controls>
+      <ui:user-control name="AppliedCriteria" path="Controls/AppliedCriteria"/>
+      <ui:user-control name="CollapsiblePanel" path="Controls/CollapsiblePanel"/>
+      <ui:user-control name="DateTimeControl" path="Controls/Editors/DateTimeControl"/>
+      <ui:user-control name="PickListControl" path="Controls/Editors/PickListControl"/>
+      <ui:user-control name="Errors" path="Controls/Errors"/>
+      <ui:user-control name="ViewTemplate" path="Site.Master"/>
+    </ui:user-controls>
+  </ui:controls-config>
+
+  <!-- Syncfusion Blazor default controls configuration -->
+  <blazor-controls-config xmlns="http://www.xomega.net/xsf">
+    <XSfGrid AllowPaging="true" AllowReordering="true" AllowResizing="true"
+             AllowSelection="true" AllowSorting="true" ShowColumnChooser="true" ShowColumnMenu="false">
+      <XSfGridSelectionSettings PersistSelection="true"/>
+      <GridSearchSettings IgnoreCase="true" />
+      <GridPageSettings PageSizes="true" />
+    </XSfGrid>
+  </blazor-controls-config>
+
+  <!-- configuration for generation of enumerations -->
+  <xfk:enumerations-config namespace="AdventureWorks.Services.Common.Enumerations"/>
+
+  <!-- configuration for generation of Entity Framework classes -->
+  <edm:entities-config efCore="true"
+                       namespace="AdventureWorks.Services.Entities"
+                       context="AdventureWorksEntities"/>
+</config>

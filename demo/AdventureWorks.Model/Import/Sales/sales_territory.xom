@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="sales">
+  <types>
+    <type name="sales territory" base="integer enumeration">
+      <config>
+        <ui:display-config typical-length="10"/>
+      </config>
+      <enum ref="sales territory"/>
+    </type>
+    <type name="sales territory group" base="enumeration" size="50">
+      <config>
+        <sql:type name="nvarchar"/>
+      </config>
+      <enum ref="sales territory group"/>
+    </type>
+  </types>
+  <enums>
+    <enum name="sales territory group">
+      <item name="North America" value="North America"/>
+      <item name="Europe" value="Europe"/>
+      <item name="Pacific" value="Pacific"/>
+    </enum>
+  </enums>
+  <objects>
+    <object name="sales territory">
+      <fields>
+        <field name="territory id" type="sales territory" key="serial" required="true">
+          <config>
+            <sql:column name="TerritoryID"/>
+          </config>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Sales territory description</summary>
+          </doc>
+        </field>
+        <field name="country region code" type="country region" required="true">
+          <config>
+            <sql:column name="CountryRegionCode"/>
+          </config>
+          <doc>
+            <summary>ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode. </summary>
+          </doc>
+        </field>
+        <field name="group" type="sales territory group" required="true">
+          <config>
+            <sql:column name="Group"/>
+          </config>
+          <doc>
+            <summary>Geographic area to which the sales territory belong.</summary>
+          </doc>
+        </field>
+        <field name="sales ytd" type="money" required="true">
+          <config>
+            <sql:column name="SalesYTD" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales in the territory year to date.</summary>
+          </doc>
+        </field>
+        <field name="sales last year" type="money" required="true">
+          <config>
+            <sql:column name="SalesLastYear" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Sales in the territory the previous year.</summary>
+          </doc>
+        </field>
+        <field name="cost ytd" type="money" required="true">
+          <config>
+            <sql:column name="CostYTD" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Business costs in the territory year to date.</summary>
+          </doc>
+        </field>
+        <field name="cost last year" type="money" required="true">
+          <config>
+            <sql:column name="CostLastYear" default="((0.00))"/>
+          </config>
+          <doc>
+            <summary>Business costs in the territory the previous year.</summary>
+          </doc>
+        </field>
+        <field name="rowguid" type="guid" required="true">
+          <config>
+            <sql:column name="rowguid" default="(newid())"/>
+          </config>
+          <doc>
+            <summary>ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <operations>
+        <operation name="read enum">
+          <output list="true">
+            <param name="territory id"/>
+            <param name="name"/>
+            <param name="country region code"/>
+            <param name="group"/>
+          </output>
+          <config>
+            <rest:method verb="GET" uri-template="sales-territory/enum"/>
+            <xfk:enum-cache enum-name="sales territory" id-param="territory id" desc-param="name"/>
+          </config>
+          <doc>
+            <summary>Reads enumeration data for Sales Territory.</summary>
+          </doc>
+        </operation>
+        <doc>
+          <summary>A service for querying and managing Sales Territory objects.</summary>
+        </doc>
+      </operations>
+      <config>
+        <sql:table name="Sales.SalesTerritory"/>
+      </config>
+      <doc>
+        <summary>Sales territory lookup table.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

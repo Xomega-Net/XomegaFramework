@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel"
+        xmlns:uc="UserControl"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:ui="http://www.xomega.net/ui"
+        name="framework">
+  <!-- Configuration of WPF controls for logical types. -->
+  <types>
+    <type-config type="boolean">
+      <ui:control>
+        <CheckBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="integer">
+      <ui:control>
+        <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="date time">
+      <ui:control>
+        <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="date">
+      <ui:control>
+        <DatePicker Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="decimal">
+      <ui:control>
+        <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="string">
+      <ui:control>
+        <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="selection">
+      <ui:control>
+        <ComboBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+      <ui:control multi-value="true">
+        <ListBox Style="{StaticResource ControlStyle}" MinHeight="21" MaxHeight="84"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="guid">
+      <ui:control>
+        <TextBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="plain password">
+      <ui:control>
+        <PasswordBox Style="{StaticResource ControlStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+    <type-config type="operator">
+      <ui:control>
+        <ComboBox Style="{StaticResource OperatorStyle}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"/>
+      </ui:control>
+    </type-config>
+  </types>
+</module>

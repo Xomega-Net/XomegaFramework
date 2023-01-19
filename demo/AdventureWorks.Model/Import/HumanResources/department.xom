@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://www.xomega.net/omodel" xmlns:xfk="http://www.xomega.net/framework"
+        xmlns:svc="http://www.xomega.net/svc"
+        xmlns:rest="http://www.xomega.net/rest"
+        xmlns:ui="http://www.xomega.net/ui"
+        xmlns:asp="clr-namespace:System.Web.UI.WebControls;assembly=System.Web"
+        xmlns:sql="http://www.xomega.net/sql"
+        xmlns:clr="http://www.xomega.net/clr"
+        xmlns:edm="http://www.xomega.net/edm"
+        name="human resources">
+  <types>
+    <type name="department" base="small int key"/>
+  </types>
+  <objects>
+    <object name="department">
+      <fields>
+        <field name="department id" type="department" key="serial" required="true">
+          <config>
+            <sql:column name="DepartmentID"/>
+          </config>
+        </field>
+        <field name="name" type="name" required="true">
+          <config>
+            <sql:column name="Name"/>
+          </config>
+          <doc>
+            <summary>Name of the department.</summary>
+          </doc>
+        </field>
+        <field name="group name" type="name" required="true">
+          <config>
+            <sql:column name="GroupName"/>
+          </config>
+          <doc>
+            <summary>Name of the group to which the department belongs.</summary>
+          </doc>
+        </field>
+        <field name="modified date" type="date time" required="true">
+          <config>
+            <sql:column name="ModifiedDate" default="(getdate())"/>
+          </config>
+          <doc>
+            <summary>Date and time the record was last updated.</summary>
+          </doc>
+        </field>
+      </fields>
+      <config>
+        <sql:table name="HumanResources.Department"/>
+      </config>
+      <doc>
+        <summary>Lookup table containing the departments within the Adventure Works Cycles company.</summary>
+      </doc>
+    </object>
+  </objects>
+</module>

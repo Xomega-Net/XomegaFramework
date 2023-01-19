@@ -1,0 +1,28 @@
+﻿.sidebar {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	padding-top: 40px;
+}
+
+	.sidebar a[data-bs-toggle="collapse"] {
+		position: relative;
+	}
+
+	/* right-align the toggle on collapsible sidebar menus */
+	.sidebar .dropdown-toggle::after {
+		display: block;
+		position: absolute;
+		top: 50%;
+		right: 1rem;
+		transform: translateY(-50%);
+	}
+
+	.sidebar ul {
+		padding-left: 1rem;
+	}
+
+	.sidebar i {
+		margin-right: 10px;
+	}

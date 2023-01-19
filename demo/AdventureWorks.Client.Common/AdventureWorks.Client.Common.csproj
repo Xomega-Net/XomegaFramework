@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>
+      net7.0
+    </TargetFrameworks>
+    <RootNamespace>AdventureWorks.Client.Common</RootNamespace>
+    <AssemblyName>AdventureWorks.Client.Common</AssemblyName>
+    <XomegaProjectType>Client.Common</XomegaProjectType>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='net472'">
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AdventureWorks.Services.Common/AdventureWorks.Services.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Messages.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <LastGenOutput>Messages.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

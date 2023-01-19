@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <RootNamespace>AdventureWorks.Services.Common</RootNamespace>
+    <AssemblyName>AdventureWorks.Services.Common</AssemblyName>
+    <XomegaProjectType>Services.Common</XomegaProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="**/*.xres" />
+    <EmbeddedResource Include="**/*.xres" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Xomega.Framework\Xomega.Framework.csproj" />
+  </ItemGroup>
+
+</Project>

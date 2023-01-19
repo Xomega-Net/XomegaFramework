@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>AdventureWorks.Client.Blazor.Common</RootNamespace>
+    <AssemblyName>AdventureWorks.Client.Blazor.Common</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <XomegaProjectType>Client.Blazor.Common</XomegaProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Xomega.Syncfusion.Blazor\Xomega.Syncfusion.Blazor.csproj" />
+    <ProjectReference Include="..\AdventureWorks.Client.Common\AdventureWorks.Client.Common.csproj" />
+  </ItemGroup>
+
+</Project>
