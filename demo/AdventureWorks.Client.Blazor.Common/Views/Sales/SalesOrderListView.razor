@@ -124,8 +124,12 @@
                 <XSfGridColumn Field="@SalesOrderList.Status" Width="7%"></XSfGridColumn>
                 <XSfGridColumn Field="@SalesOrderList.OnlineOrderFlag" Width="20px"
                                TextAlign="TextAlign.Center"></XSfGridColumn>
-                <XSfGridColumn Field="@SalesOrderList.CustomerStore" Width="14%"></XSfGridColumn>
-                <XSfGridColumn Field="@SalesOrderList.CustomerName" Width="14%"></XSfGridColumn>
+                <GridColumn HeaderText="Customer Info" HeaderTextAlign="TextAlign.Center">
+                  <GridColumns>
+                    <XSfGridColumn Field="@SalesOrderList.CustomerStore" Width="14%"></XSfGridColumn>
+                    <XSfGridColumn Field="@SalesOrderList.CustomerName" Width="14%"></XSfGridColumn>
+                  </GridColumns>
+                </GridColumn>
                 <XSfGridColumn Field="@SalesOrderList.SalesPersonId" Width="14%"></XSfGridColumn>
                 <XSfGridColumn Field="@SalesOrderList.TerritoryId" Width="7%"></XSfGridColumn>
                 <XSfGridColumn Field="@SalesOrderList.TotalDue" Width="9%"></XSfGridColumn>
