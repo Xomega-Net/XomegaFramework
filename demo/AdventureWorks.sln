@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorks.Client.Blazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorks.Client.Common", "AdventureWorks.Client.Common\AdventureWorks.Client.Common.csproj", "{4A322D9F-FA71-4D26-BA0F-8B8CE68EECA7}"
 EndProject
-Project("{952B131A-83A3-49CE-ACAC-E4BEBC86F246}") = "AdventureWorks.Model", "AdventureWorks.Model\AdventureWorks.Model.xomproj", "{D2BB3394-BD9E-49D8-9F4B-89FF797DA4ED}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorks.Services.Common", "AdventureWorks.Services.Common\AdventureWorks.Services.Common.csproj", "{B8EA8D9E-3C12-499C-96D1-099C75AD89FA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorks.Services.Entities", "AdventureWorks.Services.Entities\AdventureWorks.Services.Entities.csproj", "{4FFE8934-AE17-411E-AFDF-7DEDF0BFB3B1}"
@@ -44,8 +42,6 @@ Global
 		{4A322D9F-FA71-4D26-BA0F-8B8CE68EECA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A322D9F-FA71-4D26-BA0F-8B8CE68EECA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A322D9F-FA71-4D26-BA0F-8B8CE68EECA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2BB3394-BD9E-49D8-9F4B-89FF797DA4ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2BB3394-BD9E-49D8-9F4B-89FF797DA4ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8EA8D9E-3C12-499C-96D1-099C75AD89FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B8EA8D9E-3C12-499C-96D1-099C75AD89FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8EA8D9E-3C12-499C-96D1-099C75AD89FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
