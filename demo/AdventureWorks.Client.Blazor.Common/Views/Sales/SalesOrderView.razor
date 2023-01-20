@@ -122,7 +122,8 @@
                       <div class="pt-3">
                         <fieldset>
                           <div class="mb-3">
-                            <XSfGrid List="@VM?.MainObj?.DetailList" AllowSelection="true"
+                            <XSfGrid List="@VM?.MainObj?.DetailList" AllowSelection="true" Height="200"
+                                     Toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Cancel", "Update" })"
                                      AllowPaging="true"
                                      AllowReordering="true"
                                      AllowResizing="true"
@@ -131,21 +132,13 @@
                                      ShowColumnMenu="false">
                               <XSfDataManager></XSfDataManager>
                               <XSfGridEvents></XSfGridEvents>
-                              <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
+                              <XSfGridSelectionSettings PersistSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
                               <GridSearchSettings IgnoreCase="true"></GridSearchSettings>
                               <GridPageSettings PageSizes="true"></GridPageSettings>
+                              <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true">
+                              </GridEditSettings>
                               <GridColumns>
-                                <XSfGridColumn Field="@SalesOrderDetailList.ProductId" Width="20%">
-                                  <Template>
-                                    <CascadingValue Value="context as DataRow">
-                                      <a role="button"
-                                         @onclick="async () => await LinkDetailDetails_ClickAsync(context as DataRow)"
-                                         class="btn-link @(DisabledIfNot(VM?.LinkDetailDetails_Enabled(context as DataRow)))">
-                                        <XDataText Property="@VM?.MainObj?.DetailList?.ProductIdProperty"></XDataText>
-                                      </a>
-                                    </CascadingValue>
-                                  </Template>
-                                </XSfGridColumn>
+                                <XSfGridColumn Field="@SalesOrderDetailList.ProductId" Width="20%"></XSfGridColumn>
                                 <XSfGridColumn Field="@SalesOrderDetailList.OrderQty" Width="6%"></XSfGridColumn>
                                 <XSfGridColumn Field="@SalesOrderDetailList.UnitPrice" Width="12%"></XSfGridColumn>
                                 <XSfGridColumn Field="@SalesOrderDetailList.UnitPriceDiscount" Width="10%"></XSfGridColumn>

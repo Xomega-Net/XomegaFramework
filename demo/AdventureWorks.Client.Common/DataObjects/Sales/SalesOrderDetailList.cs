@@ -5,9 +5,11 @@
 //---------------------------------------------------------------------------------------------
 
 using AdventureWorks.Services.Common;
+using AdventureWorks.Services.Common.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework;
@@ -65,20 +67,21 @@ namespace AdventureWorks.Client.Common.DataObjects
         {
             SalesOrderDetailIdProperty = new IntegerKeyProperty(this, SalesOrderDetailId)
             {
-                Required = true,
-                Editable = false,
-                IsKey = true,
+                //Required = true,
+                Editable = true,
+                //IsKey = true,
             };
             ProductIdProperty = new EnumIntProperty(this, ProductId)
             {
                 Required = true,
                 EnumType = "product",
-                Editable = false,
+                Editable = true,
+                IsKey = true,
             };
             OrderQtyProperty = new SmallIntegerProperty(this, OrderQty)
             {
                 Required = true,
-                Editable = false,
+                Editable = true,
             };
             UnitPriceProperty = new MoneyProperty(this, UnitPrice)
             {
@@ -94,7 +97,7 @@ namespace AdventureWorks.Client.Common.DataObjects
             {
                 Required = true,
                 EnumType = "special offer",
-                Editable = false,
+                Editable = true,
             };
             LineTotalProperty = new MoneyProperty(this, LineTotal)
             {
@@ -104,11 +107,34 @@ namespace AdventureWorks.Client.Common.DataObjects
             CarrierTrackingNumberProperty = new TextProperty(this, CarrierTrackingNumber)
             {
                 Size = 25,
-                Editable = false,
+                Editable = true,
             };
             DetailsAction = new ActionProperty(this, "Details");
             NewAction = new ActionProperty(this, "New");
+
+            SpecialOfferIdProperty.LocalCacheLoader = new SpecialOfferProductReadEnumCacheLoader(ServiceProvider);
+            SpecialOfferIdProperty.SetCacheLoaderParameters(
+                SpecialOfferProduct.Parameters.ProductId, ProductIdProperty);
+
+            // computed property using the entire object
+            Expression<Func<SalesOrderDetailList, DataRow, object>> xPrice = (sod, row) => sod.ProductIdProperty.IsNull(row) ?
+                null : sod.ProductIdProperty.GetValue(row)[Product.Attributes.ListPrice];
+            UnitPriceProperty.SetComputedValue(xPrice, this);
+
+            // computed property in a data list object
+            Expression<Func<EnumProperty, DataRow, object>> xDiscount = (spOf, row) =>
+                spOf.IsNull(row) ? null : spOf.GetValue(row)[SpecialOfferProduct.Attributes.Discount];
+            UnitPriceDiscountProperty.SetComputedValue(xDiscount, SpecialOfferIdProperty);
+
+            // computed total using a helper function
+            Expression<Func<SalesOrderDetailList, DataRow, decimal>> xLineTotal = (sod, row) => GetLineTotal(
+                sod.UnitPriceProperty.GetValue(row), sod.UnitPriceDiscountProperty.GetValue(row), sod.OrderQtyProperty.GetValue(row));
+            LineTotalProperty.SetComputedValue(xLineTotal, this);
+
         }
+
+        private static decimal GetLineTotal(decimal? price, decimal? discount, short? qty) =>
+            (price ?? 0) * (1 - (discount ?? 0)) * (qty ?? 0);
 
         #endregion
 
