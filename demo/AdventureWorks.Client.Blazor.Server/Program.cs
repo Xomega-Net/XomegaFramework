@@ -79,7 +79,7 @@ foreach (var mi in MainMenu.Items)
 // Build and configure the app
 var app = builder.Build();
 
-var key = "[Your Syncfusion License Key]";
+var key = builder.Configuration.GetValue<string>("Syncfusion:LicenseKey");
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
 if (app.Environment.IsDevelopment())
 {
