@@ -109,6 +109,7 @@
                      AllowReordering="true"
                      AllowResizing="true"
                      AllowSorting="true"
+                     AllowFiltering="true"
                      ShowColumnChooser="true"
                      ShowColumnMenu="false">
               <XSfDataManager></XSfDataManager>
@@ -116,6 +117,7 @@
               <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
               <GridSearchSettings IgnoreCase="true"></GridSearchSettings>
               <GridPageSettings PageSizes="true"></GridPageSettings>
+              <GridFilterSettings Type="FilterType.Menu"></GridFilterSettings>
               <GridColumns>
                 <XSfGridColumn Field="@SalesOrderList.SalesOrderNumber" Width="10%"></XSfGridColumn>
                 <XSfGridColumn Field="@SalesOrderList.OrderDate" Width="7%"></XSfGridColumn>
