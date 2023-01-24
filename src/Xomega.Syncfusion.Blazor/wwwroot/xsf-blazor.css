@@ -12,3 +12,8 @@
     align-items: center;
     padding-left: .5em;
 }
+
+/* fix the missing right border on the right grid column in a column grouping  */
+.e-grid.e-resize-lines .e-headercell .e-rhandler, .e-grid.e-resize-lines .e-headercell .e-rsuppress {
+    border-right: 1px solid #dee2e6 !important;
+}
