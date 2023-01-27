@@ -94,6 +94,7 @@ namespace Xomega._Syncfusion.Blazor
                 return dm.RequiresCounts ? new DataResult() { Result = groupedData, Count = count } : (object)data;
             }
             var res = dm.RequiresCounts ? new DataResult() { Result = data, Count = count } : (object)data;
+            await Task.Yield();
             return await Task.FromResult(res);
         }
 
