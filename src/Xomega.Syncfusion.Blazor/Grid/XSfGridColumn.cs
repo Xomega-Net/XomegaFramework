@@ -168,7 +168,8 @@ namespace Xomega._Syncfusion.Blazor
             RenderFragment childContent = (cb) =>
             {
                 cb.OpenComponent<DropDownListEvents<string, Header>>(1);
-                cb.AddAttribute(2, "ValueChange", EventCallback.Factory.Create<ChangeEventArgs<string, Header>>(this, OnFilterChangedAsync));
+                cb.AddAttribute(2, "ValueChange", EventCallback.Factory.Create<ChangeEventArgs<string, Header>>(this,
+                    async args => await OnFilterChangedAsync(args, ctx)));
                 cb.CloseComponent();
                 cb.OpenComponent<DropDownListFieldSettings>(1);
                 cb.AddAttribute(2, "Text", "Text");
@@ -200,8 +201,11 @@ namespace Xomega._Syncfusion.Blazor
             }
         }
 
-        private async void OnFilterChangedAsync(ChangeEventArgs<string, Header> args)
+        private async Task OnFilterChangedAsync(ChangeEventArgs<string, Header> args, object ctx)
         {
+            if (ctx is PredicateModel pm) pm.Value = args.ItemData;
+            else if (ctx is PredicateModel<Header> pmh) pmh.Value = args.ItemData;
+
             if (args.ItemData == null || !IsFilterBarType) return;
 
             // auto-apply for FilterBar type only
