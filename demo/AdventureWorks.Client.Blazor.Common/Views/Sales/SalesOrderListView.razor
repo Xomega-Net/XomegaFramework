@@ -112,7 +112,9 @@
                      AllowFiltering="true"
                      ShowColumnChooser="true"
                      ShowColumnMenu="false">
-              <XSfDataManager></XSfDataManager>
+              <XSfDataManager>
+                  <DataListComponent></DataListComponent>
+              </XSfDataManager>
               <XSfGridEvents RowSelected="async (arg) => await LinkDetails_ClickAsync(arg.Data)"></XSfGridEvents>
               <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
               <GridSearchSettings IgnoreCase="true"></GridSearchSettings>

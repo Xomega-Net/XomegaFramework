@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xomega.Framework;
 using Xomega.Framework.Operators;
@@ -23,7 +24,13 @@ namespace Xomega._Syncfusion.Blazor
         /// A reference to the data manager that provides access to the underlying list object,
         /// selected rows and the grid as needed.
         /// </summary>
-        public XSfDataManager DataManager { get; set; }
+        protected XSfDataManager DataManager {
+            get
+            {
+                var dmProp = typeof(DataAdaptor).GetProperty("DataManager", BindingFlags.NonPublic | BindingFlags.Instance);
+                return dmProp?.GetValue(this) as XSfDataManager;
+            }
+        }
 
         private OperatorRegistry operatorRegistry;
 
