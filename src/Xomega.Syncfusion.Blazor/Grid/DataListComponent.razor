@@ -1,0 +1,12 @@
+﻿@namespace Xomega._Syncfusion.Blazor
+
+@inherits DataListAdaptor
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

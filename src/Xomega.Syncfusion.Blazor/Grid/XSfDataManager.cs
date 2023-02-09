@@ -18,10 +18,10 @@ namespace Xomega._Syncfusion.Blazor
         protected async override Task OnInitializedAsync()
         {
             Adaptor = Adaptors.CustomAdaptor;
-            AdaptorInstance = typeof(DataListAdaptor);
+            //AdaptorInstance = typeof(DataListAdaptor);
             await base.OnInitializedAsync();
-            if (BaseAdaptor.Instance is DataListAdaptor dla)
-                dla.DataManager = this;
+            //if (BaseAdaptor.Instance is DataListAdaptor dla)
+            //    dla.XDataManager = this;
         }
 
         /// <summary>
