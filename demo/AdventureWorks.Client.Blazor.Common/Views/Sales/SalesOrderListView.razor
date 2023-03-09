@@ -113,7 +113,7 @@
                      ShowColumnChooser="true"
                      ShowColumnMenu="false">
               <XSfDataManager>
-                  <DataListComponent></DataListComponent>
+                  <DataListComponent List="@VM?.ListObj"></DataListComponent>
               </XSfDataManager>
               <XSfGridEvents RowSelected="async (arg) => await LinkDetails_ClickAsync(arg.Data)"></XSfGridEvents>
               <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
