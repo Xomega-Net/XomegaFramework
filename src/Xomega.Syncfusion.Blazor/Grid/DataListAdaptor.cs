@@ -32,6 +32,12 @@ namespace Xomega._Syncfusion.Blazor
             }
         }
 
+        /// <summary>
+        /// Get a data list object for the data source
+        /// </summary>
+        /// <returns></returns>
+        protected virtual DataListObject GetListObject() => DataManager?.List;
+
         private OperatorRegistry operatorRegistry;
 
         /// <summary>
@@ -44,7 +50,7 @@ namespace Xomega._Syncfusion.Blazor
         private OperatorRegistry GetOperatorRegistry()
         {
             if (operatorRegistry == null)
-                operatorRegistry = DataManager?.List?.ServiceProvider?.GetService<OperatorRegistry>() ?? new OperatorRegistry();
+                operatorRegistry = GetListObject()?.ServiceProvider?.GetService<OperatorRegistry>() ?? new OperatorRegistry();
             return operatorRegistry;
         }
 
@@ -55,7 +61,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <inheritdoc/>
         public async override Task<object> ReadAsync(DataManagerRequest dm, string key = null)
         {
-            DataListObject list = DataManager?.List;
+            DataListObject list = GetListObject();
             if (list == null)
                 return dm.RequiresCounts ? new DataResult() { Result = null, Count = 0 } : null;
 
@@ -136,7 +142,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <inheritdoc/>
         public async override Task<object> InsertAsync(DataManager dataManager, object data, string key)
         {
-            var list = DataManager?.List;
+            var list = GetListObject();
             // insert data row, but suppress any notifications, since SfGrid cannot handle any UI updates at this point
             if (list != null && data is DataRow row)
             {
@@ -149,7 +155,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <inheritdoc/>
         public async override Task<object> UpdateAsync(DataManager dataManager, object data, string keyField, string key)
         {
-            var list = DataManager?.List;
+            var list = GetListObject();
             if (list != null && data is DataRow row)
                 await list.UpdateRow(row.OriginalRow, row, true);
             return data;
@@ -158,7 +164,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <inheritdoc/>
         public async override Task<object> RemoveAsync(DataManager dataManager, object data, string keyField, string key)
         {
-            var list = DataManager?.List;
+            var list = GetListObject();
             var keyProp = keyField == null ? null : list?[keyField];
             var rowsToRemove = keyProp == null ? new List<DataRow>() :
                 list.GetData().Where(r => keyProp.GetValue(ValueFormat.Internal, r) == data).ToList();
@@ -173,7 +179,7 @@ namespace Xomega._Syncfusion.Blazor
             object addedRecords, object deletedRecords, string keyField, string key, int? dropIndex)
         {
             if (deletedRecords is IEnumerable<DataRow> rowsToRemove)
-                await DataManager?.List?.RemoveRows(rowsToRemove, true);
+                await GetListObject()?.RemoveRows(rowsToRemove, true);
 
             return await base.BatchUpdateAsync(dataManager, changedRecords, addedRecords, deletedRecords, keyField, key, dropIndex);
         }

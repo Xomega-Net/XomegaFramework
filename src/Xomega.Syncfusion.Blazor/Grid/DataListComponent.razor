@@ -1,4 +1,5 @@
 ﻿@namespace Xomega._Syncfusion.Blazor
+@using Xomega.Framework;
 
 @inherits DataListAdaptor
 
@@ -9,4 +10,9 @@
 @code {
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public DataListObject List{ get; set; }
+
+    protected override DataListObject GetListObject() => List ?? base.GetListObject();
 }
