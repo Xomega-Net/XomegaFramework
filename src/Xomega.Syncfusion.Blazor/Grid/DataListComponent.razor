@@ -12,7 +12,7 @@
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public DataListObject List{ get; set; }
+    public DataListObject List { get; set; }
 
     protected override DataListObject GetListObject() => List ?? base.GetListObject();
 }

@@ -89,7 +89,7 @@ namespace Xomega._Syncfusion.Blazor
                 suppressGridSelectionUpdate = true; // to avoid recursion
                 var selIndexes = grid.GetSelectedDataRowIndexes();
                 if (selIndexes != null)
-                    await grid.SelectRowsAsync(selIndexes.ToArray());
+                    await grid.SelectRowsAsync(selIndexes.Select(d => (int)d).ToArray());
                 suppressListSelectionUpdate = false;
                 suppressGridSelectionUpdate = false;
             }

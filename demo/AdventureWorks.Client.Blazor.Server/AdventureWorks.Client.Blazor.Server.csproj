@@ -13,8 +13,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
     <PackageReference Include="Xomega.Framework.AspNetCore" Version="4.2.0" />
-    <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.4.0.38" />
-    <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.4.0.38" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="21.1.41" />
   </ItemGroup>
 
   <ItemGroup>
