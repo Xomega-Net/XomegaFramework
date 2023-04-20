@@ -218,10 +218,13 @@ namespace Xomega.Framework
 
         #region Dynamic object
 
+        // value storage for a detached DataRow that was constructed without a DataListObject
+        private Dictionary<string, object> dynamicValues = new Dictionary<string, object>();
+
         /// <inheritdoc/>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            if (List == null) return new string[0];
+            if (List == null) return dynamicValues?.Keys;
             return List.Properties.Select(p => p.Name);
         }
 
@@ -234,6 +237,8 @@ namespace Xomega.Framework
                 result = prop.GetValue(ValueFormat.Internal, this);
                 return true;
             }
+            else if (dynamicValues.TryGetValue(binder.Name, out result))
+                return true;
             return base.TryGetMember(binder, out result);
         }
 
@@ -246,6 +251,7 @@ namespace Xomega.Framework
                 prop.SetValue(value, this);
                 return true;
             }
+            else dynamicValues[binder.Name] = value;
             return base.TrySetMember(binder, value);
         }
 
