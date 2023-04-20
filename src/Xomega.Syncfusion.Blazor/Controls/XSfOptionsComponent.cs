@@ -160,7 +160,10 @@ namespace Xomega._Syncfusion.Blazor
                 string text = args.Query?.Queries?.Where?.First()?.value?.ToString();
                 var items = await Property.AsyncItemsProvider(text, Row, CancellationToken.None);
                 if (items != null)
-                    args.Result = items.Cast<T>();
+                {
+                    var resProp = typeof(ActionCompleteEventArgs<T>).GetProperty("Result");
+                    resProp?.SetValue(args, items.Cast<T>());
+                }
             }
         }
 
