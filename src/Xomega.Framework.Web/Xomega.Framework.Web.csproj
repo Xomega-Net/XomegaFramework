@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <PackageId>Xomega.Framework.Web</PackageId>
     <Version>4.2.0</Version>
