@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2023 Xomega.Net. All rights reserved.
 
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;
@@ -18,17 +19,34 @@ namespace Xomega._Syncfusion.Blazor
     /// <summary>
     /// Custom Syncfusion data grid adapter for working with Xomega data list objects.
     /// </summary>
-    public class DataListAdaptor : DataAdaptor
+    public partial class DataListAdaptor : DataAdaptor
     {
         /// <summary>
-        /// A reference to the data manager that provides access to the underlying list object,
-        /// selected rows and the grid as needed.
+        /// Any child content for the data adapter.
         /// </summary>
-        protected XSfDataManager DataManager {
+        [Parameter] public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// Data list object used as the data source for the current grid.
+        /// </summary>
+        [Parameter] public DataListObject List { get; set; }
+
+        internal XSfDataManager XDataManager { get; set; }
+
+        /// <summary>
+        /// Parent XSfGrid component.
+        /// </summary>
+        protected XSfGrid Grid
+        {
             get
             {
-                var dmProp = typeof(DataAdaptor).GetProperty("DataManager", BindingFlags.NonPublic | BindingFlags.Instance);
-                return dmProp?.GetValue(this) as XSfDataManager;
+                SfDataManager dm = XDataManager;
+                if (dm == null)
+                {
+                    var dmProp = typeof(DataAdaptor).GetProperty("DataManager", BindingFlags.NonPublic | BindingFlags.Instance);
+                    dm = dmProp?.GetValue(this) as SfDataManager;
+                }
+                return dm?.BaseAdaptor?.ParentComponent as XSfGrid;
             }
         }
 
@@ -36,7 +54,7 @@ namespace Xomega._Syncfusion.Blazor
         /// Get a data list object for the data source
         /// </summary>
         /// <returns></returns>
-        protected virtual DataListObject GetListObject() => DataManager?.List;
+        protected DataListObject GetListObject() => List ?? Grid?.List;
 
         private OperatorRegistry operatorRegistry;
 
@@ -146,7 +164,7 @@ namespace Xomega._Syncfusion.Blazor
             // insert data row, but suppress any notifications, since SfGrid cannot handle any UI updates at this point
             if (list != null && data is DataRow row)
             {
-                int idx = DataManager?.GetNewRowIndex() ?? 0;
+                int idx = 0; // TODO: figure out how to get the index of the row being inserted
                 await list.InsertAsync(idx, row, true);
             }
             return data;
@@ -169,7 +187,7 @@ namespace Xomega._Syncfusion.Blazor
             var rowsToRemove = keyProp == null ? new List<DataRow>() :
                 list.GetData().Where(r => keyProp.GetValue(ValueFormat.Internal, r) == data).ToList();
             if (!rowsToRemove.Any())
-                rowsToRemove = DataManager?.SelectedRows;
+                rowsToRemove = Grid?.SelectedRecords;
             await list.RemoveRows(rowsToRemove, true);
             return rowsToRemove;
         }
