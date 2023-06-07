@@ -7,6 +7,8 @@
 *@
 
 @namespace AdventureWorks.Client.Blazor.Common.Views
+@using Syncfusion.Blazor;
+@using Syncfusion.Blazor.Data
 @inherits SalesOrderListViewBase
 
 @if (Visible)
@@ -112,14 +114,14 @@
                      AllowFiltering="true"
                      ShowColumnChooser="true"
                      ShowColumnMenu="false">
-              <XSfDataManager>
-                  <DataListComponent List="@VM?.ListObj"></DataListComponent>
-              </XSfDataManager>
+              <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+                  <DataListAdaptor List="@VM?.ListObj"></DataListAdaptor>
+              </SfDataManager>
               <XSfGridEvents RowSelected="async (arg) => await LinkDetails_ClickAsync(arg.Data)"></XSfGridEvents>
               <XSfGridSelectionSettings PersistSelection="true" UseListSelection="true" EnableToggle="false"></XSfGridSelectionSettings>
               <GridSearchSettings IgnoreCase="true"></GridSearchSettings>
               <GridPageSettings PageSizes="true"></GridPageSettings>
-              <GridFilterSettings Type="FilterType.Menu"></GridFilterSettings>
+              <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
               <GridColumns>
                 <XSfGridColumn Field="@SalesOrderList.SalesOrderNumber" Width="10%"></XSfGridColumn>
                 <XSfGridColumn Field="@SalesOrderList.OrderDate" Width="7%"></XSfGridColumn>
