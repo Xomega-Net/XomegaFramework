@@ -1,7 +1,0 @@
-﻿@page
-
-@inject Xomega.Framework.Services.SignInManager signInManager
-
-@functions {
-    public async Task OnGetAsync(string ticket) => await signInManager.SignInAsync(ticket);
-}
