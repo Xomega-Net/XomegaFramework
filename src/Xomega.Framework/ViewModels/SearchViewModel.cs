@@ -290,8 +290,8 @@ namespace Xomega.Framework.Views
         /// <param name="e">View event of the child details view.</param>
         protected virtual void UpdateDetailsSelection(DetailsViewModel dvm, ViewEvent e)
         {
-            var keyChildProp = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey)?.FirstOrDefault();
-            UpdateListSelection(List, keyChildProp, e);
+            var keyChildProps = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey)?.ToList();
+            UpdateListSelection(List, keyChildProps, e);
         }
 
 
@@ -335,11 +335,11 @@ namespace Xomega.Framework.Views
             if (List == null || inlineViews == 0) return;
 
             var props = RankedProperties;
-            int propCnt = props.Count();
+            int propsToShow = props.Count() / inlineViews;
             int i = 0;
             foreach (var p in props)
             {
-                p.Visible = (i++ < propCnt / inlineViews);
+                p.Visible = i++ <= propsToShow;
             }
         }
 

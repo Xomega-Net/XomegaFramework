@@ -170,13 +170,14 @@ namespace Xomega.Framework.Views
         /// <param name="e">View event of the child details view.</param>
         protected virtual void UpdateDetailsSelection(DetailsViewModel dvm, ViewEvent e)
         {
-            var keyProp = DetailsObject?.Properties?.Where(p => p.IsKey)?.FirstOrDefault();
-            var keyChildProp = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey && p.Name != keyProp?.Name)?.FirstOrDefault();
-            if (keyChildProp == null) return;
+            var keyProps = DetailsObject?.Properties?.Where(p => p.IsKey)?.ToList();
+            // find child key properties within the parent by excluding matching parent keys
+            var keyChildProps = dvm?.DetailsObject?.Properties?.Where(p => p.IsKey && !(keyProps?.Any(kp => kp.Name == p.Name) ?? false))?.ToList();
+            if (keyChildProps == null) return;
 
             foreach (var list in DetailsObject.Children.Where(c => c is DataListObject).Cast<DataListObject>())
             {
-                if (UpdateListSelection(list, keyChildProp, e)) break;
+                if (UpdateListSelection(list, keyChildProps, e)) break;
             }
         }
 

@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -380,18 +381,26 @@ namespace Xomega.Framework.Views
         /// using the provided key property on the details view object.
         /// </summary>
         /// <param name="list">Data list object to update.</param>
-        /// <param name="keyChildProp">The key property on the child details view.</param>
+        /// <param name="keyChildProps">The key properties on the child details view.</param>
         /// <param name="e">Open/close event of the child details view.</param>
         /// <returns></returns>
-        protected virtual bool UpdateListSelection(DataListObject list, DataProperty keyChildProp, ViewEvent e)
+        protected virtual bool UpdateListSelection(DataListObject list, List<DataProperty> keyChildProps, ViewEvent e)
         {
+            if (list == null || keyChildProps == null || !keyChildProps.Any()) return false;
             // Find key property in the list with the same name, as the key property in the child details object.
-            var keyListProp = list?.Properties?.Where(p => p.IsKey && p.Name == keyChildProp?.Name)?.FirstOrDefault();
-            if (keyListProp != null)
+            var keys = from ck in keyChildProps
+                       from lk in list.Properties
+                       where lk.IsKey && lk.Name == ck.Name
+                       select new {
+                           ListKey = lk,
+                           ChildKey = ck
+                       };
+            if (keys.Count() == keyChildProps.Count)
             {
                 if (e.IsOpened())
-                    list.SelectedRows = list.GetData().Where(r => Equals(keyListProp.GetValue(ValueFormat.Internal, r),
-                        keyChildProp.InternalValue)).ToList();
+                    list.SelectedRows = list.GetData().Where(r => keys.All(k => 
+                        Equals(k.ListKey.GetValue(ValueFormat.Internal, r), k.ChildKey.InternalValue))
+                    ).ToList();
                 else if (e.IsClosed()) list.ClearSelectedRows();
                 return true;
             }
