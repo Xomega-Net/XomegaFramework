@@ -19,6 +19,8 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// The data property the component is bound to.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0007:Component parameters should be auto properties",
+            Justification = "Needed to wrap the base member using a subtype.")]
         [Parameter] public DataProperty Property { get => property as DataProperty; set => property = value; }
 
         /// <summary>
