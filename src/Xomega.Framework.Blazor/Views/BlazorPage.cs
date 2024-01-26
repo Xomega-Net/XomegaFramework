@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Xomega.Framework.Blazor.Components;
 using Xomega.Framework.Views;
 
@@ -51,13 +52,12 @@ namespace Xomega.Framework.Blazor.Views
 			}
 		}
 
-#if NET7_0_OR_GREATER
 		/// <summary>
 		/// Internal navigation handler for the NavigationLock component that prevents navigation
 		/// if the main view cannot close.
 		/// </summary>
 		/// <param name="ctx">Location changing context</param>
-		protected async Task ConfirmNavigation(Microsoft.AspNetCore.Components.Routing.LocationChangingContext ctx)
+		protected async Task ConfirmNavigation(LocationChangingContext ctx)
 		{
 			if (Navigation.Uri != ctx.TargetLocation && MainView != null && 
 				!await MainView.CanCloseAsync())
@@ -65,6 +65,5 @@ namespace Xomega.Framework.Blazor.Views
 				ctx.PreventNavigation();
 			}
 		}
-#endif
 	}
 }

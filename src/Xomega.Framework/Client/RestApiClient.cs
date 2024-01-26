@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2023 Xomega.Net. All rights reserved.
 
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,32 +8,43 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Resources;
-using System.Threading;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Xomega.Framework.Services
+namespace Xomega.Framework.Client
 {
     /// <summary>
     /// A base class for HTTP-based service client classes that use Xomega Framework.
     /// </summary>
-    public class HttpServiceClient
+    public class RestApiClient
     {
-        private readonly HttpClient client;
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly RestApiConfig apiConfig;
+        private readonly JsonSerializerOptions serializerOptions;
         private readonly ResourceManager resourceManager;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public HttpServiceClient(HttpClient client, ResourceManager resourceManager = null)
+        public RestApiClient(IHttpClientFactory httpClientFactory, RestApiConfig apiConfig,
+            IOptionsMonitor<JsonSerializerOptions> options, ResourceManager resourceManager = null)
         {
-            this.client = client;
+            serializerOptions = options.CurrentValue;
+            this.httpClientFactory = httpClientFactory;
+            this.apiConfig = apiConfig;
             this.resourceManager = resourceManager;
         }
 
         /// <summary>
         /// Returns the client to perform HTTP operations by subclasses.
         /// </summary>
-        public virtual HttpClient Http => client;
+        protected virtual HttpClient Http => httpClientFactory.CreateClient(apiConfig.ClientName);
+
+        /// <summary>
+        /// Serializer options for HTTP operations in subclasses.
+        /// </summary>
+        protected virtual JsonSerializerOptions SerializerOptions => serializerOptions;
+
 
         /// <summary>
         /// Reads response content with the output. Throws an error with the status code, if content is empty.
@@ -71,7 +83,7 @@ namespace Xomega.Framework.Services
                 }
                 else queryParams.Add(new KeyValuePair<string, string>(prop.Name, val.ToString()));
             }
-            return  string.Join("&", queryParams.Select(p => string.Concat(
+            return string.Join("&", queryParams.Select(p => string.Concat(
                 Uri.EscapeDataString(p.Key), "=", Uri.EscapeDataString(p.Value))));
         }
     }

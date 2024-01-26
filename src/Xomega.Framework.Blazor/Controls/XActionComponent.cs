@@ -13,6 +13,8 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// The action property that this action component is bound to.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0007:Component parameters should be auto properties",
+            Justification = "Needed to wrap the base member using a subtype.")] 
         [Parameter] public ActionProperty Action { get => property as ActionProperty; set => property = value; }
 
         /// <summary>

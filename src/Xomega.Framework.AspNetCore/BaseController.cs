@@ -7,27 +7,18 @@ namespace Xomega.Framework.Services
     /// <summary>
     /// Base class for controllers that use Xomega Framework
     /// </summary>
-    public class BaseController : ControllerBase
+    /// <param name="errorList">An error list for the current errors.</param>
+    /// <param name="errorParser">An injected error parser.</param>
+    public class BaseController(ErrorList errorList, ErrorParser errorParser) : ControllerBase
     {
         /// <summary>
         /// Errors for the current request.
         /// </summary>
-        protected readonly ErrorList currentErrors;
+        protected readonly ErrorList currentErrors = errorList;
 
         /// <summary>
         /// Error parser for handling exceptions.
         /// </summary>
-        protected readonly ErrorParser errorsParser;
-
-        /// <summary>
-        /// Constructs a Xomega-based controller
-        /// </summary>
-        /// <param name="errorList">An error list for the current errors.</param>
-        /// <param name="errorParser">An injected error parser.</param>
-        public BaseController(ErrorList errorList, ErrorParser errorParser)
-        {
-            currentErrors = errorList;
-            errorsParser = errorParser;
-        }
+        protected readonly ErrorParser errorsParser = errorParser;
     }
 }

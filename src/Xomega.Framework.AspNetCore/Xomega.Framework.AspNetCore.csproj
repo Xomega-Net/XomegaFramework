@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>4.2.1</Version>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>4.3.0</Version>
     <PackageId>Xomega.Framework.AspNetCore</PackageId>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>Logo.png</PackageIcon>
     <Company>Xomega.Net</Company>
     <Authors>Xomega Team</Authors>
     <Product>Xomega.Framework</Product>
-    <Copyright>Copyright © Xomega.Net 2023</Copyright>
+    <Copyright>Copyright © Xomega.Net 2024</Copyright>
     <Description>Xomega framework for building ASP.NET Core based Web API and apps.</Description>
     <PackageProjectUrl>https://github.com/Xomega-Net/XomegaFramework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Xomega-Net/XomegaFramework</RepositoryUrl>
@@ -23,7 +23,8 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
     <ProjectReference Include="..\Xomega.Framework\Xomega.Framework.csproj" />
   </ItemGroup>
 
