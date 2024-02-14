@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -33,8 +34,8 @@ namespace Xomega.Framework.Client
             });
             if (apiConfig.Authorization)
             {
-                services.AddSingleton<ITokenService, JwtTokenService>();
-                services.AddScoped<AuthorizationMessageHandler>();
+                services.TryAddSingleton<ITokenService, JwtTokenService>();
+                services.TryAddScoped<AuthorizationMessageHandler>();
                 b.AddHttpMessageHandler<AuthorizationMessageHandler>();
             }
             if (!string.IsNullOrEmpty(apiConfig.BasePath))

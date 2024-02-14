@@ -81,7 +81,6 @@ namespace Xomega.Framework.Blazor.Views
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            if (Model == null || Model.Activated) return;
 
             var parameters = new NameValueCollection();
             if (ActivateFromQuery)
@@ -93,7 +92,8 @@ namespace Xomega.Framework.Blazor.Views
                         parameters.Add(key, val);
                 }
             }
-            await Model.ActivateAsync(parameters);
+
+            await Model?.ActivateAsync(parameters);
         }
 
         private Func<Task> AfterRenderAction;

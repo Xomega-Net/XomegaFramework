@@ -5,6 +5,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Resources;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -22,6 +23,7 @@ namespace Xomega.Framework.Client
         private readonly IPrincipalProvider principalProvider;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly RestApiConfig apiConfig;
+        private readonly ResourceManager resourceManager;
         private readonly JsonSerializerOptions serializerOptions;
 
         private AuthToken authToken;
@@ -34,12 +36,14 @@ namespace Xomega.Framework.Client
         /// <param name="httpClientFactory">Injected HTTP client factory.</param>
         /// <param name="apiConfig">Injected REST API config.</param>
         /// <param name="serializerOptions">Injected JSON serializer options.</param>
+        /// <param name="resourceManager">Resource manager for message localization.</param>
         public JwtTokenService(IPrincipalProvider principalProvider, IHttpClientFactory httpClientFactory,
-            RestApiConfig apiConfig, IOptionsMonitor<JsonSerializerOptions> serializerOptions)
+            RestApiConfig apiConfig, IOptionsMonitor<JsonSerializerOptions> serializerOptions, ResourceManager resourceManager)
         {
             this.principalProvider = principalProvider;
             this.httpClientFactory = httpClientFactory;
             this.apiConfig = apiConfig;
+            this.resourceManager = resourceManager;
             this.serializerOptions = serializerOptions.CurrentValue;
         }
 
@@ -65,12 +69,12 @@ namespace Xomega.Framework.Client
                 var res = await JsonSerializer.DeserializeAsync<Output<AuthToken>>(content, serializerOptions, cancellationToken);
 
                 if (!res.Messages.HasErrors())
-                    SetAuthToken(res.Result);
+                    await SetAuthTokenAsync(res.Result);
             }
         }
 
         /// <inheritdoc/>
-        public virtual ClaimsIdentity SetAuthToken(AuthToken authToken)
+        public virtual async Task<ClaimsIdentity> SetAuthTokenAsync(AuthToken authToken)
         {
             this.authToken = authToken;
 
@@ -78,7 +82,7 @@ namespace Xomega.Framework.Client
             {
                 validTo = null;
                 principalProvider.CurrentPrincipal = null;
-                RedirectToLogin();
+                await RedirectToLogin();
             }
             else
             {
@@ -99,6 +103,12 @@ namespace Xomega.Framework.Client
         /// Subclasses can override this method to redirect to the login page when the auth token is cleared.
         /// </summary>
         /// <exception cref="Exception">Thrown by default to be handled by the app code.</exception>
-        protected virtual void RedirectToLogin() => throw new Exception("Your session has expired. Please log in again.");
+        protected virtual Task RedirectToLogin()
+        {
+            ErrorList errorList = new ErrorList(resourceManager);
+            errorList.AddError(ErrorType.Security, Messages.Login_SessionExpired);
+            errorList.AbortIfHasErrors();
+            return Task.CompletedTask;
+        }
     }
 }

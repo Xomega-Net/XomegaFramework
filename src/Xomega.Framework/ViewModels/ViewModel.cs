@@ -81,12 +81,26 @@ namespace Xomega.Framework.Views
         /// <returns>True if the view was successfully activated, False otherwise</returns>
         public virtual async Task<bool> ActivateAsync(NameValueCollection parameters, CancellationToken token = default)
         {
-            if (Activated) return false;
+            if (Activated && SameParams(parameters)) return false;
             Params = parameters == null ? new NameValueCollection() : new NameValueCollection(parameters);
             Activated = true;
             // make Close visible only for child views
             CloseAction.Visible = Params[ViewParams.Mode.Param] != null;
             return await Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Checks if the supplied parameters are the same as the ones the model has been activated with.
+        /// </summary>
+        /// <param name="parameters">Parameters to check</param>
+        /// <returns>True if parameters are the same, false otherwise.</returns>
+        protected virtual bool SameParams(NameValueCollection parameters)
+        {
+            if (Params == null && parameters == null) return true;
+            if (Params == null && parameters != null || Params != null && parameters == null) return false;
+
+            return Params.AllKeys.OrderBy(key => key).SequenceEqual(parameters.AllKeys.OrderBy(key => key))
+                && Params.AllKeys.All(key => Params[key] == parameters[key]);
         }
 
         #endregion

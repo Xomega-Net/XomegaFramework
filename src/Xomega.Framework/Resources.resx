@@ -156,6 +156,9 @@
   <data name="Exception_Unhandled" xml:space="preserve">
     <value>Unexpected system error occurred. Please see logs for details.</value>
   </data>
+  <data name="Login_SessionExpired" xml:space="preserve">
+    <value>Your session has expired. Please log in again.</value>
+  </data>
   <data name="Operator_NotSupported" xml:space="preserve">
     <value>Unsupported operator {0} for the {1}.</value>
     <comment>{0}=Operator, {1}=Field name</comment>

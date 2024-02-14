@@ -51,9 +51,9 @@ namespace Xomega.Framework.Client
         /// </summary>
         /// <param name="response">Service response.</param>
         /// <returns>Response content as a stream.</returns>
-        public virtual async Task<Stream> ReadOutputContentAsync(HttpResponseMessage response)
+        public virtual async Task<string> ReadOutputContentAsync(HttpResponseMessage response)
         {
-            var content = await response.Content.ReadAsStreamAsync();
+            var content = await response.Content.ReadAsStringAsync();
             if (content.Length == 0)
             {
                 var errorList = new ErrorList(resourceManager);

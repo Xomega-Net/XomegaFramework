@@ -52,7 +52,7 @@ namespace Xomega.Framework.Client
             var response = await base.SendAsync(request, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
-                tokenService.SetAuthToken(null);
+                await tokenService.SetAuthTokenAsync(null);
 
             return response;
         }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2023 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Configuration;
 using System.IdentityModel.Tokens;
@@ -40,9 +41,9 @@ namespace Xomega.Framework.Wcf
                 Type factoryType = ctx != null ?
                     typeof(ConfigurationChannelFactory<>).MakeGenericType(contractType) :
                     typeof(ChannelFactory<>).MakeGenericType(contractType);
-                container.AddSingleton(factoryType, sp => ctx == null ? Activator.CreateInstance(factoryType, endpoint.Name) :
+                container.TryAddSingleton(factoryType, sp => ctx == null ? Activator.CreateInstance(factoryType, endpoint.Name) :
                     Activator.CreateInstance(factoryType, endpoint.Name, ctx, null));
-                container.AddScoped(contractType, sp => tokenProvider != null ? factoryType.InvokeMember("CreateChannelWithIssuedToken",
+                container.TryAddScoped(contractType, sp => tokenProvider != null ? factoryType.InvokeMember("CreateChannelWithIssuedToken",
                         BindingFlags.InvokeMethod, null, sp.GetService(factoryType), new object[] { tokenProvider() }) :
                     factoryType.InvokeMember("CreateChannel", BindingFlags.InvokeMethod, null, sp.GetService(factoryType), new object[] { }));
             }
@@ -64,7 +65,7 @@ namespace Xomega.Framework.Wcf
                 {
                     Type contractType = AppInitializer.GetType(endpoint.Contract);
                     if (contractType == null || endpoint.IsSystemEndpoint || exclEndpoints != null && exclEndpoints(endpoint)) continue;
-                    container.AddScoped(contractType, serviceType);
+                    container.TryAddScoped(contractType, serviceType);
                 }
             }
             return container;

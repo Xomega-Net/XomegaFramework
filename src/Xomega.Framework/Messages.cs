@@ -85,6 +85,11 @@ namespace Xomega.Framework
         public const string Exception_Unhandled = "Exception_Unhandled";
 
         /// <summary>
+        /// Your session has expired. Please log in again.
+        /// </summary>
+        public const string Login_SessionExpired = "Login_SessionExpired";
+
+        /// <summary>
         /// Unsupported operator {0} for the {1}.
         /// Where {0}=Operator, {1}=Field name
         /// </summary>

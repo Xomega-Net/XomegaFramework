@@ -19,7 +19,7 @@ namespace Xomega.Framework.Client
         /// </summary>
         /// <param name="authToken">The authorization token to use for API access and current authentication state.</param>
         /// <returns>The claims identity constructed from the authorization token.</returns>
-        ClaimsIdentity SetAuthToken(AuthToken authToken);
+        Task<ClaimsIdentity> SetAuthTokenAsync(AuthToken authToken);
 
         /// <summary>
         /// Gets the current access token.

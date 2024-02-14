@@ -100,12 +100,14 @@ namespace Xomega.Framework.Views
                 {
                     vc.PropertyChanged += OnModelPropertyChanged;
                     vc.ViewEvents += OnViewEvents;
+                    vc.AsyncViewEvents += OnViewEventsAsync;
                     vc.View = this;
                 }
                 else
                 {
                     vc.PropertyChanged -= OnModelPropertyChanged;
                     vc.ViewEvents -= OnViewEvents;
+                    vc.AsyncViewEvents -= OnViewEventsAsync;
                     vc.View = null;
                 }
             }
@@ -167,6 +169,18 @@ namespace Xomega.Framework.Views
         protected virtual void OnViewEvents(object sender, ViewEvent e)
         {
             // subclasses can override
+        }
+
+        /// <summary>
+        /// Listens for async view events allowing subclasses to handle them.
+        /// </summary>
+        /// <param name="sender">View model that sent the event.</param>
+        /// <param name="e">View event.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the async method.</returns>
+        protected virtual async Task OnViewEventsAsync(object sender, ViewEvent e, CancellationToken token = default)
+        {
+            await Task.CompletedTask;
         }
 
         #endregion
