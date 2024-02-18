@@ -261,6 +261,12 @@ namespace Xomega.Framework
         public const string Validation_Required = "Validation_Required";
 
         /// <summary>
+        /// Transport value of {0} must be of type {1}.
+        /// Where {0}=Property name, {1}=Transport value type
+        /// </summary>
+        public const string Validation_TransportType = "Validation_TransportType";
+
+        /// <summary>
         /// Search Criteria
         /// </summary>
         public const string View_Criteria = "View_Criteria";
