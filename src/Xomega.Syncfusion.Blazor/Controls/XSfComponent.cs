@@ -42,6 +42,18 @@ namespace Xomega._Syncfusion.Blazor
         }
 
         /// <summary>
+        /// Global configuration on whether or not to use a tooltip to display validation errors
+        /// rather than showing them under the field.
+        /// </summary>
+        public static bool UseTooltipForValidationErrors = false;
+
+        /// <summary>
+        /// Overrides the class for under-the-field validation errors to not show them
+        /// when a tooltip is used to display those errors instead.
+        /// </summary>
+        public override string ErrorsClass => UseTooltipForValidationErrors ? "d-none" : base.ErrorsClass;
+
+        /// <summary>
         /// Allows setting tooltip position for the validation error tooltip.
         /// </summary>
         [Parameter] public Position TooltipPosition { get; set; } = Position.BottomCenter;
@@ -66,7 +78,7 @@ namespace Xomega._Syncfusion.Blazor
         public static void ShowTooltipError(XComponent comp, TooltipEventArgs args)
         {
             // don't show error tooltip if there are no errors or when editing a grid, which shows its own error
-            if (string.IsNullOrEmpty(comp.ErrorsText) || comp.Row != null)
+            if (!UseTooltipForValidationErrors || string.IsNullOrEmpty(comp.ErrorsText) || comp.Row != null)
                 args.Cancel = true;
         }
     }

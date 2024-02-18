@@ -104,7 +104,7 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// The Bootstrap class for the component error.
         /// </summary>
-        public string ErrorsClass => string.IsNullOrEmpty(ErrorsText) ? "" : "invalid-feedback";
+        public virtual string ErrorsClass => string.IsNullOrEmpty(ErrorsText) ? "" : "invalid-feedback";
 
         /// <summary>
         /// Constructs a new property bound component.

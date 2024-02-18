@@ -17,3 +17,13 @@
 .e-grid.e-resize-lines .e-headercell .e-rhandler, .e-grid.e-resize-lines .e-headercell .e-rsuppress {
     border-right: 1px solid #dee2e6 !important;
 }
+
+/* make validation errors display on error SF controls */
+.e-error~.invalid-feedback {
+    display: block;
+}
+
+/* make validation errors the size of SF labels */
+.invalid-feedback {
+    font-size: 12px;
+}
