@@ -67,7 +67,7 @@ namespace Xomega.Framework.Blazor
         protected PropertyChange ObservedChanges { get; set; }
 
         /// <summary>
-        /// Shorthand to determine if the property is multivalue.
+        /// Shorthand to determine if the property is multivalued.
         /// </summary>
         protected bool IsMultiValue => Property != null && Property.IsMultiValued;
 
@@ -117,7 +117,7 @@ namespace Xomega.Framework.Blazor
         /// <summary>
         /// The property state descriptions used to generate component's CSS classes.
         /// </summary>
-        protected PropertyStateDescription StateDescriptions = new PropertyStateDescription()
+        protected PropertyStateDescription StateDescriptions = new()
         {
             Valid = "is-valid",
             Invalid = "is-invalid",

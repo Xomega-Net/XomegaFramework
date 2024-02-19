@@ -18,3 +18,8 @@
   content: "* ";
   color: #dc3545;
 }
+
+/* remove the green checkmark from validated fields */
+.form-control.is-valid {
+    background-image: none;
+}
