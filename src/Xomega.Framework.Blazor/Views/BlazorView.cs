@@ -82,6 +82,10 @@ namespace Xomega.Framework.Blazor.Views
         {
             await base.OnParametersSetAsync();
 
+            // workaround for Blazor Server calling this method more than once.
+            if (Model == null || Model.Activated && Model.Params.Count > 0 && !ActivateFromQuery)
+                return;
+
             var parameters = new NameValueCollection();
             if (ActivateFromQuery)
             {
@@ -93,7 +97,7 @@ namespace Xomega.Framework.Blazor.Views
                 }
             }
 
-            await Model?.ActivateAsync(parameters);
+            await Model.ActivateAsync(parameters);
         }
 
         private Func<Task> AfterRenderAction;
