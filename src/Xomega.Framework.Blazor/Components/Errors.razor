@@ -2,15 +2,15 @@
 
 @if (ErrorList != null && ErrorList.Errors.Count() > 0)
 {
-    <div class="card alert-@GetSeverityClass() @Class">
-        <div class="card-header row g-0 justify-content-between align-items-center pe-2">
+    <div class="card @Class">
+        <div class="card-header bg-primary-subtle row g-0 justify-content-between align-items-center pe-2">
             <h6 class="col m-0">@GetTitle()</h6>
             <button type="button" @onclick="@Close" class="btn-close col-auto" aria-label="Close"></button>
         </div>
         <div class="card-body pb-2">
             @foreach (var err in ErrorList.Errors)
             {
-                <div class="mb-2">
+                <div class="mb-1 py-1 alert alert-@GetSeverityClass(err.Severity)">
                     <i class="fs-5 me-2 bi bi-@GetIconClass(err.Severity)-fill"></i><span>@err.Message</span>
                 </div>
             }
@@ -31,15 +31,24 @@
 
     protected string GetTitle() => ErrorList?.GetTitle(ViewKey);
 
-    protected string GetSeverityClass() => ErrorList.HasErrors() ? "danger" :
-        ErrorList.Errors.Any(e => e.Severity > ErrorSeverity.Info) ? "warning" : "info";
+    protected string GetSeverityClass(ErrorSeverity severity)
+    {
+        switch (severity)
+        {
+            case ErrorSeverity.Critical:
+            case ErrorSeverity.Error: return "danger";
+            case ErrorSeverity.Warning: return "warning";
+            case ErrorSeverity.Info: return "info";
+        }
+        return "";
+    }
 
     protected string GetIconClass(ErrorSeverity severity)
     {
         switch (severity)
         {
-            case ErrorSeverity.Critical:
-            case ErrorSeverity.Error: return "exclamation-circle";
+            case ErrorSeverity.Critical: return "x-octagon";
+            case ErrorSeverity.Error: return "x-circle";
             case ErrorSeverity.Warning: return "exclamation-triangle";
             case ErrorSeverity.Info: return "info-circle";
         }
