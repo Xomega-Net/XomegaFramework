@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2024 Xomega.Net. All rights reserved.
 
 using System;
 using System.Collections.Specialized;
