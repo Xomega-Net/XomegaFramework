@@ -26,7 +26,6 @@ IF NOT EXIST %NUGET_PATH% (
   copy %CACHED_NUGET% %NUGET_PATH% > nul
 )
 
-%NUGET_PATH% sign "pkg\%PRJ%.%VER%\%PRJ%.%VER%.nupkg" -CertificateFingerprint 139aacf7235ef6a774bf9b4384b511e35348a844 -Timestamper http://timestamp.comodoca.com
 %NUGET_PATH% push "pkg\%PRJ%.%VER%\%PRJ%.%VER%.nupkg" -Source https://api.nuget.org/v3/index.json
 
 :end
