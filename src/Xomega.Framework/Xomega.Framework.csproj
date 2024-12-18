@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <PackageId>Xomega.Framework</PackageId>
-    <Version>4.3.0</Version>
+    <Version>4.3.1</Version>
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
@@ -26,7 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.10" />
   </ItemGroup>
 
   <ItemGroup>

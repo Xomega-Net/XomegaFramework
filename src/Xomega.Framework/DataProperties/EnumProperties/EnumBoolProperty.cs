@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Xomega.Framework.Properties
 {
@@ -51,6 +53,14 @@ namespace Xomega.Framework.Properties
             else if (format == ValueFormat.Internal && value is bool)
                 return base.ConvertValue(value.ToString().ToLower(), format);
             return base.ConvertValue(value, format);
+        }
+
+        /// <inheritdoc/>
+        protected override async Task<object> ConvertValueAsync(object value, ValueFormat format, DataRow row, CancellationToken token = default)
+        {
+            if (format == ValueFormat.Internal && value is bool)
+                return await base.ConvertValueAsync(value.ToString().ToLower(), format, row, token);
+            return await base.ConvertValueAsync(value, format, row, token);
         }
     }
 }

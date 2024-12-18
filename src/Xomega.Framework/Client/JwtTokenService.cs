@@ -30,6 +30,11 @@ namespace Xomega.Framework.Client
         private DateTime? validTo;
 
         /// <summary>
+        /// The current token service error
+        /// </summary>
+        protected string currentError;
+
+        /// <summary>
         /// Constructs JwtTokenService using injected services and options.
         /// </summary>
         /// <param name="principalProvider">Injected principal provider.</param>
@@ -52,6 +57,9 @@ namespace Xomega.Framework.Client
 
         /// <inheritdoc/>
         public virtual DateTime? GetAccessTokenExpiration() => validTo;
+
+        /// <inheritdoc/>
+        public virtual string GetCurrentError() => currentError;
 
         /// <summary>
         /// Refreshes expired access token by calling a REST endpoint specified by the 
@@ -94,6 +102,7 @@ namespace Xomega.Framework.Client
                     jwtTokenHandler.InboundClaimTypeMap[c.Type] : c.Type, c.Value, c.ValueType, c.Issuer, c.OriginalIssuer));
                 var ci = new ClaimsIdentity(claims, "Bearer");
                 principalProvider.CurrentPrincipal = new ClaimsPrincipal(ci);
+                currentError = null;
                 return ci;
             }
             return null;
@@ -105,9 +114,7 @@ namespace Xomega.Framework.Client
         /// <exception cref="Exception">Thrown by default to be handled by the app code.</exception>
         protected virtual Task RedirectToLogin()
         {
-            ErrorList errorList = new ErrorList(resourceManager);
-            errorList.AddError(ErrorType.Security, Messages.Login_SessionExpired);
-            errorList.AbortIfHasErrors();
+            currentError = Messages.Login_SessionExpired;
             return Task.CompletedTask;
         }
     }

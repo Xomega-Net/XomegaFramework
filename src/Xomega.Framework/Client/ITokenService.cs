@@ -39,5 +39,11 @@ namespace Xomega.Framework.Client
         /// <param name="cancellationToken">A cancellation token for the operation.</param>
         /// <returns>A task for the current operation.</returns>
         Task RefreshTokenAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Gets the current token service error to display, e.g. about an expired session
+        /// </summary>
+        /// <returns>The error code for the message to display.</returns>
+        string GetCurrentError();
     }
 }
