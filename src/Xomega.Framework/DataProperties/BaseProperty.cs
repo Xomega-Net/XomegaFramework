@@ -117,7 +117,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Resource manager to be used for the property, which can be overridden in subclasses.
         /// </summary>
-        protected virtual ResourceManager ResourceMgr => parent?.ServiceProvider?.GetService<ResourceManager>() ?? Messages.ResourceManager;
+        protected virtual ResourceManager ResourceMgr => parent?.ResourceMgr ?? Messages.ResourceManager;
 
         /// <summary>
         /// Base resource key to be used for the property, which can be overridden in subclasses.

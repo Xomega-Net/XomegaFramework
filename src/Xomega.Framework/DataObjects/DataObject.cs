@@ -83,7 +83,7 @@ namespace Xomega.Framework
             Expression<Func<DataObject, bool>> deleteEnabled = (obj) => obj != null && !obj.IsNew;
             DeleteAction.SetComputedEnabled(deleteEnabled, this);
 
-            ResetAction = new ActionProperty(this, Messages.Action_Reset);
+            ResetAction = new ActionProperty(this, ResetName);
 
             // call subclass initialization in a separate method
             // to make sure base initialization is always called
@@ -132,6 +132,11 @@ namespace Xomega.Framework
         public ActionProperty ResetAction { get; private set; }
 
         /// <summary>
+        /// Name for the ResetAction property that can be overridden in subclasses.
+        /// </summary>
+        protected virtual string ResetName => Messages.Action_Reset;
+
+        /// <summary>
         /// Resets data object to initial values
         /// </summary>
         public virtual void ResetData()
@@ -160,6 +165,11 @@ namespace Xomega.Framework
             if (editableBinding != null)
                 editableBinding.Update(null);
         }
+
+        /// <summary>
+        /// Resource manager to be used for the data object and properties, which can be overridden in subclasses.
+        /// </summary>
+        public virtual ResourceManager ResourceMgr => ServiceProvider?.GetService<ResourceManager>();
 
         /// <summary>
         /// Gets a key for the current object that is used to look up localized resources

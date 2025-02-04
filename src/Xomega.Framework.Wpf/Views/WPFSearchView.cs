@@ -74,7 +74,7 @@ namespace Xomega.Framework.Views
 
                 // recalculate applied criteria with updated labels after binding
                 if (svm.List != null && svm.List.CriteriaObject != null && svm.List.AppliedCriteria != null)
-                    svm.List.AppliedCriteria = svm.List.CriteriaObject.GetFieldCriteriaSettings();
+                    svm.List.AppliedCriteria = svm.List.CriteriaObject.GetCriteriaDisplays(false);
             }
             base.BindTo(viewModel);
         }

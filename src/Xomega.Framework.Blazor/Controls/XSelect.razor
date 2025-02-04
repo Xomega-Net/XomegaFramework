@@ -1,6 +1,7 @@
 ﻿@* Copyright (c) 2023 Xomega.Net. All rights reserved. *@
 
 @using System.Collections
+@using System.Linq
 @using System.Resources
 
 @inherits XOptionsComponent<object>
@@ -12,15 +13,16 @@
     <div class="@Class">
         @if (ShowLabel)
         {
-            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+            <label class="form-label @StateClass" accesskey="@GetAccessKey()" for="@ControlId">@GetLabel(Label)</label>
         }
-        <select @ref="SelectList" id="@ControlId"
-                class="form-select @StateClass"
-                disabled="@(!IsEditable)"
-                multiple="@IsMultiValue" size="@Rows"
-                @onchange="@OnSelectionChanged"
-                @onfocus="OnFocus"
-                @onblur="OnBlur">
+        <select id="@ControlId"
+        class="form-select @StateClass"
+        disabled="@(!IsEditable)"
+        multiple="@IsMultiValue" size="@Rows"
+        value="@GetValue()"
+        @onchange="@OnSelectionChanged"
+        @onfocus="OnFocus"
+        @onblur="OnBlur">
             @if (Property != null)
             {
                 @if (!IsMultiValue && (IsNull || !IsRequired))
@@ -28,7 +30,7 @@
                     <option selected="@IsNull" disabled="@IsRequired" value="">@(IsRequired ? DefaultSelectOption : Property.NullString)</option>
                 }
 
-                var value = Property.ResolveValue(Property.InternalValue, ValueFormat.EditString);
+                var value = Property.ResolveValue(Property.GetValue(ValueFormat.Internal, Row), ValueFormat.EditString);
                 var itemValues = new ArrayList();
                 @foreach (var i in Items)
                 {
@@ -58,20 +60,28 @@
 
 @code {
 
+    protected string GetValue() {
+        var value = Property.ResolveValue(Property.GetValue(ValueFormat.Internal, Row), ValueFormat.EditString);
+        if (value is IList lst)
+        {
+            var vl = new List<string>();
+            foreach (var v in lst)
+                vl.Add(Convert.ToString(v));
+            return BindConverter.FormatValue(vl.ToArray())?.ToString();
+        }
+        else return Convert.ToString(value);
+    }
+
     protected string DefaultSelectOption => string.Format((resMgr ?? Messages.ResourceManager)
         .GetString(Messages.Select_RequiredOption), Label);
-
-    protected ElementReference SelectList { get; set; }
 
     [Parameter] public int? Rows { get; set; }
 
     protected async Task OnSelectionChanged(ChangeEventArgs e)
     {
-        if (IsMultiValue)
-        {
-            var value = await GetSelectedValues(SelectList);
-            await UpdatePropertyAsync(value);
-        }
-        else await UpdatePropertyAsync(e.Value);
+        var value = e.Value;
+        if (value is string[] values)
+            value = values.ToList();
+        await UpdatePropertyAsync(value);
     }
 }

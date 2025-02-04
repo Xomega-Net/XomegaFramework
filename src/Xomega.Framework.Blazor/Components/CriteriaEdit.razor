@@ -1,0 +1,66 @@
+﻿@* Copyright (c) 2023 Xomega.Net. All rights reserved. *@
+
+@using Xomega.Framework.Criteria
+@using Xomega.Framework.Blazor.Controls
+
+<div class="@Class">
+    <div class="row">
+        <XSelect Class="col criteria-selector" Property="@Criteria?.FieldSelectorProperty"></XSelect>
+    </div>
+    <Errors Class="mt-3" ErrorList="@Criteria?.FieldEditObject?.Errors" ViewKey="Criteria"></Errors>
+    <div class="row">
+        <XSelect Class="mt-3 col" Property="@Criteria?.FieldEditObject?.OperatorProperty" ShowLabel="false"></XSelect>
+    </div>
+    <div class="row">
+        <DynamicComponent Type="@GetValueComponentType()" Parameters="@GetValueComponentParams(false)"></DynamicComponent>
+    </div>
+    <div class="row">
+        <XDataText Class="ms-3 mt-2 col" Property="@Criteria?.FieldEditObject?.AndProperty" ShowLabel="false"></XDataText>
+    </div>
+    <div class="row">
+        <DynamicComponent Type="@GetValueComponentType()" Parameters="@GetValueComponentParams(true)"></DynamicComponent>
+    </div>
+    <div class="d-flex">
+        <XActionButton Action="Criteria?.FieldEditObject?.ResetAction" Outline="true" Class="mt-3 me-auto"
+            OnClick="() => Criteria?.ResetEdit()"></XActionButton>
+        <XActionButton Action="Criteria?.FieldEditObject?.CancelAction" Outline="true" Class="mt-3 me-2"
+            OnClick="() => Criteria?.CancelEdit()"></XActionButton>
+        <XActionButton Action="Criteria?.FieldEditObject?.AddAction" IsPrimary="true" Outline="true" Class="mt-3"
+            OnClick="() => Criteria?.ApplyEdit()"></XActionButton>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public Func<Type> ValueComponentType { get; set; }
+
+    [Parameter]
+    public CriteriaObject Criteria { get; set; }
+
+    private Type GetValueComponentType() => ValueComponentType() ?? typeof(XInputText);
+
+    private Dictionary<string, object> GetValueComponentParams(bool v2)
+    {
+        var res = new Dictionary<string, object>();
+        res["Class"] = v2 ? "mt-2 col" : "mt-3 col";
+        res["ShowLabel"] = false;
+        res["Property"] = v2 ? Criteria?.FieldEditObject?.Value2Property : Criteria?.FieldEditObject?.ValueProperty;
+        return res;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var cp = Criteria?.FieldSelectorProperty;
+        if (cp != null)
+            cp.Change += (s, e) =>
+            {
+                if (e.Change.IncludesValue())
+                    StateHasChanged();
+            };
+    }
+}

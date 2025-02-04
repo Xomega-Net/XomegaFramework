@@ -1,12 +1,17 @@
 ﻿@* Copyright (c) 2023 Xomega.Net. All rights reserved. *@
 
+@using Xomega.Framework.Criteria
+
+@inherits CriteriaSummary
+
 <div class="row g-0 mb-2">
     <button type="button" class="col-auto me-2 btn btn-outline-secondary btn-sm @(CriteriaCollapsed ? "" : "d-none")"
             @onclick="@CriteriaToggleClicked">
         <i class="bi bi-funnel-fill"></i>
     </button>
     <div class="col d-grid">
-        <Criteria AppliedCriteria="@AppliedCriteria" Title="@Title" />
+        <CriteriaSummary Title="@Title" AppliedCriteria="@AppliedCriteria"
+            @bind-CriteriaCollapsed:get="CriteriaCollapsed" @bind-CriteriaCollapsed:set="CriteriaCollapsedChanged" />
     </div>
     <button type="button" class="col-auto ms-2 btn btn-outline-secondary btn-sm" @onclick="@RefreshClicked">
         <i class="bi bi-arrow-clockwise"></i>
@@ -14,24 +19,6 @@
 </div>
 
 @code {
-
-    [Parameter]
-    public bool CriteriaCollapsed { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> CriteriaCollapsedChanged { get; set; }
-
-    public async Task CriteriaToggleClicked(MouseEventArgs args)
-    {
-        CriteriaCollapsed = false;
-        await CriteriaCollapsedChanged.InvokeAsync(CriteriaCollapsed);
-    }
-
-    [Parameter]
-    public string Title { get; set; }
-
-    [Parameter]
-    public List<FieldCriteriaSetting> AppliedCriteria { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnRefresh { get; set; }

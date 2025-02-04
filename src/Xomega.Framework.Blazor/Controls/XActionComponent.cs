@@ -28,6 +28,11 @@ namespace Xomega.Framework.Blazor
         [Parameter] public bool Outline { get; set; }
 
         /// <summary>
+        /// Specifies if this action should be displayed using a link.
+        /// </summary>
+        [Parameter] public bool Link { get; set; }
+
+        /// <summary>
         /// Specifies if this action component should have no text, e.g. icon only.
         /// </summary>
         [Parameter] public bool NoText { get; set; }

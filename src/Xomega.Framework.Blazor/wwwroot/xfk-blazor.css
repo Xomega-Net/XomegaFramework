@@ -19,6 +19,16 @@
   color: #dc3545;
 }
 
+/* highlight criteria field selector dropdown with a primary border */
+.criteria-selector .form-select {
+  border-color: rgba(var(--bs-primary-rgb), 1)
+}
+
+/* highlight criteria field display with a primary border when hovering over */
+.criteria-display:hover {
+  border-color: rgba(var(--bs-primary-rgb), 1)
+}
+
 /*
   enable modal properties on the root rather than just .modal
   for Bootstrap version > 5.0.x, since they are used in non-modal views.

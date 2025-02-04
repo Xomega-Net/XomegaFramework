@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections;
+using Xomega.Framework.Properties;
 
-namespace Xomega.Framework.Properties
+namespace Xomega.Framework.Criteria
 {
     /// <summary>
     /// A specialized enumeration property that provides operators for search criteria
@@ -98,13 +99,23 @@ namespace Xomega.Framework.Properties
             : base(parent, name)
         {
             Change += OnValueChanged;
-            if (name.EndsWith("Operator"))
+            if (name.EndsWith(CriteriaObject.Operator))
                 AdditionalPropertyName = name.Substring(0, name.Length - 8);
             if (AdditionalPropertyName != null)
-                AdditionalPropertyName2 = AdditionalPropertyName + "2";
+                AdditionalPropertyName2 = AdditionalPropertyName + CriteriaObject.V2;
             SortField = h => h[AttributeSortOrder];
             FilterFunc = IsApplicable;
             HasNullCheck = false;
+        }
+
+        /// <inheritdoc/>
+        public override void CopyFrom(DataProperty p)
+        {
+            if (p is OperatorProperty op)
+            {
+                HasNullCheck = op.HasNullCheck;
+            }
+            base.CopyFrom(p);
         }
 
         /// <summary>
@@ -123,6 +134,11 @@ namespace Xomega.Framework.Properties
 
             OnValueChanged(this, new PropertyChangeEventArgs(PropertyChange.All, null, null, null));
         }
+
+        /// <summary>
+        /// Overrides the base method to return the resource key of the associated property.
+        /// </summary>
+        protected override string ResourceKey => additionalProperty?.Name ?? base.ResourceKey;
 
         /// <summary>
         /// Determines if the given operator is applicable for the current additional properties

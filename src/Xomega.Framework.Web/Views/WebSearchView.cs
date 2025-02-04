@@ -136,7 +136,7 @@ namespace Xomega.Framework.Web
                         ucl_Criteria.DataBind();
                         WebPropertyBinding.BindToObject(ucl_Criteria, bind ? svm.List.CriteriaObject : null);
                         if (svm.List.AppliedCriteria != null) // recalculate applied criteria with updated labels after binding
-                            svm.List.AppliedCriteria = svm.List.CriteriaObject.GetFieldCriteriaSettings();
+                            svm.List.AppliedCriteria = svm.List.CriteriaObject.GetCriteriaDisplays(false);
                     }
                     if (grd_Results != null)
                     {

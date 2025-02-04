@@ -657,6 +657,21 @@ namespace Xomega.Framework
 
         #endregion
 
+        #region Cloning
+
+        /// <summary>
+        /// Clones the property with the proivded name for a different parent data object.
+        /// </summary>
+        /// <param name="parent">The parent data object for the cloned property.</param>
+        /// <param name="name">The name of the cloned property in the parent data ojbect.</param>
+        /// <returns>A cloned property added to the specified parent data object.</returns>
+        public virtual DataProperty Clone(DataObject parent, string name)
+        {
+            var newProperty = Activator.CreateInstance(GetType(), parent, name) as DataProperty;
+            newProperty.CopyFrom(this);
+            return newProperty;
+        }
+
         /// <summary>
         /// Copy value and state from another property (presumably of the same type).
         /// </summary>
@@ -664,11 +679,15 @@ namespace Xomega.Framework
         public virtual void CopyFrom(DataProperty p)
         {
             if (p == null) return;
-            SetValue(p.InternalValue);
+            IsMultiValued = p.IsMultiValued;
             Editable = p.Editable;
             Required = p.Required;
             AccessLevel = p.AccessLevel;
             Visible = p.Visible;
+            // do this last to make sure IsMultiValued is set before the value
+            SetValue(p.InternalValue);
         }
+
+        #endregion
     }
 }

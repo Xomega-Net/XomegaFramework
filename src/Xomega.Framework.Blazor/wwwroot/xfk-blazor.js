@@ -2,18 +2,6 @@
 
 var xfk = xfk || {};
 
-// utility method to get correct selected values from the specified multivalue select element.
-xfk.getSelectedValues = function (sel) {
-    var results = [];
-    var i;
-    for (i = 0; i < sel.options.length; i++) {
-        if (sel.options[i].selected) {
-            results[results.length] = sel.options[i].value;
-        }
-    }
-    return results;
-};
-
 // utility function to set up auto-complete elements to prevent some default actions
 xfk.autoCompletePreventDefault = function (element, remove) {
     if (remove) {
@@ -61,4 +49,10 @@ xfk.modalViewPopup = function (show, view) {
         modal.hide();
         modal.dispose();
     }
+};
+
+// utility function to set up Bootstrap popovers
+xfk.setupPopovers = function (element) {
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 };

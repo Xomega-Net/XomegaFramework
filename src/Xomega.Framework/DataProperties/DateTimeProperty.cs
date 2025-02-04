@@ -37,6 +37,16 @@ namespace Xomega.Framework.Properties
             Validator += ValidateDateTime;
         }
 
+        /// <inheritdoc/>>
+        public override void CopyFrom(DataProperty p)
+        {
+            if (p is DateTimeProperty dtProperty)
+            {
+                Format = dtProperty.Format;
+            }
+            base.CopyFrom(p);
+        }
+
         /// <summary>
         /// Overrides the base method to construct a list of non-Nullable DateTime values
         /// for the Transport format, since it's a value type.
@@ -139,6 +149,16 @@ namespace Xomega.Framework.Properties
             : base(parent, name)
         {
             Format = DefaultTimeFormat;
+        }
+
+        /// <inheritdoc/>>
+        public override void CopyFrom(DataProperty p)
+        {
+            if (p is TimeProperty timeProperty)
+            {
+                MinutesCentric = timeProperty.MinutesCentric;
+            }
+            base.CopyFrom(p);
         }
 
         /// <summary>

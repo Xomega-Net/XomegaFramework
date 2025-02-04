@@ -170,6 +170,7 @@ namespace Xomega.Framework
         /// <param name="change">The property change to listen to.</param>
         protected void AddPropertyChange(BaseProperty prop, PropertyChange change)
         {
+            if (prop == null) return;
             if (properties.ContainsKey(prop))
                 properties[prop] = properties[prop] + change;
             else properties[prop] = change;
@@ -262,7 +263,7 @@ namespace Xomega.Framework
         /// <inheritdoc/>
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (node.Member.ReflectedType.IsSubclassOf(typeof(BaseProperty)))
+            if (typeof(BaseProperty).IsAssignableFrom(node.Member.ReflectedType))
             {
                 var change = GetMemberProperties(node.Member.Name);
                 if (change != null)

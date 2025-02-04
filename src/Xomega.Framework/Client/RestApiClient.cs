@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Resources;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework.Client
 {
@@ -79,6 +80,18 @@ namespace Xomega.Framework.Client
                 {
                     foreach (var i in col)
                         queryParams.Add(new KeyValuePair<string, string>(prop.Name, i.ToString()));
+                }
+                else if (val.GetType().GetGenericTypeDefinition() == typeof(FieldCriteria<>))
+                {
+                    var oper = val.GetType().GetProperty("Operator").GetValue(val)?.ToString();
+                    if (oper != null)
+                        queryParams.Add(new KeyValuePair<string, string>($"{prop.Name}.Operator", oper));
+                    var vals = val.GetType().GetProperty("Values").GetValue(val);
+                    if (vals is ICollection vcol)
+                    {
+                        foreach (var i in vcol)
+                            queryParams.Add(new KeyValuePair<string, string>($"{prop.Name}.Values", i.ToString()));
+                    }
                 }
                 else queryParams.Add(new KeyValuePair<string, string>(prop.Name, val.ToString()));
             }

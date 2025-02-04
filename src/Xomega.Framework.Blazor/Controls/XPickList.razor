@@ -10,7 +10,7 @@
             {
                 <div class="col">
                     <label class="form-label">@AvailableLabel</label>
-                    <select class="form-select" @ref="AvailableList" multiple="@IsMultiValue" size="@Rows">
+                    <select class="form-select" @bind="HighlightedAvailable" multiple="@IsMultiValue" size="@Rows">
                         @if (Property != null)
                         {
                             var selected = SelectedItems;
@@ -18,7 +18,7 @@
                             {
                                 if (selected.Contains(i)) continue;
                                 var val = Property.ValueToString(i, ValueFormat.EditString);
-                                <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                                <option value="@val">@Template(i)</option>
                             }
                         }
                     </select>
@@ -45,14 +45,14 @@
                 </div>
             }
             <div class="col">
-                <label class="form-label col @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(SelectedLabel)</label>
-                <select class="form-select col @StateClass" id="@ControlId" @ref="SelectedList" multiple="@IsMultiValue" size="@Rows">
+                <label class="form-label col @StateClass" accesskey="@GetAccessKey()" for="@ControlId">@GetLabel(SelectedLabel)</label>
+                <select class="form-select col @StateClass" id="@ControlId" @bind="HighlightedSelected" multiple="@IsMultiValue" size="@Rows">
                     @if (Property != null)
                     {
                         @foreach (var i in SelectedItems)
                         {
                             var val = Property.ValueToString(i, ValueFormat.EditString);
-                            <option value="@val" selected="@IsHighlighted(val)">@Template(i)</option>
+                            <option value="@val">@Template(i)</option>
                         }
                     }
                 </select>

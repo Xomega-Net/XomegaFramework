@@ -3,14 +3,14 @@
 @if (ErrorList != null && ErrorList.Errors.Count() > 0)
 {
     <div class="card @Class">
-        <div class="card-header bg-primary-subtle row g-0 justify-content-between align-items-center pe-2">
+        <div class="card-header bg-primary-subtle row g-0 justify-content-between align-items-center px-2">
             <h6 class="col m-0">@GetTitle()</h6>
-            <button type="button" @onclick="@Close" class="btn-close col-auto" aria-label="Close"></button>
+            <button type="button" @onclick="@Close" class="btn-close col-auto ms-1" aria-label="Close"></button>
         </div>
-        <div class="card-body pb-2">
+        <div class="card-body p-2">
             @foreach (var err in ErrorList.Errors)
             {
-                <div class="mb-1 py-1 alert alert-@GetSeverityClass(err.Severity)">
+                <div class="mb-1 p-1 d-flex align-items-center alert alert-@GetSeverityClass(err.Severity)">
                     <i class="fs-5 me-2 bi bi-@GetIconClass(err.Severity)-fill"></i><span>@err.Message</span>
                 </div>
             }

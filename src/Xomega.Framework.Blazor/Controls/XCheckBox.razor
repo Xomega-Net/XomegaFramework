@@ -12,7 +12,7 @@
                    class="form-check-input @StateClass"
                    disabled="@(!IsEditable)"
                    checked="@Value" @onchange="OnValueChanged" @onfocus="@OnFocus" @onblur="OnBlur" />
-            <label class="form-check-label" accesskey="@AccessKey" for="@ControlId">
+            <label class="form-check-label" accesskey="@GetAccessKey()" for="@ControlId">
                 @GetLabel(Label)
             </label>
         </div>

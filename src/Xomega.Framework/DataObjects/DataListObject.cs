@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Xomega.Framework.Criteria;
 using Xomega.Framework.Operators;
 
 namespace Xomega.Framework
@@ -323,12 +324,12 @@ namespace Xomega.Framework
         /// </summary>
         public CriteriaObject CriteriaObject { get; set; }
 
-        private List<FieldCriteriaSetting> appliedCriteria;
+        private List<FieldCriteriaDisplay> appliedCriteria;
 
         /// <summary>
         /// List of applied criteria settings associated with the data.
         /// </summary>
-        public List<FieldCriteriaSetting> AppliedCriteria
+        public List<FieldCriteriaDisplay> AppliedCriteria
         {
             get { return appliedCriteria; }
             set
@@ -336,25 +337,6 @@ namespace Xomega.Framework
                 appliedCriteria = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(AppliedCriteria)));
             }
-        }
-
-        /// <summary>
-        /// Get the summary of applied criteria as one string,
-        /// e.g. for tooltip when it's too long to fit on the screen.
-        /// </summary>
-        /// <returns>Applied criteria summary as text.</returns>
-        public virtual string GetAppliedCriteriaText()
-        {
-            string text = "";
-            if (appliedCriteria == null || appliedCriteria.Count == 0)
-                return text;
-            foreach(var fc in appliedCriteria)
-            {
-                if (text.Length > 0) text += "; ";
-                text += fc.Label + ":" + (string.IsNullOrEmpty(fc.Operator) ? "" : " " + fc.Operator) + 
-                    (fc.Value != null && fc.Value.Length > 0 ? " " + string.Join(" and ", fc.Value) : "");
-            }
-            return text;
         }
 
         #endregion
@@ -575,7 +557,7 @@ namespace Xomega.Framework
             }
             SetModified(false, false);
             data.ReplaceData(rows);
-            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
+            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetCriteriaDisplays(false);
         }
 
         /// <summary>
@@ -606,7 +588,7 @@ namespace Xomega.Framework
             }
             SetModified(false, false);
             data.ReplaceData(rows);
-            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetFieldCriteriaSettings();
+            if (CriteriaObject != null) AppliedCriteria = CriteriaObject.GetCriteriaDisplays(false);
         }
 
         /// <summary>

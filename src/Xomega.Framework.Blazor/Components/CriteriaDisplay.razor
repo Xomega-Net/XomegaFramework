@@ -1,0 +1,81 @@
+﻿@* Copyright (c) 2023 Xomega.Net. All rights reserved. *@
+
+@using Xomega.Framework.Criteria
+
+@{
+    var displays = Criteria?.GetCriteriaDisplays(true);
+    if (displays != null && displays.Count > 0)
+    {
+        <div class="vstack gap-3 @Class">
+            @foreach (var crit in displays)
+            {
+                <div class="criteria-display card @(crit.Field.Equals(Criteria?.FieldSelectorProperty?.EditStringValue) ? "border-primary" : "")">
+                    <div class="card-header d-flex align-items-center px-2">
+                        <span class="fw-semibold me-auto">@crit.Label</span>
+                        <button class="btn-close ms-1" @onclick="() => Criteria?.ResetCriteria(crit.Field)"></button>
+                    </div>
+                    <div class="card-body p-2">
+                        @if (!string.IsNullOrEmpty(crit.Operator))
+                        {
+                            <div>
+                                <span class="@(crit.Value.Length > 0 ? "fst-italic" : "fw-normal badge fs-6 text-bg-light")"
+                                style="@ClickableStyle" @onclick="() => Criteria?.EditCriteria(crit.Field)">@crit.Operator</span>
+                            </div>
+                        }
+                        @if (crit.Value.Length > 0)
+                        {
+                            <div class="d-flex flex-wrap @(string.IsNullOrEmpty(crit.Operator) ? "" : "ps-2")">
+                                <span class="me-1 fw-normal badge fs-6 text-bg-light"
+                                style="@ClickableStyle" @onclick="() => Criteria?.EditCriteria(crit.Field)">@crit.Value[0]</span>
+                                @if (crit.And != null)
+                                {
+                                    <span class="me-1">@crit.And</span>
+                                }
+                                @if (crit.Value.Length > 1)
+                                {
+                                    <span class="me-1 fw-normal badge fs-6 text-bg-light"
+                                    style="@ClickableStyle" @onclick="() => Criteria?.EditCriteria(crit.Field)">@crit.Value[1]</span>
+                                }
+                                @if (crit.Value.Length > 2)
+                                {
+                                    <a tabindex="0" role="button" class="btn badge text-bg-warning p-2"
+                                    data-bs-toggle="popover" data-bs-trigger="focus" data-bs-container="body"
+                                    data-bs-content="@string.Join(", ", crit.Value.Skip(2))">+@(crit.Value.Length - 2)</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+@inject IJSRuntime JSRuntime;
+
+@code {
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public CriteriaObject Criteria { get; set; }
+
+    private const string ClickableStyle = "cursor: pointer";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (Criteria != null)
+            Criteria.PropertyChanged += (s, e) =>
+            {
+                StateHasChanged();
+            };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Criteria?.GetCriteriaDisplays(true)?.Any(d => d.Value?.Length > 2) ?? false)
+            await JSRuntime.InvokeVoidAsync("xfk.setupPopovers");
+    }
+}

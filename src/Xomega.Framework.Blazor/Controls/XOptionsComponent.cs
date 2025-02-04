@@ -107,23 +107,13 @@ namespace Xomega.Framework.Blazor
         };
 
         /// <summary>
-        /// Utility method to get correct selected values from the specified multivalue select element.
-        /// It calls a custom JavaScript function to get selected values as a workaround for an issue
-        /// with Blazor that doesn't currently support multivalue select elements.
-        /// For details see https://github.com/dotnet/aspnetcore/issues/5519
-        /// </summary>
-        /// <param name="selectElement">Select element to get the values from.</param>
-        /// <returns>A list of selected values for the specified element.</returns>
-        protected virtual async Task<List<string>> GetSelectedValues(ElementReference selectElement)
-            => (await JSRuntime.InvokeAsync<List<string>>("xfk.getSelectedValues", selectElement)).ToList();
-
-        /// <summary>
         /// Disposes the component and unbinds from the property.
         /// </summary>
         public override void Dispose()
         {
             if (property != null)
                 property.AsyncChange -= OnPropertyChangeAsync;
+            base.Dispose();
         }
     }
 }

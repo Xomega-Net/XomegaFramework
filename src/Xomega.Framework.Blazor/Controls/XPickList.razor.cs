@@ -3,10 +3,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Resources;
-using System.Threading.Tasks;
 
 namespace Xomega.Framework.Blazor.Controls
 {
@@ -26,20 +23,9 @@ namespace Xomega.Framework.Blazor.Controls
         /// </summary>
         [Parameter] public int Rows { get; set; } = 6;
 
-        /// <summary>
-        /// A reference to the select control for the available items.
-        /// </summary>
-        protected ElementReference AvailableList { get; set; }
-
-        /// <summary>
-        /// A reference to the select control for the currently selected items.
-        /// </summary>
-        protected ElementReference SelectedList { get; set; }
-
-        private List<string> HighlightedValues;
-
-        private bool IsHighlighted(string value)
-            => HighlightedValues != null && HighlightedValues.Contains(value);
+        private string[] HighlightedAvailable { get; set; } = [];
+        
+        private string[] HighlightedSelected { get; set; } = [];
 
         /// <summary>
         /// Gets a string resource for the specified key.
@@ -72,14 +58,13 @@ namespace Xomega.Framework.Blazor.Controls
         /// </summary>
         protected async Task Add(MouseEventArgs e)
         {
-            HighlightedValues = await GetSelectedValues(AvailableList);
-            if (Property == null || HighlightedValues.Count() == 0) return;
+            if (Property == null || HighlightedAvailable.Length == 0) return;
 
             if (!IsMultiValue && IsNull)
-                await UpdatePropertyAsync(HighlightedValues[0]);
+                await UpdatePropertyAsync(HighlightedAvailable[0]);
             else if (IsMultiValue)
             {
-                IList sel = Property.ResolveValue(HighlightedValues, ValueFormat.Internal) as IList;
+                IList sel = Property.ResolveValue(HighlightedAvailable.ToList(), ValueFormat.Internal) as IList;
                 if (Property.InternalValue is IList val && sel != null)
                     foreach (object v in val)
                         if (!sel.Contains(v)) sel.Add(v);
@@ -93,15 +78,14 @@ namespace Xomega.Framework.Blazor.Controls
         /// </summary>
         protected async Task Remove(MouseEventArgs e)
         {
-            HighlightedValues = await GetSelectedValues(SelectedList);
-            if (Property == null || HighlightedValues.Count() == 0) return;
+            if (Property == null || HighlightedSelected.Length == 0) return;
 
             if (!IsMultiValue && !IsNull)
                 await UpdatePropertyAsync(null);
             else if (IsMultiValue)
             {
                 IList val = Property.InternalValue as IList;
-                if (val != null && Property.ResolveValue(HighlightedValues, ValueFormat.Internal) is IList sel)
+                if (val != null && Property.ResolveValue(HighlightedSelected.ToList(), ValueFormat.Internal) is IList sel)
                     foreach (object v in sel) val.Remove(v);
                 await UpdatePropertyAsync(val);
             }

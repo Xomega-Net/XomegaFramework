@@ -1,0 +1,91 @@
+﻿@* Copyright (c) 2023 Xomega.Net. All rights reserved. *@
+
+@using System.Resources
+@using Xomega.Framework.Criteria
+
+<div class="alert alert-secondary mb-0 p-1 d-flex flex-wrap align-items-baseline">
+    <div class="fw-bold">
+        @Title
+    </div>
+    @if (AppliedCriteria != null)
+    {
+        <div>:</div>
+        @for (var i = 0; i < AppliedCriteria.Count; i++)
+        {
+            var crit = AppliedCriteria[i];
+            <div class="ms-3 d-flex align-items-baseline">
+                <span class="fw-semibold">@crit.Label</span>
+                @if (crit.Value.Length == 0)
+                {
+                    <span class="me-1">:</span>
+                    <span class="me-1 fw-normal badge fs-6 text-bg-light"
+                          style="@ClickableStyle" @onclick="@CriteriaToggleClicked">@crit.Operator</span>
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(crit.Operator))
+                    {
+                        <span class="me-1">:</span>
+                    }
+                    else
+                    {
+                        <span class="mx-1 fst-italic">@crit.Operator</span>
+                    }
+                    <span class="me-1 fw-normal badge fs-6 text-bg-light"
+                          style="@ClickableStyle" @onclick="@CriteriaToggleClicked">@crit.Value[0]</span>
+                    @if (crit.And != null)
+                    {
+                        <span class="me-1">@crit.And</span>
+                    }
+                    @if (crit.Value.Length > 1)
+                    {
+                        <span class="me-1 fw-normal badge fs-6 text-bg-light"
+                              style="@ClickableStyle" @onclick="@CriteriaToggleClicked">@crit.Value[1]</span>
+                    }
+                    @if (crit.Value.Length > 2)
+                    {
+                        <a tabindex="0" role="button" class="btn badge text-bg-warning p-2"
+                           data-bs-toggle="popover" data-bs-trigger="focus" data-bs-container="body" data-bs-placement="bottom" 
+                           data-bs-content="@string.Join(", ", crit.Value.Skip(2))">+@(crit.Value.Length - 2)</a>
+                    }
+                }
+            </div>
+        }
+        @if (AppliedCriteria.Count == 0)
+        {
+            <div class="ms-3 fw-normal badge fs-6 text-bg-light" style="@ClickableStyle"
+            @onclick="@CriteriaToggleClicked">@resMgr.GetString(Messages.View_Criteria_None)</div>
+        }
+    }
+</div>
+
+@inject ResourceManager resMgr;
+@inject IJSRuntime JSRuntime;
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public List<FieldCriteriaDisplay> AppliedCriteria { get; set; }
+
+    [Parameter]
+    public bool CriteriaCollapsed { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CriteriaCollapsedChanged { get; set; }
+
+    public async Task CriteriaToggleClicked(MouseEventArgs args)
+    {
+        CriteriaCollapsed = false;
+        await CriteriaCollapsedChanged.InvokeAsync(CriteriaCollapsed);
+    }
+
+    private string ClickableStyle => CriteriaCollapsed ? "cursor: pointer" : "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (AppliedCriteria?.Any(d => d.Value?.Length > 2) ?? false)
+            await JSRuntime.InvokeVoidAsync("xfk.setupPopovers");
+    }
+}

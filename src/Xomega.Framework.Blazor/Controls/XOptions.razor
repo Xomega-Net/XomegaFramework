@@ -9,7 +9,7 @@
     <div class="@Class">
         @if (ShowLabel)
         {
-            <label class="form-label @StateClass" accesskey="@AccessKey" for="@ControlId">@GetLabel(Label)</label>
+            <label class="form-label @StateClass" accesskey="@GetAccessKey()" for="@ControlId">@GetLabel(Label)</label>
         }
         <div class="@StateClass">
             @if (Property != null)

@@ -25,6 +25,26 @@ namespace Xomega.Framework
         public const string Action_Close = "Action_Close";
 
         /// <summary>
+        /// Cancel
+        /// </summary>
+        public const string Action_Cancel = "Action_Cancel";
+
+        /// <summary>
+        /// Add
+        /// </summary>
+        public const string Action_Add = "Action_Add";
+
+        /// <summary>
+        /// A
+        /// </summary>
+        public const string Action_Add_AccessKey = "Action_Add_AccessKey";
+
+        /// <summary>
+        /// C
+        /// </summary>
+        public const string Action_Cancel_AccessKey = "Action_Cancel_AccessKey";
+
+        /// <summary>
         /// C
         /// </summary>
         public const string Action_Close_AccessKey = "Action_Close_AccessKey";
@@ -43,6 +63,16 @@ namespace Xomega.Framework
         /// Reset
         /// </summary>
         public const string Action_Reset = "Action_Reset";
+
+        /// <summary>
+        /// Reset All
+        /// </summary>
+        public const string Action_ResetAll = "Action_ResetAll";
+
+        /// <summary>
+        /// l
+        /// </summary>
+        public const string Action_ResetAll_AccessKey = "Action_ResetAll_AccessKey";
 
         /// <summary>
         /// R
@@ -75,6 +105,16 @@ namespace Xomega.Framework
         public const string Action_Select = "Action_Select";
 
         /// <summary>
+        /// Update
+        /// </summary>
+        public const string Action_Update = "Action_Update";
+
+        /// <summary>
+        /// U
+        /// </summary>
+        public const string Action_Update_AccessKey = "Action_Update_AccessKey";
+
+        /// <summary>
         /// S
         /// </summary>
         public const string Action_Select_AccessKey = "Action_Select_AccessKey";
@@ -94,6 +134,12 @@ namespace Xomega.Framework
         /// Where {0}=Operator, {1}=Field name
         /// </summary>
         public const string Operator_NotSupported = "Operator_NotSupported";
+
+        /// <summary>
+        /// and
+        /// Where {0}=Operator, {1}=Field name
+        /// </summary>
+        public const string Operator_And = "Operator_And";
 
         /// <summary>
         /// Operator {0} expects {1} value(s), but only {2} were provided for {3}.
@@ -261,6 +307,11 @@ namespace Xomega.Framework
         public const string Validation_Required = "Validation_Required";
 
         /// <summary>
+        /// The first value cannot be greater than the second value.
+        /// </summary>
+        public const string Validation_Range = "Validation_Range";
+
+        /// <summary>
         /// Transport value of {0} must be of type {1}.
         /// Where {0}=Property name, {1}=Transport value type
         /// </summary>
@@ -270,6 +321,11 @@ namespace Xomega.Framework
         /// Search Criteria
         /// </summary>
         public const string View_Criteria = "View_Criteria";
+
+        /// <summary>
+        /// None
+        /// </summary>
+        public const string View_Criteria_None = "View_Criteria_None";
 
         /// <summary>
         /// Are you sure you want to delete this object?
@@ -288,9 +344,19 @@ namespace Xomega.Framework
         public const string View_Error = "View_Error";
 
         /// <summary>
+        /// Validation Error
+        /// </summary>
+        public const string CriteriaView_Error = "CriteriaView_Error";
+
+        /// <summary>
         /// Please review the following errors.
         /// </summary>
         public const string View_Errors = "View_Errors";
+
+        /// <summary>
+        /// Validation Errors
+        /// </summary>
+        public const string CriteriaView_Errors = "CriteriaView_Errors";
 
         /// <summary>
         /// Please review the following message.
@@ -328,5 +394,30 @@ namespace Xomega.Framework
         /// Please review the following warnings.
         /// </summary>
         public const string View_Warnings = "View_Warnings";
+
+        /// <summary>
+        /// Second value
+        /// </summary>
+        public const string CriteriaEditObject_Value2 = "CriteriaEditObject.Value2";
+
+        /// <summary>
+        /// Value
+        /// </summary>
+        public const string CriteriaEditObject_Value = "CriteriaEditObject.Value";
+
+        /// <summary>
+        /// Please fix criteria validation errors or discard your changes.
+        /// </summary>
+        public const string CriteriaEditObject_ValidationErrors = "CriteriaEditObject_ValidationErrors";
+
+        /// <summary>
+        /// Select Criteria
+        /// </summary>
+        public const string CriteriaFieldSelector = "CriteriaFieldSelector";
+
+        /// <summary>
+        /// t
+        /// </summary>
+        public const string CriteriaFieldSelector_AccessKey = "CriteriaFieldSelector_AccessKey";
     }
 }

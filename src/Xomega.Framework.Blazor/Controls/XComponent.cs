@@ -141,11 +141,18 @@ namespace Xomega.Framework.Blazor
         /// <returns>Markup string to be used for the label.</returns>
         protected MarkupString GetLabel(string text)
         {
-            if (AccessKey == null || text == null || !text.Contains(AccessKey))
+            string accessKey = GetAccessKey();
+            if (accessKey == null || text == null || !text.Contains(accessKey))
                 return (MarkupString)text;
-            int idx = text.IndexOf(AccessKey);
-            return (MarkupString)text.Remove(idx, 1).Insert(idx, $"<u>{AccessKey}</u>");
+            int idx = text.IndexOf(accessKey);
+            return (MarkupString)text.Remove(idx, 1).Insert(idx, $"<u>{accessKey}</u>");
         }
+
+        /// <summary>
+        /// Gets the current access key mnemonic for the component.
+        /// </summary>
+        /// <returns>Access key set directly or from the bound property.</returns>
+        public string GetAccessKey() => AccessKey ?? property.AccessKey;
 
         /// <summary>
         /// Internal auto-generated ID that can be used to associate labels to controls.
@@ -159,8 +166,6 @@ namespace Xomega.Framework.Blazor
             if (property != null)
             {
                 property.Change += OnPropertyChange;
-                if (AccessKey == null)
-                    AccessKey = property.AccessKey;
             }
         }
 

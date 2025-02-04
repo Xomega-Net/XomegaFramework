@@ -38,6 +38,17 @@ namespace Xomega.Framework.Properties
             Validator += ValidateMaximum;
         }
 
+        /// <inheritdoc/>>
+        public override void CopyFrom(DataProperty p)
+        {
+            if (p is BigIntegerProperty intProperty)
+            {
+                MinimumValue = intProperty.MinimumValue;
+                MaximumValue = intProperty.MaximumValue;
+            }
+            base.CopyFrom(p);
+        }
+
         /// <summary>
         /// Overrides the base method to construct a list of non-Nullable long values
         /// for the Transport format, since it's a value type.

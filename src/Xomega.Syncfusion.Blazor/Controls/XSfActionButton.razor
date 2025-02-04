@@ -29,7 +29,7 @@
     {
         var attr = new Dictionary<string, object>()
         {
-            { "accesskey", AccessKey }
+            { "accesskey", GetAccessKey() }
         };
         if (AdditionalAttributes != null)
             foreach (var k in AdditionalAttributes.Keys)

@@ -68,6 +68,20 @@ namespace Xomega.Framework.Properties
             Validator += ValidateLookupValue;
         }
 
+        /// <inheritdoc/>>
+        public override void CopyFrom(DataProperty p)
+        {
+            if (p is EnumProperty enumProperty)
+            {
+                CacheType = enumProperty.CacheType;
+                EnumType = enumProperty.EnumType;
+                KeyFormat = enumProperty.KeyFormat;
+                DisplayFormat = enumProperty.DisplayFormat;
+            }
+            // call the base implementation at the end, since it uses the above properties
+            base.CopyFrom(p);
+        }
+
         /// <summary>
         /// Overrides the base method to construct a list of string values for the Transport format.
         /// </summary>

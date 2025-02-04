@@ -89,6 +89,22 @@ namespace Xomega.Framework.Services
         }
 
         /// <summary>
+        /// Adds a Where clause to the given query for the specified property, and a field criteria structure.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the element.</typeparam> 
+        /// <typeparam name="TValue">The type of the values.</typeparam> 
+        /// <param name="qry">The query to add the Where clause to.</param>
+        /// <param name="propName">Property display name.</param>
+        /// <param name="prop">Expression for the property accessor.</param>
+        /// <param name="criteria">A field criteria structure with the operator and criteria values.</param>
+        /// <returns>The query with the Where clause added, or the same query if input is invalid.</returns>
+        protected virtual IQueryable<TElement> AddCriteriaClause<TElement, TValue>(IQueryable<TElement> qry, string propName,
+            Expression<Func<TElement, TValue>> prop, FieldCriteria<TValue> criteria)
+        {
+            return AddClause(qry, propName, prop, criteria?.Operator, criteria?.Values ?? new TValue[] { } );
+        }
+
+        /// <summary>
         /// Adds a Where clause to the given query for the specified property, and a list of operators that take no values.
         /// If any of the specified operators are not valid, then adds validation errors and returns the same query.
         /// </summary>
