@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Xomega.Net. All rights reserved.
+// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
