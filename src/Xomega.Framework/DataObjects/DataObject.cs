@@ -485,6 +485,42 @@ namespace Xomega.Framework
         #region Data Contract support
 
         /// <summary>
+        /// Populates data object from the given output of a service call made with specified options.
+        /// </summary>
+        /// <typeparam name="T">Type of output data contract.</typeparam>
+        /// <param name="output">Output from the service call.</param>
+        /// <param name="options">Service call options.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns></returns>
+        public virtual async Task FromOutputAsync<T>(Output<T> output, object options, CancellationToken token = default) where T : class
+        {
+            await FromDataContractAsync(output?.Result, options, token);
+            SetFromOutput(output, options);
+        }
+
+        /// <summary>
+        /// Populates data object from the given output of a service call made with specified options.
+        /// </summary>
+        /// <typeparam name="T">Type of output data contract.</typeparam>
+        /// <param name="output">Output from the service call.</param>
+        /// <param name="options">Service call options.</param>
+        /// <returns></returns>
+        public virtual void FromOutput<T>(Output<T> output, object options) where T : class
+        {
+            FromDataContract(output?.Result, options);
+            SetFromOutput(output, options);
+        }
+
+        /// <summary>
+        /// Updates data object's metadata from the given output of a service call made with specified options.
+        /// Data object's data is updated separately in the FromDataContract methods.
+        /// </summary>
+        /// <param name="output">Output from the service call.</param>
+        /// <param name="options">Service call options.</param>
+        /// <returns></returns>
+        protected virtual void SetFromOutput(Output output, object options) { }
+
+        /// <summary>
         /// Sets the data object values from the given data contract object
         /// by copying the values of the data contract object fields to the
         /// data object properties or child objects with the same names.
@@ -889,7 +925,7 @@ namespace Xomega.Framework
         #region CRUD support
 
         /// <summary>
-        /// Options for calling CRUD operations
+        /// Options for calling CRUD operations.
         /// </summary>
         public class CrudOptions
         {
@@ -907,11 +943,6 @@ namespace Xomega.Framework
             /// Indicates if the operation should call child objects in parallel.
             /// </summary>
             public bool Parallel = true;
-
-            /// <summary>
-            /// A flag indicating whether or not to preserve selection in data lists.
-            /// </summary>
-            public bool PreserveSelection = false;
         }
 
         private bool isNew = true;

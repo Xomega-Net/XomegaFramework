@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Components;
+using System.Collections.Generic;
 using System.Resources;
 using Xomega.Framework.Blazor.Views;
 
@@ -76,7 +77,11 @@ namespace Xomega.Framework.Blazor.Components
 
             // if page sizes are not provided, default it to the following list
             if (PageSizes == null || PageSizes.Length == 0)
-                PageSizes = new[] { 7, 14, 25, 50, 100 };
+            {
+                var sizes = new SortedSet<int>([7, 14, 25, 50, 100]);
+                if (PageSize > 0) sizes.Add(PageSize);
+                PageSizes = sizes.ToArray();
+            }
 
             // if page size is not provided, default it to the second option (14)
             if (PageSize == 0 && PageSizes?.Length > 0)
@@ -141,10 +146,7 @@ namespace Xomega.Framework.Blazor.Components
         /// <returns>A task for this function.</returns>
         protected virtual async Task OnPageSizeChanged(ChangeEventArgs e)
         {
-            int firstRecord = PageSize * (CurrentPage - 1);
             await SetPageSize(int.Parse(e.Value.ToString()));
-            // update the current page to make the first record visible
-            await SetCurrentPage(firstRecord / PageSize + 1);
         }
     }
 }

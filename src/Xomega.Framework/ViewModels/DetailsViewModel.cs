@@ -132,7 +132,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
-                Errors = DetailsObject.Read(new DataObject.CrudOptions { PreserveSelection = preserveSelection });
+                Errors = DetailsObject.Read(new DataListObject.ReadOptions { PreserveSelection = preserveSelection });
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace Xomega.Framework.Views
             if (DetailsObject == null) return;
             try
             {
-                Errors = await DetailsObject.ReadAsync(new DataObject.CrudOptions { PreserveSelection = preserveSelection }, token);
+                Errors = await DetailsObject.ReadAsync(new DataListObject.ReadOptions { PreserveSelection = preserveSelection }, token);
             }
             catch (Exception ex)
             {

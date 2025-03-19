@@ -17,6 +17,11 @@ namespace Xomega.Framework.Services
         /// </summary>
         [DataMember]
         public ErrorList Messages { get; set; }
+
+        /// <summary>
+        /// The total count of records when returning limited number of results.
+        /// </summary>
+        public int? TotalCount { get; set; }
         
         /// <summary>
         /// Default construction to support deserialization
@@ -68,9 +73,11 @@ namespace Xomega.Framework.Services
         /// </summary>
         /// <param name="messageList">The message list for the current operation.</param>
         /// <param name="result">The result of the current operation.</param>
-        public Output(ErrorList messageList, T result) : base(messageList)
+        /// <param name="totalCount">Total count of records when result is limited.</param>
+        public Output(ErrorList messageList, T result, int? totalCount = null) : base(messageList)
         {
             Result = result;
+            TotalCount = totalCount;
         }
     }
 }

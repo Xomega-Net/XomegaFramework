@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using System.Collections.Generic;
+using System.Linq;
+using Xomega.Framework.Services;
 
 namespace Xomega.Framework
 {
@@ -27,6 +29,13 @@ namespace Xomega.Framework
         /// <param name="y">The row to compare to.</param>
         /// <returns>The integer result of comparison of the two rows.</returns>
         public int Compare(DataRow x, DataRow y) => x?.CompareTo(y, this) ?? 0;
+
+        /// <summary>
+        /// Converts the list sort criteria to the sort criteria for service calls.
+        /// </summary>
+        /// <returns></returns>
+        public SortField[] ToSortFields()
+            => this.Select(f => f.ToSortField()).ToArray();
     }
 
     /// <summary>
@@ -43,6 +52,13 @@ namespace Xomega.Framework
         /// The sort direction: ascending or descending.
         /// </summary>
         public ListSortDirection SortDirection { get; set; }
+
+        /// <summary>
+        /// Converts the sort field to the sort field for service calls.
+        /// </summary>
+        /// <returns>A sort field for service calls.</returns>
+        public SortField ToSortField()
+            => new SortField { FieldName = PropertyName, SortDirection = SortDirection.ToSortDirection() };
     }
 
     /// <summary>
@@ -82,5 +98,12 @@ namespace Xomega.Framework
         /// <returns>Specific instance of the list sort direction.</returns>
         public static ListSortDirection FromString(string dir)
             => dir != null && dir.ToUpper().StartsWith("D") ? Descending : Ascending;
+
+        /// <summary>
+        /// Converts the list sort direction to the sort direction for services.
+        /// </summary>
+        /// <returns></returns>
+        public SortField.Direction ToSortDirection()
+            => this == Descending ? SortField.Direction.Descending : SortField.Direction.Ascending;
     }
 }

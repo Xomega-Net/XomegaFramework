@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using Xomega.Framework.Operators;
 
 namespace Xomega.Framework.Services
@@ -35,6 +36,11 @@ namespace Xomega.Framework.Services
         /// The principal for the current operation
         /// </summary>
         private IPrincipal currentPrincipal;
+
+        /// <summary>
+        /// The default maximum number of rows to return in a query.
+        /// </summary>
+        protected int? defaultMaxRows = 1000;
 
         /// <summary>
         /// Default constructor.
@@ -82,8 +88,7 @@ namespace Xomega.Framework.Services
         private string GetPropertyName(string propName, Expression prop)
         {
             if (!string.IsNullOrEmpty(propName)) return propName;
-            MemberExpression me = prop as MemberExpression;
-            if (me != null) return me.Member.Name;
+            if (prop is MemberExpression me) return me.Member.Name;
             if (prop != null) return prop.ToString();
             return null;
         }
@@ -228,6 +233,96 @@ namespace Xomega.Framework.Services
             return AddClause(qry, propName, prop, OneOfOperator.DefaultName, vals?.ToArray());
         }
 
+        /// <summary>
+        /// Adds a sort clause to the given query for the specified property and sort field.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the element.</typeparam> 
+        /// <typeparam name="TValue">The type of the values.</typeparam> 
+        /// <param name="qry">The query to add the sort clause to.</param>
+        /// <param name="prop">Expression for the property accessor.</param>
+        /// <param name="sortField">The sort field definition.</param>
+        /// <param name="first">True for the first sort field being added, false otherwise.</param>
+        /// <returns>IOrderedQueryable with the sort clause added.</returns>
+        protected virtual IOrderedQueryable<TElement> AddSortClause<TElement, TValue>(IQueryable<TElement> qry,
+                Expression<Func<TElement, TValue>> prop, SortField sortField, bool first)
+            => !first && qry is IOrderedQueryable<TElement> oqry ?
+                sortField.IsDescending ? oqry.ThenByDescending(prop) : oqry.ThenBy(prop) :
+                sortField.IsDescending ? qry.OrderByDescending(prop) : qry.OrderBy(prop);
+
+        /// <summary>
+        /// Reports an error for an unsupported sort field.
+        /// </summary>
+        /// <param name="sortField">The sort field that is not supported.</param>
+        protected void UnknownSortFieldError(SortField sortField)
+            => currentErrors.AddValidationError(Messages.SortField_NotSupported, sortField.FieldName);
+
+        /// <summary>
+        /// Adds Skip and Take clauses to the given query for the specified criteria as needed.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the element.</typeparam> 
+        /// <param name="qry">The query to add the Skip and Take clauses to.</param>
+        /// <param name="criteria">Base criteria with paging params.</param>
+        /// <param name="maxRows">Maximum number of rows to use when criteria has no paging.</param>
+        /// <returns>A query with Skip and Take clauses added as needed.</returns>
+        protected virtual IQueryable<TElement> AddSkipTake<TElement>(IQueryable<TElement> qry, SearchCriteria criteria, int? maxRows)
+        {
+            if (criteria?.Skip != null && criteria.Skip > 0)
+                qry = qry.Skip(criteria.Skip.Value);
+            var rowsToTake = criteria?.Take ?? maxRows;
+            if (rowsToTake != null)
+                qry = qry.Take(rowsToTake.Value);
+            return qry;
+        }
+
+        /// <summary>
+        /// Gets the total number of records that match the specified criteria as needed.
+        /// Also adds a warning if criteria has no paging and the number of rows returned is more than the maximum number of rows.
+        /// </summary>
+        /// <param name="getTotalCount">A function to get the total row count.</param>
+        /// <param name="criteria">Search criteria for the operation.</param>
+        /// <param name="count">The number of rows retrieved with the current criteria.</param>
+        /// <param name="maxRows">Maximum number of rows to use when criteria has no paging.</param>
+        /// <returns>The total number of rows as needed.</returns>
+        protected virtual int? GetTotal(Func<int> getTotalCount, SearchCriteria criteria, int count, int? maxRows)
+        {
+            int? totalCount = null;
+            bool atMax = (criteria?.Skip ?? 0) == 0 && criteria?.Take == null && maxRows != null && count == maxRows.Value;
+            bool lessThanPage = criteria != null && (criteria.Skip ?? 0) == 0 && criteria.Take != null && count < criteria.Take.Value;
+            if (atMax || (criteria?.GetTotalCount ?? false))
+            {
+                totalCount = lessThanPage ? count : getTotalCount();
+            }
+            if (atMax && totalCount > count)
+            {
+                currentErrors.AddWarning(Messages.Service_MaxRows, count, totalCount);
+            }
+            return totalCount;
+        }
+
+        /// <summary>
+        /// Gets the total number of records that match the specified criteria as needed.
+        /// Also adds a warning if criteria has no paging and the number of rows returned is more than the maximum number of rows.
+        /// </summary>
+        /// <param name="getTotalCountAsync">A function to get the total row count.</param>
+        /// <param name="criteria">Search criteria for the operation.</param>
+        /// <param name="count">The number of rows retrieved with the current criteria.</param>
+        /// <param name="maxRows">Maximum number of rows to use when criteria has no paging.</param>
+        /// <returns>The total number of rows as needed.</returns>
+        protected virtual async Task<int?> GetTotalAsync(Func<Task<int>> getTotalCountAsync, SearchCriteria criteria, int count, int? maxRows)
+        {
+            int? totalCount = null;
+            bool atMax = (criteria?.Skip ?? 0) == 0 && criteria?.Take == null && maxRows != null && count == maxRows.Value;
+            bool lessThanPage = criteria != null && (criteria.Skip ?? 0) == 0 && criteria.Take != null && count < criteria.Take.Value;
+            if (atMax || (criteria?.GetTotalCount ?? false))
+            {
+                totalCount = lessThanPage ? count : await getTotalCountAsync();
+            }
+            if (atMax && totalCount > count)
+            {
+                currentErrors.AddWarning(Messages.Service_MaxRows, count, totalCount);
+            }
+            return totalCount;
+        }
         #endregion
     }
 }

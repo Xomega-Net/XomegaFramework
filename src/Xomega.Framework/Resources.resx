@@ -205,13 +205,13 @@
     <value>Next Page</value>
   </data>
   <data name="Pager_PageSize" xml:space="preserve">
-    <value>Items per page</value>
+    <value>Rows per page</value>
   </data>
   <data name="Pager_Prev" xml:space="preserve">
     <value>Previous Page</value>
   </data>
   <data name="Pager_Summary" xml:space="preserve">
-    <value>Showing {0} to {1} of {2} items.</value>
+    <value>Showing {0} to {1} of {2} rows.</value>
     <comment>{0}=Lower range boundary, {1}=Upper range boundary, {2}=Total number of items</comment>
   </data>
   <data name="PickList_Add" xml:space="preserve">
@@ -367,5 +367,13 @@ Do you want to discard them and close the view?</value>
   </data>
   <data name="CriteriaFieldSelector_AccessKey" xml:space="preserve">
     <value>t</value>
+  </data>
+  <data name="SortField_NotSupported" xml:space="preserve">
+    <value>Unsupported sort field {0}.</value>
+    <comment>{0}=Field name</comment>
+  </data>
+  <data name="Service_MaxRows" xml:space="preserve">
+    <value>Returned {0} out of {1} total rows. Please refine your search criteria or use server-side paging.</value>
+    <comment>{0}=Rows returned, {1}=Total rows</comment>
   </data>
 </root>

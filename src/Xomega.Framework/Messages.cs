@@ -163,7 +163,7 @@ namespace Xomega.Framework
         public const string Pager_Next = "Pager_Next";
 
         /// <summary>
-        /// Items per page
+        /// Rows per page
         /// </summary>
         public const string Pager_PageSize = "Pager_PageSize";
 
@@ -173,7 +173,7 @@ namespace Xomega.Framework
         public const string Pager_Prev = "Pager_Prev";
 
         /// <summary>
-        /// Showing {0} to {1} of {2} items.
+        /// Showing {0} to {1} of {2} rows.
         /// Where {0}=Lower range boundary, {1}=Upper range boundary, {2}=Total number of items
         /// </summary>
         public const string Pager_Summary = "Pager_Summary";
@@ -419,5 +419,17 @@ namespace Xomega.Framework
         /// t
         /// </summary>
         public const string CriteriaFieldSelector_AccessKey = "CriteriaFieldSelector_AccessKey";
+
+        /// <summary>
+        /// Unsupported sort field {0}.
+        /// Where {0}=Field name
+        /// </summary>
+        public const string SortField_NotSupported = "SortField_NotSupported";
+
+        /// <summary>
+        /// Returned {0} out of {1} total rows. Please refine your search criteria or use server-side paging.
+        /// Where {0}=Rows returned, {1}=Total rows
+        /// </summary>
+        public const string Service_MaxRows = "Service_MaxRows";
     }
 }

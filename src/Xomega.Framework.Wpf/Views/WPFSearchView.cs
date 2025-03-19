@@ -122,7 +122,7 @@ namespace Xomega.Framework.Views
                 {
                     if (SearchButton != null)
                         SearchButton.IsEnabled = false;
-                    if (IsAsync) await svm.SearchAsync();
+                    if (IsAsync) await svm.SearchAsync(false);
                     else svm.Search(sender, e);
                 }
                 finally

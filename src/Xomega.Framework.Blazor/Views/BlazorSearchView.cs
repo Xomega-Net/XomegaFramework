@@ -36,16 +36,6 @@ namespace Xomega.Framework.Blazor.Views
         }
 
         /// <summary>
-        /// The 1-based index of the currently displayed page.
-        /// </summary>
-        protected int CurrentPage { get; set; } = 1;
-
-        /// <summary>
-        /// The size of the page to display.
-        /// </summary>
-        protected int CurrentPageSize { get; set; }
-
-        /// <summary>
         /// Localized text for the title of the search criteria bar.
         /// </summary>
         protected virtual string CriteriaText => Model?.GetString(Messages.View_Criteria);
@@ -59,7 +49,7 @@ namespace Xomega.Framework.Blazor.Views
         {
             if (ListObject != null) ListObject.CollectionChanged -= OnListChanged;
             base.BindTo(viewModel);
-            if (ListObject != null) ListObject.CollectionChanged += OnListChanged; ;
+            if (ListObject != null) ListObject.CollectionChanged += OnListChanged;
         }
 
         private void OnListChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -70,16 +60,12 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// Default handler for searching that delegates the action to the view model.
         /// </summary>
-        protected virtual async Task OnSearchAsync(MouseEventArgs e)
-        {
-            await SearchModel?.SearchAsync();
-            CurrentPage = 1; // reset the current page for new searches
-        }
+        protected virtual async Task OnSearchAsync(MouseEventArgs e) => await SearchModel?.SearchAsync(false);
 
         /// <summary>
         /// Default handler for refreshing that delegates the action to the view model.
         /// </summary>
-        protected virtual async Task OnRefreshAsync(MouseEventArgs e) => await SearchModel?.SearchAsync();
+        protected virtual async Task OnRefreshAsync(MouseEventArgs e) => await SearchModel?.SearchAsync(true);
 
         /// <summary>
         /// Default handler for resetting that delegates the action to the view model.

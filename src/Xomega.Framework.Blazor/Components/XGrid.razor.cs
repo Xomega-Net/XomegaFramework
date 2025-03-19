@@ -25,13 +25,14 @@ namespace Xomega.Framework.Blazor.Components
         /// </summary>
         [Parameter] public bool AllowSorting { get; set; } = true;
 
-        private List<XGridColumn> Columns { get; set; } = new List<XGridColumn>();
+        private List<XGridColumn> Columns { get; set; } = [];
 
         private IEnumerable<XGridColumn> VisibleColumns => Columns.Where(c => c.IsVisible);
 
-        private IEnumerable<DataRow> VisibleRows => (AllowPaging ? 
-            List?.GetData()?.Skip(PageSize * (CurrentPage - 1))?.Take(PageSize) : List?.GetData())
-            ?? new List<DataRow>();
+        private IEnumerable<DataRow> VisibleRows => List?.CurrentPageData ?? [];
+
+        private int RowCount => (List?.PagingMode == DataListObject.Paging.Server ?
+            List?.TotalRowCount : List?.RowCount) ?? 0;
 
         internal void AddColumn(XGridColumn column)
         {
@@ -91,41 +92,13 @@ namespace Xomega.Framework.Blazor.Components
         /// <summary>
         /// A flag specifying whether or not to allow paging.
         /// </summary>
-        [Parameter] public bool AllowPaging { get; set; } = true;
+        public bool AllowPaging => !(List?.PagingMode == DataListObject.Paging.None);
 
-        /// <summary>
-        /// The index of the current page, where 1 indicates the first page.
-        /// </summary>
-        [Parameter] public int CurrentPage { get; set; }
+        private async Task OnPagerCurrentPageChanged(int page) =>
+            await List?.SetCurrentPage(page);
 
-        /// <summary>
-        /// Event for when the index of the current page changes.
-        /// </summary>
-        [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
-
-        private async Task OnPagerCurrentPageChanged(int page)
-        {
-            CurrentPage = page;
-            await CurrentPageChanged.InvokeAsync(page);
-        }
-
-        /// <summary>
-        /// The current size of the page. If not explicitly specified,
-        /// will default to the second option in the list of page sizes,
-        /// or first if there is only one option.
-        /// </summary>
-        [Parameter] public int PageSize { get; set; }
-
-        /// <summary>
-        /// Event for when the page size changes.
-        /// </summary>
-        [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
-
-        private async Task OnPagerPageSizeChanged(int pageSize)
-        {
-            PageSize = pageSize;
-            await PageSizeChanged.InvokeAsync(pageSize);
-        }
+        private async Task OnPagerPageSizeChanged(int pageSize) =>
+            await List?.SetPageSize(pageSize);
 
         /// <summary>
         /// An array of possible page sizes to select from.

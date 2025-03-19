@@ -280,7 +280,8 @@ namespace Xomega.Framework.Criteria
         {
             if (dataContract == null) return;
             var props = dataContract.GetType().GetProperties()
-                .Where(p => p.PropertyType.GetGenericTypeDefinition() == typeof(FieldCriteria<>));
+                .Where(p => p.PropertyType.IsGenericType &&
+                       p.PropertyType.GetGenericTypeDefinition() == typeof(FieldCriteria<>));
             foreach (PropertyInfo pi in props)
             {
                 if (!CriteriaFieldGroups.TryGetValue(pi.Name, out var crit) || !crit.HasValue()) continue;

@@ -197,7 +197,7 @@ namespace Xomega.Framework.Web
         protected virtual async Task SearchAsync(CancellationToken token = default)
         {
             if (Model is SearchViewModel svm)
-                await svm.SearchAsync(token);
+                await svm.SearchAsync(false, token);
         }
 
         /// <summary>

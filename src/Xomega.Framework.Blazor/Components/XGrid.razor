@@ -46,9 +46,9 @@
     </table>
     @if (AllowPaging)
     { 
-        <Pager ItemsCount="List?.RowCount ?? 0" ResourceKey="@ResourceKey"
+        <Pager ItemsCount="RowCount" ResourceKey="@ResourceKey"
                PageSizes="PageSizes" PagesToShow="PagesToShow"
-               PageSize="PageSize" PageSizeChanged="OnPagerPageSizeChanged"
-               CurrentPage="CurrentPage" CurrentPageChanged="OnPagerCurrentPageChanged"/>
+               PageSize="List?.PageSize ?? 0" PageSizeChanged="OnPagerPageSizeChanged"
+               CurrentPage="List?.CurrentPage ?? 0" CurrentPageChanged="OnPagerCurrentPageChanged"/>
     }
 </CascadingValue>
