@@ -252,8 +252,8 @@ namespace Xomega.Framework
         public string ToString(string format, ResourceManager resMgr)
         {
             // for performance purposes check standard fields first
-            if (format == FieldId || !IsValid) return Id;
-            if (format == FieldText) return GetText(resMgr);
+            if (format == FieldId || !IsValid) return Id?.Trim();
+            if (format == FieldText) return GetText(resMgr)?.Trim();
 
             return Regex.Replace(format, @"\[(i|t|a:)(.*?)\]", m => EvaluateMatch(m, resMgr));
         }
@@ -272,16 +272,17 @@ namespace Xomega.Framework
             string attrName = m.Result("$2");
             if (string.IsNullOrEmpty(attrName))
             {
-                if (field == "i") return Id;
-                if (field == "t") return GetText(resMgr);
+                if (field == "i") return Id?.Trim();
+                if (field == "t") return GetText(resMgr)?.Trim();
             }
             else if (field == "a:")
             {
-                string res = "";
+                string res;
                 object attr = this[attrName];
-                if (!(attr is IList lst)) res = Convert.ToString(attr);
-                else foreach (string s in lst) res += (res == "" ? "" : ", ") + s;
-                return res;
+                if (attr is IList lst)
+                    res = string.Join(", ", lst);
+                else res = Convert.ToString(attr);
+                return res.Trim();
             }
             return m.Value;
         }

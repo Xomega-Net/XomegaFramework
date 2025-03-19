@@ -125,7 +125,7 @@ namespace Xomega.Framework.Lookup
             {
                 if (!indexedData.TryGetValue(format, out IndexedTable tbl))
                     tbl = BuildIndexedTable(format, resMgr);
-                if (tbl.TryGetValue(value, out Header res)) return res;
+                if (tbl.TryGetValue(value?.Trim(), out Header res)) return res;
                 return res;
             }
             finally
@@ -185,7 +185,7 @@ namespace Xomega.Framework.Lookup
                 foreach (Header h in Data)
                 {
                     if (h == null) continue;
-                    string key = h.ToString(format, resMgr);
+                    string key = h.ToString(format, resMgr).Trim();
                     if (tbl.TryGetValue(key, out Header h1))
                         h1.AddToAttribute(GroupAttrPrefix + format, h);
                     else tbl[key] = h;
