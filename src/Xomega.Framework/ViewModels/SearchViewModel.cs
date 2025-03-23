@@ -215,6 +215,23 @@ namespace Xomega.Framework.Views
                 CriteriaCollapsed = false;
         }
 
+        /// <summary>
+        /// Resets current view to initial state
+        /// </summary>
+        /// <param name="sender">Command sender</param>
+        /// <param name="e">Event arguments</param>
+        public async virtual Task ResetAsync(object sender, EventArgs e)
+        {
+            if (List != null)
+            {
+                await List.ResetDataAsync();
+                await List.CriteriaObject?.ResetDataAsync();
+                Errors = null;
+            }
+            if (AutoCollapseCriteria)
+                CriteriaCollapsed = false;
+        }
+
         #endregion
 
         #region Selection

@@ -36,6 +36,44 @@ namespace Xomega.Framework
         /// <returns></returns>
         public SortField[] ToSortFields()
             => this.Select(f => f.ToSortField()).ToArray();
+
+        /// <summary>
+        /// Clones the current sort criteria.
+        /// </summary>
+        /// <returns>A clone of the current sort criteria.</returns>
+        public ListSortCriteria Clone()
+        {
+            var clone = new ListSortCriteria();
+            foreach (var field in this)
+            {
+                clone.Add(new ListSortField
+                {
+                    PropertyName = field.PropertyName,
+                    SortDirection = field.SortDirection
+                });
+            }
+            return clone;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj is ListSortCriteria sc)
+            {
+                if (Count != sc.Count)
+                    return false;
+                for (int i = 0; i < Count; i++)
+                {
+                    if (!this[i].Equals(sc[i]))
+                        return false;
+                }
+                return true;
+            }
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>
@@ -59,6 +97,20 @@ namespace Xomega.Framework
         /// <returns>A sort field for service calls.</returns>
         public SortField ToSortField()
             => new SortField { FieldName = PropertyName, SortDirection = SortDirection.ToSortDirection() };
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj is ListSortField other)
+            {
+                return PropertyName == other.PropertyName &&
+                       SortDirection == other.SortDirection;
+            }
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>

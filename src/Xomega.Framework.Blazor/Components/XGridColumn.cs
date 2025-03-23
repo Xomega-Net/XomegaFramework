@@ -173,13 +173,13 @@ namespace Xomega.Framework.Blazor.Components
             return "";
         }
 
-        internal void OnHeaderClicked(MouseEventArgs e)
+        internal async Task OnHeaderClicked(MouseEventArgs e)
         {
             if (!IsSortable) return;
 
             var list = List;
-            var sc = SortCriteria;
-            var curSf = SortField;
+            var sc = SortCriteria?.Clone() ?? [];
+            var curSf = sc?.Find(sf => sf.PropertyName == Property.Name);
             var newSf = new ListSortField()
             {
                 PropertyName = Property.Name,
@@ -191,8 +191,11 @@ namespace Xomega.Framework.Blazor.Components
             else if (curSf != null)
                 curSf.SortDirection = ListSortDirection.Toggle(curSf.SortDirection);
             else if (list != null)
-                list.SortCriteria = new ListSortCriteria() { newSf };
-            if (list != null) list.Sort();
+                sc = [newSf];
+            if (list != null)
+            {
+                await list.SetSortCriteria(sc);
+            }
         }
 
         #endregion

@@ -106,6 +106,8 @@ namespace Xomega.Framework
             AppliedCriteria = null;
             AppliedCriteriaValues = null;
             data.Clear();
+            firstRowIndex = 0;
+            TotalRowCount = null;
         }
 
         /// <summary>
@@ -115,6 +117,16 @@ namespace Xomega.Framework
         {
             Clear();
             modified = null;
+        }
+
+        /// <summary>
+        /// Asynchronously resets the list by clearing all data.
+        /// </summary>
+        public override async Task ResetDataAsync()
+        {
+            ResetData();
+            await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(CurrentPage)));
+            await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(TotalRowCount)));
         }
 
         /// <summary>
@@ -153,12 +165,21 @@ namespace Xomega.Framework
 
         #endregion
 
-        #region Sorting
+        #region Sorting and paging
 
         /// <summary>
         /// Gets or sets sort criteria for the data object list.
         /// </summary>
         public ListSortCriteria SortCriteria { get; set; }
+
+        /// <summary>
+        /// Sets the sort criteria asynchronously.
+        /// </summary>
+        /// <param name="sort">New sort criteria to use.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the operation.</returns>
+        public async Task SetSortCriteria(ListSortCriteria sort, CancellationToken token = default)
+            => await SkipTakeAsync(firstRowIndex, pageSize, sort, token);
 
         /// <summary>
         /// Sorts the data object list according to the specified <see cref="SortCriteria"/>.
@@ -173,10 +194,6 @@ namespace Xomega.Framework
         /// Sorts the data object list according to the specified comparison function.
         /// </summary>
         public void Sort(Comparison<DataRow> cmp) => data.Sort(cmp);
-
-        #endregion
-
-        #region Pagination support
 
         /// <summary>
         /// Modes of paging of the list data.
@@ -205,14 +222,14 @@ namespace Xomega.Framework
         public Paging PagingMode { get; set; } = Paging.Client;
 
         /// <summary>
-        /// The index of the current page, where 1 indicates the first page.
+        /// The index of the first row on the current page.
         /// </summary>
-        protected int currentPage;
+        protected int firstRowIndex;
 
         /// <summary>
         /// The index of the current page, where 1 indicates the first page.
         /// </summary>
-        public int CurrentPage => currentPage;
+        public int CurrentPage => firstRowIndex / PageSize + 1;
 
         /// <summary>
         /// Sets the current page to the specified index asynchronously.
@@ -222,12 +239,7 @@ namespace Xomega.Framework
         /// <param name="token">Cancellation token.</param>
         /// <returns>The task for the operation.</returns>
         public async Task SetCurrentPage(int page, CancellationToken token = default)
-        {
-            currentPage = page;
-            if (PagingMode == Paging.Server && data.Count > 0)
-                await ReadAsync(new ReadOptions { IsPaging = true }, token);
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(CurrentPage)));
-        }
+            => await SkipTakeAsync((page - 1) * PageSize, PageSize, SortCriteria, token);
 
         /// <summary>
         /// The current size of the page.
@@ -241,33 +253,61 @@ namespace Xomega.Framework
 
         /// <summary>
         /// Sets the page size to the specified value asynchronously.
-        /// When ServerPaging is true, reads the data for the current page from the server.
         /// </summary>
-        /// <param name="value">The new page size to use.</param>
+        /// <param name="pageSize">The new page size to use.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The task for the operation.</returns>
-        public async Task SetPageSize(int value, CancellationToken token = default)
+        public async Task SetPageSize(int pageSize, CancellationToken token = default)
+            => await SkipTakeAsync(firstRowIndex, pageSize, SortCriteria, token);
+
+        /// <summary>
+        /// Sets the current page and page size to the specified values asynchronously.
+        /// When ServerPaging is true, reads the data for the current page from the server.
+        /// </summary>
+        /// <param name="skip">The index of the first row on the page.</param>
+        /// <param name="take">The page size.</param>
+        /// <param name="sort">Sort criteria.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task for the operation.</returns>
+        public async Task SkipTakeAsync(int skip, int take, ListSortCriteria sort, CancellationToken token = default)
         {
-            int firstRecord = PageSize * (CurrentPage - 1);
-            pageSize = value;
-            // update the current page to make the first record visible
-            currentPage = firstRecord / PageSize + 1;
-            if (PagingMode == Paging.Server && data.Count > 0)
+            bool firstRowChanged = skip != firstRowIndex;
+            bool pageSizeChanged = take != PageSize;
+            bool sortChanged = !Equals(sort, SortCriteria);
+
+            firstRowIndex = skip;
+            pageSize = take;
+            SortCriteria = sort;
+            if (PagingMode == Paging.Server && data.Count > 0 && 
+                (firstRowChanged || pageSizeChanged || sortChanged))
+            {
                 await ReadAsync(new ReadOptions {
-                    IsPaging = true,
-                    PreserveSelection = true }, token);
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(CurrentPage)));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(PageSize)));
+                    IsPaging = firstRowChanged || pageSizeChanged,
+                    IsSorting = sortChanged,
+                    PreserveSelection = !firstRowChanged && !sortChanged
+                }, token);
+            }
+            else if (sortChanged)
+            {
+                Sort();
+                firstRowIndex = 0;
+                firstRowChanged = true;
+            }
+            if (firstRowChanged)
+                await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(CurrentPage)), token);
+            if (pageSizeChanged)
+                await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(PageSize)), token);
+            if (sortChanged)
+                await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(SortCriteria)), token);
         }
 
         /// <summary>
         /// The data for the current page.
         /// </summary>
         public IEnumerable<DataRow> CurrentPageData => PagingMode == Paging.Client ?
-            GetData().Skip(PageSize * (CurrentPage - 1)).Take(PageSize) : GetData();
+            GetData().Skip(firstRowIndex).Take(PageSize) : GetData();
 
         #endregion
-
 
         #region Selection support
 
@@ -492,6 +532,22 @@ namespace Xomega.Framework
         #region Collection modification
 
         /// <summary>
+        /// Async collection changed event, which allows waiting for all async handlers to complete.
+        /// </summary>
+        public event Func<object, NotifyCollectionChangedEventArgs, CancellationToken, Task> AsyncCollectionChanged;
+
+
+        /// <summary>
+        /// Asynchronously fires the specified collection changed event, which allows waiting for all async handlers to complete.
+        /// </summary>
+        public async Task OnCollectionChangedAsync(NotifyCollectionChangedEventArgs args, CancellationToken token = default)
+        {
+            var tasks = AsyncCollectionChanged?.GetInvocationList()?.Select(d => (Task)d.DynamicInvoke(this, args, token));
+            if (tasks != null)
+                await Task.WhenAll(tasks);
+        }
+
+        /// <summary>
         /// Occurs when the data in the list changes.
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -546,7 +602,9 @@ namespace Xomega.Framework
         public virtual async Task InsertAsync(int index, DataRow row, bool suppressNotification = false)
         {
             Insert(index, row, suppressNotification);
-            await Task.CompletedTask;
+            if (!suppressNotification)
+                await OnCollectionChangedAsync(new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add, row, index));
         }
 
         /// <summary>
@@ -579,7 +637,9 @@ namespace Xomega.Framework
                 data.RemoveRows(rows.Where(r => r.List == this));
                 SetModified(true, false);
             }
-            await Task.CompletedTask;
+            if (!suppressNotification)
+                await OnCollectionChangedAsync(new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Remove, rows.ToList()));
         }
 
         /// <summary>
@@ -602,6 +662,9 @@ namespace Xomega.Framework
                 await data.ReplaceRowAsync(newRow, row);
                 SetModified(true, false);
             }
+            if (!suppressNotification)
+                await OnCollectionChangedAsync(new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Replace, newRow, row));
         }
 
         /// <summary>
@@ -661,6 +724,12 @@ namespace Xomega.Framework
             public bool IsPaging = false;
 
             /// <summary>
+            /// A flag indicating whether or not the operation is a request
+            /// caused by changing sort order with server-side paging.
+            /// </summary>
+            public bool IsSorting = false;
+
+            /// <summary>
             /// Applied criteria to store on success or revert to on failure.
             /// </summary>
             public object Criteria = null;
@@ -690,24 +759,42 @@ namespace Xomega.Framework
             criteria.Sort = SortCriteria?.ToSortFields();
             if (PagingMode == Paging.Server)
             {
-                // reset to the first page when searching with new criteria
-                criteria.Skip = readOpt.IsPaging || readOpt.IsReload ? 
-                    PageSize * (CurrentPage - 1) : 0;
+                if (readOpt.IsPaging || readOpt.IsReload)
+                    criteria.Skip = firstRowIndex;
+                else // reset to the first page when searching with new criteria
+                {
+                    criteria.Skip = 0;
+                }
                 criteria.Take = PageSize;
                 // refresh total count only for new searches and when reloading
-                criteria.GetTotalCount = !readOpt.IsPaging;
+                criteria.GetTotalCount = !readOpt.IsPaging && !readOpt.IsSorting;
             }
             return criteria;
         }
 
-        /// <summary>
-        /// Keeps track of the TotalRowCount for server-side paging and resets current page on new searches.
-        /// </summary>
-        /// <param name="output">Output from the service call.</param>
-        /// <param name="options">Service call options.</param>
-        /// <returns></returns>
-        protected override void SetFromOutput(Output output, object options)
+        /// <inheritdoc/>
+        public override async Task FromOutputAsync<T>(Output<T> output, object options, CancellationToken token = default)
         {
+            await FromDataContractAsync(output?.Result, options, token);
+            if (output?.Messages?.HasErrors() ?? false) return;
+            if (output.TotalCount != null)
+            {
+                TotalRowCount = output.TotalCount;
+                await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(TotalRowCount)), token);
+            }
+            if (options is ReadOptions readOpt && !readOpt.IsReload && !readOpt.IsPaging)
+            {
+                // reset to the first page for new searches
+                firstRowIndex = 0;
+                await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(CurrentPage)), token);
+            }
+            await OnCollectionChangedAsync(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), token);
+        }
+
+        /// <inheritdoc/>
+        public override void FromOutput<T>(Output<T> output, object options)
+        {
+            FromDataContract(output?.Result, options);
             if (output?.Messages?.HasErrors() ?? false) return;
             if (output.TotalCount != null)
             {
@@ -717,7 +804,7 @@ namespace Xomega.Framework
             if (options is ReadOptions readOpt && !readOpt.IsReload && !readOpt.IsPaging)
             {
                 // reset to the first page for new searches
-                currentPage = 1;
+                firstRowIndex = 0;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(CurrentPage)));
             }
         }

@@ -76,12 +76,22 @@ namespace Xomega.Framework.Client
             {
                 var val = prop.GetValue(obj);
                 if (val == null) continue;
-                if (val is ICollection col)
+                else if (val is SortField[] sortFields)
+                {
+                    for (int i = 0; i < sortFields.Length; i++)
+                    {
+                        var field = sortFields[i];
+                        queryParams.Add(new KeyValuePair<string, string>($"{prop.Name}[{i}].FieldName", field.FieldName));
+                        queryParams.Add(new KeyValuePair<string, string>($"{prop.Name}[{i}].SortDirection", field.SortDirection.ToString()));
+                    }
+                }
+                else if (val is ICollection col)
                 {
                     foreach (var i in col)
                         queryParams.Add(new KeyValuePair<string, string>(prop.Name, i.ToString()));
                 }
-                else if (val.GetType().GetGenericTypeDefinition() == typeof(FieldCriteria<>))
+                else if (val.GetType().IsGenericType &&
+                    val.GetType().GetGenericTypeDefinition() == typeof(FieldCriteria<>))
                 {
                     var oper = val.GetType().GetProperty("Operator").GetValue(val)?.ToString();
                     if (oper != null)

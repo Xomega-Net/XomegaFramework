@@ -20,7 +20,7 @@ namespace Xomega.Framework.Services
         /// <summary>
         /// A flag indicating whether to get the total count of records that match the criteria.
         /// </summary>
-        public bool GetTotalCount { get; set; }
+        public bool? GetTotalCount { get; set; }
 
         /// <summary>
         /// The fields to sort by.

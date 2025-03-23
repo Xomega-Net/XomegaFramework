@@ -14,7 +14,7 @@
                 {
                 <th class="@col.AlignmentClass @col.WrapClass" style="@col.GetHeaderStyle()"
                     title="@col.GetHeaderText()" role="@(col.IsSortable ? "button" : null)"
-                    @onclick="@((e) => OnHeaderClicked(col, e))">
+                    @onclick="@(async (e) => await OnHeaderClicked(col, e))">
                     @if (col.SortField != null)
                     {
                         <i class='@col.GetSortClass()' aria-hidden='true' />

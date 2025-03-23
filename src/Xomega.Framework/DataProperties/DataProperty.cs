@@ -161,11 +161,20 @@ namespace Xomega.Framework
             => IsValueNull(GetValue(ValueFormat.Internal, row), ValueFormat.Internal);
 
         /// <summary>
-        /// Resets property value and modified state to default values
+        /// Resets property value and modified state to default values.
         /// </summary>
         public virtual void ResetValue()
         {
             SetValue(null);
+            Modified = null;
+        }
+
+        /// <summary>
+        /// Resets property value and modified state to default values asynchronously.
+        /// </summary>
+        public virtual async Task ResetValueAsync()
+        {
+            await SetValueAsync(null);
             Modified = null;
         }
 

@@ -70,11 +70,7 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// Default handler for resetting that delegates the action to the view model.
         /// </summary>
-        protected virtual async Task OnResetAsync(MouseEventArgs e)
-        {
-            SearchModel?.Reset(this, e);
-            await Task.CompletedTask;
-        }
+        protected virtual async Task OnResetAsync(MouseEventArgs e) => await SearchModel?.ResetAsync(this, e);
 
         /// <summary>
         /// Default handler for the PermaLink action that adds criteria to the URL.

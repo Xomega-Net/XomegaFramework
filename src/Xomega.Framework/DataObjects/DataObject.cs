@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Resources;
@@ -145,6 +146,18 @@ namespace Xomega.Framework
                 p.ResetValue();
             foreach (string chName in childObjects.Keys)
                 childObjects[chName].ResetData();
+            modified = null;
+        }
+
+        /// <summary>
+        /// Resets data object to initial values asynchronously.
+        /// </summary>
+        public virtual async Task ResetDataAsync()
+        {
+            foreach (DataProperty p in properties.Values)
+                await p.ResetValueAsync();
+            foreach (string chName in childObjects.Keys)
+                await childObjects[chName].ResetDataAsync();
             modified = null;
         }
 
@@ -386,6 +399,23 @@ namespace Xomega.Framework
             PropertyChanged?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Async property changed event, which allows waiting for all async handlers to complete.
+        /// </summary>
+        public event Func<object, PropertyChangedEventArgs, CancellationToken, Task> AsyncPropertyChanged;
+
+
+        /// <summary>
+        /// Asynchronously fires the specified property changed event, which allows waiting for all async handlers to complete.
+        /// </summary>
+        public async Task OnPropertyChangedAsync(PropertyChangedEventArgs args, CancellationToken token = default)
+        {
+            PropertyChanged?.Invoke(this, args);
+            var tasks = AsyncPropertyChanged?.GetInvocationList()?.Select(d => (Task)d.DynamicInvoke(this, args, token));
+            if (tasks != null)
+                await Task.WhenAll(tasks);
+        }
+
         #endregion
 
         #region Editability support
@@ -495,7 +525,6 @@ namespace Xomega.Framework
         public virtual async Task FromOutputAsync<T>(Output<T> output, object options, CancellationToken token = default) where T : class
         {
             await FromDataContractAsync(output?.Result, options, token);
-            SetFromOutput(output, options);
         }
 
         /// <summary>
@@ -508,17 +537,7 @@ namespace Xomega.Framework
         public virtual void FromOutput<T>(Output<T> output, object options) where T : class
         {
             FromDataContract(output?.Result, options);
-            SetFromOutput(output, options);
         }
-
-        /// <summary>
-        /// Updates data object's metadata from the given output of a service call made with specified options.
-        /// Data object's data is updated separately in the FromDataContract methods.
-        /// </summary>
-        /// <param name="output">Output from the service call.</param>
-        /// <param name="options">Service call options.</param>
-        /// <returns></returns>
-        protected virtual void SetFromOutput(Output output, object options) { }
 
         /// <summary>
         /// Sets the data object values from the given data contract object

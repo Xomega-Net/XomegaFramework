@@ -5,7 +5,9 @@ using Syncfusion.Blazor.Grids;
 using Syncfusion.Blazor.Grids.Internal;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Xomega.Framework;
 
@@ -29,11 +31,27 @@ namespace Xomega._Syncfusion.Blazor
             {
                 if (list == value) return;
                 if (list != null)
-                    list.CollectionChanged -= OnListDataChanged;
+                {
+                    list.AsyncCollectionChanged -= OnListDataChanged;
+                    list.AsyncPropertyChanged -= OnListPropertyChanged;
+                }
                 list = value;
                 if (list != null)
-                    list.CollectionChanged += OnListDataChanged;
+                {
+                    list.AsyncCollectionChanged += OnListDataChanged;
+                    list.AsyncPropertyChanged += OnListPropertyChanged;
+
+                }
                 refresh = true; // trigger refresh when changing lists
+            }
+        }
+
+        private async Task OnListPropertyChanged(object sender, PropertyChangedEventArgs e, CancellationToken token)
+        {
+            if (e.PropertyName == nameof(DataListObject.CurrentPage) && PageSettings != null)
+            {
+                PageSettings.CurrentPage = list.CurrentPage;
+                await Refresh();
             }
         }
 
@@ -45,9 +63,9 @@ namespace Xomega._Syncfusion.Blazor
             refresh = false;
         }
 
-        private void OnListDataChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private async Task OnListDataChanged(object sender, NotifyCollectionChangedEventArgs e, CancellationToken token)
         {
-            Refresh();
+            await Refresh();
         }
 
         /// <summary>
@@ -77,7 +95,7 @@ namespace Xomega._Syncfusion.Blazor
         {
             base.Dispose(disposing);
             if (List != null)
-                List.CollectionChanged -= OnListDataChanged;
+                List.AsyncCollectionChanged -= OnListDataChanged;
         }
     }
 }

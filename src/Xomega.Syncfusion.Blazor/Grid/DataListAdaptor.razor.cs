@@ -83,24 +83,34 @@ namespace Xomega._Syncfusion.Blazor
             if (list == null)
                 return dm.RequiresCounts ? new DataResult() { Result = null, Count = 0 } : null;
 
+            ListSortCriteria sortCrit = null;
+            if (dm.Sorted != null && dm.Sorted.Count > 0)
+            {
+                sortCrit = ToSortCriteria(dm.Sorted.Reverse<Sort>()); // multi-column sort comes in reverse order
+            }
+
+            if (dm.Take != 0 || dm.Skip != 0)
+                await list.SkipTakeAsync(dm.Skip, dm.Take, sortCrit);
+
             IEnumerable<DataRow> data = list.GetData();
             if (dm.Where != null && dm.Where.Count > 0)
                 data = data.Where(r => Matches(r, "and", dm.Where, false));
             if (dm.Search != null && dm.Search.Count > 0)
                 data = data.Where(r => Matches(r, "and", SearchToWhere(dm.Search), true));
 
-            data = data.ToList(); // run the search before sorting and counting
-            if (dm.Sorted != null && dm.Sorted.Count > 0)
-            {
-                var sortCrit = ToSortCriteria(dm.Sorted.Reverse<Sort>()); // multi-column sort comes in reverse order
-                ((List<DataRow>)data).Sort(sortCrit);
-            }
+            data = data.ToList();
 
-            int count = data.Count();
-            if (dm.Skip != 0)
-                data = data.Skip(dm.Skip);
-            if (dm.Take != 0)
-                data = data.Take(dm.Take);
+            int count = 0;
+            if (list.PagingMode == DataListObject.Paging.Server)
+            {
+                count = list.TotalRowCount ?? data.Count();
+            }
+            else
+            {
+                count = data.Count();
+                data = data.Skip((list.CurrentPage - 1) * list.PageSize)
+                    .Take(list.PageSize);
+            }
 
             if (dm.Group != null)
             {
@@ -151,11 +161,11 @@ namespace Xomega._Syncfusion.Blazor
             });
 
         private ListSortCriteria ToSortCriteria(IEnumerable<Sort> sort)
-            => new ListSortCriteria(sort.Select(s => new ListSortField()
+            => [.. sort.Select(s => new ListSortField()
             {
                 PropertyName = s.Name,
                 SortDirection = ListSortDirection.FromString(s.Direction)
-            }));
+            })];
 
         /// <inheritdoc/>
         public async override Task<object> InsertAsync(DataManager dataManager, object data, string key)

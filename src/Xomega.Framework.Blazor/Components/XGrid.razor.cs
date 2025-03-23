@@ -39,7 +39,7 @@ namespace Xomega.Framework.Blazor.Components
             Columns.Add(column);
         }
 
-        private void OnHeaderClicked(XGridColumn col, MouseEventArgs e) => col.OnHeaderClicked(e);
+        private async Task OnHeaderClicked(XGridColumn col, MouseEventArgs e) => await col.OnHeaderClicked(e);
 
         #region Selection support
 
