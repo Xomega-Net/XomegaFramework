@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>4.3.1</Version>
+    <Version>4.4.0</Version>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <RazorLangVersion>3.0</RazorLangVersion>
     <PackageId>Xomega.Syncfusion.Blazor</PackageId>

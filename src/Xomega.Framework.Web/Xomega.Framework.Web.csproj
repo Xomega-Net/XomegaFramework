@@ -4,7 +4,7 @@
     <TargetFramework>net462</TargetFramework>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <PackageId>Xomega.Framework.Web</PackageId>
-    <Version>4.3.1</Version>
+    <Version>4.4.0</Version>
     <Authors>Xomega Team</Authors>
     <Company>Xomega.Net</Company>
     <Product>Xomega.Framework</Product>
