@@ -127,6 +127,7 @@ namespace Xomega.Framework
             ResetData();
             await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(CurrentPage)));
             await OnPropertyChangedAsync(new PropertyChangedEventArgs(nameof(TotalRowCount)));
+            await OnCollectionChangedAsync(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         /// <summary>

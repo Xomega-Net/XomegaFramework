@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -37,13 +38,13 @@ namespace Xomega.Framework.Views
             if (SaveButton != null)
             {
                 SaveButton.Command = new RelayCommand<object>(
-                    p => Save(this, EventArgs.Empty),
+                    async (p) => await Save(this, EventArgs.Empty),
                     p => SaveEnabled());
             }
             if (DeleteButton != null)
             {
                 DeleteButton.Command = new RelayCommand<object>(
-                    p => Delete(this, EventArgs.Empty),
+                    async (p) => await Delete(this, EventArgs.Empty),
                     p => DeleteEnabled());
             }
         }
@@ -77,7 +78,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for saving the view delegating the action to the view model.
         /// </summary>
-        protected virtual async void Save(object sender, EventArgs e)
+        protected virtual async Task Save(object sender, EventArgs e)
         {
             if (Model is DetailsViewModel dvm)
             {
@@ -110,7 +111,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Default handler for deleting the view delegating the action to the view model.
         /// </summary>
-        protected virtual async void Delete(object sender, EventArgs e)
+        protected virtual async Task Delete(object sender, EventArgs e)
         {
             if (Model is DetailsViewModel dvm)
             {

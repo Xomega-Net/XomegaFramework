@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Xomega.Framework.Views
@@ -11,6 +12,7 @@ namespace Xomega.Framework.Views
     public class RelayCommand<T> : ICommand
     {
         readonly Action<T> _execute;
+        readonly Func<T, Task> _executeAsync;
         readonly Predicate<T> _canExecute;
 
         /// <summary>
@@ -20,6 +22,12 @@ namespace Xomega.Framework.Views
         public RelayCommand(Action<T> execute) : this(execute, null) { }
 
         /// <summary>
+        /// Constructs a relay command with the specified action
+        /// </summary>
+        /// <param name="executeAsync">Action to execute</param>
+        public RelayCommand(Func<T, Task> executeAsync) : this(executeAsync, null) { }
+
+        /// <summary>
         /// Constructs a relay command with the specified action and a check if command can be executed
         /// </summary>
         /// <param name="execute">Action to execute</param>
@@ -27,7 +35,19 @@ namespace Xomega.Framework.Views
         public RelayCommand(Action<T> execute, Predicate<T> canExecute)
         {
             if (execute == null) throw new ArgumentNullException("execute");
-            _execute = execute;
+            _execute= execute;
+            _canExecute = canExecute;
+        }
+
+        /// <summary>
+        /// Constructs a relay command with the specified action and a check if command can be executed
+        /// </summary>
+        /// <param name="executeAsync">Action to execute</param>
+        /// <param name="canExecute">Delegate that determines if command can be executed</param>
+        public RelayCommand(Func<T, Task> executeAsync, Predicate<T> canExecute)
+        {
+            if (executeAsync == null) throw new ArgumentNullException("executeAsync");
+            _executeAsync = executeAsync;
             _canExecute = canExecute;
         }
 
@@ -53,6 +73,11 @@ namespace Xomega.Framework.Views
         /// </summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed,
         /// this object can be set to null.</param>
-        public void Execute(object parameter) { _execute((T)parameter); }
+        public async void Execute(object parameter)
+        {
+            if (_executeAsync != null)
+                await _executeAsync((T)parameter);
+            else _execute((T)parameter);
+        }
     }
 }

@@ -48,10 +48,9 @@ namespace Xomega._Syncfusion.Blazor
 
         private async Task OnListPropertyChanged(object sender, PropertyChangedEventArgs e, CancellationToken token)
         {
-            if (e.PropertyName == nameof(DataListObject.CurrentPage) && PageSettings != null)
+            if (e.PropertyName == nameof(DataListObject.CurrentPage))
             {
-                PageSettings.CurrentPage = list.CurrentPage;
-                await Refresh();
+                await GoToPageAsync(list.CurrentPage);
             }
         }
 
