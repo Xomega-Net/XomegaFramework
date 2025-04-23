@@ -122,46 +122,37 @@ namespace Xomega.Framework.Criteria
         /// <summary>
         /// Cancels the current edit and resets the field selector.
         /// </summary>
-        public void CancelEdit() => FieldSelectorProperty?.SetValue(null);
+        public async Task CancelEditAsync() => await FieldSelectorProperty?.SetValueAsync(null);
 
         /// <summary>
         /// Resets the current edit object to its default state.
         /// </summary>
-        public void ResetEdit() => FieldEditObject?.ResetData();
+        public async Task ResetEditAsync() => await FieldEditObject?.ResetDataAsync();
 
         /// <summary>
         /// Applies the data in the current edit object to the underlying criteria group.
         /// </summary>
-        public void ApplyEdit()
+        public async Task ApplyEditAsync()
         {
-            if (FieldEditObject != null && FieldEditObject.Update())
+            if (FieldEditObject != null && await FieldEditObject.UpdateAsync())
             {
-                FieldSelectorProperty.SetValue(null);
+                await FieldSelectorProperty.SetValueAsync(null);
             }
         }
 
         /// <summary>
         /// Validates the current criteria object and stores validation errors.
-        /// If the current criteria edit object has any values, it validates it first.
-        /// If the edits are valid, it auto-applies them before validating the criteria object.
-        /// This allows clicking Search without having to click Add/Update first.
-        /// If the edits are not valid, a special validation error is added to the criteria object
-        /// to prevent the caller from running the search.
+        /// If edits that are not applied yet are not valid, a special validation error
+        /// is added to the criteria object to prevent the caller from running the search.
         /// </summary>
         /// <param name="force">True to force validation, false otherwise.</param>
         public override void Validate(bool force)
         {
-            if (FieldEditObject != null && FieldEditObject.HasValues())
+            if (FieldEditObject?.Errors?.HasErrors() ?? false)
             {
-                FieldEditObject.Validate(force);
-                FieldEditObject.Errors = FieldEditObject.GetValidationErrors();
-                if (FieldEditObject.Errors.HasErrors())
-                {
-                    validationErrorList = NewErrorList();
-                    validationErrorList.AddValidationError(Messages.CriteriaEditObject_ValidationErrors);
-                    return;
-                }
-                else ApplyEdit();
+                validationErrorList = NewErrorList();
+                validationErrorList.AddValidationError(Messages.CriteriaEditObject_ValidationErrors);
+                return;
             }
 
             base.Validate(force);

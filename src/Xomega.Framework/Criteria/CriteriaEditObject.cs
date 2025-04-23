@@ -85,7 +85,7 @@ namespace Xomega.Framework.Criteria
 
             CancelAction = new ActionProperty(this, Messages.Action_Cancel);
             AddAction = new ActionProperty(this, group.HasValue() ? Messages.Action_Update : Messages.Action_Add);
-            Expression<Func<DataProperty, DataProperty, bool>> addEnabled = (pOp, pVal) =>
+            Expression<Func<DataProperty, DataProperty, bool>> addEnabled = (pOp, pVal) => group.HasValue() ||
                 pOp != null && pOp.InternalValue != null || pVal != null && pVal.InternalValue != null;
             AddAction.SetComputedEnabled(addEnabled, OperatorProperty, ValueProperty);
             AddAction.UpdateComputedEnabed();
@@ -144,15 +144,20 @@ namespace Xomega.Framework.Criteria
         /// Validates the edits and, if valid, updates the underlying criteria with the values from this edit object.
         /// </summary>
         /// <returns>True if the values were valid, false otherwise.</returns>
-        public virtual bool Update()
+        public virtual async Task<bool> UpdateAsync()
         {
             Validate(true);
             Errors = GetValidationErrors();
             if (Errors.HasErrors()) return false;
 
-            group.OperatorProperty?.SetValue(OperatorProperty.InternalValue);
-            group.ValueProperty?.SetValue(ValueProperty.InternalValue);
-            group.Value2Property?.SetValue(Value2Property.InternalValue);
+            if (group.OperatorProperty != null && OperatorProperty != null)
+                await group.OperatorProperty.SetValueAsync(OperatorProperty.InternalValue);
+
+            if (group.ValueProperty != null && ValueProperty != null)
+                await group.ValueProperty.SetValueAsync(ValueProperty.InternalValue);
+
+            if (group.Value2Property != null && Value2Property != null)
+                await group.Value2Property.SetValueAsync(Value2Property.InternalValue);
             return true;
         }
     }

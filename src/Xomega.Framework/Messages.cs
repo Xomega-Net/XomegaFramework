@@ -163,7 +163,7 @@ namespace Xomega.Framework
         public const string Pager_Next = "Pager_Next";
 
         /// <summary>
-        /// Rows per page
+        /// Items per page
         /// </summary>
         public const string Pager_PageSize = "Pager_PageSize";
 
@@ -173,7 +173,7 @@ namespace Xomega.Framework
         public const string Pager_Prev = "Pager_Prev";
 
         /// <summary>
-        /// Showing {0} to {1} of {2} rows.
+        /// Showing {0} to {1} of {2} items.
         /// Where {0}=Lower range boundary, {1}=Upper range boundary, {2}=Total number of items
         /// </summary>
         public const string Pager_Summary = "Pager_Summary";

@@ -158,6 +158,7 @@ namespace Xomega.Framework.Views
             if (List == null) return false;
             try
             {
+                await List.ApplyCriteriaEditAsync(token);
                 List.Validate(true);
                 ErrorList msgList = List.GetValidationErrors();
                 msgList.AbortIfHasErrors();

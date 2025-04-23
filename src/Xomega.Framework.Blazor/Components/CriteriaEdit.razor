@@ -22,11 +22,11 @@
     </div>
     <div class="d-flex">
         <XActionButton Action="Criteria?.FieldEditObject?.ResetAction" Outline="true" Class="mt-3 me-auto"
-            OnClick="() => Criteria?.ResetEdit()"></XActionButton>
+            OnClick="async () => await Criteria?.ResetEditAsync()"></XActionButton>
         <XActionButton Action="Criteria?.FieldEditObject?.CancelAction" Outline="true" Class="mt-3 me-2"
-            OnClick="() => Criteria?.CancelEdit()"></XActionButton>
+            OnClick="async () => await Criteria?.CancelEditAsync()"></XActionButton>
         <XActionButton Action="Criteria?.FieldEditObject?.AddAction" IsPrimary="true" Outline="true" Class="mt-3"
-            OnClick="() => Criteria?.ApplyEdit()"></XActionButton>
+            OnClick="async () => await Criteria?.ApplyEditAsync()"></XActionButton>
     </div>
 </div>
 

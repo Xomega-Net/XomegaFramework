@@ -205,13 +205,13 @@
     <value>Next Page</value>
   </data>
   <data name="Pager_PageSize" xml:space="preserve">
-    <value>Rows per page</value>
+    <value>Items per page</value>
   </data>
   <data name="Pager_Prev" xml:space="preserve">
     <value>Previous Page</value>
   </data>
   <data name="Pager_Summary" xml:space="preserve">
-    <value>Showing {0} to {1} of {2} rows.</value>
+    <value>Showing {0} to {1} of {2} items.</value>
     <comment>{0}=Lower range boundary, {1}=Upper range boundary, {2}=Total number of items</comment>
   </data>
   <data name="PickList_Add" xml:space="preserve">

@@ -230,7 +230,7 @@ namespace Xomega.Framework
         /// <summary>
         /// The index of the current page, where 1 indicates the first page.
         /// </summary>
-        public int CurrentPage => firstRowIndex / PageSize + 1;
+        public int CurrentPage => pageSize > 0 ? firstRowIndex / pageSize + 1 : 1;
 
         /// <summary>
         /// Sets the current page to the specified index asynchronously.
@@ -515,6 +515,21 @@ namespace Xomega.Framework
         }
 
         /// <summary>
+        /// If the current criteria edit object has any values,
+        /// validates and applies the edits. Otherwise, cancels the edits.
+        /// This allows clicking Search without having to click Add/Update first.
+        /// </summary>
+        /// <param name="token">Cancellation token</param>
+        /// <returns>The task for the operation.</returns>
+        public async Task ApplyCriteriaEditAsync(CancellationToken token)
+        {
+            if (CriteriaObject?.FieldEditObject == null) return;
+            if (CriteriaObject.FieldEditObject.HasValues())
+                await CriteriaObject.ApplyEditAsync();
+            else await CriteriaObject.CancelEditAsync();
+        }
+
+        /// <summary>
         /// Validates the data list object and the criteria object, if any.
         /// </summary>
         /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
@@ -543,9 +558,11 @@ namespace Xomega.Framework
         /// </summary>
         public async Task OnCollectionChangedAsync(NotifyCollectionChangedEventArgs args, CancellationToken token = default)
         {
+            CollectionChangeFiring = true;
             var tasks = AsyncCollectionChanged?.GetInvocationList()?.Select(d => (Task)d.DynamicInvoke(this, args, token));
             if (tasks != null)
                 await Task.WhenAll(tasks);
+            CollectionChangeFiring = false;
         }
 
         /// <summary>
@@ -554,7 +571,7 @@ namespace Xomega.Framework
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
-        /// Indicator that collection change event is in progress
+        /// Indicator that collection change event is in progress.
         /// </summary>
         public bool CollectionChangeFiring { get; private set; }
 
@@ -743,32 +760,41 @@ namespace Xomega.Framework
         /// <typeparam name="T">Type for criteria data contract that should extend SearchCriteria.</typeparam>
         /// <param name="options">ReadOptions for the operation.</param>
         /// <returns>Criteria data contract for the Read operation.</returns>
-        protected virtual T GetCriteriaDataContract<T>(object options) where T : SearchCriteria, new()
+        protected virtual T GetCriteriaDataContract<T>(object options) where T : new()
         {
-            T criteria;
+            T criteria = default;
             var readOpt = options as ReadOptions ?? new ReadOptions();
-            if ((readOpt.IsReload || readOpt.IsPaging) && AppliedCriteriaValues is T appliedCriteria)
+            if (readOpt.IsReload || readOpt.IsPaging)
             {
-                criteria = appliedCriteria;
-                readOpt.Criteria = criteria.Clone();
+                if (AppliedCriteriaValues is T appliedCriteria)
+                    criteria = appliedCriteria;
+                else criteria = new T();
+                if (criteria is SearchCriteria sc)
+                    readOpt.Criteria = sc.Clone();
             }
             else
             {
-                criteria = CriteriaObject?.ToDataContract<T>(options) ?? new T();
+                if (CriteriaObject != null)
+                    criteria = CriteriaObject.ToDataContract<T>(options);
+                if (criteria == null)
+                    criteria = new T();
                 readOpt.Criteria = criteria;
             }
-            criteria.Sort = SortCriteria?.ToSortFields();
+            if (!(criteria is SearchCriteria baseCriteria))
+                return criteria;
+
+            baseCriteria.Sort = SortCriteria?.ToSortFields();
             if (PagingMode == Paging.Server)
             {
                 if (readOpt.IsPaging || readOpt.IsReload)
-                    criteria.Skip = firstRowIndex;
+                    baseCriteria.Skip = firstRowIndex;
                 else // reset to the first page when searching with new criteria
                 {
-                    criteria.Skip = 0;
+                    baseCriteria.Skip = 0;
                 }
-                criteria.Take = PageSize;
+                baseCriteria.Take = PageSize;
                 // refresh total count only for new searches and when reloading
-                criteria.GetTotalCount = !readOpt.IsPaging && !readOpt.IsSorting;
+                baseCriteria.GetTotalCount = !readOpt.IsPaging && !readOpt.IsSorting;
             }
             return criteria;
         }
@@ -840,6 +866,7 @@ namespace Xomega.Framework
                 r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
             SetModified(false, false);
+            rows.Sort();
             data.ReplaceData(rows);
             SetAppliedCriteria(options);
         }
@@ -875,6 +902,7 @@ namespace Xomega.Framework
                 r.Selected = sel.Any(s => SameEntity(s, r, keys));
             }
             SetModified(false, false);
+            rows.Sort();
             data.ReplaceData(rows);
             SetAppliedCriteria(options);
         }
