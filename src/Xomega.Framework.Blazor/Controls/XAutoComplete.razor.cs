@@ -71,7 +71,14 @@ namespace Xomega.Framework.Blazor.Controls
         public async ValueTask DisposeAsync()
         {
             if (Input.Id != null)
-                await JsRuntime.InvokeVoidAsync("xfk.autoCompletePreventDefault", Input, true);
+                try
+                {
+                    await JsRuntime.InvokeVoidAsync("xfk.autoCompletePreventDefault", Input, true);
+                }
+                catch (JSDisconnectedException)
+                {
+                    // ignore errors on shutdown
+                }
         }
 
         /// <inheritdoc/>

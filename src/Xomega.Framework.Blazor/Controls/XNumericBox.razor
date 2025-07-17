@@ -36,7 +36,7 @@
 
     [Parameter] public decimal? Step { get; set; }
 
-    protected override string InputType => Type ?? (IsMultiValue ? "text" : "number");
+    protected override string InputType => Type ?? (IsMultiValue || !IsEditable ? "text" : "number");
     
     protected string ControlClass => InputType == "range" ? "form-range" : "form-control";
 }

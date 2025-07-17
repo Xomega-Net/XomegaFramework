@@ -175,7 +175,7 @@ namespace Xomega.Framework.Blazor.Views
             foreach (Breakpoint bp in Enum.GetValues(typeof(Breakpoint)))
             {
                 int w = GetWidth(bp);
-                int c = Math.Max(1, Math.Min(w / width, maxCol));
+                int c = Math.Max(1, Math.Min(w / (width > 0 ? width : 1), maxCol));
                 if (c != cols)
                     bpCols[bp] = cols = c;
             }
@@ -194,6 +194,6 @@ namespace Xomega.Framework.Blazor.Views
         /// constructs a string of Bootstrap col classes for laying out elements in the parent panel.
         /// </summary>
         /// <returns>A string of Bootstrap col classes for laying out elements in the parent panel.</returns>
-        public string ToColClass() => string.Join(" ", widths.Select(w => $"col{BreakpointInfix(w.Key)}-{(w.Value == 0 ? 0 : 12 / w.Value)}"));
+        public string ToColClass() => string.Join(" ", widths.Select(w => $"col{BreakpointInfix(w.Key)}-{(w.Value == 0 ? 0 : (12 / w.Value))}"));
     }
 }

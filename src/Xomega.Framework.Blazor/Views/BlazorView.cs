@@ -291,7 +291,10 @@ namespace Xomega.Framework.Blazor.Views
         {
             BindTo(null);
             foreach (var cv in ChildViews)
-                await cv.CloseAsync(token);
+            {
+                if (cv != null)
+                    await cv.CloseAsync(token);
+            }
         }
 
         #endregion
