@@ -28,14 +28,20 @@ namespace Xomega.Framework
         public override async Task UpdateAsync(DataRow row, CancellationToken token)
         {
             if (property is DataProperty dp)
+            {
                 await dp.SetValueAsync(GetComputedValue(row), row);
+                dp.Modified = false; // don't treat computed properties as modified
+            }
         }
 
         /// <inheritdoc/>
         public override void Update(DataRow row)
         {
             if (property is DataProperty dp)
+            {
                 dp.SetValue(GetComputedValue(row), row);
+                dp.Modified = false; // don't treat computed properties as modified
+            }
         }
     }
 }

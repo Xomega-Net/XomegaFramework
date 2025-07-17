@@ -189,8 +189,7 @@ namespace Xomega.Framework.Views
         protected override void OnChildEvent(object childViewModel, ViewEvent e)
         {
             UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
-            // ignore events from grandchildren
-            if (e.IsSaved(false) || e.IsDeleted(false))
+            if (ShouldReloadOnChildEvent(childViewModel, e))
             {
                 LoadData(true); // reload child lists if a child was updated
                 UpdateDetailsSelection(childViewModel as DetailsViewModel, ViewEvent.Opened);
@@ -208,8 +207,7 @@ namespace Xomega.Framework.Views
         protected override async Task OnChildEventAsync(object childViewModel, ViewEvent e, CancellationToken token = default)
         {
             UpdateDetailsSelection(childViewModel as DetailsViewModel, e);
-            // ignore events from grandchildren
-            if (e.IsSaved(false) || e.IsDeleted(false))
+            if (ShouldReloadOnChildEvent(childViewModel, e))
             {
                 await LoadDataAsync(true, token); // reload child lists if a child was updated
                 UpdateDetailsSelection(childViewModel as DetailsViewModel, ViewEvent.Opened);
@@ -217,6 +215,20 @@ namespace Xomega.Framework.Views
 
             await base.OnChildEventAsync(childViewModel, e, token);
         }
+
+        /// <summary>
+        /// Determines whether the current view should reload in response to a child event.
+        /// </summary>
+        /// <remarks>By default, the view reloads if the event indicates a save or delete operation,
+        /// and the details object is not new, populated and not modified.</remarks>
+        /// <param name="childViewModel">The child view model.</param>
+        /// <param name="e">The child event to evaluate.</param>
+        /// <returns><see langword="true"/> if the view should reload based on the event and the state of the details object;
+        /// otherwise, <see langword="false"/>.</returns>
+        protected virtual bool ShouldReloadOnChildEvent(object childViewModel, ViewEvent e) =>            
+            (e.IsSaved(false) || e.IsDeleted(false)) && // include events from grandchildren
+            DetailsObject != null && !DetailsObject.IsNew && // don't reload new objects
+            !(DetailsObject.IsModified() ?? true); // don't reload if the object is modified or not populated
 
         #endregion
 
