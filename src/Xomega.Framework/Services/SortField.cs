@@ -1,10 +1,13 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
+using System.Runtime.Serialization;
+
 namespace Xomega.Framework.Services
 {
     /// <summary>
     /// A class that represents a field to sort a sort direction.
     /// </summary>
+    [DataContract]
     public class SortField
     {
         /// <summary>

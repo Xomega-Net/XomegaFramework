@@ -19,7 +19,7 @@ namespace Xomega._Syncfusion.Blazor
     public class XSfGrid : SfGrid<DataRow>
     {
         private DataListObject list;
-        private bool refresh = false;
+        private bool refresh;
 
         /// <summary>
         /// List object bound to this grid control.
@@ -55,7 +55,7 @@ namespace Xomega._Syncfusion.Blazor
         }
 
         /// <inheritdoc/>
-        protected async override Task OnParametersSetAsync()
+        protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
             if (refresh) await InvokeAsync(Refresh);
@@ -73,7 +73,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <returns>Array of indexes for selected data rows, or null if cannot get those.</returns>
         public double[] GetSelectedDataRowIndexes()
         {
-            List<double> selIndexes = new List<double>();
+            var selIndexes = new List<double>();
             var rowsProp = GetType().GetProperty("Rows", BindingFlags.NonPublic | BindingFlags.Instance);
             if (rowsProp == null) 
                 return null; // reflecting nonpublic members doesn't work in WASM

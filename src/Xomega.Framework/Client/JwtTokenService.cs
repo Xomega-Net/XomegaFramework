@@ -1,8 +1,8 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Resources;
@@ -94,8 +94,8 @@ namespace Xomega.Framework.Client
             }
             else
             {
-                var jwtTokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = jwtTokenHandler.ReadJwtToken(authToken.AccessToken);
+                var jwtTokenHandler = new JsonWebTokenHandler();
+                var jwtToken = jwtTokenHandler.ReadJsonWebToken(authToken.AccessToken);
                 validTo = jwtToken.ValidTo;
 
                 var claims = jwtToken.Claims.Select(c => new Claim(jwtTokenHandler.InboundClaimTypeMap.ContainsKey(c.Type) ?

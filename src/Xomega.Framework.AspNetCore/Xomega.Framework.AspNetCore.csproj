@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>4.4.1</Version>
+    <Version>4.4.2</Version>
     <PackageId>Xomega.Framework.AspNetCore</PackageId>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>Logo.png</PackageIcon>
@@ -24,8 +24,8 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.16.0" />
     <ProjectReference Include="..\Xomega.Framework\Xomega.Framework.csproj" />
   </ItemGroup>
 

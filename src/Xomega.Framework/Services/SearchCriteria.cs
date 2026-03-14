@@ -1,10 +1,13 @@
 ﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
 
+using System.Runtime.Serialization;
+
 namespace Xomega.Framework.Services
 {
     /// <summary>
     /// Base class for search criteria structures
     /// </summary>
+    [DataContract]
     public class SearchCriteria
     {
         /// <summary>
@@ -25,6 +28,7 @@ namespace Xomega.Framework.Services
         /// <summary>
         /// The fields to sort by.
         /// </summary>
+        [DataMember]
         public SortField[] Sort { get; set; }
 
         /// <summary>
