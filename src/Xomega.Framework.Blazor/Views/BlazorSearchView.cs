@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Xomega.Net. All rights reserved.
+﻿// Copyright (c) 2026 Xomega.Net. All rights reserved.
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
