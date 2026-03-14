@@ -2,7 +2,7 @@
 
 Xomega Framework is a full-stack open-source application framework for quickly building well-architected data-oriented web or desktop apps in .NET.
 
-The framework has been built from more than 20 years of experience and is based on an approach that has been proven in many large-scale enterprise applications. The primary goals of the framework are to:
+The framework has been built from more than 25 years of experience and is based on an approach that has been proven in many large-scale enterprise applications. The primary goals of the framework are to:
 
 - ✔️ Enable rapid application development.
 - ✔️ Employ future-proof best practice architectures.
@@ -25,6 +25,7 @@ Following is a summary of the framework’s major features.
   - [x] Blazor Server.
   - [x] Blazor WebAssembly.
   - [x] Syncfusion Blazor components with in-grid editing.
+  - [x] MAUI Blazor Hybrid.
   - [x] WPF views and controls.
   - [x] Legacy ASP.NET WebForms.
 
@@ -52,40 +53,40 @@ Xomega Framework helps you to write a large part of your presentation logic in a
 
 The generic MVVM architecture of the presentation layer built with Xomega Framework that enables its flexibility and reusability is depicted in the following diagram.
 
-![UI architecture](../../../Xomega.Docs/blob/master/docs/framework/common-ui/img/ui_arch.png)
+![UI architecture](https://github.com/Xomega-Net/Xomega.Docs/blob/master/docs/framework/common-ui/img/ui_arch.png?raw=true)
 
 Communication between the presentation layer and your business services will depend on the overall architecture of your app and the specific technologies that you use for its layers, as illustrated by the following diagram.
 
-![Services architecture](../../../Xomega.Docs/blob/master/docs/framework/services/img/services.png?raw=true)
+![Services architecture](https://github.com/Xomega-Net/Xomega.Docs/blob/master/docs/framework/services/img/services.png?raw=true)
 
 ## Documentation
 
 Complete documentation for the Xomega Framework concepts and components with code examples is available at [Xomega.Net Docs](https://xomega.net/docs/framework/overview).
 
-If you find any incorrect or missing documentation, please browse existing [Documentation Issues](../../../Xomega.Docs/issues) or open a new one. Also, feel free to fix any incorrect documentation and submit a PR in the [Xomega.Docs repository](../../../Xomega.Docs).
+If you find any incorrect or missing documentation, please browse existing [Documentation Issues](https://github.com/Xomega-Net/Xomega.Docs/issues) or open a new one. Also, feel free to fix any incorrect documentation and submit a PR in the [Xomega.Docs repository](https://github.com/Xomega-Net/Xomega.Docs).
 
 ## How to get started
 
 ### VS solution wizard
 
-The easiest and fastest way to get started with Xomega Framework is to [download and install our free VS extension](https://xomega.net/System/Download.aspx) **Xomega.Net for Visual Studio**. It provides a *New Project* template with a solution wizard, where you can configure a new solution for any supported architecture, such as Blazor, WPF, ASP.NET, or SPA, or even pick multiple architectures that will share the same code.
+The easiest and fastest way to get started with Xomega Framework is to [download and install our free VS extension](https://xomega.net) **Xomega.Net for Visual Studio**. It provides a *New Project* template with a solution wizard, where you can configure a new solution for any supported architecture, such as Blazor, MAUI, WPF, ASP.NET, or SPA, or even pick multiple architectures that will share the same code.
 
 ### Xomega low-code platform
 
 It gets way better than that though since Xomega.Net allows you to build a domain and service model from your database, and then just **generate complete Search and Details views** with all the view models, business services, and other artifacts right from your service model. The generated code will follow Xomega Framework best practices, and all you’d have to do is to just customize it where needed.
 
-### Walkthrough tutorial
+### Walk-through tutorial
 
 To quickly learn how to build a Blazor Server and WebAssembly apps with our Xomega platform, give it a spin and [walk through our step-by-step tutorial](https://xomega.net/docs/tutorial/get-started), where you can build a fully functional LOB app in no time.
 
-Alternatively, you can open the [source code for the final solution](../../../Xomega.Tutorial) that was built in that tutorial, and explore how the Xomega Framework components and code work together in Blazor apps.
+Alternatively, you can open the [source code for the final solution](https://github.com/Xomega-Net/Xomega.Tutorial) that was built in that tutorial, and explore how the Xomega Framework components and code work together in Blazor apps.
 
 ### NuGet packages
 
 Xomega Framework packages are [available via NuGet](http://www.nuget.org/packages?q=xomega.framework), so you can always manually add them to your existing projects and configure them in the application’s startup classes if you know what you’re doing.
 
 ## Community & Support
-- [Community Forum](../../../Xomega.Net4VS/discussions) - browse or ask questions, suggest new features, or discuss Xomega Framework and the overall Xomega platform.
-- [GitHub Issues](../../issues) - browse and report issues with Xomega Framework.
+- [Community Forum](https://github.com/Xomega-Net/Xomega.Net4VS/discussions) - browse or ask questions, suggest new features, or discuss Xomega Framework and the overall Xomega platform.
+- [GitHub Issues](https://github.com/Xomega-Net/XomegaFramework/issues) - browse and report issues with Xomega Framework.
 ---
-If you enjoy using Xomega Framework, then be sure to **add a star** ⭐ to this repository and help us **spread the word!** 📢
+If you enjoy using Xomega Framework, then be sure to **add a star** ⭐ to [our GitHub repository](https://github.com/Xomega-Net/XomegaFramework) and help us **spread the word!** 📢
