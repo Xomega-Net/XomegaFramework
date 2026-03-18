@@ -58,7 +58,7 @@ namespace Xomega._Syncfusion.Blazor
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            if (refresh) await InvokeAsync(Refresh);
+            if (refresh) await InvokeAsync(async () => await Refresh());
             refresh = false;
         }
 
@@ -70,7 +70,7 @@ namespace Xomega._Syncfusion.Blazor
         /// <summary>
         /// Get indexes in the grid of the underlying data rows that are marked as selected.
         /// </summary>
-        /// <returns>Array of indexes for selected data rows, or null if cannot get those.</returns>
+        /// <returns>Array of indexes for selected data rows, or null if it cannot get those.</returns>
         public double[] GetSelectedDataRowIndexes()
         {
             var selIndexes = new List<double>();
