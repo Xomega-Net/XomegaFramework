@@ -71,7 +71,7 @@ namespace Xomega.Framework.Blazor.Views
         }
 
         /// <summary>
-        /// Boolean parameter for whether or not to activate the view model from the query string.
+        /// Boolean parameter for whether to activate the view model from the query string.
         /// Used on a top-level view within a page.
         /// </summary>
         [Parameter]
@@ -185,7 +185,7 @@ namespace Xomega.Framework.Blazor.Views
         protected virtual string FooterClass => FooterVisible ? "modal-footer" : "d-none";
 
         /// <summary>
-        /// Returns whether or not to show the footer.
+        /// Returns whether to show the footer.
         /// </summary>
         protected virtual bool FooterVisible => (Model?.CloseAction?.Visible ?? false);
 

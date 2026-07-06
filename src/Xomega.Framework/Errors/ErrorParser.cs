@@ -21,7 +21,7 @@ namespace Xomega.Framework
         private readonly IServiceProvider serviceProvider;
 
         /// <summary>
-        /// A flag indicating whether or not to return full exception details in the error list.
+        /// A flag indicating whether to return full exception details in the error list.
         /// </summary>
         protected readonly bool fullException;
 
@@ -29,7 +29,7 @@ namespace Xomega.Framework
         /// Constructs a new error parser.
         /// </summary>
         /// <param name="serviceProvider">Service provider.</param>
-        /// <param name="fullException">Whether or not to return full exception details in the error list.</param>
+        /// <param name="fullException">Whether to return full exception details in the error list.</param>
         public ErrorParser(IServiceProvider serviceProvider, bool fullException)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Xomega.Framework.Operators
 {
     /// <summary>
-    /// Operators for whether or not a property value contains a substring.
+    /// Operators for whether a property value contains a substring.
     /// </summary>
     public class ContainsOperator : Operator
     {

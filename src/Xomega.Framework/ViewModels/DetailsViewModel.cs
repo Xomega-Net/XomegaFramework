@@ -126,7 +126,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Main function to load details data.
         /// </summary>
-        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection in child lists.</param>
+        /// <param name="preserveSelection">A flag indicating whether to preserve selection in child lists.</param>
         public virtual void LoadData(bool preserveSelection)
         {
             if (DetailsObject == null) return;
@@ -143,7 +143,7 @@ namespace Xomega.Framework.Views
         /// <summary>
         /// Main function to load details data.
         /// </summary>
-        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection in child lists.</param>
+        /// <param name="preserveSelection">A flag indicating whether to preserve selection in child lists.</param>
         /// <param name="token">Cancellation token.</param>
         public virtual async Task LoadDataAsync(bool preserveSelection, CancellationToken token = default)
         {

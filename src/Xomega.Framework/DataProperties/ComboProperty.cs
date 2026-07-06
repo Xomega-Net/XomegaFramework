@@ -36,7 +36,7 @@ namespace Xomega.Framework.Properties
         public string Format { get; set; }
 
         /// <summary>
-        /// A flag indicating whether or not to trim component values
+        /// A flag indicating whether to trim component values
         /// when building the combo value.  The default is true.
         /// </summary>
         public bool TrimValues { get; set; }

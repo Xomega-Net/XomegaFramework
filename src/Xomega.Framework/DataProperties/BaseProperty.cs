@@ -13,7 +13,7 @@ namespace Xomega.Framework
     /// <summary>
     /// The base class for all Xomega properties that defines various additional meta-information
     /// that can be associated with a piece of data, such as description, editability, visibility,
-    /// security, whether or not it is required, etc. It also provides support for notification
+    /// security, whether it is required, etc. It also provides support for notification
     /// of any changes in this type of information.
     /// Xomega properties are typically added to Xomega data objects that can serve as a data model
     /// for user interface screens.
@@ -180,7 +180,7 @@ namespace Xomega.Framework
         protected bool editable = true;
 
         /// <summary>
-        /// Returns a value indicating whether or not the property is editable.
+        /// Returns a value indicating whether the property is editable.
         /// This value is calculated based on the internal value of the editable field,
         /// the result of the call delegated to the parent object to determine this property's editability
         /// and the value of the security access level. Controls bound to this property
@@ -221,19 +221,19 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// An internal flag that keeps track of whether or not the property is currently being edited.
+        /// An internal flag that keeps track of whether the property is currently being edited.
         /// </summary>
         private bool editing = false;
 
         /// <summary>
-        /// Returns whether or not the property is currently being edited by the user.
+        /// Returns whether the property is currently being edited by the user.
         /// Controls that are bound to this property should set this value to true or false
         /// when they gain or lose focus respectively.
         /// </summary>
         public bool Editing { get => GetEditing(); set => SetEditing(value); }
 
         /// <summary>
-        /// Returns whether or not the property is currently being edited by the user
+        /// Returns whether the property is currently being edited by the user
         /// at the specified row, if any.
         /// </summary>
         /// <param name="row">The row to check if the property is being edited, or null for the entire property.</param>
@@ -241,7 +241,7 @@ namespace Xomega.Framework
         public bool GetEditing(DataRow row = null) => row?.GetEditing(this) ?? editing;
 
         /// <summary>
-        /// Sets whether or not the property is currently being edited at the specified row, if any.
+        /// Sets whether the property is currently being edited at the specified row, if any.
         /// </summary>
         /// <param name="value">True if the property is being edited, false otherwise.</param>
         /// <param name="row">The row, for which the property is being edited, or null for the entire property.</param>
@@ -291,7 +291,7 @@ namespace Xomega.Framework
         private bool visible = true;
 
         /// <summary>
-        /// Returns a value indicating whether or not the property is visible.
+        /// Returns a value indicating whether the property is visible.
         /// This value is calculated based on the internal value of the visible field,
         /// the result of the call delegated to the parent object to determine this property's visibility
         /// and the value of the security access level. Controls bound to this property
@@ -338,13 +338,13 @@ namespace Xomega.Framework
         #region Required support
 
         /// <summary>
-        /// A internal flag that keeps track of whether or not the property is required.
+        /// A internal flag that keeps track of whether the property is required.
         /// The default value is false.
         /// </summary>
         private bool required;
 
         /// <summary>
-        /// Returns a value indicating whether or not the property is required.
+        /// Returns a value indicating whether the property is required.
         /// This value is calculated based on the internal value of the required field and
         /// the result of the call delegated to the parent object to determine if this property is required.
         /// Setting this value updates the internal required flag and fires the property change event if necessary.

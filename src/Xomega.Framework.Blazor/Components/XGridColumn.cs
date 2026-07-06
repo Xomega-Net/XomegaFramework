@@ -88,7 +88,7 @@ namespace Xomega.Framework.Blazor.Components
         };
 
         /// <summary>
-        /// Returns whether or not the grid column is currently visible based on the visibility of the underlying property.
+        /// Returns whether the grid column is currently visible based on the visibility of the underlying property.
         /// </summary>
         public bool IsVisible => Property?.Visible ?? true;
 
@@ -109,7 +109,7 @@ namespace Xomega.Framework.Blazor.Components
             TextAlign == Alignment.Center ? "text-center" : ""; // default is text-start
 
         /// <summary>
-        /// Whether or not to allow wrapping content in the column cells.
+        /// Whether to allow wrapping content in the column cells.
         /// </summary>
         [Parameter] public bool AllowWrap { get; set; }
 
@@ -133,7 +133,7 @@ namespace Xomega.Framework.Blazor.Components
         #region Sorting
 
         /// <summary>
-        /// Specifies whether or not the current column allows sorting.
+        /// Specifies whether the current column allows sorting.
         /// </summary>
         [Parameter] public bool Sortable { get; set; } = true;
 

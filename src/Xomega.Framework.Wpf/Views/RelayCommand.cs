@@ -60,7 +60,7 @@ namespace Xomega.Framework.Views
         public bool CanExecute(object parameter) { return _canExecute == null ? true : _canExecute((T)parameter); }
 
         /// <summary>
-        /// Occurs when changes occur that affect whether or not the command should execute.
+        /// Occurs when changes occur that affect whether the command should execute.
         /// </summary>
         public event EventHandler CanExecuteChanged
         {

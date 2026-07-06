@@ -32,7 +32,7 @@ namespace Xomega.Framework.Lookup
         protected ICollection<string> supportedTypes;
 
         /// <summary>
-        /// Indicates whether or not the loaded lookup tables should be case sensitive.
+        /// Indicates whether the loaded lookup tables should be case sensitive.
         /// </summary>
         protected bool caseSensitive;
 
@@ -42,7 +42,7 @@ namespace Xomega.Framework.Lookup
         /// <param name="serviceProvider">Service provider for the lookup cache loader</param>
         /// <param name="cacheType">The cache type that this loader is designed for.
         /// It should be null if any type is supported.</param>
-        /// <param name="caseSensitive">Indicates whether or not the loaded lookup tables should be case sensitive.</param>
+        /// <param name="caseSensitive">Indicates whether the loaded lookup tables should be case sensitive.</param>
         /// <param name="tableTypes">A list of lookup table types that this loader can load.
         /// If null, the list will be determined based on the first run.</param>
         protected LookupCacheLoader(IServiceProvider serviceProvider, string cacheType, bool caseSensitive, params string[] tableTypes)

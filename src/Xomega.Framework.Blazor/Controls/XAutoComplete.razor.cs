@@ -35,7 +35,7 @@ namespace Xomega.Framework.Blazor.Controls
         protected string Value => Property?.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
 
         /// <summary>
-        /// A flag that keeps track of whether or not the auto-complete dropdown is visible.
+        /// A flag that keeps track of whether the auto-complete dropdown is visible.
         /// </summary>
         protected bool DropDownVisible { get; set; } = false;
 

@@ -36,7 +36,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Specifies whether or not the action is currently enabled.
+        /// Specifies whether the action is currently enabled.
         /// This is just an alias for the underlying editable flag to avoid confusion,
         /// since actions technically don't support editability.
         /// </summary>

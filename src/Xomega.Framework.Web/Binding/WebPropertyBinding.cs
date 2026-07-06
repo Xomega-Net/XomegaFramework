@@ -52,7 +52,7 @@ namespace Xomega.Framework.Web
         /// Checks if a control is property bind-able.
         /// </summary>
         /// <param name="ctl">Control to check.</param>
-        /// <returns>Whether or not the control is property bind-able.</returns>
+        /// <returns>Whether the control is property bind-able.</returns>
         public static bool IsBindable(Control ctl)
         {
             return ctl != null;

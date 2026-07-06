@@ -27,7 +27,7 @@ namespace Xomega.Framework.Properties
         public decimal MinimumValue { get; set; }
 
         /// <summary>
-        /// Whether or not the minimum value is allowed.
+        /// Whether the minimum value is allowed.
         /// </summary>
         public bool MinimumAllowed { get; set; }
 
@@ -37,7 +37,7 @@ namespace Xomega.Framework.Properties
         public decimal MaximumValue { get; set; }
 
         /// <summary>
-        /// Whether or not the maximum value is allowed.
+        /// Whether the maximum value is allowed.
         /// </summary>
         public bool MaximumAllowed { get; set; }
 

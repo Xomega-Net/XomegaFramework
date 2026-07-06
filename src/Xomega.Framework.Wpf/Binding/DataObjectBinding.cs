@@ -42,7 +42,7 @@ namespace Xomega.Framework
         /// Serves mainly as a trigger for static class registration.
         /// </summary>
         /// <param name="obj">Dependency object to check.</param>
-        /// <returns>Whether or not the dependency object is data object bind-able.</returns>
+        /// <returns>Whether the dependency object is data object bind-able.</returns>
         public static bool IsBindable(DependencyObject obj)
         {
             return obj != null && Data.GetObjectBinding(obj) != null;

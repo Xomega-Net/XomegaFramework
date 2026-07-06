@@ -62,7 +62,7 @@ namespace Xomega.Framework
         /// dependency property for the property name (see <see cref="Property.NameProperty"/>).
         /// </summary>
         /// <param name="obj">Dependency object to check.</param>
-        /// <returns>Whether or not the dependency object is property bind-able.</returns>
+        /// <returns>Whether the dependency object is property bind-able.</returns>
         public static bool IsBindable(DependencyObject obj)
         {
             return obj != null && Property.GetName(obj) != null;

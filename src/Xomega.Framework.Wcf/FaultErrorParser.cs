@@ -15,7 +15,7 @@ namespace Xomega.Framework.Wcf
         /// Constructs a new error parser that is able to parse WCF faults.
         /// </summary>
         /// <param name="serviceProvider">Service provider.</param>
-        /// <param name="fullException">Whether or not to return full exception details in the error list.</param>
+        /// <param name="fullException">Whether to return full exception details in the error list.</param>
         public FaultErrorParser(IServiceProvider serviceProvider, bool fullException = true) : base(serviceProvider, fullException)
         {
         }

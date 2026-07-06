@@ -34,7 +34,7 @@ namespace Xomega.Framework.Blazor
         [CascadingParameter] public EditContext EditContext { get; set; }
 
         /// <summary>
-        /// Whether or not to show component label.
+        /// Whether to show component label.
         /// </summary>
         [Parameter] public bool ShowLabel { get; set; } = true;
 

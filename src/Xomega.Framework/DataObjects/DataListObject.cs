@@ -532,7 +532,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Validates the data list object and the criteria object, if any.
         /// </summary>
-        /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
+        /// <param name="force">True to validate regardless of whether it has been already validated.</param>
         public override void Validate(bool force)
         {
             if (CriteriaObject != null) CriteriaObject.Validate(force);
@@ -725,24 +725,24 @@ namespace Xomega.Framework
         public class ReadOptions : CrudOptions
         {
             /// <summary>
-            /// A flag indicating whether or not to preserve selection in data lists.
+            /// A flag indicating whether to preserve selection in data lists.
             /// </summary>
             public bool PreserveSelection = false;
 
             /// <summary>
-            /// A flag indicating whether or not the operation is a reload
+            /// A flag indicating whether the operation is a reload
             /// and should use currently applied criteria.
             /// </summary>
             public bool IsReload = false;
 
             /// <summary>
-            /// A flag indicating whether or not the operation is a request
+            /// A flag indicating whether the operation is a request
             /// caused by changing current page or page size with server-side paging.
             /// </summary>
             public bool IsPaging = false;
 
             /// <summary>
-            /// A flag indicating whether or not the operation is a request
+            /// A flag indicating whether the operation is a request
             /// caused by changing sort order with server-side paging.
             /// </summary>
             public bool IsSorting = false;

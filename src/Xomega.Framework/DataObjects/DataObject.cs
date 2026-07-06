@@ -427,7 +427,7 @@ namespace Xomega.Framework
         private bool editable = true;
 
         /// <summary>
-        /// Returns a value indicating whether or not the data object is editable.
+        /// Returns a value indicating whether the data object is editable.
         /// This value is calculated based on the internal value of the editable field,
         /// the parent object's editability and the value of the security access level.
         /// Setting this value updates the internal editable flag and fires
@@ -865,7 +865,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Validates the data object and all its properties and child objects recursively.
         /// </summary>
-        /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
+        /// <param name="force">True to validate regardless of whether it has been already validated.</param>
         public virtual void Validate(bool force)
         {
             foreach (DataProperty p in properties.Values) p.Validate(force, null);

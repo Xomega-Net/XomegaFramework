@@ -24,12 +24,12 @@ namespace Xomega.Framework
         public static readonly PropertyChange Editable = new PropertyChange(1 << 1);
 
         /// <summary>
-        /// A static constant representing a change in whether or not the property is being edited.
+        /// A static constant representing a change in whether the property is being edited.
         /// </summary>
         public static readonly PropertyChange Editing = new PropertyChange(1 << 2);
 
         /// <summary>
-        /// A static constant representing a change in whether or not the property is required.
+        /// A static constant representing a change in whether the property is required.
         /// </summary>
         public static readonly PropertyChange Required = new PropertyChange(1 << 3);
 
@@ -82,18 +82,18 @@ namespace Xomega.Framework
 
         /// <summary>
         /// Returns if the current combination of changes includes a change
-        /// in whether or not the property is being edited.
+        /// in whether the property is being edited.
         /// </summary>
         /// <returns>True if the current combination of changes includes a change 
-        /// in whether or not the property is being edited, otherwise false.</returns>
+        /// in whether the property is being edited, otherwise false.</returns>
         public bool IncludesEditing() { return (change & Editing.change) > 0; }
 
         /// <summary>
         /// Returns if the current combination of changes includes a change
-        /// in whether or not the property is required.
+        /// in whether the property is required.
         /// </summary>
         /// <returns>True if the current combination of changes includes a change 
-        /// in whether or not the property is required, otherwise false.</returns>
+        /// in whether the property is required, otherwise false.</returns>
         public bool IncludesRequired() { return (change & Required.change) > 0; }
 
         /// <summary>

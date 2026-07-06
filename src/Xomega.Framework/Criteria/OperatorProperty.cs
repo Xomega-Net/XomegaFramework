@@ -142,7 +142,7 @@ namespace Xomega.Framework.Criteria
 
         /// <summary>
         /// Determines if the given operator is applicable for the current additional properties
-        /// by checking the first additional property type and whether or not it's multivalued
+        /// by checking the first additional property type and whether it's multivalued
         /// and comparing it to the corresponding attributes of the given operator.
         /// This method is used as a filter function for the list of operators to display.
         /// </summary>

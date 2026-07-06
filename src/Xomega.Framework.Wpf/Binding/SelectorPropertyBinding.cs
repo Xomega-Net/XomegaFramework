@@ -81,7 +81,7 @@ namespace Xomega.Framework.Binding
 
         /// <summary>
         /// Binds the selector to the given property. Sets the selection mode based on
-        /// whether or not the property is multivalued and the default list item template
+        /// whether the property is multivalued and the default list item template
         /// unless it has already been set in XAML.
         /// </summary>
         /// <param name="property">The data property to bind the framework element to.</param>

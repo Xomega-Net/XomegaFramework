@@ -39,7 +39,7 @@ namespace Xomega.Framework.Lookup
         protected Dictionary<string, IndexedTable> indexedData = new Dictionary<string, IndexedTable>();
 
         /// <summary>
-        /// A flag of whether or not to use case-sensitive lookups.
+        /// A flag of whether to use case-sensitive lookups.
         /// </summary>
         [DataMember]
         public bool CaseSensitive { get; set; }
@@ -54,7 +54,7 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="type">Lookup table type string.</param>
         /// <param name="data">A list of headers that serves as the table's data set.</param>
-        /// <param name="caseSensitive">A boolean flag of whether or not to perform case sensitive look-ups.</param>
+        /// <param name="caseSensitive">A boolean flag of whether to perform case sensitive look-ups.</param>
         public LookupTable(string type, IEnumerable<Header> data, bool caseSensitive)
         {
             Type = type;

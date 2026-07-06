@@ -469,7 +469,7 @@ namespace Xomega.Framework
         /// <summary>
         /// A delegate to support custom conversion functions. It will try to convert the value
         /// that is passed by reference to the specified format by setting the reference to the 
-        /// converted value. It will return whether or not the conversion succeeded, which determines
+        /// converted value. It will return whether the conversion succeeded, which determines
         /// if further conversion rules need to be applied.
         /// If the delegate is only able to convert values to just one format, it should return false for other formats.
         /// </summary>
@@ -486,7 +486,7 @@ namespace Xomega.Framework
         /// <summary>
         /// A delegate to support custom async conversion functions. It will try to convert the value
         /// that is passed by reference to the specified format by setting the reference to the 
-        /// converted value. It will return whether or not the conversion succeeded, which determines
+        /// converted value. It will return whether the conversion succeeded, which determines
         /// if further conversion rules need to be applied.
         /// If the delegate is only able to convert values to just one format, it should return false for other formats.
         /// </summary>
@@ -603,7 +603,7 @@ namespace Xomega.Framework
         /// <summary>
         /// Validates the property and fires a validation property change event.
         /// </summary>
-        /// <param name="force">True to validate regardless of whether or not it has been already validated.</param>
+        /// <param name="force">True to validate regardless of whether it has been already validated.</param>
         /// <param name="row">The row to validate, or null to validate the property value</param>
         public virtual void Validate(bool force, DataRow row)
         {

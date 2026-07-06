@@ -162,7 +162,7 @@ namespace Xomega.Framework
         }
 
         /// <summary>
-        /// Returns whether or not the row has been modified.
+        /// Returns whether the row has been modified.
         /// Null means that the row was just created or cloned, but no properties have been changed.
         /// </summary>
         /// <returns>True if the row is modified, false otherwise.</returns>

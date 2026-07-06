@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 namespace Xomega.Framework
 {
     /// <summary>
-    /// Computed binding for updating whether or not the property is required.
+    /// Computed binding for updating whether the property is required.
     /// </summary>
     public class ComputedRequiredBinding : ComputedBinding
     {
         /// <summary>
-        /// Constructs a new computed binding for updating whether or not the property is required.
+        /// Constructs a new computed binding for updating whether the property is required.
         /// </summary>
         /// <param name="property">The property to update based on the computed result.</param>
         /// <param name="expression">Lambda expression used to compute the result.</param>

@@ -31,8 +31,8 @@ namespace Xomega.Framework.Lookup
         /// Constructs an XML lookup cache loader from the given XML stream.
         /// </summary>
         /// <param name="stream">The XML stream to load the lookup data from.</param>
-        /// <param name="caseSensitive">A flag indicating whether or not the lookup tables should be case-sensitive.
-        /// Typically this is based on whether or not the application database is case-sensitive.</param>
+        /// <param name="caseSensitive">A flag indicating whether the lookup tables should be case-sensitive.
+        /// Typically this is based on whether the application database is case-sensitive.</param>
         public XmlLookupCacheLoader(Stream stream, bool caseSensitive)
             : this(stream, LookupCache.Global, caseSensitive) { }
 
@@ -41,8 +41,8 @@ namespace Xomega.Framework.Lookup
         /// </summary>
         /// <param name="stream">The XML stream to load the lookup data from.</param>
         /// <param name="cacheType">Initializes the type of cache that this loader applies too.</param>
-        /// <param name="caseSensitive">A flag indicating whether or not the lookup tables should be case-sensitive.
-        /// Typically this is based on whether or not the application database is case-sensitive.</param>
+        /// <param name="caseSensitive">A flag indicating whether the lookup tables should be case-sensitive.
+        /// Typically this is based on whether the application database is case-sensitive.</param>
         public XmlLookupCacheLoader(Stream stream, string cacheType, bool caseSensitive)
             : base(null, cacheType, caseSensitive)
         {

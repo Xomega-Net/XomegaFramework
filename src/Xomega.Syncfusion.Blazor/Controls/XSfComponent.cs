@@ -42,7 +42,7 @@ namespace Xomega._Syncfusion.Blazor
         }
 
         /// <summary>
-        /// Global configuration on whether or not to use a tooltip to display validation errors
+        /// Global configuration on whether to use a tooltip to display validation errors
         /// rather than showing them under the field.
         /// </summary>
         public static bool UseTooltipForValidationErrors = false;

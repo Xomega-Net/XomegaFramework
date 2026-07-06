@@ -34,7 +34,7 @@ namespace Xomega.Framework.Lookup
         /// Constructs a new local lookup cache loader from the given service provider for the specified type(s).
         /// </summary>
         /// <param name="serviceProvider">Service provider to use for loading the local cache.</param>
-        /// <param name="caseSensitive">Indicates whether or not the loaded lookup tables should be case sensitive.</param>
+        /// <param name="caseSensitive">Indicates whether the loaded lookup tables should be case sensitive.</param>
         /// <param name="tableTypes">A list of lookup table types that this loader can load.
         /// If null, the list will be determined based on the first run.</param>
         public LocalLookupCacheLoader(IServiceProvider serviceProvider, bool caseSensitive, params string[] tableTypes)

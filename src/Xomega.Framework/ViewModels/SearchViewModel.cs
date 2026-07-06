@@ -122,7 +122,7 @@ namespace Xomega.Framework.Views
         /// Performs the search with the current criteria and populates the list
         /// </summary>
         /// <param name="reload">True to reload with currently applied criteria, false to use the CriteriaObject.</param>
-        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
+        /// <param name="preserveSelection">A flag indicating whether to preserve selection.</param>
         /// <returns>True on success, false in case of errors.</returns>
         public virtual bool Search(bool reload, bool preserveSelection)
         {
@@ -150,7 +150,7 @@ namespace Xomega.Framework.Views
         /// Performs asynchronous search with the current criteria and populates the list.
         /// </summary>
         /// <param name="reload">True to reload with currently applied criteria, false to use the CriteriaObject.</param>
-        /// <param name="preserveSelection">A flag indicating whether or not to preserve selection.</param>
+        /// <param name="preserveSelection">A flag indicating whether to preserve selection.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>True on success, false in case of errors.</returns>
         public virtual async Task<bool> SearchAsync(bool reload, bool preserveSelection, CancellationToken token = default)

@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Xomega.Framework.Operators
 {
     /// <summary>
-    /// Operators for whether or not a property value starts with a substring.
+    /// Operators for whether a property value starts with a substring.
     /// </summary>
     public class StartsWithOperator : Operator
     {

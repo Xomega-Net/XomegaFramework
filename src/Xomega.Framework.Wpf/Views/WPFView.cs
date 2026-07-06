@@ -35,7 +35,7 @@ namespace Xomega.Framework.Views
         }
 
         /// <summary>
-        /// Indicates whether or not the view is using async operations.
+        /// Indicates whether the view is using async operations.
         /// </summary>
         protected bool IsAsync { get; set; }
 

@@ -63,7 +63,7 @@ namespace Xomega.Framework.Web
         }
 
         /// <summary>
-        /// Sets the selection mode based on whether or not the property is multivalued.
+        /// Sets the selection mode based on whether the property is multivalued.
         /// </summary>
         protected override void OnPropertyBound()
         {

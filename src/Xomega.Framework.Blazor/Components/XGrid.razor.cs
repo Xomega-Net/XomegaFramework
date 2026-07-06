@@ -21,7 +21,7 @@ namespace Xomega.Framework.Blazor.Components
         [Parameter] public RenderFragment GridColumns { get; set; }
 
         /// <summary>
-        /// Whether or not the grid allows sorting.
+        /// Whether the grid allows sorting.
         /// </summary>
         [Parameter] public bool AllowSorting { get; set; } = true;
 
@@ -44,7 +44,7 @@ namespace Xomega.Framework.Blazor.Components
         #region Selection support
 
         /// <summary>
-        /// A flag specifying whether or not to allow selection.
+        /// A flag specifying whether to allow selection.
         /// </summary>
         [Parameter] public bool? AllowSelection { get; set; }
 
@@ -52,11 +52,11 @@ namespace Xomega.Framework.Blazor.Components
         /// Helper function returning the class for selected rows.
         /// </summary>
         /// <param name="row">The data row.</param>
-        /// <returns>Row's CSS class based on whether or not the row is selected.</returns>
+        /// <returns>Row's CSS class based on whether the row is selected.</returns>
         protected string SelectedClass(DataRow row) => row.Selected ? "table-active" : "";
 
         /// <summary>
-        /// Row's CSS class based on whether or not the list allows selection.
+        /// Row's CSS class based on whether the list allows selection.
         /// </summary>
         protected virtual string SelectableClass => AllowSelection ?? false ||
             AllowSelection == null && List?.RowSelectionMode != null ? "table-hover" : "";
@@ -90,7 +90,7 @@ namespace Xomega.Framework.Blazor.Components
         #region Pagination support
 
         /// <summary>
-        /// A flag specifying whether or not to allow paging.
+        /// A flag specifying whether to allow paging.
         /// </summary>
         public bool AllowPaging => !(List?.PagingMode == DataListObject.Paging.None);
 
