@@ -172,7 +172,7 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// The class to use for the view's middle main div.
         /// </summary>
-        protected virtual string MiddleClass => Mode == ViewParams.Mode.Popup ? $"modal-dialog {ModalSize}" : "d-flex";
+        protected virtual string MiddleClass => Mode == ViewParams.Mode.Popup ? $"modal-dialog {ModalSize}" : "d-flex w-100";
 
         /// <summary>
         /// The class to use for the view's inner main div.
@@ -193,6 +193,15 @@ namespace Xomega.Framework.Blazor.Views
         /// Indicates if the view is visible.
         /// </summary>
         [Parameter] public bool Visible { get; set; }
+
+        /// <summary>
+        /// The preferred number of Bootstrap columns (1–11 out of 12) this view's <b>own content</b>
+        /// should occupy within the parent's row when displayed as an inline child view.
+        /// When this view has open inline children, its total span in the parent's row is automatically
+        /// widened so that own content still gets this many columns; see <see cref="EffectivePreferredColumns"/>.
+        /// Views with no preference (0) share the remaining space equally by view count.
+        /// </summary>
+        [Parameter] public int PreferredColumns { get; set; }
 
         /// <inheritdoc/>
         public virtual async Task<bool> ShowAsync(CancellationToken token = default)
@@ -343,6 +352,39 @@ namespace Xomega.Framework.Blazor.Views
         protected int OpenInlineViews => (Visible ? 1 : 0) + ChildViews.Where(v => v?.Mode == ViewParams.Mode.Inline).Sum(v => v.OpenInlineViews);
 
         /// <summary>
+        /// The effective Bootstrap column span this view and its open inline children should occupy
+        /// in the direct parent's row. When <see cref="PreferredColumns"/> is set, own content keeps
+        /// that many columns; the total span grows to accommodate any open preferred grandchildren.
+        /// Computed as <c>PreferredColumns × 12 / selfCol</c>, where <c>selfCol</c> is what this
+        /// view's own content would receive within its own row (using the same allocation logic as
+        /// <see cref="GetViewCol"/>). Returns 0 when no preference is set.
+        /// </summary>
+        protected int EffectivePreferredColumns
+        {
+            get
+            {
+                if (PreferredColumns <= 0) return 0;
+
+                // Compute what fraction of this view's own row is left for own content
+                // after open preferred children have taken their effective share.
+                // This mirrors the mainCol calculation in GetViewCol.
+                var inlineChildren = ChildViews.Where(v => v?.Mode == ViewParams.Mode.Inline
+                                                        && (v.Visible || v.OpenInlineViews > 0));
+                int preferredEffectiveSum = inlineChildren.Where(v => v.PreferredColumns > 0)
+                                                          .Sum(v => v.EffectivePreferredColumns);
+                int unpreferredChildViews = inlineChildren.Where(v => v.PreferredColumns == 0)
+                                                          .Sum(v => v.OpenInlineViews);
+                int unpreferredViews = 1 + unpreferredChildViews;
+                int remaining = Math.Max(unpreferredViews, 12 - preferredEffectiveSum);
+                int selfCol = remaining / unpreferredViews;
+
+                // Own content occupies PreferredColumns within the parent's row and selfCol within
+                // this view's own row, so the total span scales proportionally.
+                return selfCol > 0 ? PreferredColumns * 12 / selfCol : PreferredColumns;
+            }
+        }
+
+        /// <summary>
         /// Breakpoint widths for the view and all its open inline children
         /// </summary>
         protected BreakpointWidths bpWidths;
@@ -355,6 +397,10 @@ namespace Xomega.Framework.Blazor.Views
         /// <summary>
         /// Gets a string of Bootstrap column classes for various breakpoints that would allow to properly display
         /// the given child view at each breakpoint given the current number of open inline views.
+        /// Each inline child's <see cref="EffectivePreferredColumns"/> is reserved for that child's subtree,
+        /// so the child's own content always occupies its <see cref="PreferredColumns"/> columns regardless
+        /// of how many grandchildren it has open. The parent and any children without a preference share
+        /// the remaining columns equally by view count.
         /// </summary>
         /// <param name="childView">The child view, for which to return the column classes.</param>
         /// <returns>A string of Bootstrap column classes for various breakpoints for this view.</returns>
@@ -368,15 +414,39 @@ namespace Xomega.Framework.Blazor.Views
             selfWidths = new BreakpointWidths(bpWidths);
 
             int totalViews = OpenInlineViews;
-            if (totalViews <= 1) return "d-flex"; // no visible children
+            if (totalViews <= 1) return "d-flex w-100"; // no visible children
 
             int currentView = childView?.OpenInlineViews ?? 1;
 
-            int mainCol = (12 / totalViews);
+            // Sum effective columns pre-allocated by preferred inline children.
+            // Each child's effective span accounts for its own open grandchildren recursively.
+            var inlineChildren = ChildViews.Where(v => v?.Mode == ViewParams.Mode.Inline
+                                                    && (v.Visible || v.OpenInlineViews > 0));
+            int preferredEffectiveSum = inlineChildren.Where(v => v.PreferredColumns > 0)
+                                                      .Sum(v => v.EffectivePreferredColumns);
+
+            // Self (1 view) plus any unpreferred children share the remaining columns by view count.
+            int unpreferredViews = 1 + inlineChildren.Where(v => v.PreferredColumns == 0)
+                                                      .Sum(v => v.OpenInlineViews);
+            int remaining = 12 - preferredEffectiveSum;
+            int colPerView = remaining >= unpreferredViews ? remaining / unpreferredViews : 0;
+
+            // When preferred children consume all available columns, the main view and any
+            // unpreferred children have no room left, so they are hidden entirely, effectively
+            // drilling into the preferred child's details.
+            if (colPerView <= 0 && (childView == null || childView.PreferredColumns <= 0))
+                return "d-none";
+
+            // Parent always gets colPerView; preferred child gets its effective total span;
+            // unpreferred child gets colPerView scaled by its subtree depth.
+            int mainCol = colPerView;
+            int col = childView == null ? mainCol
+                    : childView.PreferredColumns > 0 ? childView.EffectivePreferredColumns
+                    : colPerView * currentView;
+
             // calculate the point to hide the main view based on its column width
             Breakpoint hidePt = mainCol < 4 ? Breakpoint.xxl : mainCol < 6 ? Breakpoint.xl : Breakpoint.lg;
 
-            int col = 12 * currentView / totalViews;
             string res = $"col-{hidePt}-{col} ";
 
             if (childView == null)

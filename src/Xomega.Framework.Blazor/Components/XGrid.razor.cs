@@ -2,13 +2,15 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Xomega.Framework.Blazor.Components
 {
     /// <summary>
     /// Bootstrap-based grid component that binds to Xomega list objects.
     /// </summary>
-    public partial class XGrid : ComponentBase
+    public partial class XGrid : ComponentBase, IDisposable
     {
         /// <summary>
         /// List object the grid is bound to.
@@ -33,6 +35,49 @@ namespace Xomega.Framework.Blazor.Components
 
         private int RowCount => (List?.PagingMode == DataListObject.Paging.Server ?
             List?.TotalRowCount : List?.RowCount) ?? 0;
+
+        private DataListObject subscribedList;
+
+        /// <inheritdoc/>
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            if (subscribedList == List) return;
+            if (subscribedList != null)
+            {
+                subscribedList.CollectionChanged -= OnListCollectionChanged;
+                subscribedList.SelectionChanged -= OnListSelectionChanged;
+                subscribedList.PropertyChanged -= OnListPropertyChanged;
+            }
+            subscribedList = List;
+            if (subscribedList == null) return;
+
+            subscribedList.CollectionChanged += OnListCollectionChanged;
+            subscribedList.SelectionChanged += OnListSelectionChanged;
+            subscribedList.PropertyChanged += OnListPropertyChanged;
+        }
+
+        private void OnListCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) =>
+            InvokeAsync(StateHasChanged);
+
+        private void OnListSelectionChanged(object sender, EventArgs e) =>
+            InvokeAsync(StateHasChanged);
+
+        private void OnListPropertyChanged(object sender, PropertyChangedEventArgs e) =>
+            InvokeAsync(StateHasChanged);
+
+        /// <summary>
+        /// Disposes the component and unsubscribes from the data list object events.
+        /// </summary>
+        public void Dispose()
+        {
+            if (subscribedList != null)
+            {
+                subscribedList.CollectionChanged -= OnListCollectionChanged;
+                subscribedList.SelectionChanged -= OnListSelectionChanged;
+                subscribedList.PropertyChanged -= OnListPropertyChanged;
+            }
+        }
 
         internal void AddColumn(XGridColumn column)
         {
