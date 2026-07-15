@@ -32,7 +32,12 @@ namespace Xomega.Framework.Blazor.Controls
         /// <summary>
         /// Gets the value for the text box element from the property.
         /// </summary>
-        protected string Value => Property?.GetStringValue(IsEditable ? ValueFormat.EditString : ValueFormat.DisplayString, Row);
+        protected string Value => Property?.GetStringValue(IsEditable ? ValueFormat.EditString : DisplayFormat, Row);
+
+        /// <summary>
+        /// Gets or sets the format to use for displaying the property value in the text box when not in edit mode.
+        /// </summary>
+        [Parameter] public ValueFormat DisplayFormat { get; set; } = ValueFormat.DisplayString;
 
         /// <summary>
         /// A flag that keeps track of whether the auto-complete dropdown is visible.

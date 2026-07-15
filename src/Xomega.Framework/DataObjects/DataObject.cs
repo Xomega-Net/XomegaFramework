@@ -565,7 +565,7 @@ namespace Xomega.Framework
         /// <param name="options">Additional options for the operation.</param>
         /// <param name="row">The row to set the values for.
         /// Null to set values of the current data object.</param>
-        protected void FromDataContract(object dataContract, object options, DataRow row)
+        protected virtual void FromDataContract(object dataContract, object options, DataRow row)
         {
             if (dataContract == null) return;
             SetModified(false, false);
@@ -625,10 +625,10 @@ namespace Xomega.Framework
         /// <param name="dataContract">The data contract object to copy the values from.</param>
         /// <param name="options">Additional options for the operation.</param>
         /// <param name="row">The row to set the values for.
-        /// <param name="token">Cancellation token.</param>
         /// Null to set values of the current data object.</param>
-        protected async Task FromDataContractAsync(object dataContract, object options, DataRow row,
-                                                   CancellationToken token = default)
+        /// <param name="token">Cancellation token.</param>
+        protected virtual async Task FromDataContractAsync(
+            object dataContract, object options, DataRow row, CancellationToken token = default)
         {
             if (dataContract == null) return;
             SetModified(false, false);

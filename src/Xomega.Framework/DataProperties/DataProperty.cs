@@ -125,7 +125,7 @@ namespace Xomega.Framework
         public async Task SetValueAsync(object val, DataRow row = null, CancellationToken token = default)
         {
             object oldValue = GetValue(ValueFormat.Internal, row);
-            object newValue = await ResolveValueAsync(val, ValueFormat.Internal, row);
+            object newValue = await ResolveValueAsync(val, ValueFormat.Internal, row, token);
 
             if (Column < 0)
                 InternalValue = newValue;
