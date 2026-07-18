@@ -1,0 +1,40 @@
+@* Copyright (c) 2026 Xomega.Net. All rights reserved. *@
+
+@inherits XComponent
+
+@if (IsVisible)
+{
+    <div class="@Class">
+        @if (ShowLabel)
+        {
+            <label class="form-label" accesskey="@GetAccessKey()" for="@ControlId">@GetLabel(Label)</label>
+        }
+        @if (!IsNull)
+        {
+            <span id="@ControlId" class="badge text-bg-light @ValueClass">@(Property?.GetStringValue(ValueFormat.DisplayString, Row))</span>
+        }
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// A hyphenated CSS class that contains the enum type and the current value
+    /// e.g. enum-type-V.
+    /// </summary>
+    protected string ValueClass
+    {
+        get
+        {
+            if (Property is not EnumProperty enumProperty || IsNull) return null;
+            var enumType = enumProperty.EnumType?.Replace(" ", "-");
+            var value = enumProperty.GetValue(Row)?.Id;
+            return string.IsNullOrEmpty(enumType) || string.IsNullOrEmpty(value) ? null : $"{enumType}-{value}";
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        ObservedChanges = PropertyChange.Value + PropertyChange.Visible;
+    }
+}
