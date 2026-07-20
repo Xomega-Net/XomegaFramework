@@ -1,8 +1,12 @@
 ﻿@* Copyright (c) 2026 Xomega.Net. All rights reserved. *@
+@implements IDisposable
 
-<li class="nav-item">
-    <a role="button" class="nav-link @ActiveClass" @onclick="@(() => Parent.ActivateTab(this))">@Title</a>
-</li>
+@if (Visible)
+{
+    <li class="nav-item">
+        <a role="button" class="nav-link @ActiveClass" @onclick="@(() => Parent.ActivateTab(this))">@Title</a>
+    </li>
+}
 
 @code {
     [Parameter]
@@ -14,7 +18,12 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    [Parameter]
+    public bool Visible { get; set; } = true;
+
     string ActiveClass => Parent?.ActiveTab == this ? "active" : null;
+
+    bool? previousVisible;
 
     protected override void OnInitialized()
     {
@@ -22,7 +31,21 @@
             throw new ArgumentNullException(nameof(Parent), "TabPage must exist within a TabSet");
         base.OnInitialized();
 
-        if (Parent.ActiveTab == null)
-            Parent.ActivateTab(this);
+        Parent.RegisterTab(this);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (previousVisible.HasValue && previousVisible.Value != Visible)
+            Parent.OnTabVisibilityChanged(this, Visible);
+
+        previousVisible = Visible;
+    }
+
+    public void Dispose()
+    {
+        Parent?.UnregisterTab(this);
     }
 }

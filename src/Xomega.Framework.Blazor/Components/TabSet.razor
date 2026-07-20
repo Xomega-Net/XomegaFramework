@@ -18,11 +18,101 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    [Parameter]
+    public int SelectedIndex { get; set; } = -1;
+
+    [Parameter]
+    public EventCallback<int> SelectedIndexChanged { get; set; }
+
     public TabPage ActiveTab { get; private set; }
+
+    private readonly List<TabPage> tabs = new();
+
+    internal void RegisterTab(TabPage tab)
+    {
+        if (!tabs.Contains(tab))
+            tabs.Add(tab);
+    }
+
+    internal void UnregisterTab(TabPage tab)
+    {
+        tabs.Remove(tab);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        // Child TabPage components have their own parameters (including Visible) set
+        // after this component's OnParametersSet runs, so their Visible state can't be
+        // reliably checked until after render, i.e. here in OnAfterRender.
+        if (!firstRender && (SelectedIndex < 0 || SelectedIndex >= tabs.Count || ActiveTab == tabs[SelectedIndex]))
+            return;
+
+        TabPage tab = null;
+        if (SelectedIndex >= 0 && SelectedIndex < tabs.Count)
+          tab = tabs[SelectedIndex].Visible ? tabs[SelectedIndex] : FindNearestVisibleTab(SelectedIndex);
+        else if (firstRender)
+          tab = FindNearestVisibleTab(-1);
+
+        if (tab != null && tab != ActiveTab)
+          ActivateTab(tab);
+    }
+
+    private TabPage FindNearestVisibleTab(int idx)
+    {
+        for (int i = idx + 1; i < tabs.Count; i++)
+        {
+            if (tabs[i].Visible)
+                return tabs[i];
+        }
+
+        for (int i = idx - 1; i >= 0; i--)
+        {
+            if (tabs[i].Visible)
+                return tabs[i];
+        }
+
+        return null;
+    }
 
     public void ActivateTab(TabPage tab)
     {
         ActiveTab = tab;
+
+        int index = tabs.IndexOf(tab);
+        if (index >= 0 && index != SelectedIndex)
+        {
+            SelectedIndex = index;
+            SelectedIndexChanged.InvokeAsync(index);
+        }
+
         StateHasChanged();
+    }
+
+    internal void OnTabVisibilityChanged(TabPage tab, bool visible)
+    {
+        if (!visible && ActiveTab == tab)
+        {
+            int idx = tabs.IndexOf(tab);
+            TabPage next = SelectedIndex >= 0 && SelectedIndex < tabs.Count && tabs[SelectedIndex].Visible
+                ? tabs[SelectedIndex]
+                : FindNearestVisibleTab(SelectedIndex >= 0 && SelectedIndex < tabs.Count ? SelectedIndex : idx);
+
+            if (next != null)
+                ActivateTab(next);
+            else
+            {
+                ActiveTab = null;
+                StateHasChanged();
+            }
+        }
+        else if (visible && ActiveTab == null)
+        {
+            TabPage next = SelectedIndex >= 0 && SelectedIndex < tabs.Count && tabs[SelectedIndex].Visible
+                ? tabs[SelectedIndex]
+                : tab;
+            ActivateTab(next);
+        }
     }
 }
