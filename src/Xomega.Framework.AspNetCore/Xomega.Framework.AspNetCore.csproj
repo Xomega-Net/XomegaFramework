@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.34" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.16.0" />
     <ProjectReference Include="..\Xomega.Framework\Xomega.Framework.csproj" />
   </ItemGroup>
