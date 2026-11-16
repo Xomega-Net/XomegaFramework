@@ -94,7 +94,10 @@ namespace Xomega.Framework.Client
             }
             else
             {
-                var jwtTokenHandler = new JsonWebTokenHandler();
+                var jwtTokenHandler = new JsonWebTokenHandler()
+                {
+                    MapInboundClaims = true
+                };
                 var jwtToken = jwtTokenHandler.ReadJsonWebToken(authToken.AccessToken);
                 validTo = jwtToken.ValidTo;
 
