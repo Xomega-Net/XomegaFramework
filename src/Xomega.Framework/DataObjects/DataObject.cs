@@ -584,7 +584,8 @@ namespace Xomega.Framework
         protected virtual void FromDataContract(object dataContract, object options, DataRow row)
         {
             if (dataContract == null) return;
-            SetModified(false, false);
+            if (row == null) // don't set modified flag when populating list rows
+                SetModified(false, false);
             foreach (PropertyInfo pi in dataContract.GetType().GetProperties())
             {
                 object val = pi.GetValue(dataContract, null);
@@ -647,7 +648,8 @@ namespace Xomega.Framework
             object dataContract, object options, DataRow row, CancellationToken token = default)
         {
             if (dataContract == null) return;
-            SetModified(false, false);
+            if (row == null) // don't set modified flag when populating list rows
+                SetModified(false, false);
             foreach (PropertyInfo pi in dataContract.GetType().GetProperties())
             {
                 object val = pi.GetValue(dataContract, null);

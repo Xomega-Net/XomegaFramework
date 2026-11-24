@@ -108,10 +108,12 @@ namespace Xomega.Framework
 
             bool sameValue = ValuesEqual(oldValue, newValue);
             // update Modified flag, make sure to not set it back from true to false
-            if (GetModified(row) == null) SetModified(false, row);
+            bool uninitialized = GetModified(row) == null;
+            if (uninitialized) SetModified(false, row);
             else if (!sameValue) SetModified(true, row);
             if (!sameValue) ResetValidation(row);
-            FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row));
+            if (!uninitialized || row == null) // uninitialized rows are not yet part of the list and should not fire property change events
+                FirePropertyChange(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row));
         }
 
         /// <summary>
@@ -134,10 +136,12 @@ namespace Xomega.Framework
 
             bool sameValue = ValuesEqual(oldValue, newValue);
             // update Modified flag, make sure to not set it back from true to false
-            if (GetModified(row) == null) SetModified(false, row);
+            bool uninitialized = GetModified(row) == null;
+            if (uninitialized) SetModified(false, row);
             else if (!sameValue) SetModified(true, row);
             if (!sameValue) ResetValidation(row);
-            await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row), token);
+            if (!uninitialized || row == null) // uninitialized rows are not yet part of the list and should not fire property change events
+                await FirePropertyChangeAsync(new PropertyChangeEventArgs(PropertyChange.Value, oldValue, newValue, row), token);
         }
 
         /// <summary>
